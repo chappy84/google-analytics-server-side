@@ -4,8 +4,10 @@ Google Analytics Server Side
 Google Analytics Server Side is an implementation of [Google Analytics ECMAScript][1] code in [PHP][2]
 It implements parts of the interface that would be available without ECMAScript in a Browser
 
-CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
-HOME: <http://github.com/chappy84/google-analytics-server-side>  
+CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`
+
+HOME: <http://github.com/chappy84/google-analytics-server-side>
+
 BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>
 
 Google Analytics was developed by [Google][3]. 
