@@ -4,14 +4,12 @@ Google Analytics Server Side
 Google Analytics Server Side is an implementation of [Google Analytics ECMAScript][1] code in [PHP][2]
 It implements parts of the interface that would be available without ECMAScript in a Browser
 
-CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`
-
-HOME: <http://github.com/chappy84/google-analytics-server-side>
-
-BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>
+CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
+HOME: <http://github.com/chappy84/google-analytics-server-side>  
+BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>  
 
 Google Analytics was developed by [Google][3]. 
-The PHP version is maintained by [Tom Chapman][4].
+This PHP adaptation is maintained by [Tom Chapman][4].
 
 [1]: http://code.google.com/apis/analytics/docs/tracking/home.html
 [2]: http://www.php.net/
@@ -27,36 +25,33 @@ Google Analytics Server Side can be used simply in the following manner:
 	$gass->setAccount('UA-XXXXXXX-X')
 		 ->createPageView();
 		 
-The User Agent, Server Name, Remove Address, Document Path, Charset and Cookies
-are all set automatically without any method calls being required by the developer
-However, the following methods are available to set these variables and should be 
-called before the createPageView/createEvent method to save the Page View / Event :
+The User Agent, Server Name, Remove Address, Document Path, Document Referer, Charset
+and Cookies are all set automatically without any method calls being required by the 
+developer. However, the following methods are available to set these variables and 
+should be called before the createPageView/createEvent method to save the 
+Page View / Event :
 
 	setUserAgent
 	setServerName
 	setRemoteAddress
 	setDocumentPath
+	setDocumentReferer
 	setCharset
 	setCookies
 	
 On top of this there are also set methods to alter the default values for 
 the Google Analytics tracker version, the accepted language, the Google Analytics
-account, the referer, the document path, the page title and the event. These are
-available via the following methods:
+account, the page title and the event. These are available via the following methods:
 
 	setVersion
 	setAcceptLanguage
 	setAccount
-	setDocumentReferer
-	setDocumentPath
 	setPageTitle
 	setEvent*
 	
-*setEvent is not required if arguments are provided to createEvent.
-
-get methods are also provided for all of the above.
-	
-All methods but get methods allow chaining for ease of use.
+*setEvent is not required if arguments are provided to createEvent.  
+get methods are also provided for all of the above.  
+All methods but get methods allow chaining for ease of use.  
 
 LICENSE
 -------

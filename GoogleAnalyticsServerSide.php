@@ -12,9 +12,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Google Analytics Server Side is free software; you can redistribute it and/or 
+ * Google Analytics Server Side is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or any later 
+ * the Free Software Foundation; either version 3 of the License, or any later
  * version.
  *
  * The GNU General Public License can be found at
@@ -30,7 +30,7 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		Beta 0.5.0
+ * @version		Beta 0.5.5
  * @example		$gass = new GoogleAnalyticsServerSide();
  *            	$gass->setAccount('UA-XXXXXXX-X')
  *					 ->createPageView();
@@ -186,6 +186,9 @@ class GoogleAnalyticsServerSide {
 		if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
 			$this->setDocumentPath($_SERVER['REQUEST_URI']);
 		}
+		if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
+			$this->setDocumentReferer($_SERVER['HTTP_REFERER']);
+		}
 		if (isset($_SERVER['HTTP_ACCEPT_CHARSET']) && !empty($_SERVER['HTTP_ACCEPT_CHARSET'])) {
 			$charset = $_SERVER['HTTP_ACCEPT_CHARSET'];
 			if (false !== strpos(strtolower($charset), 'utf-8')) {
@@ -308,6 +311,7 @@ class GoogleAnalyticsServerSide {
 	/**
 	 * @param field_type $version
 	 * @return GoogleAnalyticsServerSide
+	 * @throws InvalidArgumentException
 	 * @access public
 	 */
 	public function setVersion($version) {
@@ -355,6 +359,7 @@ class GoogleAnalyticsServerSide {
 	/**
 	 * @param string $remoteAddress
 	 * @return GoogleAnalyticsServerSide
+	 * @throws InvalidArgumentException
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
@@ -369,6 +374,7 @@ class GoogleAnalyticsServerSide {
 	/**
 	 * @param string $account
 	 * @return GoogleAnalyticsServerSide
+	 * @throws InvalidArgumentException
 	 * @access public
 	 */
 	public function setAccount($account) {
@@ -383,9 +389,14 @@ class GoogleAnalyticsServerSide {
 	/**
 	 * @param string $documentReferer
 	 * @return GoogleAnalyticsServerSide
+	 * @throws InvalidArgumentException
 	 * @access public
 	 */
 	public function setDocumentReferer($documentReferer) {
+		$documentReferer = trim($documentReferer);
+		if (!empty($documentReferer) && false === parse_url($documentReferer)) {
+			throw new InvalidArgumentException('Document Referer must be a valid URL.');
+		}
 		$this->documentReferer = $documentReferer;
 		return $this;
 	}
@@ -419,6 +430,7 @@ class GoogleAnalyticsServerSide {
 	/**
 	 * @param array $event
 	 * @return GoogleAnalyticsServerSide
+	 * @throws InvalidArgumentException
 	 * @access public
 	 */
 	public function setEvent($category, $action, $label = null, $value = null) {
@@ -448,6 +460,7 @@ class GoogleAnalyticsServerSide {
 	 * Returns the last saved event as a string for the URL parameters
 	 *
 	 * @return string
+	 * @throws DomainException
 	 * @access public
 	 */
 	public function getEventString() {
@@ -456,6 +469,9 @@ class GoogleAnalyticsServerSide {
 			if (!empty($value)) {
 				$eventValues[] = $value;
 			}
+		}
+		if (empty($eventValues)) {
+			throw new DomainException('Event Cannot be Empty! setEvent must be called or parameters must be passed to createEvent.');
 		}
 		return '5('.implode($eventValues, '*').')';
 	}
@@ -506,16 +522,16 @@ class GoogleAnalyticsServerSide {
 		 * Get the correct values out of the google analytics cookies
 		 */
 		if (isset($cookies['__utma']) && null !== $cookies['__utma']) {
-			list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma']);
+			list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma'], 6);
 		}
 		if (isset($cookies['__utmb']) && null !== $cookies['__utmb']) {
-			list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb']);
+			list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb'], 4);
 		}
 		if (isset($cookies['__utmc']) && null !== $cookies['__utmc']) {
 			$domainId = $cookies['__utmc'];
 		}
 		if (isset($cookies['__utmz']) && null !== $cookies['__utmz']) {
-			list($domainId, $firstVisit, $session, $sessionVisits) = explode('.', $cookies['__utmz']);
+			list($domainId, $firstVisit, $session, $sessionVisits, $trafficSourceString) = explode('.', $cookies['__utmz'], 5);
 		}
 
 		/**
@@ -541,12 +557,25 @@ class GoogleAnalyticsServerSide {
 		$currentVisit = time();
 
 		/**
-		 * Set the cookies tot he required values
+		 * Works out where the traffic came from and sets the end part of the utmz cookie accordingly
+		 */
+		$referer = $this->getDocumentReferer();
+		$serverName = $this->getServerName();
+		if (!empty($referer) && !empty($serverName) && false === strpos($referer, $serverName)
+				&& false !== ($refererParts = parse_url($referer)) && isset($refererParts['host'], $refererParts['path'])) {
+			$trafficSourceString = 'utmcsr='.$refererParts['host'].'|utmccn=(referral)|utmcmd=referral|utmcct='.$refererParts['path'];
+		}
+		if (!isset($trafficSourceString) || false === strpos($trafficSourceString, 'utmcsr=')) {
+			$trafficSourceString = 'utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)';
+		}
+
+		/**
+		 * Set the cookies to the required values
 		 */
 		$this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session);
 		$this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit);
 		$this->setCookie('__utmc', $domainId);
-		$this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$sessionVisits.'.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)');
+		$this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$sessionVisits.'.'.$trafficSourceString);
 
 		return $this;
 	}
@@ -586,6 +615,7 @@ class GoogleAnalyticsServerSide {
 	 *
 	 * @param string $name
 	 * @param string $value
+	 * @throws LengthException
 	 * @throws OutOfBoundsException
 	 * @return GoogleAnalyticsServerSide
 	 */
@@ -639,6 +669,7 @@ class GoogleAnalyticsServerSide {
 	 *
 	 * @param string $utmUrl
 	 * @return GoogleAnalyticsServerSide
+	 * @throws RuntimeException
 	 * @access public
 	 */
 	public function sendRequest($utmUrl) {
