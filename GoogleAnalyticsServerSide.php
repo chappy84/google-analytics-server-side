@@ -17,7 +17,7 @@
  * the Free Software Foundation; either version 3 of the License, or any later
  * version.
  *
- * The GNU General Public License can be found at
+ * The GNU General Public License can be found at:
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
@@ -30,9 +30,9 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		Beta 0.5.5
+ * @version		Beta 0.6.0
  * @example		$gass = new GoogleAnalyticsServerSide();
- *            	$gass->setAccount('UA-XXXXXXX-X')
+ *	    	$gass->setAccount('UA-XXXXXXX-X')
  *					 ->createPageView();
  */
 class GoogleAnalyticsServerSide {
@@ -52,6 +52,23 @@ class GoogleAnalyticsServerSide {
 	 * @var string
 	 */
 	const GIF_LOCATION = 'http://www.google-analytics.com/__utm.gif';
+
+
+	/**
+	 * Location of the current JS file
+	 *
+	 * @var string
+	 */
+	const JS_LOCATION = 'http://www.google-analytics.com/ga.js';
+
+
+
+	/**
+	 * Location of a list of all known bots to ignore from the
+	 *
+	 * @var string
+	 */
+	const BOT_CSV_LOCATION = 'http://user-agent-string.info/rpc/get_data.php?botIP-All=csv';
 
 
 	/**
@@ -153,7 +170,7 @@ class GoogleAnalyticsServerSide {
 	 * @var string
 	 * @access private
 	 */
-	private $charset;
+	private $charset = 'UTF-8';
 
 
 	/**
@@ -167,16 +184,53 @@ class GoogleAnalyticsServerSide {
 							,	'__utmc'	=> null
 							,	'__utmz'	=> null);
 
+
+	/**
+	 * List of bots in use that the class should ignore
+	 * array format: 'bot name' => 'bot user agent'
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $bots = array();
+
+
+	/**
+	 * Options provided by the user to the class
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $options = array(	'ignoreBots' 		=> false
+							,	'cachePath'			=> null
+							,	'cacheBotsFilename'	=> 'bots.csv'
+							,	'cacheTimeout'		=> 2592000
+							,	'curlOptions'		=> array());
+
+
+	/**
+	 * Last date the bots were cached
+	 *
+	 * @var integer
+	 * @access private
+	 */
+	private $botsCacheDate = null;
+
+
 	/**
 	 * Class Level Constructor
 	 * Sets all the variables it can from the request headers received from the Browser
 	 *
+	 * @param array $options
+	 * @throws InvalidArgumentException
 	 * @access public
 	 */
-	public function __construct() {
-		if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
-			$this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+	public function __construct(array $options = array()) {
+		if (!is_array($options)) {
+			throw new InvalidArgumentException('Argument $options must be an array.');
 		}
+		$this->setOptions($options);
+		$this->setLatestVersionFromJs();
 		if (isset($_SERVER['SERVER_NAME']) && !empty($_SERVER['SERVER_NAME'])) {
 			$this->setServerName($_SERVER['SERVER_NAME']);
 		}
@@ -186,23 +240,14 @@ class GoogleAnalyticsServerSide {
 		if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
 			$this->setDocumentPath($_SERVER['REQUEST_URI']);
 		}
+		if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
+			$this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+		}
 		if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
 			$this->setDocumentReferer($_SERVER['HTTP_REFERER']);
 		}
-		if (isset($_SERVER['HTTP_ACCEPT_CHARSET']) && !empty($_SERVER['HTTP_ACCEPT_CHARSET'])) {
-			$charset = $_SERVER['HTTP_ACCEPT_CHARSET'];
-			if (false !== strpos(strtolower($charset), 'utf-8')) {
-				$charset = 'utf-8';
-			} else {
-				if (false !== strpos($charset,';')) {
-					list($charset, $other) = explode(';', $charset, 2);
-				}
-				if (false !== strpos($charset, ',')) {
-					list($charset,$other) = explode(',', $charset, 2);
-				}
-				unset($other);
-			}
-			$this->setCharset($charset);
+		if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+			$this->setAcceptLanguage($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		}
 		foreach ($this->getCookies() as $name => $value) {
 			if (isset($_COOKIE[$name]) && !empty($_COOKIE[$name])) {
@@ -309,13 +354,53 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
+	 * @return the $bots
+	 * @access public
+	 */
+	public function getBots() {
+		return $this->bots;
+	}
+
+
+	/**
+	 * @return the $options
+	 */
+	public function getOptions() {
+		return $this->options;
+	}
+
+
+	/**
+	 * Gets a specific option
+	 *
+	 * @param string $name
+	 * @throws OutOfRangeException
+	 * @return mixed
+	 */
+	public function getOption($name) {
+		if (!array_key_exists($name, $this->options)) {
+			throw new OutOfRangeException('Option '.$name.' is not an available option.');
+		}
+		return $this->options[$name];
+	}
+
+
+	/**
+	 * @return the $botsCacheDate
+	 */
+	private function getBotsCacheDate() {
+		return $this->botsCacheDate;
+	}
+
+
+	/**
 	 * @param field_type $version
 	 * @return GoogleAnalyticsServerSide
 	 * @throws InvalidArgumentException
 	 * @access public
 	 */
 	public function setVersion($version) {
-		if (1 !== preg_match('/^[\d\.]+$', $version)) {
+		if (1 !== preg_match('/^(\d+\.){2}\d+$/', $version)) {
 			throw new InvalidArgumentException('Invalid version number provided: '.$version);
 		}
 		$this->version = $version;
@@ -340,6 +425,12 @@ class GoogleAnalyticsServerSide {
 	 * @access public
 	 */
 	public function setAcceptLanguage($acceptLanguage) {
+		if (false !== strpos($acceptLanguage, ';')) {
+			list($acceptLanguage, $other) = explode(';', $acceptLanguage, 2);
+		}
+		if (false !== strpos($acceptLanguage, ',')) {
+			list($acceptLanguage, $other) = explode(',', $acceptLanguage, 2);
+		}
 		$this->acceptLanguage = strtolower($acceptLanguage);
 		return $this;
 	}
@@ -457,6 +548,104 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
+	 * @param array $bots
+	 * @return GoogleAnalyticsServerSide
+	 * @access public
+	 */
+	public function setBots(array $bots = array()) {
+		if (!is_array($bots)) {
+			throw new InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
+		}
+		$this->bots = $bots;
+		return $this;
+	}
+
+
+	/**
+	 * @param array $options
+	 * @return GoogleAnalyticsServerSide
+	 * @access public
+	 */
+	public function setOptions(array $options = array()) {
+		if (!is_array($options)) {
+			throw new InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
+		}
+		foreach ($options as $name => $value) {
+			$this->setOption($name, $value);
+		}
+		return $this;
+	}
+
+
+	/**
+	 * Set a specific option related to the
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 * @return GoogleAnalyticsServerSide
+	 * @access public
+	 */
+	public function setOption($name, $value) {
+		$this->getOption($name);
+		switch ($name) {
+			case 'ignoreBots':
+				if (!is_bool($value)) {
+					throw new InvalidArgumentException($name.' must be a boolean.');
+				}
+				break;
+			case 'cachePath':
+				if (null !== $value) {
+					if (!is_string($value)) {
+						throw new InvalidArgumentException($name.' must be a string.');
+					}
+					if (!is_dir($value) || !is_writable($value)) {
+						throw new RuntimeException('Path '.$value.' is not writable, please check permissions on the folder and try again.');
+					}
+				}
+				break;
+			case 'cacheBotsFilename':
+				if (!is_string($value)) {
+					throw new InvalidArgumentException($name.' must be a string.');
+				}
+				break;
+			case 'cacheTimeout':
+				if (!is_numeric($value)) {
+					throw new InvalidArgumentException($name.' must be numeric.');
+				}
+				if ($value < 10) {
+					throw new InvalidArgumentException($name.' has a minimum value of 10.');
+				}
+				break;
+			default:
+		}
+		$this->options[$name] = $value;
+		return $this;
+	}
+
+
+	/**
+	 * Sets the last bot cache date from the last cache file created
+	 *
+	 * @return GoogleAnalyticsServerSide
+	 * @access private
+	 */
+	private function setBotsCacheDate($botsCacheDate = null) {
+		if (0 == func_num_args()) {
+			$fileRelPath = DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename');
+			$botsCacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
+										&& file_exists($csvPathname.$fileRelPath)
+										&& is_readable($csvPathname.$fileRelPath)
+										&& false !== ($fileModifiedTime = filectime($csvPathname.$fileRelPath)))
+									? $fileModifiedTime : null;
+		} elseif (null !== $botsCacheDate && !is_numeric($botsCacheDate)) {
+			throw new Exception('botsCacheDate must be numeric or null.');
+		}
+		$this->botsCacheDate = $botsCacheDate;
+		return $this;
+	}
+
+
+	/**
 	 * Returns the last saved event as a string for the URL parameters
 	 *
 	 * @return string
@@ -474,6 +663,28 @@ class GoogleAnalyticsServerSide {
 			throw new DomainException('Event Cannot be Empty! setEvent must be called or parameters must be passed to createEvent.');
 		}
 		return '5('.implode($eventValues, '*').')';
+	}
+
+
+	/**
+	 * The last octect of the IP address is removed to anonymize the user.
+	 *
+	 * @access public
+	 * @param string $remoteAddress [optional]
+	 * @return string
+	 */
+	public function getIPToReport($remoteAddress = null) {
+		$remoteAddress = (empty($remoteAddress)) ? $this->remoteAddress : $remoteAddress;
+		if (empty($remoteAddress)) {
+			return '';
+		}
+
+		// Capture the first three octects of the IP address and replace the forth
+		// with 0, e.g. 124.455.3.123 becomes 124.455.3.0
+		if (preg_match('/^((\d{1,3}\.){3})\d{1,3}$/', $remoteAddress, $matches)) {
+			return $matches[1] . '0';
+		}
+		return '';
 	}
 
 
@@ -645,6 +856,7 @@ class GoogleAnalyticsServerSide {
 			throw new LengthException('Cookie cannot have an empty value');
 		}
 		throw new OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
+		return $this;
 	}
 
 
@@ -664,18 +876,113 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
+	 * Retreives the contents from the external csv source
+	 * and then parses it into the class level variable bots
+	 *
+	 * @return GoogleAnalyticsServerSide
+	 * @access private
+	 */
+	private function setBotsFromCsv() {
+		if (null !== ($csvPathname = $this->getOption('cachePath'))) {
+			$this->setBotsCacheDate();
+			if (null !== ($lastCacheDate = $this->getBotsCacheDate())) {
+				$csvPath = $csvPathname.DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename');
+				if ($lastCacheDate > (time() - $this->getOption('cacheTimeout')) && is_readable($csvPath)) {
+					$botsCsv = file_get_contents($csvPath);
+				} elseif (false === @unlink($csvPath)) {
+					throw new RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
+				}
+			}
+		}
+		if (!isset($botsCsv)) {
+			$this->setBotsCacheDate(null);
+			$botsCsv = $this->retreiveBotsCsv();
+		}
+		$this->setBots($this->parseBotsCsv($botsCsv));
+		return $this;
+	}
+
+
+	/**
+	 * Retreives the bots csv from the default source
+	 *
+	 * @return string
+	 * @access private
+	 */
+	private function retreiveBotsCsv() {
+		return trim($this->getSource(self::BOT_CSV_LOCATION));
+	}
+
+
+	/**
+	 * Parses the contents of the csv from the default source and
+	 * returns an array of bots in the default format
+	 *
+	 * @param string $fileContexts
+	 * @return array
+	 */
+	private function parseBotsCsv($fileContexts) {
+		$botList = explode("\n", $fileContexts);
+		$distinctBots = array();
+		foreach ($botList as $line) {
+			$csvLine = str_getcsv($line);
+			if (!isset($distinctBots[$csvLine[0]])) {
+				$distinctBots[$csvLine[0]] = (isset($csvLine[6])) ? $csvLine[6] : $csvLine[1];
+			}
+		}
+		return $distinctBots;
+	}
+
+
+	/**
+	 * Saves the current list of bots to the cache directory for use next time the script is run
+	 *
+	 * @return GoogleAnalyticsServerSide
+	 * @access private
+	 */
+	private function saveBotsToCsv() {
+		if (null === $this->getBotsCacheDate()
+				&& null !== ($csvPath = $this->getOption('cachePath')) && is_writable($csvPath)) {
+			$csvLines = array();
+			foreach ($this->getBots() as $name => $value) {
+				$csvLines[] = '"'.addslashes($name).'","'.addslashes($value).'"';
+			}
+			$csvString = implode("\n", $csvLines);
+			if (false === file_put_contents($csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename'), $csvString, LOCK_EX)) {
+				throw new RuntimeException('Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename'));
+			}
+		}
+		return $this;
+	}
+
+
+	/**
+	 * Returns whether or not the current user is a bot
+	 *
+	 * @return boolean
+	 * @access public
+	 */
+	public function getIsBot() {
+		$userAgent = $this->getUserAgent();
+		$bots = $this->getBots();
+		return (!empty($bots) && (in_array($userAgent, $bots) || array_key_exists($userAgent, $bots)));
+	}
+
+
+	/**
 	 * Make a tracking request to Google Analytics from this server.
 	 * Copies the headers from the original request to the new one.
 	 *
-	 * @param string $utmUrl
-	 * @return GoogleAnalyticsServerSide
+	 * @param string $url
+	 * @return mixed
+	 * @throws UnexpectedValueException
 	 * @throws RuntimeException
 	 * @access public
 	 */
-	public function sendRequest($utmUrl) {
+	private function getSource($url) {
 
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $utmUrl);
+		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -683,22 +990,76 @@ class GoogleAnalyticsServerSide {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(	'Accepts-Language: '.$this->getAcceptLanguage()
 												,	'X-Forwarded-For: '.$this->getRemoteAddress()));
 
-		$gifResponse = curl_exec($ch);
+		$extraCurlOptions = $this->getOption('curlOptions');
+		if (!empty($extraCurlOptions) && false === curl_setopt_array($ch, $extraCurlOptions)) {
+			throw new UnexpectedValueException('One of the extra curl options specified is invalid.');
+		}
 
-		switch(curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
+		if (false === ($response = curl_exec($ch))) {
+			throw new RuntimeException('Source could not be retreived');
+		}
+
+		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		switch($statusCode) {
 			case '400':
-				throw new RuntimeException('Google Analytics data was not saved.');
+			case '411':
+			case '412':
+			case '413':
+			case '414':
+			case '415':
+			case '416':
+			case '417':
+			case '422':
+			case '423':
+			case '424':
+			case '425':
+			case '426':
+				$message = 'Bad Request';
+				break;
+			case '401':
+			case '403':
+			case '407':
+				$message = 'Forbidden';
+				break;
+			case '402':
+				$message = 'Payment Required';
 				break;
 			case '404':
-				throw new RuntimeException('URI has no match in the display map.');
+			case '410':
+				$message = 'Not Found';
 				break;
-			case '406':
-				throw new RuntimeException('Requested representation not available for this resource.');
+			case '408':
+				$message = 'Timeout';
+				break;
+			case '444':
+				$message = 'No Response';
+				break;
+			case '418':
+				$message = 'The server is a teapot, this code doesn\'t like tea!';
 				break;
 			default:
 		}
+		if (isset($message)) {
+			throw new RuntimeException($message, $statusCode);
+		}
 		curl_close($ch);
 
+		return $response;
+	}
+
+
+	/**
+	 * Retreives the latest version of Google Analytics from the ga.js file
+	 *
+	 * @return GoogleAnalyticsServerSide
+	 * @access public
+	 */
+	public function setLatestVersionFromJs() {
+		$currentJs = $this->getSource(self::JS_LOCATION);
+		$version = preg_replace('/^[\s\S]+\=function\(\)\{return[\'"]((\d+\.){2}\d+)[\'"][\s\S]+$/i', '$1', $currentJs);
+		if (preg_match('/^(\d+\.){2}\d+$/', $version)) {
+			$this->setVersion($version);
+		}
 		return $this;
 	}
 
@@ -717,7 +1078,7 @@ class GoogleAnalyticsServerSide {
 		if (null !== ($pageTitle = $this->getPageTitle()) && !empty($pageTitle)) {
 			$queryParams['utmdt'] = $pageTitle;
 		}
-		return $this->trackPageView($queryParams);
+		return $this->track($queryParams);
 	}
 
 
@@ -737,21 +1098,37 @@ class GoogleAnalyticsServerSide {
 		}
 		$queryParams = array(	'utmt'	=> 'event'
 							,	'utme'	=> $this->getEventString());
-		return $this->trackPageView($queryParams);
+		return $this->track($queryParams);
 	}
 
 
 	/**
-	 * Track a page view, updates all the cookies and campaign tracker,
-	 * makes a server side request to Google Analytics.
+	 * Track information.
+	 * Updates all the cookies, makes a server side request to Google Analytics.
 	 *
-	 * Defenitions of the Analytics Parameters are stored at: http://code.google.com/apis/analytics/docs/tracking/gaTrackingTroubleshooting.html
+	 * Defenitions of the Analytics Parameters are stored at:
+	 * http://code.google.com/apis/analytics/docs/tracking/gaTrackingTroubleshooting.html
 	 *
 	 * @param array $extraParams
-	 * @return GoogleAnalyticsServerSide
+	 * @return boolean|GoogleAnalyticsServerSide
 	 * @access private
 	 */
-	private function trackPageView(array $extraParams = array()) {
+	private function track(array $extraParams = array()) {
+
+		$options = $this->getOptions();
+		if (true === $options['ignoreBots'] && empty($options['cachePath'])) {
+			throw new DomainException('You must set a cachePath if you wish to use ignoreBots.');
+		}
+
+		if (true === $options['ignoreBots']) {
+			if (empty($this->bots)) {
+				$this->setBotsFromCsv();
+			}
+			if ($this->getIsBot()) {
+				return false;
+			}
+		}
+
 		$domainName = $this->getServerName();
 		if (empty($domainName)) {
 			$domainName = '';
@@ -778,11 +1155,36 @@ class GoogleAnalyticsServerSide {
 							,	'utmcc'	=> $this->getCookiesString()
 							,	'utmul' => $this->getAcceptLanguage()
 							,	'utmcs' => $this->getCharset()
+							,	'utmip'	=> $this->getIPToReport()
 							,	'utmu'	=> 'q~');
 		$queryParams = array_merge($queryParams, $extraParams);
 		$utmUrl = self::GIF_LOCATION.'?'.http_build_query($queryParams, null, '&');
 
-		$this->sendRequest($utmUrl);
+		$this->getSource($utmUrl);
 		return $this;
+	}
+
+
+	/**
+	 * Class Level Destructor
+	 *
+	 * @access public
+	 */
+	public function __destruct() {
+		if (null !== $this->getOptions('cachePath')) {
+			$this->saveBotsToCsv();
+		}
+	}
+}
+
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50300) {
+	function str_getcsv($input, $delimiter = ',', $enclosure = '"', $escape = '\\') {
+		$input = trim($input, $enclosure." \n\t\r\0");
+		$csvElements = preg_split('/['.addslashes($enclosure).']\s*?'.addslashes($delimiter).'\s*?['.addslashes($enclosure).']/', $input);
+		$returnArray = array();
+		foreach ($csvElements as $element) {
+			$returnArray[] = trim($element);
+		}
+		return $returnArray;
 	}
 }

@@ -25,33 +25,53 @@ Google Analytics Server Side can be used simply in the following manner:
 	$gass->setAccount('UA-XXXXXXX-X')
 		 ->createPageView();
 		 
-The User Agent, Server Name, Remove Address, Document Path, Document Referer, Charset
-and Cookies are all set automatically without any method calls being required by the 
-developer. However, the following methods are available to set these variables and 
-should be called before the createPageView/createEvent method to save the 
-Page View / Event :
+The class constructor accepts an optional associative array parameter of available 
+configuration options. These are as follows:
 
+ignoreBots\*: Whether or not to ignore web trawling bots and spiders (boolean default false)
+cachePath\*: Directory to cache the bot list in (string default null)
+cacheBotsFilename: Filename of the bot list saved in the cache dir (string default bots.csv)
+cacheTimeout: Time (seconds) between refreshes of the bots list (integer default 2592000 - 1 Month)
+curlOptions: extra options to pass to Curl, same as parameter passed to curl_setopt_array (array default array())
+
+These options can also be set individually by the method setOption, 
+or in one go with the method setOptions
+
+*if ignoreBots is set to true, cachePath must be set to an existing writable directory
+		 
+The User Agent, Server Name, Remote Address, Document Path, Document Referer, Google
+Analytics Version, Accepted Language and Cookies are all set automatically without 
+any method calls being required by the developer. However, the following methods are 
+available to set these variables and should be called before the createPageView/createEvent 
+method to save the tracking information:
+
+	setVersion
+	setAcceptLanguage
 	setUserAgent
 	setServerName
 	setRemoteAddress
 	setDocumentPath
 	setDocumentReferer
-	setCharset
 	setCookies
 	
 On top of this there are also set methods to alter the default values for 
-the Google Analytics tracker version, the accepted language, the Google Analytics
-account, the page title and the event. These are available via the following methods:
+the Google Analytics account, the page title, document charset and the event. 
+These are available via the following methods:
 
-	setVersion
-	setAcceptLanguage
 	setAccount
 	setPageTitle
-	setEvent*
+	setCharset
+	setEvent**
 	
-*setEvent is not required if arguments are provided to createEvent.  
+**setEvent is not required if arguments are provided to createEvent.  
 get methods are also provided for all of the above.  
-All methods but get methods allow chaining for ease of use.  
+All methods but get methods allow chaining for ease of use.
+
+When using the functionality to not track requests from web trawling bots and spiders
+you have the option to set the list of bots yourself via the method setBots.
+This required an associative array in the following format:
+
+"Bot Name" => "Bot User Agent"
 
 LICENSE
 -------
@@ -73,7 +93,7 @@ modify it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 3 of the License, or any later 
 version.
 
-The GNU General Public License can be found at
+The GNU General Public License can be found at  
 http://www.gnu.org/copyleft/gpl.html.
 
 N/B: This code is nether written or endorsed by Google or any of it's
