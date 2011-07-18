@@ -30,7 +30,7 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		Beta 0.6.0
+ * @version		Beta 0.6.1
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    	$gass->setAccount('UA-XXXXXXX-X')
  *					 ->createPageView();
@@ -379,6 +379,13 @@ class GoogleAnalyticsServerSide {
 	 */
 	public function getOption($name) {
 		if (!array_key_exists($name, $this->options)) {
+			$methodName = 'get'.ucfirst($name);
+			if (method_exists($this, $methodName)) {
+				$reflectionMethod = new ReflectionMethod($this, $methodName);
+				if ($reflectionMethod->isPublic()) {
+					return $this->$methodName();
+				}
+			}
 			throw new OutOfRangeException('Option '.$name.' is not an available option.');
 		}
 		return $this->options[$name];
@@ -587,6 +594,15 @@ class GoogleAnalyticsServerSide {
 	 */
 	public function setOption($name, $value) {
 		$this->getOption($name);
+		if (!array_key_exists($name, $this->options)) {
+			$methodName = 'set'.ucfirst($name);
+			if (method_exists($this, $methodName)) {
+				$reflectionMethod = new ReflectionMethod($this, $methodName);
+				if ($reflectionMethod->isPublic()) {
+					return $this->$methodName($value);
+				}
+			}
+		}
 		switch ($name) {
 			case 'ignoreBots':
 				if (!is_bool($value)) {
