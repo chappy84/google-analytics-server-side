@@ -30,7 +30,7 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		Beta 0.6.1
+ * @version		0.6.2 Beta
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    	$gass->setAccount('UA-XXXXXXX-X')
  *					 ->createPageView();
@@ -226,6 +226,9 @@ class GoogleAnalyticsServerSide {
 	 * @access public
 	 */
 	public function __construct(array $options = array()) {
+		if (!extension_loaded('curl')) {
+			throw new RuntimeException('cURL PHP extension is not loaded. This extension is required by GoogleAnalyticsServerSide.');
+		}
 		if (!is_array($options)) {
 			throw new InvalidArgumentException('Argument $options must be an array.');
 		}
