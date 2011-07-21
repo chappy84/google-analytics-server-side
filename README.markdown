@@ -1,14 +1,14 @@
 Google Analytics Server Side
 ============================
 
-Google Analytics Server Side is an implementation of [Google Analytics ECMAScript][1] code in [PHP][2]
+Google Analytics Server Side is an implementation of [Google Analytics ECMAScript][1] code in [PHP][2]  
 It implements parts of the interface that would be available without ECMAScript in a Browser
 
 CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
 HOME: <http://github.com/chappy84/google-analytics-server-side>  
 BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>  
 
-Google Analytics was developed by [Google][3]. 
+Google Analytics was developed by [Google][3].  
 This PHP adaptation is maintained by [Tom Chapman][4].
 
 [1]: http://code.google.com/apis/analytics/docs/tracking/home.html
@@ -28,10 +28,10 @@ Google Analytics Server Side can be used simply in the following manner:
 The class constructor accepts an optional associative array parameter of available 
 configuration options. These are as follows:
 
-ignoreBots\*: Whether or not to ignore web trawling bots and spiders (boolean default false)
-cachePath\*: Directory to cache the bot list in (string default null)
-cacheBotsFilename: Filename of the bot list saved in the cache dir (string default bots.csv)
-cacheTimeout: Time (seconds) between refreshes of the bots list (integer default 2592000 - 1 Month)
+ignoreBots\*: Whether or not to ignore web trawling bots and spiders (boolean default false)  
+cachePath\*: Directory to cache the bot list in (string default null)  
+cacheBotsFilename: Filename of the bot list saved in the cache dir (string default bots.csv)  
+cacheTimeout: Time (seconds) between refreshes of the bots list (integer default 2592000 - 1 Month)  
 curlOptions: extra options to pass to Curl, same as parameter passed to curl_setopt_array (array default array())
 
 These options can also be set individually by the method setOption, 
