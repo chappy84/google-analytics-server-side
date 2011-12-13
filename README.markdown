@@ -79,6 +79,16 @@ This required an associative array in the following format:
 
 "Bot Name" => "Bot User Agent"
 
+COOKIES
+-------
+
+Cookies are automatically set when either createPageView or createEvent are called.
+They are however only sent as headers to the browser once, thus if you call either function more than 
+once, or call both functions, then they will only be included in the headers when the first call is made.
+
+You do have the option to turn off the sending of the cookie headers to the browser which can be done 
+by calling disableCookieHeaders before calling createPageView/createEvent for the first time.
+
 LICENSE
 -------
 

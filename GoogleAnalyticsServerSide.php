@@ -62,7 +62,6 @@ class GoogleAnalyticsServerSide {
 	const JS_LOCATION = 'http://www.google-analytics.com/ga.js';
 
 
-
 	/**
 	 * Location of a list of all known bots to ignore from the
 	 *
@@ -171,6 +170,15 @@ class GoogleAnalyticsServerSide {
 	 * @access private
 	 */
 	private $charset = 'UTF-8';
+	
+
+	/**
+	 * Whether or not to send the cookies when send
+	 *
+	 * @var boolean
+	 * @access private
+	 */
+	private $sendCookieHeaders = true;
 
 
 	/**
@@ -802,10 +810,11 @@ class GoogleAnalyticsServerSide {
 		/**
 		 * Set the cookies to the required values
 		 */
-		$this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session);
-		$this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit);
-		$this->setCookie('__utmc', $domainId);
-		$this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$sessionVisits.'.'.$trafficSourceString);
+		$this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session, $this->sendCookieHeaders);
+		$this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit, $this->sendCookieHeaders);
+		$this->setCookie('__utmc', $domainId, $this->sendCookieHeaders);
+		$this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$sessionVisits.'.'.$trafficSourceString, $this->sendCookieHeaders);
+		$this->disableCookieHeaders();
 
 		return $this;
 	}
@@ -891,6 +900,16 @@ class GoogleAnalyticsServerSide {
 			return $this->cookies[$name];
 		}
 		throw new OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
+	}
+	
+	
+	/**
+	 * Disables whether or not the cookie headers are sent when setCookies is called
+	 *
+	 * @access public
+	 */
+	public function disableCookieHeaders() {
+		$this->sendCookieHeaders = false;
 	}
 
 
