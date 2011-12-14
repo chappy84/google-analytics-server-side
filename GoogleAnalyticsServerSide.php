@@ -963,9 +963,11 @@ class GoogleAnalyticsServerSide {
 		$botList = explode("\n", $fileContexts);
 		$distinctBots = array();
 		foreach ($botList as $line) {
-			$csvLine = str_getcsv($line);
-			if (!isset($distinctBots[$csvLine[0]])) {
-				$distinctBots[$csvLine[0]] = (isset($csvLine[6])) ? $csvLine[6] : $csvLine[1];
+			if ( !empty($line)) {
+				$csvLine = str_getcsv($line);
+				if (!isset($distinctBots[$csvLine[0]])) {
+					$distinctBots[$csvLine[0]] = (isset($csvLine[6])) ? $csvLine[6] : $csvLine[1];
+				}
 			}
 		}
 		return $distinctBots;
