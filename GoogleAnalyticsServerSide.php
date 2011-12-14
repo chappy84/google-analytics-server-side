@@ -30,7 +30,7 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.6.3 Beta
+ * @version		0.6.4 Beta
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    		$gass->setAccount('UA-XXXXXXX-X')
  *					 ->createPageView();
@@ -76,7 +76,7 @@ class GoogleAnalyticsServerSide {
 	 * @var string
 	 * @access private
 	 */
-	private $version = '5.1.0';
+	private $version = '5.2.2';
 
 
 	/**
@@ -170,7 +170,7 @@ class GoogleAnalyticsServerSide {
 	 * @access private
 	 */
 	private $charset = 'UTF-8';
-	
+
 
 	/**
 	 * Whether or not to send the cookies when send
@@ -901,8 +901,8 @@ class GoogleAnalyticsServerSide {
 		}
 		throw new OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
 	}
-	
-	
+
+
 	/**
 	 * Disables whether or not the cookie headers are sent when setCookies is called
 	 *
@@ -925,10 +925,12 @@ class GoogleAnalyticsServerSide {
 			$this->setBotsCacheDate();
 			if (null !== ($lastCacheDate = $this->getBotsCacheDate())) {
 				$csvPath = $csvPathname.DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename');
-				if ($lastCacheDate > (time() - $this->getOption('cacheTimeout')) && is_readable($csvPath)) {
-					$botsCsv = file_get_contents($csvPath);
-				} elseif (false === @unlink($csvPath)) {
-					throw new RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
+				if ($lastCacheDate < (time() - $this->getOption('cacheTimeout')) || !is_readable($csvPath)
+						|| false === ($botsCsv = file_get_contents($csvPath)) || '' == trim($botsCsv)) {
+					unset($botsCsv);
+					if (false === @unlink($csvPath)) {
+						throw new RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
+					}
 				}
 			}
 		}
@@ -948,7 +950,12 @@ class GoogleAnalyticsServerSide {
 	 * @access private
 	 */
 	private function retreiveBotsCsv() {
-		return trim($this->getSource(self::BOT_CSV_LOCATION));
+		$botsCsv = trim($this->getSource(self::BOT_CSV_LOCATION));
+		if (empty($botsCsv)) {
+			throw new RuntimeException(	 'Bots CSV retrieved from external source seems to be empty. '
+										.'Please either set ignoreBots to false or ensure the bots csv file can be retreived.');
+		}
+		return $botsCsv;
 	}
 
 
@@ -963,7 +970,7 @@ class GoogleAnalyticsServerSide {
 		$botList = explode("\n", $fileContexts);
 		$distinctBots = array();
 		foreach ($botList as $line) {
-			if ( !empty($line)) {
+			if (!empty($line)) {
 				$csvLine = str_getcsv($line);
 				if (!isset($distinctBots[$csvLine[0]])) {
 					$distinctBots[$csvLine[0]] = (isset($csvLine[6])) ? $csvLine[6] : $csvLine[1];
