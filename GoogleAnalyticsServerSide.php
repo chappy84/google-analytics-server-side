@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
 /**
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,19 +25,17 @@
  * 		employees. "Google" and "Google Analytics" are trademarks of
  * 		Google Inc. and it's respective subsidiaries.
  *
- * Requires curl PHP module to be installed
- *
  * @copyright	Copyright (c) 2011 Tom Chapman (http://tom-chapman.co.uk/)
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.6.4 Beta
+ * @version		0.7.0 Beta
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    		$gass->setAccount('UA-XXXXXXX-X')
  *					 ->createPageView();
  */
-class GoogleAnalyticsServerSide {
-
+class GoogleAnalyticsServerSide
+{
 
 	/**
 	 * The path the cookie will be available to.
@@ -51,7 +50,7 @@ class GoogleAnalyticsServerSide {
 	 *
 	 * @var string
 	 */
-	const GIF_LOCATION = 'http://www.google-analytics.com/__utm.gif';
+	const GIF_URL = 'http://www.google-analytics.com/__utm.gif';
 
 
 	/**
@@ -59,15 +58,7 @@ class GoogleAnalyticsServerSide {
 	 *
 	 * @var string
 	 */
-	const JS_LOCATION = 'http://www.google-analytics.com/ga.js';
-
-
-	/**
-	 * Location of a list of all known bots to ignore from the
-	 *
-	 * @var string
-	 */
-	const BOT_CSV_LOCATION = 'http://user-agent-string.info/rpc/get_data.php?botIP-All=csv';
+	const JS_URL = 'http://www.google-analytics.com/ga.js';
 
 
 	/**
@@ -194,35 +185,21 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * List of bots in use that the class should ignore
-	 * array format: 'bot name' => 'bot user agent'
+	 * Class to check if the current request is a bot or not
 	 *
-	 * @var array
+	 * @var null|GASS_BotInfo
 	 * @access private
 	 */
-	private $bots = array();
+	private $botInfo;
 
 
 	/**
-	 * Options provided by the user to the class
+	 * Options to pass to GASS_Http
 	 *
-	 * @var array
+	 * @var null|array|GASS_Http_Interface
 	 * @access private
 	 */
-	private $options = array(	'ignoreBots' 		=> false
-							,	'cachePath'			=> null
-							,	'cacheBotsFilename'	=> 'bots.csv'
-							,	'cacheTimeout'		=> 2592000
-							,	'curlOptions'		=> array());
-
-
-	/**
-	 * Last date the bots were cached
-	 *
-	 * @var integer
-	 * @access private
-	 */
-	private $botsCacheDate = null;
+	private $http;
 
 
 	/**
@@ -234,14 +211,9 @@ class GoogleAnalyticsServerSide {
 	 * @access public
 	 */
 	public function __construct(array $options = array()) {
-		if (!extension_loaded('curl')) {
-			throw new RuntimeException('cURL PHP extension is not loaded. This extension is required by GoogleAnalyticsServerSide.');
-		}
 		if (!is_array($options)) {
 			throw new InvalidArgumentException('Argument $options must be an array.');
 		}
-		$this->setOptions($options);
-		$this->setLatestVersionFromJs();
 		if (isset($_SERVER['SERVER_NAME']) && !empty($_SERVER['SERVER_NAME'])) {
 			$this->setServerName($_SERVER['SERVER_NAME']);
 		}
@@ -265,11 +237,13 @@ class GoogleAnalyticsServerSide {
 				$this->setCookie($name, $_COOKIE[$name], false);
 			}
 		}
+		$this->setOptions($options);
+		$this->setLatestVersionFromJs();
 	}
 
 
 	/**
-	 * @return the $version
+	 * @return string
 	 * @access public
 	 */
 	public function getVersion() {
@@ -278,7 +252,7 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @return the $userAgent
+	 * @return string
 	 * @access public
 	 */
 	public function getUserAgent() {
@@ -287,7 +261,7 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @return the $acceptLanguage
+	 * @return string
 	 * @access public
 	 */
 	public function getAcceptLanguage() {
@@ -296,7 +270,7 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @return the $serverName
+	 * @return string
 	 * @access public
 	 */
 	public function getServerName() {
@@ -304,7 +278,7 @@ class GoogleAnalyticsServerSide {
 	}
 
 	/**
-	 * @return the $remoteAddress
+	 * @return string
 	 * @access public
 	 */
 	public function getRemoteAddress() {
@@ -313,7 +287,7 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @return the $account
+	 * @return string
 	 * @access public
 	 */
 	public function getAccount() {
@@ -322,7 +296,7 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @return the $documentReferer
+	 * @return string
 	 * @access public
 	 */
 	public function getDocumentReferer() {
@@ -331,7 +305,7 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @return the $documentPath
+	 * @return string
 	 * @access public
 	 */
 	public function getDocumentPath() {
@@ -340,7 +314,7 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @return the $pageTitle
+	 * @return string
 	 * @access public
 	 */
 	public function getPageTitle() {
@@ -348,7 +322,7 @@ class GoogleAnalyticsServerSide {
 	}
 
 	/**
-	 * @return the $event
+	 * @return string
 	 * @access public
 	 */
 	public function getEvent() {
@@ -356,7 +330,7 @@ class GoogleAnalyticsServerSide {
 	}
 
 	/**
-	 * @return the $charset
+	 * @return string
 	 * @access public
 	 */
 	public function getCharset() {
@@ -365,19 +339,20 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @return the $bots
+	 * @return null|GASS_BotInfo
 	 * @access public
 	 */
-	public function getBots() {
-		return $this->bots;
+	public function getBotInfo() {
+		return $this->botInfo;
 	}
 
 
 	/**
-	 * @return the $options
+	 * @return null|array|GASS_Http_Interface
+	 * @access public
 	 */
-	public function getOptions() {
-		return $this->options;
+	public function getHttp() {
+		return $this->http;
 	}
 
 
@@ -387,32 +362,22 @@ class GoogleAnalyticsServerSide {
 	 * @param string $name
 	 * @throws OutOfRangeException
 	 * @return mixed
+	 * @access public
 	 */
 	public function getOption($name) {
-		if (!array_key_exists($name, $this->options)) {
-			$methodName = 'get'.ucfirst($name);
-			if (method_exists($this, $methodName)) {
-				$reflectionMethod = new ReflectionMethod($this, $methodName);
-				if ($reflectionMethod->isPublic()) {
-					return $this->$methodName();
-				}
+		$methodName = 'get'.ucfirst($name);
+		if (method_exists($this, $methodName)) {
+			$reflectionMethod = new ReflectionMethod($this, $methodName);
+			if ($reflectionMethod->isPublic()) {
+				return $this->$methodName();
 			}
-			throw new OutOfRangeException('Option '.$name.' is not an available option.');
 		}
-		return $this->options[$name];
+		throw new OutOfRangeException($name.' is not an available option.');
 	}
 
 
 	/**
-	 * @return the $botsCacheDate
-	 */
-	private function getBotsCacheDate() {
-		return $this->botsCacheDate;
-	}
-
-
-	/**
-	 * @param field_type $version
+	 * @param string $version
 	 * @return GoogleAnalyticsServerSide
 	 * @throws InvalidArgumentException
 	 * @access public
@@ -433,6 +398,7 @@ class GoogleAnalyticsServerSide {
 	 */
 	public function setUserAgent($userAgent) {
 		$this->userAgent = $userAgent;
+		GASS_Http::getInstance()->setUserAgent($this->userAgent);
 		return $this;
 	}
 
@@ -450,6 +416,7 @@ class GoogleAnalyticsServerSide {
 			list($acceptLanguage, $other) = explode(',', $acceptLanguage, 2);
 		}
 		$this->acceptLanguage = strtolower($acceptLanguage);
+		GASS_Http::getInstance()->setAcceptLanguage($this->acceptLanguage);
 		return $this;
 	}
 
@@ -476,6 +443,7 @@ class GoogleAnalyticsServerSide {
 			throw new InvalidArgumentException('The Remote Address must be an IP address.');
 		}
 		$this->remoteAddress = $remoteAddress;
+		GASS_Http::getInstance()->setRemoteAddress($this->remoteAddress);
 		return $this;
 	}
 
@@ -566,15 +534,52 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * @param array $bots
+	 * Sets confguration options for the BotInfo adapter to use, or the class adapter to use itself
+	 *
+	 * @param array|boolean|GASS_BotInfo_Interface|null $botInfo
+	 * @throws InvalidArgumentException
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setBots(array $bots = array()) {
-		if (!is_array($bots)) {
-			throw new InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
+	public function setBotInfo($botInfo) {
+		if (!is_array($botInfo) && !is_bool($botInfo) && $botInfo !== null
+				&& !$botInfo instanceof GASS_BotInfo_Interface) {
+			throw new InvalidArgumentException($name.' must be an array, boolean, null'
+												.' or a class which implements GASS_BotInfo_Interface.');
+		} elseif ($botInfo !== null && $botInfo !== false) {
+			if ($botInfo instanceof GASS_BotInfo_Interface) {
+				$this->botInfo = new GASS_BotInfo(array(), $botInfo);
+			} elseif (is_array($botInfo)) {
+				$this->botInfo = new GASS_BotInfo($botInfo);
+			} else {
+				$this->botInfo = new GASS_BotInfo();
+			}
+		} else {
+			$this->botInfo = null;
 		}
-		$this->bots = $bots;
+		return $this;
+	}
+
+
+	/**
+	 * @param null|array|GASS_Http_Interface $http
+	 * @throws InvalidArgumentException
+	 * @return GoogleAnalyticsServerSide
+	 */
+	public function setHttp($http) {
+		if ($http !== null && !is_array($http)
+				&& !$http instanceof GASS_Http_Interface) {
+			throw new InvalidArgumentException($name.' must be an array, null'
+												.' or a class which implements GASS_Http_Interface.');
+		}
+		if ($http !== null) {
+			if ($http instanceof GASS_Http_Interface) {
+				GASS_Http::getInstance(array(), $http);
+			} elseif (is_array($http)) {
+				GASS_Http::getInstance($http);
+			}
+		}
+		$this->http = $http;
 		return $this;
 	}
 
@@ -605,69 +610,13 @@ class GoogleAnalyticsServerSide {
 	 */
 	public function setOption($name, $value) {
 		$this->getOption($name);
-		if (!array_key_exists($name, $this->options)) {
-			$methodName = 'set'.ucfirst($name);
-			if (method_exists($this, $methodName)) {
-				$reflectionMethod = new ReflectionMethod($this, $methodName);
-				if ($reflectionMethod->isPublic()) {
-					return $this->$methodName($value);
-				}
+		$methodName = 'set'.ucfirst($name);
+		if (method_exists($this, $methodName)) {
+			$reflectionMethod = new ReflectionMethod($this, $methodName);
+			if ($reflectionMethod->isPublic()) {
+				return $this->$methodName($value);
 			}
 		}
-		switch ($name) {
-			case 'ignoreBots':
-				if (!is_bool($value)) {
-					throw new InvalidArgumentException($name.' must be a boolean.');
-				}
-				break;
-			case 'cachePath':
-				if (null !== $value) {
-					if (!is_string($value)) {
-						throw new InvalidArgumentException($name.' must be a string.');
-					}
-					if (!is_dir($value) || !is_writable($value)) {
-						throw new RuntimeException('Path '.$value.' is not writable, please check permissions on the folder and try again.');
-					}
-				}
-				break;
-			case 'cacheBotsFilename':
-				if (!is_string($value)) {
-					throw new InvalidArgumentException($name.' must be a string.');
-				}
-				break;
-			case 'cacheTimeout':
-				if (!is_numeric($value)) {
-					throw new InvalidArgumentException($name.' must be numeric.');
-				}
-				if ($value < 10) {
-					throw new InvalidArgumentException($name.' has a minimum value of 10.');
-				}
-				break;
-			default:
-		}
-		$this->options[$name] = $value;
-		return $this;
-	}
-
-
-	/**
-	 * Sets the last bot cache date from the last cache file created
-	 *
-	 * @return GoogleAnalyticsServerSide
-	 * @access private
-	 */
-	private function setBotsCacheDate($botsCacheDate = null) {
-		if (0 == func_num_args()) {
-			$fileRelPath = DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename');
-			$botsCacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
-										&& file_exists($csvPathname.$fileRelPath)
-										&& is_readable($csvPathname.$fileRelPath)
-										&& false !== ($fileModifiedTime = filectime($csvPathname.$fileRelPath)))
-									? $fileModifiedTime : null;
-		} elseif (null !== $botsCacheDate && !is_numeric($botsCacheDate)) {
-			throw new Exception('botsCacheDate must be numeric or null.');
-		}
-		$this->botsCacheDate = $botsCacheDate;
 		return $this;
 	}
 
@@ -741,8 +690,8 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * Sets the google analytics cookies with the relevant values. For the relevant sections see:
-	 * http://www.analyticsevangelist.com/google-analytics/how-to-read-google-analytics-cookies/
+	 * Sets the google analytics cookies with the relevant values. For the relevant sections
+	 * see: http://www.analyticsevangelist.com/google-analytics/how-to-read-google-analytics-cookies/
 	 *
 	 * @access public
 	 * @param array $cookies [optional]
@@ -884,7 +833,16 @@ class GoogleAnalyticsServerSide {
 			throw new LengthException('Cookie cannot have an empty value');
 		}
 		throw new OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
-		return $this;
+	}
+
+
+	/**
+	 * Disables whether or not the cookie headers are sent when setCookies is called
+	 *
+	 * @access public
+	 */
+	public function disableCookieHeaders() {
+		$this->sendCookieHeaders = false;
 	}
 
 
@@ -904,205 +862,13 @@ class GoogleAnalyticsServerSide {
 
 
 	/**
-	 * Disables whether or not the cookie headers are sent when setCookies is called
-	 *
-	 * @access public
-	 */
-	public function disableCookieHeaders() {
-		$this->sendCookieHeaders = false;
-	}
-
-
-	/**
-	 * Retreives the contents from the external csv source
-	 * and then parses it into the class level variable bots
-	 *
-	 * @return GoogleAnalyticsServerSide
-	 * @access private
-	 */
-	private function setBotsFromCsv() {
-		if (null !== ($csvPathname = $this->getOption('cachePath'))) {
-			$this->setBotsCacheDate();
-			if (null !== ($lastCacheDate = $this->getBotsCacheDate())) {
-				$csvPath = $csvPathname.DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename');
-				if ($lastCacheDate < (time() - $this->getOption('cacheTimeout')) || !is_readable($csvPath)
-						|| false === ($botsCsv = file_get_contents($csvPath)) || '' == trim($botsCsv)) {
-					unset($botsCsv);
-					if (false === @unlink($csvPath)) {
-						throw new RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
-					}
-				}
-			}
-		}
-		if (!isset($botsCsv)) {
-			$this->setBotsCacheDate(null);
-			$botsCsv = $this->retreiveBotsCsv();
-		}
-		$this->setBots($this->parseBotsCsv($botsCsv));
-		return $this;
-	}
-
-
-	/**
-	 * Retreives the bots csv from the default source
-	 *
-	 * @return string
-	 * @access private
-	 */
-	private function retreiveBotsCsv() {
-		$botsCsv = trim($this->getSource(self::BOT_CSV_LOCATION));
-		if (empty($botsCsv)) {
-			throw new RuntimeException(	 'Bots CSV retrieved from external source seems to be empty. '
-										.'Please either set ignoreBots to false or ensure the bots csv file can be retreived.');
-		}
-		return $botsCsv;
-	}
-
-
-	/**
-	 * Parses the contents of the csv from the default source and
-	 * returns an array of bots in the default format
-	 *
-	 * @param string $fileContexts
-	 * @return array
-	 */
-	private function parseBotsCsv($fileContexts) {
-		$botList = explode("\n", $fileContexts);
-		$distinctBots = array();
-		foreach ($botList as $line) {
-			if (!empty($line)) {
-				$csvLine = str_getcsv($line);
-				if (!isset($distinctBots[$csvLine[0]])) {
-					$distinctBots[$csvLine[0]] = (isset($csvLine[6])) ? $csvLine[6] : $csvLine[1];
-				}
-			}
-		}
-		return $distinctBots;
-	}
-
-
-	/**
-	 * Saves the current list of bots to the cache directory for use next time the script is run
-	 *
-	 * @return GoogleAnalyticsServerSide
-	 * @access private
-	 */
-	private function saveBotsToCsv() {
-		if (null === $this->getBotsCacheDate()
-				&& null !== ($csvPath = $this->getOption('cachePath')) && is_writable($csvPath)) {
-			$csvLines = array();
-			foreach ($this->getBots() as $name => $value) {
-				$csvLines[] = '"'.addslashes($name).'","'.addslashes($value).'"';
-			}
-			$csvString = implode("\n", $csvLines);
-			if (false === file_put_contents($csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename'), $csvString, LOCK_EX)) {
-				throw new RuntimeException('Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheBotsFilename'));
-			}
-		}
-		return $this;
-	}
-
-
-	/**
-	 * Returns whether or not the current user is a bot
-	 *
-	 * @return boolean
-	 * @access public
-	 */
-	public function getIsBot() {
-		$userAgent = $this->getUserAgent();
-		$bots = $this->getBots();
-		return (!empty($bots) && (in_array($userAgent, $bots) || array_key_exists($userAgent, $bots)));
-	}
-
-
-	/**
-	 * Make a tracking request to Google Analytics from this server.
-	 * Copies the headers from the original request to the new one.
-	 *
-	 * @param string $url
-	 * @return mixed
-	 * @throws UnexpectedValueException
-	 * @throws RuntimeException
-	 * @access public
-	 */
-	private function getSource($url) {
-
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_USERAGENT, $this->getUserAgent());
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(	'Accepts-Language: '.$this->getAcceptLanguage()
-												,	'X-Forwarded-For: '.$this->getRemoteAddress()));
-
-		$extraCurlOptions = $this->getOption('curlOptions');
-		if (!empty($extraCurlOptions) && false === curl_setopt_array($ch, $extraCurlOptions)) {
-			throw new UnexpectedValueException('One of the extra curl options specified is invalid.');
-		}
-
-		if (false === ($response = curl_exec($ch))) {
-			throw new RuntimeException('Source could not be retreived');
-		}
-
-		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		switch($statusCode) {
-			case '400':
-			case '411':
-			case '412':
-			case '413':
-			case '414':
-			case '415':
-			case '416':
-			case '417':
-			case '422':
-			case '423':
-			case '424':
-			case '425':
-			case '426':
-				$message = 'Bad Request';
-				break;
-			case '401':
-			case '403':
-			case '407':
-				$message = 'Forbidden';
-				break;
-			case '402':
-				$message = 'Payment Required';
-				break;
-			case '404':
-			case '410':
-				$message = 'Not Found';
-				break;
-			case '408':
-				$message = 'Timeout';
-				break;
-			case '444':
-				$message = 'No Response';
-				break;
-			case '418':
-				$message = 'The server is a teapot, this code doesn\'t like tea!';
-				break;
-			default:
-		}
-		if (isset($message)) {
-			throw new RuntimeException($message, $statusCode);
-		}
-		curl_close($ch);
-
-		return $response;
-	}
-
-
-	/**
 	 * Retreives the latest version of Google Analytics from the ga.js file
 	 *
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setLatestVersionFromJs() {
-		$currentJs = $this->getSource(self::JS_LOCATION);
+		$currentJs = GASS_Http::getInstance()->request(self::JS_URL)->getResponse();
 		$version = preg_replace('/^[\s\S]+\=function\(\)\{return[\'"]((\d+\.){2}\d+)[\'"][\s\S]+$/i', '$1', $currentJs);
 		if (preg_match('/^(\d+\.){2}\d+$/', $version)) {
 			$this->setVersion($version);
@@ -1162,18 +928,9 @@ class GoogleAnalyticsServerSide {
 	 */
 	private function track(array $extraParams = array()) {
 
-		$options = $this->getOptions();
-		if (true === $options['ignoreBots'] && empty($options['cachePath'])) {
-			throw new DomainException('You must set a cachePath if you wish to use ignoreBots.');
-		}
-
-		if (true === $options['ignoreBots']) {
-			if (empty($this->bots)) {
-				$this->setBotsFromCsv();
-			}
-			if ($this->getIsBot()) {
-				return false;
-			}
+		if ($this->botInfo !== null
+				&& $this->botInfo->getIsBot()) {
+			return false;
 		}
 
 		$domainName = $this->getServerName();
@@ -1185,11 +942,6 @@ class GoogleAnalyticsServerSide {
 		$documentReferer = (empty($documentReferer) && $documentReferer !== "0")
 							? '-'
 							: urldecode($documentReferer);
-
-		$userAgent = $this->getUserAgent();
-		if (empty($userAgent)) {
-			$userAgent = '';
-		}
 
 		$this->setCookies();
 
@@ -1205,33 +957,9 @@ class GoogleAnalyticsServerSide {
 							,	'utmip'	=> $this->getIPToReport()
 							,	'utmu'	=> 'q~');
 		$queryParams = array_merge($queryParams, $extraParams);
-		$utmUrl = self::GIF_LOCATION.'?'.http_build_query($queryParams, null, '&');
+		$utmUrl = self::GIF_URL.'?'.http_build_query($queryParams, null, '&');
 
-		$this->getSource($utmUrl);
+		GASS_Http::getInstance()->request($utmUrl)->getResponse();
 		return $this;
-	}
-
-
-	/**
-	 * Class Level Destructor
-	 *
-	 * @access public
-	 */
-	public function __destruct() {
-		if (null !== $this->getOptions('cachePath')) {
-			$this->saveBotsToCsv();
-		}
-	}
-}
-
-if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50300) {
-	function str_getcsv($input, $delimiter = ',', $enclosure = '"', $escape = '\\') {
-		$input = trim($input, $enclosure." \n\t\r\0");
-		$csvElements = preg_split('/['.addslashes($enclosure).']\s*?'.addslashes($delimiter).'\s*?['.addslashes($enclosure).']/', $input);
-		$returnArray = array();
-		foreach ($csvElements as $element) {
-			$returnArray[] = trim($element);
-		}
-		return $returnArray;
 	}
 }
