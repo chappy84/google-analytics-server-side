@@ -514,6 +514,9 @@ class GoogleAnalyticsServerSide
 		if (($category === null && $action !== null) || ($category !== null && $action === null)) {
 			throw new InvalidArgumentException('Category and Action must be set for an Event');
 		}
+		if ($value !== null && !is_int($value)) {
+			throw new InvalidArgumentException('Value must be an integer.');
+		}
 		$this->event = array(	'category'	=> $category
 							,	'action'	=> $action
 							,	'label'		=> $label
