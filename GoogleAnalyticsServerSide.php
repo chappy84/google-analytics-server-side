@@ -351,7 +351,8 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * @return the $customVariables
+	 * @return string
+	 * @access public
 	 */
 	public function getCustomVariables() {
 		return $this->customVariables;
