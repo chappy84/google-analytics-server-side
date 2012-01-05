@@ -73,10 +73,10 @@ All methods but get methods allow chaining for ease of use.
 
 ### Event Tracking
 
-	$gass->createEvent('Category', 'Action', 'Label [optional]', 'Value [optional - integer]');
+	$gass->createEvent('Category', 'Action', 'Label [optional]', 'Value [optional - integer]', nonInteraction [optional - boolean]);
 
-N.B. createEvent() does not require createPageView() to be called first, however your pages/visit
-metric may become < 1 if you do not call createPageView() first.
+N.B. createEvent() does not require createPageView() to be called first.  
+However if you do not call createPageView first then set nonInteraction to true otherwise your pages/visit metric may become < 1.
 
 BotInfo
 -------

@@ -155,6 +155,24 @@ class GoogleAnalyticsServerSide
 
 
 	/**
+	 * Whether the event is a non-interaction or not
+	 *
+	 * @var boolean
+	 * @access private
+	 */
+	private $nonInteraction = false;
+
+
+	/**
+	 * Data for the custom variables
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $customVariables = array();
+
+
+	/**
 	 * CharacterSet the displayed page is encoded in.
 	 *
 	 * @var string
@@ -277,6 +295,7 @@ class GoogleAnalyticsServerSide
 		return $this->serverName;
 	}
 
+
 	/**
 	 * @return string
 	 * @access public
@@ -321,6 +340,7 @@ class GoogleAnalyticsServerSide
 		return $this->pageTitle;
 	}
 
+
 	/**
 	 * @return string
 	 * @access public
@@ -328,6 +348,15 @@ class GoogleAnalyticsServerSide
 	public function getEvent() {
 		return $this->event;
 	}
+
+
+	/**
+	 * @return the $customVariables
+	 */
+	public function getCustomVariables() {
+		return $this->customVariables;
+	}
+
 
 	/**
 	 * @return string
@@ -511,22 +540,59 @@ class GoogleAnalyticsServerSide
 	 * @param string $action
 	 * @param string $label [optional]
 	 * @param integer $value [optional]
+	 * @param boolean $nonInteraction [optional]
 	 * @throws InvalidArgumentException
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setEvent($category, $action, $label = null, $value = null) {
+	public function setEvent($category, $action, $label = null, $value = null, $nonInteraction = false) {
 		if (($category === null && $action !== null) || ($category !== null && $action === null)) {
 			throw new InvalidArgumentException('Category and Action must be set for an Event');
 		}
 		if ($value !== null && !is_int($value)) {
 			throw new InvalidArgumentException('Value must be an integer.');
 		}
+		if (!is_bool($nonInteraction)) {
+			throw new InvalidArgumentException('NonInteraction must be a boolean.');
+		}
 		$this->event = array(	'category'	=> $category
 							,	'action'	=> $action
 							,	'label'		=> $label
 							,	'value'		=> $value);
+		$this->nonInteraction = $nonInteraction;
 		return $this;
+	}
+
+
+	/**
+	 * Adds a custom variable to the passed data
+	 *
+	 * @see http://code.google.com/apis/analytics/docs/tracking/gaTrackingCustomVariables.html
+	 *
+	 * @param string $name
+	 * @param string $value
+	 * @param integer $scope [optional]
+	 * @param integer $index [optional]
+	 * @throws OutOfBoundsException
+	 * @throws InvalidArgumentException
+	 * @access public
+	 */
+	public function setCustomVariable($name, $value, $scope = 3, $index = null) {
+		if ($index === null) {
+			$index = count($this->customVariables) + 1;
+			if ($index > 5) {
+				throw new OutOfBoundsException('You cannot add more than 5 custom variables.');
+			}
+		} elseif (!is_int($index) || $index < 1 || $index > 5) {
+			throw new InvalidArgumentException('The index must be an integer between 1 and 5.');
+		}
+		if (!is_int($scope) || $scope < 1 || $scope > 3) {
+			throw new InvalidArgumentException('The Scope must be a value between 1 and 3');
+		}
+		$this->customVariables['index'.$index] = array(	'index'	=> (int)$index
+													,	'name'	=> (string)$name
+													,	'value'	=> (string)$value
+													,	'scope' => (int)$scope);
 	}
 
 
@@ -637,8 +703,11 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function getEventString() {
+		$event = $this->getEvent();
+		$value = $event['value'];
+		unset($event['value']);
 		$eventValues = array();
-		foreach ($this->getEvent() as $key => $value) {
+		foreach ($event as $key => $value) {
 			if (!empty($value)) {
 				$eventValues[] = $value;
 			}
@@ -646,7 +715,30 @@ class GoogleAnalyticsServerSide
 		if (empty($eventValues)) {
 			throw new DomainException('Event Cannot be Empty! setEvent must be called or parameters must be passed to createEvent.');
 		}
-		return '5('.implode($eventValues, '*').')';
+		return '5('.implode($eventValues, '*').')'.(($value === null) ? '('.$value.')' : '');
+	}
+
+
+	/**
+	 * Returns the saved custom variables as a string for the URL parameters
+	 *
+	 * @return string|null
+	 * @access public
+	 */
+	public function getCustomVariableString() {
+		$customVars = $this->getCustomVariables();
+		if (!empty($customVars)) {
+			$names = array();
+			$values = array();
+			$scopes = array();
+			foreach ($customVars as $key => $value) {
+				$names[] = $value['name'];
+				$values[] = $value['value'];
+				$scopes[] = $value['scope'];
+			}
+			return '8('.implode($names, '*').')9('.implode($values, '*').')11('.implode($scopes, '*').')';
+		}
+		return null;
 	}
 
 
@@ -913,12 +1005,15 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function createEvent($category = null, $action = null, $label = null, $value = null) {
+	public function createEvent($category = null, $action = null, $label = null, $value = null, $nonInteraction = false) {
 		if (0 < func_num_args()) {
-			$this->setEvent($category, $action, $label, $value);
+			$this->setEvent($category, $action, $label, $value, $nonInteraction);
 		}
 		$queryParams = array(	'utmt'	=> 'event'
 							,	'utme'	=> $this->getEventString());
+		if ($this->nonInteraction === true) {
+			$queryParams['utmni'] = '1';
+		}
 		return $this->track($queryParams);
 	}
 
@@ -965,6 +1060,13 @@ class GoogleAnalyticsServerSide
 							,	'utmip'	=> $this->getIPToReport()
 							,	'utmu'	=> 'q~');
 		$queryParams = array_merge($queryParams, $extraParams);
+
+		if (null !== ($customVarString = $this->getCustomVariableString())) {
+			$queryParams['utme'] = ((isset($queryParams['utme']) && !empty($queryParams['utme']))
+									? $queryParams['utme']
+									: '') . $customVarString;
+		}
+
 		$utmUrl = self::GIF_URL.'?'.http_build_query($queryParams, null, '&');
 
 		GASS_Http::getInstance()->request($utmUrl)->getResponse();

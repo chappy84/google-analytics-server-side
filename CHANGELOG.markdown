@@ -1,6 +1,23 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.3 Beta
+------------------
+
+- Add in setting of Custom Variables
+- Add extra nonInteraction parameter to setEvent/createEvent
+- Correct issue with getEventString where value set in wrong place
+
+Version 0.7.2 Beta
+------------------
+
+- Check event value is integer
+
+Version 0.7.1 Beta
+------------------
+
+- PHPDoc and Readme updates
+
 Version 0.7.0 Beta
 ------------------
 
