@@ -147,7 +147,7 @@ class GASS_BotInfo_UserAgentStringInfo
 		$botsCsv = trim($csvSource);
 		if (empty($botsCsv)) {
 			throw new RuntimeException(	 'Bots CSV retrieved from external source seems to be empty. '
-										.'Please either set ignoreBots to false or ensure the bots csv file can be retreived.');
+										.'Please either set botInfo to null or ensure the bots csv file can be retreived.');
 		}
 		return $botsCsv;
 	}

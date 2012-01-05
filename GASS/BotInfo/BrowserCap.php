@@ -107,7 +107,12 @@ class GASS_BotInfo_BrowserCap
 			throw new RuntimeException(__CLASS__.' cannot be initialised before a user-agent has been set in the GASS_Http adapter.'
 										.' The remote server rejects requests without a user-agent.');
 		}
-		$browscapContents = GASS_Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();
+		$browscapSource = GASS_Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();
+		$browscapContents = trim($browscapSource);
+		if (empty($browscapContents)) {
+			throw new RuntimeException(	 'BrowserCap ini file retrieved from external source seems to be empty. '
+										.'Please either set botInfo to null or ensure the php_browsercap.ini file can be retreived.');
+		}
 		if (false == file_put_contents($browsCapLocation, $browscapContents)) {
 			throw new RuntimeException('Could not write to "'.$browsCapLocation.'", please check the permissions and try again.');
 		}
