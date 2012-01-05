@@ -75,7 +75,8 @@ All methods but get methods allow chaining for ease of use.
 
 	$gass->createEvent('Category', 'Action', 'Label (optional)', 'Value (optional)');
 
-N.B. createEvent() does not require createPageView() to be called first.
+N.B. createEvent() does not require createPageView() to be called first, however your pages/visit
+metric may become < 1 if you do not call createPageView() first.
 
 BotInfo
 -------
