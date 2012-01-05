@@ -1,15 +1,15 @@
 Google Analytics Server Side
 ============================
 
-Google Analytics Server Side is an implementation of [Google Analytics ECMAScript][1] code in [PHP][2]
+Google Analytics Server Side is an implementation of [Google Analytics ECMAScript][1] code in [PHP][2]  
 It implements parts of the interface that would be available without ECMAScript in a Browser
 
-CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`
-HOME: <http://github.com/chappy84/google-analytics-server-side>
-BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>
+CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
+HOME: <http://github.com/chappy84/google-analytics-server-side>  
+BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>  
 
-Google Analytics was developed by [Google][3].
-This PHP adaptation is maintained by [Tom Chapman][4].
+Google Analytics was developed by [Google][3].  
+This PHP adaptation is maintained by [Tom Chapman][4].  
 
 [1]: http://code.google.com/apis/analytics/docs/tracking/home.html
 [2]: http://www.php.net/
@@ -73,7 +73,7 @@ All methods but get methods allow chaining for ease of use.
 
 ### Event Tracking
 
-	$gass->createEvent('Category', 'Action', 'Label (optional)', 'Value [optional - integer]');
+	$gass->createEvent('Category', 'Action', 'Label [optional]', 'Value [optional - integer]');
 
 N.B. createEvent() does not require createPageView() to be called first, however your pages/visit
 metric may become < 1 if you do not call createPageView() first.
@@ -81,7 +81,7 @@ metric may become < 1 if you do not call createPageView() first.
 BotInfo
 -------
 
-You must enable botInfo for it to ignore any search/trawler bots.
+You must enable botInfo for it to ignore any search/trawler bots.  
 To do this you need to pass one of true, and associative array or an instance of the adapter you want to use
 into the class.  The code will default to the BrowserCap adapter. Setting this to true will use the default.
 If you pass an associative array, this will be passed to BotInfo and through to the Adapter. When providing
@@ -93,7 +93,7 @@ Adapter. You can also pass an instance of a GASS_BotInfo Adapter which will be u
 There are two adapters available in the GASS framework
 
 #### BrowserCap
-To use this adapter you must have the php ini setting [browsercap][5] set.
+To use this adapter you must have the php ini setting [browsercap][5] set.  
 The code will automatically update/download the file in/to the location provided.
 
 There is one optional option as part of the array configuration parameter.  This is 'cacheLifetime'.
@@ -119,7 +119,7 @@ or
 
 #### UserAgentStringInfo
 This was the previous default for Google Analytics Server Side which downloads a csv list of search engine
-crawlers from [user-agent-string.info][6].
+crawlers from [user-agent-string.info][6].  
 There are three options as part of the array configuration parameter:
 
 - cachePath: where to save the list of bots downloaded from user-agent-string.info (required)
@@ -134,7 +134,7 @@ This can be implemented in the same way as the BrowserCap adapter.
 Http
 ----
 
-This is a singleton class which provides http functionality across all sections of the GASS framework.
+This is a singleton class which provides http functionality across all sections of the GASS framework.  
 This will default to using the Stream adapter and requires no options. All options should be passed as a
 configuration option to GoogleAnalyticsServerSide either via the configuration parameter int he 'http' element
 or via the setHttp parameter. This can either be an associative array or an instance of the required adapter
@@ -163,7 +163,7 @@ any headers or proxy information etc. into this to use in the connection when ma
 
 #### Curl
 This utilises the php extension cURL. cURL is recommended, however as it's not always available the code defaults
-to stream to allow all servers make http requests in the correct way.
+to stream to allow all servers make http requests in the correct way.  
 Any options provided to this class must be passed using the [curl constants] as identifiers (associative array
 keys or option names).
 
@@ -173,7 +173,7 @@ keys or option names).
 COOKIES
 -------
 
-Cookies are automatically set when either createPageView or createEvent are called.
+Cookies are automatically set when either createPageView or createEvent are called.  
 They are however only sent as headers to the browser once, thus if you call either function more than
 once, or call both functions, then they will only be included in the headers when the first call is made.
 
@@ -207,7 +207,7 @@ modify it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 3 of the License, or any later
 version.
 
-The GNU General Public License can be found at
+The GNU General Public License can be found at  
 http://www.gnu.org/copyleft/gpl.html.
 
 N/B: This code is nether written or endorsed by Google or any of it's
