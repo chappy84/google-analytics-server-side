@@ -505,9 +505,14 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * @param array $event
-	 * @return GoogleAnalyticsServerSide
+	 * Set the Event to be sent.
+	 *
+	 * @param string $category
+	 * @param string $action
+	 * @param string $label [optional]
+	 * @param integer $value [optional]
 	 * @throws InvalidArgumentException
+	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setEvent($category, $action, $label = null, $value = null) {
