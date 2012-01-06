@@ -133,7 +133,7 @@ class GASS_BotInfo_BrowserCap
 		$userAgent = $this->getUserAgent();
 		$browserDetails = get_browser($userAgent);
 		return ((isset($browserDetails->crawler) && $browserDetails->crawler == 1)
-					|| !isset($browserDetails->javascript) || $browser->javascript != 1
-					|| !isset($browserDetails->cookies) || $browser->cookies != 1);
+					|| !isset($browserDetails->javascript) || $browserDetails->javascript != 1
+					|| !isset($browserDetails->cookies) || $browserDetails->cookies != 1);
 	}
 }

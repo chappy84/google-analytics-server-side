@@ -1,11 +1,17 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.5 Beta
+------------------
+
+- Fix wrong name variable used in BrowserCap
+- Ensure UserAgent has been sent to BotInfo
+- Ensure AcceptedLanguage/RemoteAddress/UserAgent has been sent to Http
+
 Version 0.7.4 Beta
 ------------------
 
 - Fix autoloading issue in PHP 5.2 where GASS_Adapter_Base::__construct didn't match GASS_Adapter_Interface::__construct
-
 
 Version 0.7.3 Beta
 ------------------

@@ -420,6 +420,9 @@ class GoogleAnalyticsServerSide
 	public function setUserAgent($userAgent) {
 		$this->userAgent = $userAgent;
 		GASS_Http::getInstance()->setUserAgent($this->userAgent);
+		if ($this->botInfo instanceof GASS_BotInfo_Interface) {
+			$this->botInfo->setUserAgent($this->getUserAgent());
+		}
 		return $this;
 	}
 
@@ -620,6 +623,7 @@ class GoogleAnalyticsServerSide
 			} else {
 				$this->botInfo = new GASS_BotInfo();
 			}
+			$this->botInfo->setUserAgent($this->getUserAgent());
 		} else {
 			$this->botInfo = null;
 		}
@@ -644,6 +648,9 @@ class GoogleAnalyticsServerSide
 			} elseif (is_array($http)) {
 				GASS_Http::getInstance($http);
 			}
+			GASS_Http::getInstance()->setAcceptLanguage($this->getAcceptLanguage())
+									->setRemoteAddress($this->getRemoteAddress())
+									->setUserAgent($this->getUserAgent());
 		}
 		$this->http = $http;
 		return $this;
