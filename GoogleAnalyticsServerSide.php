@@ -155,15 +155,6 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * Whether the event is a non-interaction or not
-	 *
-	 * @var boolean
-	 * @access private
-	 */
-	private $nonInteraction = false;
-
-
-	/**
 	 * Data for the custom variables
 	 *
 	 * @var array
@@ -556,11 +547,11 @@ class GoogleAnalyticsServerSide
 		if (!is_bool($nonInteraction)) {
 			throw new InvalidArgumentException('NonInteraction must be a boolean.');
 		}
-		$this->event = array(	'category'	=> $category
-							,	'action'	=> $action
-							,	'label'		=> $label
-							,	'value'		=> $value);
-		$this->nonInteraction = $nonInteraction;
+		$this->event = array(	'category'		=> $category
+							,	'action'		=> $action
+							,	'label'			=> $label
+							,	'value'			=> $value
+							,	'nonInteraction'=> $nonInteraction);
 		return $this;
 	}
 
@@ -706,7 +697,7 @@ class GoogleAnalyticsServerSide
 	public function getEventString() {
 		$event = $this->getEvent();
 		$value = $event['value'];
-		unset($event['value']);
+		unset($event['value'], $event['nonInteraction']);
 		$eventValues = array();
 		foreach ($event as $key => $value) {
 			if (!empty($value)) {
@@ -1012,7 +1003,8 @@ class GoogleAnalyticsServerSide
 		}
 		$queryParams = array(	'utmt'	=> 'event'
 							,	'utme'	=> $this->getEventString());
-		if ($this->nonInteraction === true) {
+		$event = $this->getEvent();
+		if ($event['nonInteraction'] === true) {
 			$queryParams['utmni'] = '1';
 		}
 		return $this->track($queryParams);
