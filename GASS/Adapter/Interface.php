@@ -38,7 +38,7 @@ interface GASS_Adapter_Interface
 	 *
 	 * @param array $cacheOptions
 	 */
-	public function __construct(array $options);
+	public function __construct(array $options = array());
 
 
 	/**
