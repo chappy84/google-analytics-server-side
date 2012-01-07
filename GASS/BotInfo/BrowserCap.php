@@ -44,12 +44,20 @@ class GASS_BotInfo_BrowserCap
 
 
 	/**
-	 * Options to use with the class
+	 * URL location specifying the latest update date of the file
 	 *
-	 * @var array
-	 * @access protected
+	 * @var string
 	 */
-	protected $options = array('cacheLifetime' => 2592000);
+	const VERSION_DATE_URL = 'http://browsers.garykeith.com/version-date';
+
+
+	/**
+	 * The last time the browsercap file was updated
+	 *
+	 * @var integer
+	 * @access private
+	 */
+	private $latestVersionDate;
 
 
 	/**
@@ -62,6 +70,35 @@ class GASS_BotInfo_BrowserCap
 	public function __construct(array $options = array()) {
 		parent::__construct($options);
 		$this->checkIniFile();
+	}
+
+
+	/**
+	 * Returns the last date the ini file was updated (on remote webiste)
+	 *
+	 * @return integer
+	 * @access public
+	 */
+	public function getLatestVersionDate() {
+		if ($this->latestVersionDate === null) {
+			$this->setLatestVersionDate();
+		}
+		return $this->latestVersionDate;
+	}
+
+
+	/**
+	 * Gets the latest version date from the web
+	 *
+	 * @access private
+	 */
+	private function setLatestVersionDate() {
+		$latestDateString = trim(GASS_Http::getInstance()
+												->request(self::VERSION_DATE_URL)
+												->getResponse());
+		if (false !== ($latestVersionDate = strtotime($latestDateString))) {
+			$this->latestVersionDate = $latestVersionDate;
+		}
 	}
 
 
@@ -82,8 +119,8 @@ class GASS_BotInfo_BrowserCap
 			throw new RuntimeException('The browscap php ini setting points to a un-readable file, please ensure the permissions are correct and try again.');
 		}
 		if (false === ($fileSaveTime = filemtime($browsCapLocation))
-				|| null === ($cacheLifetime = $this->getOption('cacheLifetime'))
-				|| $fileSaveTime < (time() - $cacheLifetime)) {
+				|| (null !== ($latestVersionDate = $this->getLatestVersionDate())
+					&& $fileSaveTime < $latestVersionDate)) {
 			$this->updateIniFile();
 		}
 	}

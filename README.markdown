@@ -94,11 +94,8 @@ There are two adapters available in the GASS framework
 
 #### BrowserCap
 To use this adapter you must have the php ini setting [browsercap][5] set.  
-The code will automatically update/download the file in/to the location provided.
-
-There is one optional option as part of the array configuration parameter.  This is 'cacheLifetime'.
-cacheLifetime is the number of seconds before the ini file set in browscap is regarded as
-expired and the code will try to download a replacement file. This defaults to 2592000 (30 days).
+When an update is available on the server the code will automatically download 
+the file into the location provided.
 
 e.g.
 
@@ -107,8 +104,7 @@ e.g.
 
 or
 
-	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' 		=> 'BrowserCap'
-																	,	'cacheLifetime'	=> 86400)
+	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array('adapter' => 'BrowserCap')
 											,	'account'	=> 'UA-XXXXXXX-X'));
 
 or
