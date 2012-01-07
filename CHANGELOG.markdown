@@ -75,7 +75,7 @@ Version 0.6.0 Beta
 - Auto-setting of accepted language from headers
 - Ability to pass options to curl
 - Remove auto-setting of charset from headers, default to UTF-8 (response should define this, not request headers)
-- Try manually reporting IP address to GA as done in the GA mobile code
+- Try manually reporting IP address to GA as done in the GA mobile code ( http://www.google.com/analytics/googleanalyticsformobile.zip )
 - str_getcsv is not available in PHP before PHP 5.3 so added in a crude implementation so it works in lower than 5.3
 
 Version 0.5.5 Beta
