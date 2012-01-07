@@ -93,9 +93,19 @@ Adapter. You can also pass an instance of a GASS_BotInfo Adapter which will be u
 There are two adapters available in the GASS framework
 
 #### BrowserCap
-To use this adapter you must have the php ini setting [browsercap][5] set.  
-When an update is available on the server the code will automatically download 
+There is one optional option as part of the array configuration parameter. 
+
+- browscap: This is the same as the php ini setting [browscap][5], a file-system location where the 
+[php_browscap.ini file][6] is located / can be downloaded to
+
+When an update for the browscap ini file is available [on the server][6] the code will automatically download 
 the file into the location provided.
+
+N/B: You MUST either provide the browscap setting or have it set in php.ini, otherwise this adapter will not work.
+
+N/B2: Due to an issue with the browscap ini file only being loaded when PHP starts up (which is with the web-server 
+apache, PHP-FPM etc.) the code deals with the ini file itself, rather than using the built in get_browser function. 
+This ensures the auto-update functionality will work without the need to restart the web-server.
 
 e.g.
 
@@ -104,7 +114,8 @@ e.g.
 
 or
 
-	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array('adapter' => 'BrowserCap')
+	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' => 'BrowserCap'
+																	,	'browscap'=> '/tmp/php_browscap.ini')
 											,	'account'	=> 'UA-XXXXXXX-X'));
 
 or
@@ -113,13 +124,9 @@ or
 	$browserCapAdapter = new GASS_BotInfo_BrowserCap;
 	$gass->setBotInfo($browserCapAdapter);
 
-N/B: the browsercap ini file is only loaded when php starts, with web-servers (apache, php-fpm etc.) 
-this is when the web-server itself is started, thus updates to the file will require a server restart
-to use the latest version. A php E_USER_NOTICE error is logged to the php error log when this is required. 
-
 #### UserAgentStringInfo
 This was the previous default for Google Analytics Server Side which downloads a csv list of search engine
-crawlers from [user-agent-string.info][6].  
+crawlers from [user-agent-string.info][7].  
 There are three options as part of the array configuration parameter:
 
 - cachePath: where to save the list of bots downloaded from user-agent-string.info (required)
@@ -129,7 +136,8 @@ There are three options as part of the array configuration parameter:
 This can be implemented in the same way as the BrowserCap adapter.
 
 [5]: http://www.php.net/manual/en/misc.configuration.php#ini.browscap
-[6]: http://user-agent-string.info/download
+[6]: http://browsers.garykeith.com/downloads.asp
+[7]: http://user-agent-string.info/download
 
 Http
 ----
@@ -156,7 +164,7 @@ or
 There are two Adapters available to GASS_Http, these are:
 
 #### Stream
-Stream creates a stream context and utilises this stream with file_get_contents. See [php's example][7].
+Stream creates a stream context and utilises this stream with file_get_contents. See [php's example][8].
 Any options provided to this class will go into the 'http' array for the stream context, thus you may pass
 any headers or proxy information etc. into this to use in the connection when made.
 
@@ -164,11 +172,11 @@ any headers or proxy information etc. into this to use in the connection when ma
 #### Curl
 This utilises the php extension cURL. cURL is recommended, however as it's not always available the code defaults
 to stream to allow all servers make http requests in the correct way.  
-Any options provided to this class must be passed using the [curl constants] as identifiers (associative array
+Any options provided to this class must be passed using the [curl constants][9] as identifiers (associative array
 keys or option names).
 
-[7]: http://www.php.net/file_get_contents#example-2118
-[8]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
+[8]: http://www.php.net/file_get_contents#example-2118
+[9]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
 
 COOKIES
 -------

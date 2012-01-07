@@ -61,6 +61,24 @@ class GASS_BotInfo_BrowserCap
 
 
 	/**
+	 * The parsed contents of the browscap ini file
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $browsers = array();
+
+
+	/**
+	 * Class options
+	 *
+	 * @var array
+	 * @access private
+	 */
+	protected $options = array(	'browscap'	=> null);
+
+
+	/**
 	 * {@inheritdoc}
 	 *
 	 * @param array $options
@@ -69,6 +87,11 @@ class GASS_BotInfo_BrowserCap
 	 */
 	public function __construct(array $options = array()) {
 		parent::__construct($options);
+		if (null === $this->getOption('browscap')
+				&& false !== ($browsCapLocation = ini_get('browscap'))
+				&& '' != trim($browsCapLocation)) {
+			$this->setOption('browscap', trim($browsCapLocation));
+		}
 		$this->checkIniFile();
 	}
 
@@ -109,20 +132,21 @@ class GASS_BotInfo_BrowserCap
 	 * @access private
 	 */
 	private function checkIniFile() {
-		if (false === ($browsCapLocation = ini_get('browscap')) || '' == trim($browsCapLocation)) {
-			throw new RuntimeException('The browscap php ini setting has not been specified, please set this and try again.');
+		if (null === ($browsCapLocation = $this->getOption('browscap'))) {
+			throw new RuntimeException('The browscap option has not been specified, please set this and try again.');
 		}
 		if (!file_exists($browsCapLocation)) {
 			$this->updateIniFile();
 		}
 		if (!is_readable($browsCapLocation)) {
-			throw new RuntimeException('The browscap php ini setting points to a un-readable file, please ensure the permissions are correct and try again.');
+			throw new RuntimeException('The browscap option points to a un-readable file, please ensure the permissions are correct and try again.');
 		}
 		if (false === ($fileSaveTime = filemtime($browsCapLocation))
 				|| (null !== ($latestVersionDate = $this->getLatestVersionDate())
 					&& $fileSaveTime < $latestVersionDate)) {
 			$this->updateIniFile();
 		}
+		$this->loadIniFile();
 	}
 
 
@@ -133,7 +157,7 @@ class GASS_BotInfo_BrowserCap
 	 * @access private
 	 */
 	private function updateIniFile() {
-		$browsCapLocation = ini_get('browscap');
+		$browsCapLocation = $this->getOption('browscap');
 		$lastDirSep = strrpos($browsCapLocation, DIRECTORY_SEPARATOR);
 		$directory = substr($browsCapLocation, 0, $lastDirSep);
 		if ((!file_exists($directory) && !mkdir($directory, 0777, true)) || !is_writable($directory)) {
@@ -142,7 +166,7 @@ class GASS_BotInfo_BrowserCap
 		$currentHttpUserAgent = GASS_Http::getInstance()->getUserAgent();
 		if ($currentHttpUserAgent === null || '' == trim($currentHttpUserAgent)) {
 			throw new RuntimeException(__CLASS__.' cannot be initialised before a user-agent has been set in the GASS_Http adapter.'
-										.' The remote server rejects requests without a user-agent.');
+												.' The remote server rejects requests without a user-agent.');
 		}
 		$browscapSource = GASS_Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();
 		$browscapContents = trim($browscapSource);
@@ -153,7 +177,99 @@ class GASS_BotInfo_BrowserCap
 		if (false == file_put_contents($browsCapLocation, $browscapContents)) {
 			throw new RuntimeException('Could not write to "'.$browsCapLocation.'", please check the permissions and try again.');
 		}
-		error_log('PHP requires a restart to update the browsercap ini file.', E_USER_NOTICE);
+	}
+
+
+	/**
+	 * Loads the browscap ini file from the specified location
+	 *
+	 * @access private
+	 */
+	private function loadIniFile() {
+		$browscapLocation = $this->getOption('browscap');
+		if (defined('PHP_VERSION_ID') && PHP_VERSION_ID >= 50300) {
+			$browsers = parse_ini_file($browscapLocation, true, INI_SCANNER_RAW);
+		} else {
+			$browsers = parse_ini_file($browscapLocation, true);
+		}
+		if ($browsers === false || empty($browsers)) {
+			throw new RuntimeException('Browscap ini file could not be parsed.');
+		}
+		$this->browsers = $browsers;
+	}
+
+
+	/**
+	 * Returns all the details related to a browser
+	 *
+	 * @param string $index
+	 * @return array|boolean
+	 */
+	private function getBrowserDetails($index) {
+		if (isset($this->browsers[$index])) {
+			$browserDetails = $this->browsers[$index];
+			if (isset($browserDetails['Parent'])) {
+				if (false === ($extraDetails = $this->getBrowserDetails($browserDetails['Parent']))) {
+					return false;
+				}
+				$browserDetails = array_merge($extraDetails, $browserDetails);
+			}
+			return $browserDetails;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Checks the parsed browscap ini file for the provided user-agent.
+	 * Return value is compatible with php's get_browser return value.
+	 *
+	 * @param string $userAgent
+	 * @return boolean|object|array
+	 */
+	public function getBrowser($userAgent = null, $returnArray = false) {
+		if (0 < func_num_args()) {
+			$this->setUserAgent($userAgent);
+		}
+		$userAgent = $this->getUserAgent();
+		$browser = '*';
+		foreach ($this->browsers as $browserKey => $details) {
+			$regEx = $this->getBrowserRegex($browserKey);
+			if (1 === preg_match($regEx, $userAgent)) {
+				$browser = $browserKey;
+				break;
+			}
+		}
+		if (false !== ($browserDetails = $this->getBrowserDetails($browser))) {
+			$returnBrowsDet = array();
+			$browserRegex = $this->getBrowserRegex($browser);
+			$returnBrowsDet['browser_name_regex'] = substr($browserRegex, 0, strlen($browserRegex) - 1);
+			$returnBrowsDet['browser_name_pattern'] = $browser;
+			foreach ($browserDetails as $key => $value) {
+				if ($value == 'true') {
+					$value = '1';
+				} elseif ($value == 'false') {
+					$value = '';
+				}
+				$returnBrowsDet[strtolower($key)] = $value;
+			}
+			return ($returnArray === true) ? $returnBrowsDet : (object)$returnBrowsDet;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Converts a browscap browser pattern into a regular expression
+	 *
+	 * @param string $browserPattern
+	 * @return string
+	 * @access private
+	 */
+	private function getBrowserRegex($browserPattern) {
+		$regEx = preg_quote($browserPattern);
+		$regEx = str_replace(array('\?', '\*'), array('.', '.*'), $regEx);
+		return '?^'.strtolower($regEx).'$?i';
 	}
 
 
@@ -168,11 +284,9 @@ class GASS_BotInfo_BrowserCap
 		if ($userAgent !== null) {
 			$this->setUserAgent($userAgent);
 		}
-		$userAgent = $this->getUserAgent();
-		if (false === ($browserDetails = get_browser($userAgent))) {
-			throw new RuntimeException('The browsercap ini file at "'.ini_get('browscap').'" was not loaded when php started, restart PHP.');
-		}
-		return ((isset($browserDetails->crawler) && $browserDetails->crawler == 1)
+		$browserDetails = $this->getBrowser();
+		return (false === $browserDetails
+					|| (isset($browserDetails->crawler) && $browserDetails->crawler == 1)
 					|| (isset($browserDetails->isbanned) && $browserDetails->isbanned == 1)
 					|| !isset($browserDetails->javascript) || $browserDetails->javascript != 1
 					|| !isset($browserDetails->cookies) || $browserDetails->cookies != 1);
