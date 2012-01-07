@@ -86,13 +86,12 @@ class GASS_BotInfo_BrowserCap
 	 * @access public
 	 */
 	public function __construct(array $options = array()) {
-		parent::__construct($options);
-		if (null === $this->getOption('browscap')
+		if (!isset($options['browscap'])
 				&& false !== ($browsCapLocation = ini_get('browscap'))
 				&& '' != trim($browsCapLocation)) {
-			$this->setOption('browscap', trim($browsCapLocation));
+			$options['browscap'] = trim($browsCapLocation);
 		}
-		$this->checkIniFile();
+		parent::__construct($options);
 	}
 
 
@@ -122,6 +121,26 @@ class GASS_BotInfo_BrowserCap
 		if (false !== ($latestVersionDate = strtotime($latestDateString))) {
 			$this->latestVersionDate = $latestVersionDate;
 		}
+	}
+
+
+	/**
+	 * Sets a specific option
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 * @return GASS_Adapter_Base
+	 * @access public
+	 */
+	public function setOption($name, $value) {
+		parent::setOption($name, $value);
+		switch ($name) {
+			case 'browscap':
+				$this->checkIniFile();
+				break;
+			default:
+		}
+		return $this;
 	}
 
 
