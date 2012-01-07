@@ -28,7 +28,7 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.0 Beta
+ * @version		0.7.6 Beta
  */
 class GASS_BotInfo_BrowserCap
 	extends GASS_BotInfo_Base
@@ -116,6 +116,7 @@ class GASS_BotInfo_BrowserCap
 		if (false == file_put_contents($browsCapLocation, $browscapContents)) {
 			throw new RuntimeException('Could not write to "'.$browsCapLocation.'", please check the permissions and try again.');
 		}
+		error_log('PHP requires a restart to update the browsercap ini file.', E_USER_NOTICE);
 	}
 
 
@@ -131,8 +132,11 @@ class GASS_BotInfo_BrowserCap
 			$this->setUserAgent($userAgent);
 		}
 		$userAgent = $this->getUserAgent();
-		$browserDetails = get_browser($userAgent);
+		if (false === ($browserDetails = get_browser($userAgent))) {
+			throw new RuntimeException('The browsercap ini file at "'.ini_get('browscap').'" was not loaded when php started, restart PHP.');
+		}
 		return ((isset($browserDetails->crawler) && $browserDetails->crawler == 1)
+					|| (isset($browserDetails->isbanned) && $browserDetails->isbanned == 1)
 					|| !isset($browserDetails->javascript) || $browserDetails->javascript != 1
 					|| !isset($browserDetails->cookies) || $browserDetails->cookies != 1);
 	}

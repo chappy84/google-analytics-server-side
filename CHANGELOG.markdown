@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.6 Beta
+------------------
+
+- Throw exceptions when browsercap ini file not loaded but specified
+- Inform user via php error log when browsercap ini file has been updated and needs loading 
+
 Version 0.7.5 Beta
 ------------------
 

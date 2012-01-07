@@ -117,6 +117,10 @@ or
 	$browserCapAdapter = new GASS_BotInfo_BrowserCap;
 	$gass->setBotInfo($browserCapAdapter);
 
+N/B: the browsercap ini file is only loaded when php starts, with web-servers (apache, php-fpm etc.) 
+this is when the web-server itself is started, thus updates to the file will require a server restart
+to use the latest version. A php E_USER_NOTICE error is logged to the php error log when this is required. 
+
 #### UserAgentStringInfo
 This was the previous default for Google Analytics Server Side which downloads a csv list of search engine
 crawlers from [user-agent-string.info][6].  
