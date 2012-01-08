@@ -28,7 +28,6 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.6 Beta
  */
 class GASS_Http_Stream
 	extends GASS_Http_Base
@@ -145,7 +144,7 @@ class GASS_Http_Stream
 
 		$context = stream_context_create(parent::getOption('context'));
 
-		if (false === ($response = file_get_contents(	parent::getOption('url')
+		if (false === ($response = @file_get_contents(	parent::getOption('url')
 													,	false
 													,	$context))) {
 			throw new RuntimeException('Source could not be retreived.');

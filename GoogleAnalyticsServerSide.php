@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.6 Beta
+ * @version		0.7.7 Beta
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    		$gass->setAccount('UA-XXXXXXX-X')
  *					 ->createPageView();
@@ -703,7 +703,7 @@ class GoogleAnalyticsServerSide
 	 */
 	public function getEventString() {
 		$event = $this->getEvent();
-		$value = $event['value'];
+		$eventValue = $event['value'];
 		unset($event['value'], $event['nonInteraction']);
 		$eventValues = array();
 		foreach ($event as $key => $value) {
@@ -714,7 +714,7 @@ class GoogleAnalyticsServerSide
 		if (empty($eventValues)) {
 			throw new DomainException('Event Cannot be Empty! setEvent must be called or parameters must be passed to createEvent.');
 		}
-		return '5('.implode($eventValues, '*').')'.(($value === null) ? '('.$value.')' : '');
+		return '5('.implode($eventValues, '*').')'.(($eventValue !== null) ? '('.$eventValue.')' : '');
 	}
 
 
@@ -982,7 +982,17 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function createPageView() {
+	public function createPageView($url = null) {
+		if ($url !== null) {
+			if (0 != strpos($url, '/')) {
+				if (false === ($urlParts = parse_url($url))) {
+					throw new DomainException('Url is invalid: '.$url);
+				}
+				$url = $urlParts['path'];
+				$this->setServerName($urlParts['host']);
+			}
+			$this->setDocumentPath($url);
+		}
 		$queryParams = array();
 		$documentPath = $this->getDocumentPath();
 		$documentPath = (empty($documentPath)) ? '' : urldecode($documentPath);
@@ -1000,7 +1010,8 @@ class GoogleAnalyticsServerSide
 	 * @param string $category [optional]
 	 * @param string $action [optional]
 	 * @param string $label [optional]
-	 * @param string $value [optional]
+	 * @param integer $value [optional]
+	 * @param boolean $nonInteraction [optional]
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */

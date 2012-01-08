@@ -28,10 +28,6 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.6 Beta
- * @example		$gass = new GoogleAnalyticsServerSide();
- *	    		$gass->setAccount('UA-XXXXXXX-X')
- *					 ->createPageView();
  */
 
 /**

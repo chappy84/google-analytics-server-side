@@ -28,7 +28,6 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.6 Beta
  */
 class GASS_BotInfo_UserAgentStringInfo
 	extends GASS_BotInfo_Base
@@ -190,7 +189,7 @@ class GASS_BotInfo_UserAgentStringInfo
 				$csvLines[] = '"'.addslashes($name).'","'.addslashes($value).'"';
 			}
 			$csvString = implode("\n", $csvLines);
-			if (false === file_put_contents($csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'), $csvString, LOCK_EX)) {
+			if (false === @file_put_contents($csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'), $csvString, LOCK_EX)) {
 				throw new RuntimeException('Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'));
 			}
 		}

@@ -28,7 +28,6 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.6 Beta
  */
 class GASS_BotInfo_BrowserCap
 	extends GASS_BotInfo_Base
@@ -115,9 +114,21 @@ class GASS_BotInfo_BrowserCap
 	 * @access private
 	 */
 	private function setLatestVersionDate() {
-		$latestDateString = trim(GASS_Http::getInstance()
+		$browsCapLocation = $this->getOption('browscap');
+		$directory = dirname($browsCapLocation);
+		$latestVersionDateFile = $directory.DIRECTORY_SEPARATOR.'latestVersionDate.txt';
+		if (!file_exists($latestVersionDateFile)
+				|| false === ($fileSaveTime = filemtime($latestVersionDateFile))
+				|| $fileSaveTime < time() - 86400) {
+			$latestDateString = trim(GASS_Http::getInstance()
 												->request(self::VERSION_DATE_URL)
 												->getResponse());
+			if (false === @file_put_contents($latestVersionDateFile, trim($latestDateString))) {
+				throw new RuntimeException('Cannot save latest version date to file: '.$latestVersionDateFile);
+			}
+		} elseif (false === ($latestDateString = @file_get_contents($latestVersionDateFile))) {
+			throw new RuntimeException('Couldn\'t read latest version date file: '.$latestVersionDateFile);
+		}
 		if (false !== ($latestVersionDate = strtotime($latestDateString))) {
 			$this->latestVersionDate = $latestVersionDate;
 		}
@@ -177,8 +188,7 @@ class GASS_BotInfo_BrowserCap
 	 */
 	private function updateIniFile() {
 		$browsCapLocation = $this->getOption('browscap');
-		$lastDirSep = strrpos($browsCapLocation, DIRECTORY_SEPARATOR);
-		$directory = substr($browsCapLocation, 0, $lastDirSep);
+		$directory = dirname($browsCapLocation);
 		if ((!file_exists($directory) && !mkdir($directory, 0777, true)) || !is_writable($directory)) {
 			throw new RuntimeException('The directory "'.$directory.'" is not writable, please ensure this file can be written to and try again.');
 		}
@@ -193,7 +203,7 @@ class GASS_BotInfo_BrowserCap
 			throw new RuntimeException(	 'BrowserCap ini file retrieved from external source seems to be empty. '
 										.'Please either set botInfo to null or ensure the php_browsercap.ini file can be retreived.');
 		}
-		if (false == file_put_contents($browsCapLocation, $browscapContents)) {
+		if (false == @file_put_contents($browsCapLocation, $browscapContents)) {
 			throw new RuntimeException('Could not write to "'.$browsCapLocation.'", please check the permissions and try again.');
 		}
 	}

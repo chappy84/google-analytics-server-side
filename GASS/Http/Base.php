@@ -28,7 +28,6 @@
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.6 Beta
  */
 abstract class GASS_Http_Base
 	extends GASS_Adapter_Base

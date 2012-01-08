@@ -98,15 +98,6 @@ There is one optional option as part of the array configuration parameter.
 - browscap: This is the same as the php ini setting [browscap][5], a file-system location where the 
 [php_browscap.ini file][6] is located / can be downloaded to
 
-When an update for the browscap ini file is available [on the server][6] the code will automatically download 
-the file into the location provided.
-
-N/B: You MUST either provide the browscap setting or have it set in php.ini, otherwise this adapter will not work.
-
-N/B2: Due to an issue with the browscap ini file only being loaded when PHP starts up (which is with the web-server 
-apache, PHP-FPM etc.) the code deals with the ini file itself, rather than using the built in get_browser function. 
-This ensures the auto-update functionality will work without the need to restart the web-server.
-
 e.g.
 
 	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> true
@@ -123,6 +114,15 @@ or
 	$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'))
 	$browserCapAdapter = new GASS_BotInfo_BrowserCap;
 	$gass->setBotInfo($browserCapAdapter);
+
+When an update for the browscap ini file is available [on the server][6] the code will automatically download 
+the file into the location provided.
+
+N/B: You MUST either provide the browscap setting or have it set in php.ini, otherwise this adapter will not work.
+
+N/B2: Due to an issue with the browscap ini file only being loaded when PHP starts up (which is with the web-server 
+apache, PHP-FPM etc.) the code deals with the ini file itself, rather than using the built in get_browser function. 
+This ensures the auto-update functionality will work without the need to restart the web-server.
 
 #### UserAgentStringInfo
 This was the previous default for Google Analytics Server Side which downloads a csv list of search engine
@@ -144,7 +144,7 @@ Http
 
 This is a singleton class which provides http functionality across all sections of the GASS framework.  
 This will default to using the Stream adapter and requires no options. All options should be passed as a
-configuration option to GoogleAnalyticsServerSide either via the configuration parameter int he 'http' element
+configuration option to GoogleAnalyticsServerSide either via the configuration parameter in the 'http' element
 or via the setHttp parameter. This can either be an associative array or an instance of the required adapter
 
 e.g.
