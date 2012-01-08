@@ -35,7 +35,7 @@ class GASS_BotInfo_BrowserCap
 {
 
 	/**
-	 * URL location of the current browsercap.ini file
+	 * URL location of the current browscap.ini file
 	 *
 	 * @var string
 	 */
@@ -51,7 +51,7 @@ class GASS_BotInfo_BrowserCap
 
 
 	/**
-	 * The last time the browsercap file was updated
+	 * The last time the browscap file was updated
 	 *
 	 * @var integer
 	 * @access private
@@ -156,7 +156,7 @@ class GASS_BotInfo_BrowserCap
 
 
 	/**
-	 * Checks whether the browsercap file exists, is readable, and hasn't expired the cache lifetime
+	 * Checks whether the browscap file exists, is readable, and hasn't expired the cache lifetime
 	 *
 	 * @throws RuntimeException
 	 * @access private
@@ -181,7 +181,7 @@ class GASS_BotInfo_BrowserCap
 
 
 	/**
-	 * Updates the browsercap ini file to the latest version
+	 * Updates the browscap ini file to the latest version
 	 *
 	 * @throws RuntimeException
 	 * @access private
@@ -200,8 +200,8 @@ class GASS_BotInfo_BrowserCap
 		$browscapSource = GASS_Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();
 		$browscapContents = trim($browscapSource);
 		if (empty($browscapContents)) {
-			throw new RuntimeException(	 'BrowserCap ini file retrieved from external source seems to be empty. '
-										.'Please either set botInfo to null or ensure the php_browsercap.ini file can be retreived.');
+			throw new RuntimeException(	 'browscap ini file retrieved from external source seems to be empty. '
+										.'Please either set botInfo to null or ensure the php_browscap.ini file can be retreived.');
 		}
 		if (false == @file_put_contents($browsCapLocation, $browscapContents)) {
 			throw new RuntimeException('Could not write to "'.$browsCapLocation.'", please check the permissions and try again.');
