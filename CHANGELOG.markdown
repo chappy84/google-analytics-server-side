@@ -1,6 +1,17 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.8 Beta
+------------------
+
+- Silence all is_readable, is_writable, file_exists and filemtime calls as the result is being checked anyway
+so we don't really want a lot of E_WARNING php errors for no reason.
+- Minor code speed improvement
+- Some extra verification on event / custom variable strings
+- convert createPageView / createEvent / setCustomVariable to trackPageView / trackEvent / setCustomVar as they 
+are in the Google Analytics ECMAScript, left alias functions for old method names
+- Add getVisitorCustomVar and deleteCustomVar methods
+
 Version 0.7.7 Beta
 ------------------
 

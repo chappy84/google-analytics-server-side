@@ -23,7 +23,7 @@ Google Analytics Server Side can be used simply in the following manner:
 
 	$gass = new GoogleAnalyticsServerSide();
 	$gass->setAccount('UA-XXXXXXX-X')
-		->createPageView();
+		->trackPageView();
 
 The class constructor accepts an optional associative array parameter of available
 configuration options. Basically if there's a public method to set the variable
@@ -46,7 +46,7 @@ or in one go with the method setOptions
 The User Agent, Server Name, Remote Address, Document Path, Document Referer, Google
 Analytics Version, Accepted Language and Cookies are all set automatically without
 any method calls being required by the developer. However, the following methods are
-available to set these variables and should be called before the createPageView/createEvent
+available to set these variables and should be called before the trackPageView / trackEvent
 method to save the tracking information:
 
 - setVersion
@@ -67,16 +67,16 @@ These are available via the following methods:
 - setCharset
 - setEvent**
 
-**setEvent is not required if arguments are provided to createEvent.
+**setEvent is not required if arguments are provided to trackEvent.
 get methods are also provided for all of the above.
 All methods but get methods allow chaining for ease of use.
 
 ### Event Tracking
 
-	$gass->createEvent('Category', 'Action', 'Label [optional]', Value [optional - integer], nonInteraction [optional - boolean]);
+	$gass->trackEvent('Category', 'Action', 'Label [optional]', Value [optional - integer], nonInteraction [optional - boolean]);
 
-N.B. createEvent() does not require createPageView() to be called first.  
-However if you do not call createPageView first then set nonInteraction to true otherwise your pages/visit metric may become < 1.
+N.B. trackEvent() does not require trackPageView() to be called first.  
+However if you do not call trackPageView first then set nonInteraction to true otherwise your pages/visit metric may become < 1.
 
 BotInfo
 -------
@@ -181,12 +181,12 @@ keys or option names).
 COOKIES
 -------
 
-Cookies are automatically set when either createPageView or createEvent are called.  
+Cookies are automatically set when either trackPageView or trackEvent are called.  
 They are however only sent as headers to the browser once, thus if you call either function more than
 once, or call both functions, then they will only be included in the headers when the first call is made.
 
 You do have the option to turn off the sending of the cookie headers to the browser which can be done
-by calling disableCookieHeaders before calling createPageView/createEvent for the first time.
+by calling disableCookieHeaders before calling trackPageView / trackEvent for the first time.
 
 Quick Note on External Frameworks
 ---------------------------------

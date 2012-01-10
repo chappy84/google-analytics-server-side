@@ -29,10 +29,10 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.7 Beta
+ * @version		0.7.8 Beta
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    		$gass->setAccount('UA-XXXXXXX-X')
- *					 ->createPageView();
+ *					 ->trackPageView();
  */
 class GoogleAnalyticsServerSide
 {
@@ -351,6 +351,21 @@ class GoogleAnalyticsServerSide
 
 
 	/**
+	 * Returns the value of the specified custom variable
+	 *
+	 * @param integer $index
+	 * @throws OutOfBoundsException
+	 * @access public
+	 */
+	public function getVisitorCustomVar($index) {
+		if (isset($this->customVariables['index'.$index])) {
+			return $this->customVariables['index'.$index]['value'];
+		}
+		throw new OutOfBoundsException('The index: "'.$index.'" has not been set.');
+	}
+
+
+	/**
 	 * @return string
 	 * @access public
 	 */
@@ -550,9 +565,9 @@ class GoogleAnalyticsServerSide
 		if (!is_bool($nonInteraction)) {
 			throw new InvalidArgumentException('NonInteraction must be a boolean.');
 		}
-		$this->event = array(	'category'		=> $category
-							,	'action'		=> $action
-							,	'label'			=> $label
+		$this->event = array(	'category'		=> $this->removeSpecialCustomVarChars($category)
+							,	'action'		=> $this->removeSpecialCustomVarChars($action)
+							,	'label'			=> $this->removeSpecialCustomVarChars($label)
 							,	'value'			=> $value
 							,	'nonInteraction'=> $nonInteraction);
 		return $this;
@@ -572,22 +587,58 @@ class GoogleAnalyticsServerSide
 	 * @throws InvalidArgumentException
 	 * @access public
 	 */
-	public function setCustomVariable($name, $value, $scope = 3, $index = null) {
+	public function setCustomVar($name, $value, $scope = 3, $index = null) {
 		if ($index === null) {
 			$index = count($this->customVariables) + 1;
 			if ($index > 5) {
 				throw new OutOfBoundsException('You cannot add more than 5 custom variables.');
 			}
 		} elseif (!is_int($index) || $index < 1 || $index > 5) {
-			throw new InvalidArgumentException('The index must be an integer between 1 and 5.');
+			throw new OutOfBoundsException('The index must be an integer between 1 and 5.');
 		}
 		if (!is_int($scope) || $scope < 1 || $scope > 3) {
 			throw new InvalidArgumentException('The Scope must be a value between 1 and 3');
 		}
+		if (64 < strlen($name.$value)) {
+			throw new DomainException('The name / value combination exceeds the 64 byte custom var limit.');
+		}
 		$this->customVariables['index'.$index] = array(	'index'	=> (int)$index
-													,	'name'	=> (string)$name
-													,	'value'	=> (string)$value
+													,	'name'	=> (string)$this->removeSpecialCustomVarChars($name)
+													,	'value'	=> (string)$this->removeSpecialCustomVarChars($value)
 													,	'scope' => (int)$scope);
+	}
+
+
+	/**
+	 * Alias method for setCustomVar
+	 *
+	 * @see GoogleAnalyticsServerSide::setCustomVar
+	 */
+	public function setCustomVariable() {
+		return call_user_func_array(array($this, 'setCustomVar'), func_get_args());
+	}
+
+
+	/**
+	 * Removes the special characters used when defining custom vars in the url
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	private function removeSpecialCustomVarChars($value) {
+		return str_replace(array('*', '(', ')'), ' ', $name);
+	}
+
+
+	/**
+	 * Removes a previously set custom variable
+	 *
+	 * @param integer $index
+	 * @return GoogleAnalyticsServerSide
+	 */
+	public function deleteCustomVar($index) {
+		unset($this->customVariables['index'.$index]);
+		return $this;
 	}
 
 
@@ -712,7 +763,7 @@ class GoogleAnalyticsServerSide
 			}
 		}
 		if (empty($eventValues)) {
-			throw new DomainException('Event Cannot be Empty! setEvent must be called or parameters must be passed to createEvent.');
+			throw new DomainException('Event Cannot be Empty! setEvent must be called or parameters must be passed to trackEvent.');
 		}
 		return '5('.implode($eventValues, '*').')'.(($eventValue !== null) ? '('.$eventValue.')' : '');
 	}
@@ -977,12 +1028,13 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * Creates a Google Analytics Page View
+	 * Tracks a Page View in Google Analytics
 	 *
+	 * @param string $url
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function createPageView($url = null) {
+	public function trackPageView($url = null) {
 		if ($url !== null) {
 			if (0 != strpos($url, '/')) {
 				if (false === ($urlParts = parse_url($url))) {
@@ -1005,7 +1057,17 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * Creates a Google Analytics Event
+	 * Alias function for trackPageView
+	 *
+	 * @see GoogleAnalyticsServerSide::trackPageView
+	 */
+	public function createPageView() {
+		return call_user_func_array(array($this, 'trackPageView'), func_get_args());
+	}
+
+
+	/**
+	 * Tracks an Event in Google Analytics
 	 *
 	 * @param string $category [optional]
 	 * @param string $action [optional]
@@ -1015,17 +1077,29 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function createEvent($category = null, $action = null, $label = null, $value = null, $nonInteraction = false) {
+	public function trackEvent($category = null, $action = null, $label = null, $value = null, $nonInteraction = false) {
 		if (0 < func_num_args()) {
 			$this->setEvent($category, $action, $label, $value, $nonInteraction);
+		} else {
+			$event = $this->getEvent();
+			$nonInteraction = $event['nonInteraction'];
 		}
 		$queryParams = array(	'utmt'	=> 'event'
 							,	'utme'	=> $this->getEventString());
-		$event = $this->getEvent();
-		if ($event['nonInteraction'] === true) {
+		if ($nonInteraction === true) {
 			$queryParams['utmni'] = '1';
 		}
 		return $this->track($queryParams);
+	}
+
+
+	/**
+	 * Alias function for trackEvent
+	 *
+	 * @see GoogleAnalyticsServerSide::trackEvent
+	 */
+	public function createEvent() {
+		return call_user_func_array(array($this, 'trackEvent'), func_get_args());
 	}
 
 

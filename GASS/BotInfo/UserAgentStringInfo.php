@@ -122,7 +122,7 @@ class GASS_BotInfo_UserAgentStringInfo
 			$this->setCacheDate();
 			if (null !== ($lastCacheDate = $this->getCacheDate())) {
 				$csvPath = $csvPathname.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename');
-				if ($lastCacheDate > (time() - $this->getOption('cacheLifetime')) && is_readable($csvPath)
+				if ($lastCacheDate > (time() - $this->getOption('cacheLifetime')) && @is_readable($csvPath)
 						&& false !== ($botsCsv = @file_get_contents($csvPath))) {
 					return $botsCsv;
 				} elseif (false === @unlink($csvPath)) {
@@ -183,7 +183,7 @@ class GASS_BotInfo_UserAgentStringInfo
 	 */
 	private function saveToCache() {
 		if (null === $this->getCacheDate()
-				&& null !== ($csvPath = $this->getOption('cachePath')) && is_writable($csvPath)) {
+				&& null !== ($csvPath = $this->getOption('cachePath')) && @is_writable($csvPath)) {
 			$csvLines = array();
 			foreach ($this->bots as $name => $value) {
 				$csvLines[] = '"'.addslashes($name).'","'.addslashes($value).'"';
@@ -207,9 +207,9 @@ class GASS_BotInfo_UserAgentStringInfo
 		if (0 == func_num_args()) {
 			$fileRelPath = DIRECTORY_SEPARATOR.$this->getOption('cacheFilename');
 			$cacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
-										&& file_exists($csvPathname.$fileRelPath)
-										&& is_readable($csvPathname.$fileRelPath)
-										&& false !== ($fileModifiedTime = filemtime($csvPathname.$fileRelPath)))
+										&& @file_exists($csvPathname.$fileRelPath)
+										&& @is_readable($csvPathname.$fileRelPath)
+										&& false !== ($fileModifiedTime = @filemtime($csvPathname.$fileRelPath)))
 									? $fileModifiedTime : null;
 		} elseif (null !== $cacheDate && !is_numeric($cacheDate)) {
 			throw new Exception('cacheDate must be numeric or null.');

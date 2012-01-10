@@ -117,8 +117,8 @@ class GASS_BotInfo_BrowserCap
 		$browsCapLocation = $this->getOption('browscap');
 		$directory = dirname($browsCapLocation);
 		$latestVersionDateFile = $directory.DIRECTORY_SEPARATOR.'latestVersionDate.txt';
-		if (!file_exists($latestVersionDateFile)
-				|| false === ($fileSaveTime = filemtime($latestVersionDateFile))
+		if (!@file_exists($latestVersionDateFile)
+				|| false === ($fileSaveTime = @filemtime($latestVersionDateFile))
 				|| $fileSaveTime < time() - 86400) {
 			$latestDateString = trim(GASS_Http::getInstance()
 												->request(self::VERSION_DATE_URL)
@@ -165,13 +165,13 @@ class GASS_BotInfo_BrowserCap
 		if (null === ($browsCapLocation = $this->getOption('browscap'))) {
 			throw new RuntimeException('The browscap option has not been specified, please set this and try again.');
 		}
-		if (!file_exists($browsCapLocation)) {
+		if (!@file_exists($browsCapLocation)) {
 			$this->updateIniFile();
 		}
-		if (!is_readable($browsCapLocation)) {
+		if (!@is_readable($browsCapLocation)) {
 			throw new RuntimeException('The browscap option points to a un-readable file, please ensure the permissions are correct and try again.');
 		}
-		if (false === ($fileSaveTime = filemtime($browsCapLocation))
+		if (false === ($fileSaveTime = @filemtime($browsCapLocation))
 				|| (null !== ($latestVersionDate = $this->getLatestVersionDate())
 					&& $fileSaveTime < $latestVersionDate)) {
 			$this->updateIniFile();
@@ -189,7 +189,7 @@ class GASS_BotInfo_BrowserCap
 	private function updateIniFile() {
 		$browsCapLocation = $this->getOption('browscap');
 		$directory = dirname($browsCapLocation);
-		if ((!file_exists($directory) && !mkdir($directory, 0777, true)) || !is_writable($directory)) {
+		if ((!@file_exists($directory) && !mkdir($directory, 0777, true)) || !@is_writable($directory)) {
 			throw new RuntimeException('The directory "'.$directory.'" is not writable, please ensure this file can be written to and try again.');
 		}
 		$currentHttpUserAgent = GASS_Http::getInstance()->getUserAgent();
