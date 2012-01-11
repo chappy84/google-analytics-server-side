@@ -613,6 +613,7 @@ class GoogleAnalyticsServerSide
 	 * Alias method for setCustomVar
 	 *
 	 * @see GoogleAnalyticsServerSide::setCustomVar
+	 * @deprecated
 	 */
 	public function setCustomVariable() {
 		return call_user_func_array(array($this, 'setCustomVar'), func_get_args());
@@ -1060,6 +1061,7 @@ class GoogleAnalyticsServerSide
 	 * Alias function for trackPageView
 	 *
 	 * @see GoogleAnalyticsServerSide::trackPageView
+	 * @deprecated
 	 */
 	public function createPageView() {
 		return call_user_func_array(array($this, 'trackPageView'), func_get_args());
@@ -1097,6 +1099,7 @@ class GoogleAnalyticsServerSide
 	 * Alias function for trackEvent
 	 *
 	 * @see GoogleAnalyticsServerSide::trackEvent
+	 * @deprecated
 	 */
 	public function createEvent() {
 		return call_user_func_array(array($this, 'trackEvent'), func_get_args());
