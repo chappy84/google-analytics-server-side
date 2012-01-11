@@ -59,6 +59,7 @@ function GASSAutoload($name) {
 				require_once $proposedPath;
 				if (class_exists($name) || interface_exists($name)) {
 					$classFound = true;
+					break;
 				}
 			}
 		}
