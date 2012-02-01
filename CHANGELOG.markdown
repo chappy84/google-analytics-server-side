@@ -1,12 +1,6 @@
 Google Analytics Server Side Changelog
 ======================================
 
-Version 0.7.9 Beta
-------------------
-
-- Remove issue where cookie contains one of the invalid raw cookie characters
-- Add in setSessionCookieTimeout & setVisitorCookieTimeout functionality from google analytics
-
 Version 0.7.8 Beta
 ------------------
 
