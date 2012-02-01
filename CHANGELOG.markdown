@@ -8,9 +8,10 @@ Version 0.7.8 Beta
 so we don't really want a lot of E_WARNING php errors for no reason.
 - Minor code speed improvements
 - Some extra verification on event / custom variable strings
+- Remove issue where cookie contains one of the invalid raw cookie characters
 - convert createPageView / createEvent / setCustomVariable to trackPageView / trackEvent / setCustomVar as they 
 are in the Google Analytics ECMAScript, left alias functions for old method names
-- Add getVisitorCustomVar and deleteCustomVar methods
+- Add getVisitorCustomVar, deleteCustomVar, setSessionCookieTimeout & setVisitorCookieTimeout methods
 
 Version 0.7.7 Beta
 ------------------

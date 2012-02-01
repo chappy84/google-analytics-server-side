@@ -182,6 +182,24 @@ class GoogleAnalyticsServerSide
 
 
 	/**
+	 * Timeout of the default user session cookie (default half hour)
+	 *
+	 * @var integer
+	 * @access private
+	 */
+	private $sessionCookieTimeout = 1800;
+
+
+	/**
+	 * Timout of the default visitor cookie (default two years)
+	 *
+	 * @var integer
+	 * @access private
+	 */
+	private $visitorCookieTimeout = 63072000;
+
+
+	/**
 	 * Contains all the details of the analytics cookies
 	 *
 	 * @var array
@@ -960,11 +978,14 @@ class GoogleAnalyticsServerSide
 	 */
 	private function setCookie($name, $value, $setHeader = true) {
 		$value = trim($value);
+		if (empty($value)) {
+			throw new LengthException('Cookie cannot have an empty value');
+		}
 		if (array_key_exists($name, $this->cookies) && !empty($value)) {
 			$this->cookies[$name] = $value;
 			switch ($name) {
 				case '__utmb':
-					$cookieLife = time() + (60*30); // 1/2 Hour Cookie
+					$cookieLife = time() + $this->sessionCookieTimeout;
 					break;
 				case '__utmc':
 					$cookieLife = 0; // Session Cookie
@@ -973,17 +994,36 @@ class GoogleAnalyticsServerSide
 					$cookieLife = time() + (((60*60)*24)*90); // 3-Month Cookie
 					break;
 				default:
-					$cookieLife = time() + 63072000;
+					$cookieLife = time() + $this->visitorCookieTimeout;
 			}
 			if ($setHeader) {
-				setrawcookie($name, $value, $cookieLife, self::COOKIE_PATH, '.'.$this->getServerName());
+				setcookie($name, $value, $cookieLife, self::COOKIE_PATH, '.'.$this->getServerName());
 			}
 			return $this;
 		}
-		if (empty($value)) {
-			throw new LengthException('Cookie cannot have an empty value');
-		}
 		throw new OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
+	}
+
+
+	/**
+	 * Sets the session cookie timeout
+	 *
+	 * @param integer (milliseconds)
+	 * @access public
+	 */
+	public function setSessionCookieTimeout($sessionCookieTimeout) {
+		$this->sessionCookieTimeout = round($sessionCookieTimeout / 1000);
+	}
+
+
+	/**
+	 * Sets the visitor cookie timeout
+	 *
+	 * @param integer (milliseconds)
+	 * @access public
+	 */
+	public function setVisitorCookieTimeout($visitorCookieTimeout) {
+		$this->visitorCookieTimeout = round($visitorCookieTimeout / 1000);
 	}
 
 
