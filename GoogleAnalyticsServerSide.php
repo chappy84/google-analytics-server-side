@@ -634,7 +634,8 @@ class GoogleAnalyticsServerSide
 	 * @deprecated
 	 */
 	public function setCustomVariable() {
-		return call_user_func_array(array($this, 'setCustomVar'), func_get_args());
+		$arguments = func_get_args();
+		return call_user_func_array(array($this, 'setCustomVar'), $arguments);
 	}
 
 
@@ -1104,7 +1105,8 @@ class GoogleAnalyticsServerSide
 	 * @deprecated
 	 */
 	public function createPageView() {
-		return call_user_func_array(array($this, 'trackPageView'), func_get_args());
+		$arguments = func_get_args();
+		return call_user_func_array(array($this, 'trackPageView'), $arguments);
 	}
 
 
@@ -1142,7 +1144,8 @@ class GoogleAnalyticsServerSide
 	 * @deprecated
 	 */
 	public function createEvent() {
-		return call_user_func_array(array($this, 'trackEvent'), func_get_args());
+		$arguments = func_get_args();
+		return call_user_func_array(array($this, 'trackEvent'), $arguments);
 	}
 
 
