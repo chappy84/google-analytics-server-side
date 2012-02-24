@@ -528,7 +528,7 @@ class GoogleAnalyticsServerSide
 	 */
 	public function setDocumentReferer($documentReferer) {
 		$documentReferer = trim($documentReferer);
-		if (!empty($documentReferer) && false === parse_url($documentReferer)) {
+		if (!empty($documentReferer) && false === @parse_url($documentReferer)) {
 			throw new InvalidArgumentException('Document Referer must be a valid URL.');
 		}
 		$this->documentReferer = $documentReferer;
@@ -919,7 +919,7 @@ class GoogleAnalyticsServerSide
 		$referer = $this->getDocumentReferer();
 		$serverName = $this->getServerName();
 		if (!empty($referer) && !empty($serverName) && false === strpos($referer, $serverName)
-				&& false !== ($refererParts = parse_url($referer)) && isset($refererParts['host'], $refererParts['path'])) {
+				&& false !== ($refererParts = @parse_url($referer)) && isset($refererParts['host'], $refererParts['path'])) {
 			$trafficSourceString = 'utmcsr='.$refererParts['host'].'|utmccn=(referral)|utmcmd=referral|utmcct='.$refererParts['path'];
 		}
 		if (!isset($trafficSourceString) || false === strpos($trafficSourceString, 'utmcsr=')) {
@@ -1079,7 +1079,7 @@ class GoogleAnalyticsServerSide
 	public function trackPageView($url = null) {
 		if ($url !== null) {
 			if (0 != strpos($url, '/')) {
-				if (false === ($urlParts = parse_url($url))) {
+				if (false === ($urlParts = @parse_url($url))) {
 					throw new DomainException('Url is invalid: '.$url);
 				}
 				$url = $urlParts['path'];
