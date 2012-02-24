@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.9 Beta
+------------------
+
+- Ensure user can use the Mobile GA accounts starting in "MO-" aswell (may allow use of utmip for user location)
+- Remove un-required method call
+
 Version 0.7.8 Beta
 ------------------
 

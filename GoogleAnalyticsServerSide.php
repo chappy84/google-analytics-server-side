@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.8 Beta
+ * @version		0.7.9 Beta
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    		$gass->setAccount('UA-XXXXXXX-X')
  *					 ->trackPageView();
@@ -512,8 +512,8 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setAccount($account) {
-		if (1 !== preg_match('/^UA-\d{4,}-\d+$/',$account)) {
-			throw new InvalidArgumentException('Google Analytics user account must be in the format: UA-XXXXXXX-X');
+		if (1 !== preg_match('/^(MO|UA)-\d{4,}-\d+$/',$account)) {
+			throw new InvalidArgumentException('Google Analytics user account must be in the format: UA-XXXXXXX-X or MO-XXXXXXX-X');
 		}
 		$this->account = $account;
 		return $this;
