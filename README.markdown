@@ -200,7 +200,7 @@ Quick Note on External Frameworks
 
 You may be wondering why this framework doesn't use an external framework (such as Zend Framework, Symfony etc.)
 for certain sections of this (Http etc.).  It was decided not to rely on any external sources, thus developers
-could use this code regardless of any framework they already had.
+could use this code with minimal setup and without having to download any other code from other locations.
 
 LICENSE
 -------

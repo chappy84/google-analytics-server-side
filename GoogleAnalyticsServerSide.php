@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.9 Beta
+ * @version		0.7.10 Beta
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    		$gass->setAccount('UA-XXXXXXX-X')
  *					 ->trackPageView();
@@ -208,6 +208,7 @@ class GoogleAnalyticsServerSide
 	private $cookies = array(	'__utma'	=> null
 							,	'__utmb'	=> null
 							,	'__utmc'	=> null
+							,	'__utmv'	=> null
 							,	'__utmz'	=> null);
 
 
@@ -646,7 +647,7 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 */
 	private function removeSpecialCustomVarChars($value) {
-		return str_replace(array('*', '(', ')'), ' ', $name);
+		return str_replace(array('*', '(', ')', '^'), ' ', $value);
 	}
 
 
@@ -804,7 +805,9 @@ class GoogleAnalyticsServerSide
 			foreach ($customVars as $key => $value) {
 				$names[] = $value['name'];
 				$values[] = $value['value'];
-				$scopes[] = $value['scope'];
+				if (!in_array($value['scope'], array(1,2))) {
+					$scopes[] = (($value['index'] > (count($scopes) + 1)) ? $value['index'].'!' : '' ) . $value['scope'];
+				}
 			}
 			return '8('.implode($names, '*').')9('.implode($values, '*').')11('.implode($scopes, '*').')';
 		}
@@ -862,12 +865,15 @@ class GoogleAnalyticsServerSide
 	/**
 	 * Sets the google analytics cookies with the relevant values. For the relevant sections
 	 * see: http://www.analyticsevangelist.com/google-analytics/how-to-read-google-analytics-cookies/
+	 * see: http://www.cheatography.com/jay-taylor/cheat-sheets/google-analytics-cookies-v2/
+	 * see: http://www.tutkiun.com/2011/04/a-google-analytics-cookie-explained.html
 	 *
 	 * @access public
 	 * @param array $cookies [optional]
 	 * @return GoogleAnalyticsServerSide
 	 */
 	public function setCookies(array $cookies = array()) {
+
 		$cookies = (empty($cookies)) ? $this->getCookies() : $cookies;
 
 		// Check the cookies provided are valid for this class, getCookie will throw the exception if the name isn't valid
@@ -886,6 +892,23 @@ class GoogleAnalyticsServerSide
 		}
 		if (isset($cookies['__utmc']) && null !== $cookies['__utmc']) {
 			$domainId = $cookies['__utmc'];
+		}
+		if (isset($cookies['__utmv']) && null !== $cookies['__utmv'] && false !== strpos($cookies['__utmv'], '.|')) {
+			list($domainId, $customVars) = explode('.|', $cookies['__utmv'], 2);
+			if (!empty($customVars)) {
+				if (false !== strpos($customVars, '^')) {
+					$customVars = explode('^', $customVars);
+				} else {
+					$customVars = array($customVars);
+				}
+				$currentCustVars = $this->getCustomVariables();
+				foreach ($customVars as $customVar) {
+					list($custVarIndex, $custVarName, $custVarValue, $custVarScope) = explode('=', $customVar, 4);
+					if (!isset($currentCustVars['index'.$custVarIndex])) {
+						$this->setCustomVar($custVarIndex, $custVarName, $custVarValue, $custVarScope);
+					}
+				}
+			}
 		}
 		if (isset($cookies['__utmz']) && null !== $cookies['__utmz']) {
 			list($domainId, $firstVisit, $session, $sessionVisits, $trafficSourceString) = explode('.', $cookies['__utmz'], 5);
@@ -932,6 +955,16 @@ class GoogleAnalyticsServerSide
 		$this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session, $this->sendCookieHeaders);
 		$this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit, $this->sendCookieHeaders);
 		$this->setCookie('__utmc', $domainId, $this->sendCookieHeaders);
+		if (isset($cookies['__utmv']) && null !== $cookies['__utmv']) {
+			$customVars = $this->getCustomVariables();
+			$customVarsArray = array();
+			foreach($customVars as $customVar) {
+				if ($customVar['scope'] == 1) {
+					$customVarsArray[] = implode('=', $customVar);
+				}
+			}
+			$this->setCookie('__utmv', $domainId.'.|'.implode('^', $customVarsArray), $this->sendCookieHeaders);
+		}
 		$this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$sessionVisits.'.'.$trafficSourceString, $this->sendCookieHeaders);
 		$this->disableCookieHeaders();
 
@@ -958,7 +991,9 @@ class GoogleAnalyticsServerSide
 	 */
 	public function getCookiesString() {
 		$cookieParts = array();
-		foreach ($this->getCookies() as $name => $value) {
+		$currentCookies = $this->getCookies();
+		unset($currentCookies['__utmv']);
+		foreach ($currentCookies as $name => $value) {
 			$value = trim($value);
 			if (!empty($value)) {
 				$cookieParts[] = $name.'='.$value.';';

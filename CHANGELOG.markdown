@@ -1,12 +1,18 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.10 Beta
+-------------------
+
+- Sets the __utmv custom var cookie which stores scope 1 (visitor-level) variables
+- Correct the custom var string passed to GA, scope 3 (page-level) shouldn't be passed.
+
 Version 0.7.9 Beta
 ------------------
 
-- Ensure user can use the Mobile GA accounts starting in "MO-" aswell (may allow use of utmip for user location)
-- Remove un-required method call
-- Silence parse_url when an issue occurs, return value is checked
+- Ensure user can use the Mobile GA accounts starting in "MO-" aswell. Lets utmip provide the user's location to GA.
+- Remove un-required method call.
+- Silence parse_url when an issue occurs, return value is checked.
 
 Version 0.7.8 Beta
 ------------------
