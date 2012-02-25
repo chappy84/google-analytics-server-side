@@ -92,7 +92,7 @@ interface GASS_Http_Interface
 	/**
 	 * Sets the current Remote Address for the sent headers (X-Forwarded-For)
 	 *
-	 * @param unknown_type $remoteAddress
+	 * @param string $remoteAddress
 	 * @access public
 	 * @return GASS_Http_Interface
 	 */
@@ -121,7 +121,7 @@ interface GASS_Http_Interface
 	/**
 	 * Sets the current User-Agent for the sent headers
 	 *
-	 * @param unknown_type $userAgent
+	 * @param string $userAgent
 	 * @access public
 	 * @return GASS_Http_Interface
 	 */

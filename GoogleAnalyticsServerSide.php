@@ -374,6 +374,7 @@ class GoogleAnalyticsServerSide
 	 *
 	 * @param integer $index
 	 * @throws OutOfBoundsException
+	 * @return string
 	 * @access public
 	 */
 	public function getVisitorCustomVar($index) {
@@ -381,6 +382,25 @@ class GoogleAnalyticsServerSide
 			return $this->customVariables['index'.$index]['value'];
 		}
 		throw new OutOfBoundsException('The index: "'.$index.'" has not been set.');
+	}
+
+
+	/**
+	 * Returns all custom vars for a specific scope
+	 *
+	 * @param integer $scope
+	 * @return array
+	 * @access public
+	 */
+	public function getCustomVarsByScope($scope = 3) {
+		$customVars = $this->getCustomVariables();
+		$returnArray = array();
+		foreach($customVars as $customVar) {
+			if ($customVar['scope'] == $scope) {
+				$returnArray[] = implode('=', $customVar);
+			}
+		}
+		return $returnArray;
 	}
 
 
@@ -641,6 +661,30 @@ class GoogleAnalyticsServerSide
 
 
 	/**
+	 * Sets the custom vars from the cookie if not already set by developer
+	 *
+	 * @param string $customVarsString
+	 * @access private
+	 */
+	private function setCustomVarsFromCookie($customVarsString){
+		if (!empty($customVarsString)) {
+			if (false !== strpos($customVarsString, '^')) {
+				$customVars = explode('^', $customVarsString);
+			} else {
+				$customVars = array($customVarsString);
+			}
+			$currentCustVars = $this->getCustomVariables();
+			foreach ($customVars as $customVar) {
+				list($custVarIndex, $custVarName, $custVarValue, $custVarScope) = explode('=', $customVar, 4);
+				if (!isset($currentCustVars['index'.$custVarIndex])) {
+					$this->setCustomVar($custVarIndex, $custVarName, $custVarValue, $custVarScope);
+				}
+			}
+		}
+	}
+
+
+	/**
 	 * Removes the special characters used when defining custom vars in the url
 	 *
 	 * @param string $value
@@ -895,20 +939,7 @@ class GoogleAnalyticsServerSide
 		}
 		if (isset($cookies['__utmv']) && null !== $cookies['__utmv'] && false !== strpos($cookies['__utmv'], '.|')) {
 			list($domainId, $customVars) = explode('.|', $cookies['__utmv'], 2);
-			if (!empty($customVars)) {
-				if (false !== strpos($customVars, '^')) {
-					$customVars = explode('^', $customVars);
-				} else {
-					$customVars = array($customVars);
-				}
-				$currentCustVars = $this->getCustomVariables();
-				foreach ($customVars as $customVar) {
-					list($custVarIndex, $custVarName, $custVarValue, $custVarScope) = explode('=', $customVar, 4);
-					if (!isset($currentCustVars['index'.$custVarIndex])) {
-						$this->setCustomVar($custVarIndex, $custVarName, $custVarValue, $custVarScope);
-					}
-				}
-			}
+			$this->setCustomVarsFromCookie($customVars);
 		}
 		if (isset($cookies['__utmz']) && null !== $cookies['__utmz']) {
 			list($domainId, $firstVisit, $session, $sessionVisits, $trafficSourceString) = explode('.', $cookies['__utmz'], 5);
@@ -955,19 +986,14 @@ class GoogleAnalyticsServerSide
 		$this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session, $this->sendCookieHeaders);
 		$this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit, $this->sendCookieHeaders);
 		$this->setCookie('__utmc', $domainId, $this->sendCookieHeaders);
-		if (isset($cookies['__utmv']) && null !== $cookies['__utmv']) {
-			$customVars = $this->getCustomVariables();
-			$customVarsArray = array();
-			foreach($customVars as $customVar) {
-				if ($customVar['scope'] == 1) {
-					$customVarsArray[] = implode('=', $customVar);
-				}
-			}
-			$this->setCookie('__utmv', $domainId.'.|'.implode('^', $customVarsArray), $this->sendCookieHeaders);
-		}
 		$this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$sessionVisits.'.'.$trafficSourceString, $this->sendCookieHeaders);
-		$this->disableCookieHeaders();
 
+		$scope1Vars = $this->getCustomVarsByScope(1);
+		if (!empty($scope1Vars)) {
+			$this->setCookie('__utmv', $domainId.'.|'.implode('^', $scope1Vars), $this->sendCookieHeaders);
+		}
+
+		$this->disableCookieHeaders();
 		return $this;
 	}
 
