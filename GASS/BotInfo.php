@@ -68,6 +68,7 @@ class GASS_BotInfo
 	 * @param array $arguments
 	 * @throws DomainException
 	 * @return mixed
+	 * @access public
 	 */
 	public function __call($name, $arguments) {
 		if ($this->adapter instanceof GASS_BotInfo_Interface) {
@@ -81,6 +82,8 @@ class GASS_BotInfo
 	 * Sets the current adapter to use
 	 *
 	 * @param string|GASS_BotInfo_Interface $adapter
+	 * @throws InvalidArgumentException
+	 * @return GASS_BotInfo
 	 * @access public
 	 */
 	public function setAdapter($adapter) {
@@ -98,6 +101,7 @@ class GASS_BotInfo
 
 	/**
 	 * @return the $adapter
+	 * @access public
 	 */
 	public function getAdapter() {
 		return $this->adapter;

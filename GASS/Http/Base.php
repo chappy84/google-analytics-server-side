@@ -297,6 +297,7 @@ abstract class GASS_Http_Base
 	 * @param string $url
 	 * @param array $options
 	 * @return GASS_Http_Base
+	 * @access public
 	 */
 	public function request($url = null, array $options = array()) {
 		if ($url !== null) {

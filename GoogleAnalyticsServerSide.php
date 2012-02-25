@@ -677,7 +677,7 @@ class GoogleAnalyticsServerSide
 			foreach ($customVars as $customVar) {
 				list($custVarIndex, $custVarName, $custVarValue, $custVarScope) = explode('=', $customVar, 4);
 				if (!isset($currentCustVars['index'.$custVarIndex])) {
-					$this->setCustomVar($custVarIndex, $custVarName, $custVarValue, $custVarScope);
+					$this->setCustomVar($custVarName, $custVarValue, $custVarScope, $custVarIndex);
 				}
 			}
 		}
@@ -689,6 +689,7 @@ class GoogleAnalyticsServerSide
 	 *
 	 * @param string $value
 	 * @return string
+	 * @access private
 	 */
 	private function removeSpecialCustomVarChars($value) {
 		return str_replace(array('*', '(', ')', '^'), ' ', $value);
@@ -700,6 +701,7 @@ class GoogleAnalyticsServerSide
 	 *
 	 * @param integer $index
 	 * @return GoogleAnalyticsServerSide
+	 * @access public
 	 */
 	public function deleteCustomVar($index) {
 		unset($this->customVariables['index'.$index]);
@@ -751,6 +753,7 @@ class GoogleAnalyticsServerSide
 	 * @param null|array|GASS_Http_Interface $http
 	 * @throws InvalidArgumentException
 	 * @return GoogleAnalyticsServerSide
+	 * @access public
 	 */
 	public function setHttp($http) {
 		if ($http !== null && !is_array($http)
@@ -862,9 +865,9 @@ class GoogleAnalyticsServerSide
 	/**
 	 * The last octect of the IP address is removed to anonymize the user.
 	 *
-	 * @access public
 	 * @param string $remoteAddress [optional]
 	 * @return string
+	 * @access public
 	 */
 	public function getIPToReport($remoteAddress = null) {
 		$remoteAddress = (empty($remoteAddress)) ? $this->remoteAddress : $remoteAddress;
@@ -912,9 +915,9 @@ class GoogleAnalyticsServerSide
 	 * see: http://www.cheatography.com/jay-taylor/cheat-sheets/google-analytics-cookies-v2/
 	 * see: http://www.tutkiun.com/2011/04/a-google-analytics-cookie-explained.html
 	 *
-	 * @access public
 	 * @param array $cookies [optional]
 	 * @return GoogleAnalyticsServerSide
+	 * @access public
 	 */
 	public function setCookies(array $cookies = array()) {
 
@@ -1034,9 +1037,11 @@ class GoogleAnalyticsServerSide
 	 *
 	 * @param string $name
 	 * @param string $value
+	 * @param boolean $setHeader
 	 * @throws LengthException
 	 * @throws OutOfBoundsException
 	 * @return GoogleAnalyticsServerSide
+	 * @access private
 	 */
 	private function setCookie($name, $value, $setHeader = true) {
 		$value = trim($value);
@@ -1070,32 +1075,38 @@ class GoogleAnalyticsServerSide
 	/**
 	 * Sets the session cookie timeout
 	 *
-	 * @param integer (milliseconds)
+	 * @param integer $sessionCookieTimeout (milliseconds)
+	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setSessionCookieTimeout($sessionCookieTimeout) {
 		$this->sessionCookieTimeout = round($sessionCookieTimeout / 1000);
+		return $this;
 	}
 
 
 	/**
 	 * Sets the visitor cookie timeout
 	 *
-	 * @param integer (milliseconds)
+	 * @param integer $visitorCookieTimeout (milliseconds)
+	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setVisitorCookieTimeout($visitorCookieTimeout) {
 		$this->visitorCookieTimeout = round($visitorCookieTimeout / 1000);
+		return $this;
 	}
 
 
 	/**
 	 * Disables whether or not the cookie headers are sent when setCookies is called
 	 *
+	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function disableCookieHeaders() {
 		$this->sendCookieHeaders = false;
+		return $this;
 	}
 
 
@@ -1105,6 +1116,7 @@ class GoogleAnalyticsServerSide
 	 * @param string $name
 	 * @throws OutOfBoundsException
 	 * @return string
+	 * @access public
 	 */
 	private function getCookie($name) {
 		if (array_key_exists($name, $this->cookies)) {

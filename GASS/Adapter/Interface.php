@@ -36,6 +36,7 @@ interface GASS_Adapter_Interface
 	 * Class level constructor
 	 *
 	 * @param array $cacheOptions
+	 * @access public
 	 */
 	public function __construct(array $options = array());
 
@@ -44,6 +45,7 @@ interface GASS_Adapter_Interface
 	 * Set Options related to class
 	 *
 	 * @param array $options
+	 * @return GASS_Adapter_Interface
 	 * @access public
 	 */
 	public function setOptions(array $options);
@@ -54,6 +56,7 @@ interface GASS_Adapter_Interface
 	 *
 	 * @param string $name
 	 * @param mixed $value
+	 * @return GASS_Adapter_Interface
 	 * @access public
 	 */
 	public function setOption($name, $value);
@@ -62,8 +65,8 @@ interface GASS_Adapter_Interface
 	/**
 	 * Returns all options set
 	 *
-	 * @access public
 	 * @return array
+	 * @access public
 	 */
 	public function getOptions();
 
@@ -72,8 +75,8 @@ interface GASS_Adapter_Interface
 	 * Returns a specific option
 	 *
 	 * @param string $name
-	 * @access public
 	 * @return mixed
+	 * @access public
 	 */
 	public function getOption($name);
 }

@@ -55,7 +55,7 @@ class GASS_Http
 	 * Class Constructor
 	 *
 	 * @param array $options
-	 * @param string $adapter [optional] - can be provided in $options aswell
+	 * @param string|GASS_Http_Interface $adapter [optional] - can be provided in $options aswell
 	 * @access protected
 	 */
 	public function __construct(array $options = array(), $adapter = null) {
@@ -72,6 +72,8 @@ class GASS_Http
 
 	/**
 	 * @throws RuntimeException
+	 * @final
+	 * @access public
 	 */
 	final public function __clone() {
 		throw new RuntimeException('You cannot clone '.__CLASS__);
@@ -82,10 +84,12 @@ class GASS_Http
 	 * Returns the current instance of GASS_Http
 	 * Accepts the same parameters as __construct
 	 *
-	 * @return GASS_Http
-	 * @access public
-	 * @static
 	 * @see GASS_Http::__construct
+	 * @param array $options
+	 * @param string|GASS_Http_Interface $adapter
+	 * @return GASS_Http
+	 * @static
+	 * @access public
 	 */
 	public static function getInstance(array $options = array(), $adapter = null) {
 		$className = __CLASS__;
@@ -105,6 +109,7 @@ class GASS_Http
 	 * @param array $arguments
 	 * @throws DomainException
 	 * @return mixed
+	 * @access public
 	 */
 	public function __call($name, $arguments) {
 		if ($this->adapter instanceof GASS_Http_Interface) {
@@ -118,6 +123,8 @@ class GASS_Http
 	 * Sets the current adapter to use
 	 *
 	 * @param string $adapter
+	 * @throws InvalidArgumentException
+	 * @return GASS_Http
 	 * @access public
 	 */
 	public function setAdapter($adapter) {

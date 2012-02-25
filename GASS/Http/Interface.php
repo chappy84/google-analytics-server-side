@@ -83,8 +83,8 @@ interface GASS_Http_Interface
 	 * Sets the current Accepted Language for the sent headers
 	 *
 	 * @param string $acceptLanguage
-	 * @access public
 	 * @return GASS_Http_Interface
+	 * @access public
 	 */
 	public function setAcceptLanguage($acceptLanguage);
 
@@ -93,8 +93,8 @@ interface GASS_Http_Interface
 	 * Sets the current Remote Address for the sent headers (X-Forwarded-For)
 	 *
 	 * @param string $remoteAddress
-	 * @access public
 	 * @return GASS_Http_Interface
+	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress);
 
@@ -103,6 +103,7 @@ interface GASS_Http_Interface
 	 * Returns the existing request response
 	 *
 	 * @param mixed $response
+	 * @return GASS_Http_Interface
 	 * @access public
 	 */
 	public function setResponse($response);
@@ -112,8 +113,8 @@ interface GASS_Http_Interface
 	 * Sets the Url to Request
 	 *
 	 * @param string $url
-	 * @access public
 	 * @return GASS_Http_Interface
+	 * @access public
 	 */
 	public function setUrl($url);
 
@@ -122,8 +123,8 @@ interface GASS_Http_Interface
 	 * Sets the current User-Agent for the sent headers
 	 *
 	 * @param string $userAgent
-	 * @access public
 	 * @return GASS_Http_Interface
+	 * @access public
 	 */
 	public function setUserAgent($userAgent);
 
@@ -133,6 +134,8 @@ interface GASS_Http_Interface
 	 *
 	 * @param string $url
 	 * @param array $options
+	 * @return GASS_Http_Interface
+	 * @access public
 	 */
 	public function request($url = null, array $options = array());
 }

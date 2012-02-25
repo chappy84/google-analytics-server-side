@@ -58,6 +58,7 @@ class GASS_Http_Curl
 	 *
 	 * @param array $options
 	 * @throws RuntimeException
+	 * @access public
 	 */
 	public function __construct(array $options = array()) {
 		if (!extension_loaded('curl')) {
@@ -100,6 +101,7 @@ class GASS_Http_Curl
 			curl_close($this->curl);
 		}
 		$this->curl = null;
+		return $this;
 	}
 
 

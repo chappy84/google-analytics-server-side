@@ -72,7 +72,7 @@ class GASS_BotInfo_BrowserCap
 	 * Class options
 	 *
 	 * @var array
-	 * @access private
+	 * @access protected
 	 */
 	protected $options = array(	'browscap'	=> null);
 
@@ -81,7 +81,6 @@ class GASS_BotInfo_BrowserCap
 	 * {@inheritdoc}
 	 *
 	 * @param array $options
-	 * @throws RuntimeException
 	 * @access public
 	 */
 	public function __construct(array $options = array()) {
@@ -111,6 +110,7 @@ class GASS_BotInfo_BrowserCap
 	/**
 	 * Gets the latest version date from the web
 	 *
+	 * @throws RuntimeException
 	 * @access private
 	 */
 	private function setLatestVersionDate() {
@@ -233,6 +233,7 @@ class GASS_BotInfo_BrowserCap
 	 *
 	 * @param string $index
 	 * @return array|boolean
+	 * @access private
 	 */
 	private function getBrowserDetails($index) {
 		if (isset($this->browsers[$index])) {
@@ -255,6 +256,7 @@ class GASS_BotInfo_BrowserCap
 	 *
 	 * @param string $userAgent
 	 * @return boolean|object|array
+	 * @access public
 	 */
 	public function getBrowser($userAgent = null, $returnArray = false) {
 		if (0 < func_num_args()) {

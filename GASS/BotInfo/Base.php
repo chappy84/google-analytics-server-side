@@ -56,6 +56,7 @@ abstract class GASS_BotInfo_Base
 	 * {@inheritdoc}
 	 *
 	 * @return string
+	 * @access public
 	 */
 	public function getUserAgent() {
 		return $this->userAgent;
@@ -66,8 +67,11 @@ abstract class GASS_BotInfo_Base
 	 * {@inheritdoc}
 	 *
 	 * @param string $userAgent
+	 * @return GASS_BotInfo_Base
+	 * @access public
 	 */
 	public function setUserAgent($userAgent) {
 		$this->userAgent = $userAgent;
+		return $this;
 	}
 }

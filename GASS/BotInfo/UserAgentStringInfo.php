@@ -75,6 +75,7 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * Class level constructor
 	 *
 	 * @param array $cacheOptions
+	 * @access public
 	 */
 	public function __construct(array $options = array()) {
 		parent::__construct($options);
@@ -104,6 +105,7 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * Returns the current bots
 	 *
 	 * @return array
+	 * @access public
 	 */
 	public function get() {
 		return $this->bots;
@@ -114,7 +116,8 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * Retreives the contents from the external csv source
 	 * and then parses it into the class level variable bots
 	 *
-	 * @return array
+	 * @return array|null
+	 * @throws RuntimeException
 	 * @access private
 	 */
 	private function getFromCache() {
@@ -139,6 +142,7 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * Retreives the bots csv from the default source
 	 *
 	 * @return string
+	 * @throws RuntimeException
 	 * @access private
 	 */
 	private function getFromWeb() {
@@ -158,6 +162,7 @@ class GASS_BotInfo_UserAgentStringInfo
 	 *
 	 * @param string $fileContexts
 	 * @return array
+	 * @access private
 	 */
 	private function parseCsv($fileContexts) {
 		$botList = explode("\n", $fileContexts);
@@ -179,6 +184,7 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * Saves the current list of bots to the cache directory for use next time the script is run
 	 *
 	 * @return GoogleAnalyticsServerSide
+	 * @throws RuntimeException
 	 * @access private
 	 */
 	private function saveToCache() {
@@ -200,7 +206,9 @@ class GASS_BotInfo_UserAgentStringInfo
 	/**
 	 * Sets the last bot cache date from the last cache file created
 	 *
+	 * @param integer $cacheDate [optional]
 	 * @return GoogleAnalyticsServerSide
+	 * @throws DomainException
 	 * @access private
 	 */
 	private function setCacheDate($cacheDate = null) {
@@ -212,7 +220,7 @@ class GASS_BotInfo_UserAgentStringInfo
 										&& false !== ($fileModifiedTime = @filemtime($csvPathname.$fileRelPath)))
 									? $fileModifiedTime : null;
 		} elseif (null !== $cacheDate && !is_numeric($cacheDate)) {
-			throw new Exception('cacheDate must be numeric or null.');
+			throw new DomainException('cacheDate must be numeric or null.');
 		}
 		$this->cacheDate = $cacheDate;
 		return $this;
@@ -220,9 +228,10 @@ class GASS_BotInfo_UserAgentStringInfo
 
 
 	/**
-	 *
+	 * Returns the current cache date
 	 *
 	 * @return number|null
+	 * @access public
 	 */
 	public function getCacheDate() {
 		return $this->cacheDate;

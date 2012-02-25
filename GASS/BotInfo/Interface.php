@@ -36,7 +36,7 @@ interface GASS_BotInfo_Interface
 	/**
 	 * Returns whether or not the provided user-agent is a trawler bot or not
 	 *
-	 * @param string $userAgent
+	 * @param string $userAgent [optional]
 	 * @return boolean
 	 * @access public
 	 */
@@ -56,6 +56,7 @@ interface GASS_BotInfo_Interface
 	 * Set the current user agent for use in the class
 	 *
 	 * @param string $userAgent
+	 * @return GASS_BotInfo_Interface
 	 * @access public
 	 */
 	public function setUserAgent($userAgent);

@@ -36,7 +36,7 @@ interface GASS_Interface
 	 * Class Constructor
 	 *
 	 * @param array $options
-	 * @param string $adapter [optional] - can be provided in $options aswell
+	 * @param string|GASS_Adapter_Interface $adapter [optional] - can be provided in $options aswell
 	 * @access public
 	 */
 	public function __construct(array $options = array(), $adapter = null);
@@ -49,6 +49,7 @@ interface GASS_Interface
 	 * @param array $arguments
 	 * @throws DomainException
 	 * @return mixed
+	 * @access public
 	 */
 	public function __call($name, $arguments);
 
@@ -57,6 +58,7 @@ interface GASS_Interface
 	 * Set the adapter to use
 	 *
 	 * @param string|GASS_Adapter_Interface $adapter
+	 * @return GASS_Interface
 	 * @access public
 	 */
 	public function setAdapter($adapter);
@@ -66,6 +68,7 @@ interface GASS_Interface
 	 * Get the instance of the current adapter in use
 	 *
 	 * @return GASS_Adapter_Interface
+	 * @access public
 	 */
 	public function getAdapter();
 }
