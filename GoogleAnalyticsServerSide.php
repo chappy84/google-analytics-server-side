@@ -624,6 +624,8 @@ class GoogleAnalyticsServerSide
 	 * @param integer $index [optional]
 	 * @throws OutOfBoundsException
 	 * @throws InvalidArgumentException
+	 * @throws DomainException
+	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setCustomVar($name, $value, $scope = 3, $index = null) {
@@ -645,6 +647,7 @@ class GoogleAnalyticsServerSide
 													,	'name'	=> (string)$this->removeSpecialCustomVarChars($name)
 													,	'value'	=> (string)$this->removeSpecialCustomVarChars($value)
 													,	'scope' => (int)$scope);
+		return $this;
 	}
 
 
@@ -852,7 +855,7 @@ class GoogleAnalyticsServerSide
 			foreach ($customVars as $key => $value) {
 				$names[] = $value['name'];
 				$values[] = $value['value'];
-				if (!in_array($value['scope'], array(1,2))) {
+				if (in_array($value['scope'], array(1,2))) {
 					$scopes[] = (($value['index'] > (count($scopes) + 1)) ? $value['index'].'!' : '' ) . $value['scope'];
 				}
 			}
@@ -920,7 +923,6 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setCookies(array $cookies = array()) {
-
 		$cookies = (empty($cookies)) ? $this->getCookies() : $cookies;
 
 		// Check the cookies provided are valid for this class, getCookie will throw the exception if the name isn't valid
@@ -1239,6 +1241,7 @@ class GoogleAnalyticsServerSide
 				&& $this->botInfo->getIsBot()) {
 			return false;
 		}
+
 
 		$domainName = $this->getServerName();
 		if (empty($domainName)) {

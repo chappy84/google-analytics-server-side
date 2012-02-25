@@ -79,7 +79,6 @@ class GASS_BotInfo_UserAgentStringInfo
 	 */
 	public function __construct(array $options = array()) {
 		parent::__construct($options);
-		$this->set();
 	}
 
 
@@ -246,6 +245,9 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * @access public
 	 */
 	public function getIsBot($userAgent = null) {
+		if (empty($this->bots)) {
+			$this->set();
+		}
 		if ($userAgent !== null) {
 			$this->setUserAgent($userAgent);
 		}

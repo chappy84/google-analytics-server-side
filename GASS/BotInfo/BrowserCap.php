@@ -136,26 +136,6 @@ class GASS_BotInfo_BrowserCap
 
 
 	/**
-	 * Sets a specific option
-	 *
-	 * @param string $name
-	 * @param mixed $value
-	 * @return GASS_Adapter_Base
-	 * @access public
-	 */
-	public function setOption($name, $value) {
-		parent::setOption($name, $value);
-		switch ($name) {
-			case 'browscap':
-				$this->checkIniFile();
-				break;
-			default:
-		}
-		return $this;
-	}
-
-
-	/**
 	 * Checks whether the browscap file exists, is readable, and hasn't expired the cache lifetime
 	 *
 	 * @throws RuntimeException
@@ -259,6 +239,10 @@ class GASS_BotInfo_BrowserCap
 	 * @access public
 	 */
 	public function getBrowser($userAgent = null, $returnArray = false) {
+		if (empty($this->browsers)) {
+			$this->checkIniFile();
+		}
+
 		if (0 < func_num_args()) {
 			$this->setUserAgent($userAgent);
 		}

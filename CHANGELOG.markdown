@@ -7,6 +7,8 @@ Version 0.7.10 Beta
 - Sets the __utmv custom var cookie which stores scope 1 (visitor-level) variables
 - Correct the custom var string passed to GA, scope 3 (page-level) shouldn't be passed.
 - PHPDoc completion.
+- Only load data files in BotInfo adapters when data actually needed
+- setCustomVar returns $this for chaining
 
 Version 0.7.9 Beta
 ------------------
