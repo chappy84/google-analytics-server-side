@@ -630,7 +630,10 @@ class GoogleAnalyticsServerSide
 	 */
 	public function setCustomVar($name, $value, $scope = 3, $index = null) {
 		if ($index === null) {
-			$index = count($this->customVariables) + 1;
+			$index = 0;
+			do {
+				$index++;
+			} while (isset($this->customVariables['index'.$index]) && $index < 6);
 			if ($index > 5) {
 				throw new OutOfBoundsException('You cannot add more than 5 custom variables.');
 			}
