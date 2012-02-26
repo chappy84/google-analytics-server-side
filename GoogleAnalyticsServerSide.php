@@ -158,15 +158,6 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * Information related to the event
-	 *
-	 * @var array
-	 * @access private
-	 */
-	private $event = array();
-
-
-	/**
 	 * Data for the custom variables
 	 *
 	 * @var array
@@ -786,14 +777,17 @@ class GoogleAnalyticsServerSide
 	/**
 	 * Returns the last saved event as a string for the URL parameters
 	 *
+	 * @param array $event
 	 * @return string
 	 * @throws DomainException
 	 * @access public
 	 */
-	public function getEventString() {
-		$event = $this->getEvent();
+	public function getEventString($event) {
+		if (!is_array($event) || !isset($event['category'], $event['action'])) {
+			throw new \InvalidArgumentException('Event must be an associative array containing at least a category and action');
+		}
 		$eventValue = $event['value'];
-		unset($event['value'], $event['nonInteraction']);
+		unset($event['value']);
 		$eventValues = array();
 		foreach ($event as $key => $value) {
 			if (!empty($value)) {
@@ -1162,14 +1156,13 @@ class GoogleAnalyticsServerSide
 		if (!is_bool($nonInteraction)) {
 			throw new \InvalidArgumentException('NonInteraction must be a boolean.');
 		}
-		$this->event = array(	'category'		=> $this->removeSpecialCustomVarChars($category)
-							,	'action'		=> $this->removeSpecialCustomVarChars($action)
-							,	'label'			=> $this->removeSpecialCustomVarChars($label)
-							,	'value'			=> $value
-							,	'nonInteraction'=> $nonInteraction);
+		$event = array(	'category'		=> $this->removeSpecialCustomVarChars($category)
+					,	'action'		=> $this->removeSpecialCustomVarChars($action)
+					,	'label'			=> $this->removeSpecialCustomVarChars($label)
+					,	'value'			=> $value);
 
 		$queryParams = array(	'utmt'	=> 'event'
-							,	'utme'	=> $this->getEventString());
+							,	'utme'	=> $this->getEventString($event));
 		if ($nonInteraction === true) {
 			$queryParams['utmni'] = '1';
 		}
