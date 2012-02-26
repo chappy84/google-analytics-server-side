@@ -69,7 +69,7 @@ class GoogleAnalyticsServerSide
 	 * @var string
 	 * @access private
 	 */
-	private $version = '5.2.2';
+	private $version = '5.2.5';
 
 
 	/**
