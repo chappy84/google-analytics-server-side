@@ -65,10 +65,8 @@ These are available via the following methods:
 - setAccount
 - setPageTitle
 - setCharset
-- setEvent**
 
-**setEvent is not required if arguments are provided to trackEvent.
-get methods are also provided for all of the above.
+Get methods are also provided for all of the above.
 All methods but get methods allow chaining for ease of use.
 
 ### Event Tracking
@@ -195,14 +193,6 @@ once, or call both functions, then they will only be included in the headers whe
 You do have the option to turn off the sending of the cookie headers to the browser which can be done
 by calling disableCookieHeaders before calling trackPageView / trackEvent for the first time.
 
-Quick Note on External Frameworks
----------------------------------
-
-You may be wondering why this framework doesn't use an external framework (such as Zend Framework, Symfony etc.)
-for certain sections of this (Http etc.).  It was decided not to rely on any external sources, mainly for 
-maintenance reasons, but also so that developers could use this code with minimal setup and without having to 
-download any other code from other locations.
-
 PHP Version
 -----------
 
@@ -214,6 +204,14 @@ to fix any issues which arise in this branch. Please notify me of any issues via
 this readme, or via a pull request from your fork if you've attempted a fix yourself.
 
 [10]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+
+Quick Note on External Frameworks
+---------------------------------
+
+You may be wondering why this framework doesn't use an external framework (such as Zend Framework, Symfony etc.)
+for certain sections of this (Http etc.).  It was decided not to rely on any external sources, mainly for 
+maintenance reasons, but also so that developers could use this code with minimal setup and without having to 
+download any other code from other locations.
 
 LICENSE
 -------
