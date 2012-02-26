@@ -25,11 +25,13 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * 		employees. "Google" and "Google Analytics" are trademarks of
  * 		Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011 Tom Chapman (http://tom-chapman.co.uk/)
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @version		0.7.11 Beta
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    		$gass->setAccount('UA-XXXXXXX-X')
  *					 ->trackPageView();
