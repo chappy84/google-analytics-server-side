@@ -83,16 +83,16 @@ BotInfo
 
 You must enable botInfo for it to ignore any search/trawler bots.  
 To do this you need to pass one of true, and associative array or an instance of the adapter you want to use
-into the class.  The code will default to the BrowserCap adapter. Setting this to true will use the default.
+into the class.  The code will default to the BrowsCap adapter. Setting this to true will use the default.
 If you pass an associative array, this will be passed to BotInfo and through to the Adapter. When providing
 an associative array you can also pass the element 'adapter' which will tell BotInfo which class to use as the
-Adapter. You can also pass an instance of a GASS_BotInfo Adapter which will be used by the GASS_BotInfo Class.
+Adapter. You can also pass an instance of a GASS\BotInfo Adapter which will be used by the GASS\BotInfo Class.
 
 ### Adapters
 
 There are two adapters available in the GASS framework
 
-#### BrowserCap
+#### BrowsCap
 There is one optional option as part of the array configuration parameter. 
 
 - browscap: This is the same as the php ini setting [browscap][5], a file-system location where the 
@@ -105,15 +105,15 @@ e.g.
 
 or
 
-	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' => 'BrowserCap'
+	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' => 'BrowsCap'
 																	,	'browscap'=> '/tmp/php_browscap.ini')
 											,	'account'	=> 'UA-XXXXXXX-X'));
 
 or
 
 	$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'))
-	$browserCapAdapter = new GASS_BotInfo_BrowserCap;
-	$gass->setBotInfo($browserCapAdapter);
+	$browsCapAdapter = new \GASS\BotInfo\BrowsCap;
+	$gass->setBotInfo($browsCapAdapter);
 
 When an update for the browscap ini file is available [on the server][6] the code will automatically download 
 the file into the location provided.
@@ -133,7 +133,7 @@ There are three options as part of the array configuration parameter:
 - cacheFilename: the filename to save the list of bots to (optional, defaults to bots.csv)
 - cacheLifetime: number of secods before the cache expires (optional, defaults to 2592000 (30 days))
 
-This can be implemented in the same way as the BrowserCap adapter.
+This can be implemented in the same way as the BrowsCap adapter.
 
 [5]: http://www.php.net/manual/en/misc.configuration.php#ini.browscap
 [6]: http://browsers.garykeith.com/downloads.asp
@@ -155,13 +155,13 @@ e.g.
 
 or
 
-	$httpAdapter = new GASS_Http_Stream();
+	$httpAdapter = new \GASS\Http\Stream();
 	$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'));
 	$gass->setHttp($httpAdapter);
 
 ### Adapters
 
-There are two Adapters available to GASS_Http, these are:
+There are two Adapters available to GASS\Http, these are:
 
 #### Stream
 Stream creates a stream context and utilises this stream with file_get_contents. See [php's example][8].
@@ -202,6 +202,18 @@ You may be wondering why this framework doesn't use an external framework (such 
 for certain sections of this (Http etc.).  It was decided not to rely on any external sources, mainly for 
 maintenance reasons, but also so that developers could use this code with minimal setup and without having to 
 download any other code from other locations.
+
+PHP Version
+-----------
+
+The Bad News: This project is now a pure PHP 5.3 project. PHP themselves no longer support PHP 5.2 as of August 2011 
+and with PHP 5.4 on the way it's time we left 5.2 behind (sorry to all those on shared hosting stuck with it).  
+   
+The Good News: I have however left a [PHP 5.2 Branch][10] which you can feel free to use, fork etc.. I will try 
+to fix any issues which arise in this branch. Please notify me of any issues via the bugs link at the top of 
+this readme, or via a pull request from your fork if you've attempted a fix yourself.
+
+[10]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 LICENSE
 -------

@@ -32,8 +32,25 @@
  * @package		GoogleAnalyticsServerSide
  * @subpackage	BotInfo
  */
-class GASS_BotInfo_UserAgentStringInfo
-	extends GASS_BotInfo_Base
+
+/**
+ * @namespace
+ */
+namespace GASS\BotInfo;
+use GASS\Http;
+
+/**
+ * BrowsCap adapter which uses browscap ini file to negatively identify search engine bots
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	BotInfo
+ */
+class UserAgentStringInfo
+	extends Base
 {
 
 	/**
@@ -87,7 +104,7 @@ class GASS_BotInfo_UserAgentStringInfo
 	/**
 	 * Sets the bots list
 	 *
-	 * @return GASS_BotInfo_UserAgentStringInfo
+	 * @return GASS\BotInfo\UserAgentStringInfo
 	 * @access public
 	 */
 	public function set() {
@@ -133,7 +150,7 @@ class GASS_BotInfo_UserAgentStringInfo
 						&& false !== ($botsCsv = @file_get_contents($csvPath))) {
 					return $botsCsv;
 				} elseif (false === @unlink($csvPath)) {
-					throw new RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
+					throw new \RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
 				}
 			}
 		}
@@ -150,10 +167,10 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * @access private
 	 */
 	private function getFromWeb() {
-		$csvSource = GASS_Http::getInstance()->request(self::CSV_URL)->getResponse();
+		$csvSource = Http\Http::getInstance()->request(self::CSV_URL)->getResponse();
 		$botsCsv = trim($csvSource);
 		if (empty($botsCsv)) {
-			throw new RuntimeException(	 'Bots CSV retrieved from external source seems to be empty. '
+			throw new \RuntimeException('Bots CSV retrieved from external source seems to be empty. '
 										.'Please either set botInfo to null or ensure the bots csv file can be retreived.');
 		}
 		return $botsCsv;
@@ -170,20 +187,19 @@ class GASS_BotInfo_UserAgentStringInfo
 	 */
 	private function parseCsv($fileContexts) {
 		$botList = explode("\n", $fileContexts);
-		$botInfo = new stdClass;
+		$botInfo = new \stdClass;
 		$botInfo->distinctBots = array();
 		$botInfo->distinctIPs = array();
 		foreach ($botList as $line) {
 			$line = trim($line);
 			if (!empty($line)) {
 				$csvLine = str_getcsv($line);
-				$lineVals = count($csvLine);
 				if (!isset($botInfo->distinctBots[$csvLine[0]])) {
-					$botInfo->distinctBots[$csvLine[0]] = ($lineVals >= 7)
+					$botInfo->distinctBots[$csvLine[0]] = (isset($csvLine[6]))
 															? $csvLine[6]
-															: (($lineVals >= 3) ? $csvLine[2] : $csvLine[1]);
+															: $csvLine[2];
 				}
-				if ($lineVals >= 3 && !isset($botInfo->distinctIPs[$csvLine[1]])) {
+				if (!isset($botInfo->distinctIPs[$csvLine[1]])) {
 					$botInfo->distinctIPs[$csvLine[1]] = $csvLine[0];
 				}
 			}
@@ -203,18 +219,12 @@ class GASS_BotInfo_UserAgentStringInfo
 		if (null === $this->getCacheDate()
 				&& null !== ($csvPath = $this->getOption('cachePath')) && @is_writable($csvPath)) {
 			$csvLines = array();
-			if (!empty($this->botIps)) {
-				foreach ($this->botIps as $ipAddress => $name) {
-					$csvLines[] = '"'.addslashes($name).'","'.addslashes($ipAddress).'","'.addslashes($this->bots[$name]).'"';
-				}
-			} else {
-				foreach ($this->bots as $name => $userAgent) {
-					$csvLines[] = '"'.addslashes($name).'","'.addslashes($userAgent).'"';
-				}
+			foreach ($this->botIps as $ipAddress => $name) {
+				$csvLines[] = '"'.addslashes($name).'","'.addslashes($ipAddress).'","'.addslashes($this->bots[$name]).'"';
 			}
 			$csvString = implode("\n", $csvLines);
 			if (false === @file_put_contents($csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'), $csvString, LOCK_EX)) {
-				throw new RuntimeException('Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'));
+				throw new \RuntimeException('Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'));
 			}
 		}
 		return $this;
@@ -238,7 +248,7 @@ class GASS_BotInfo_UserAgentStringInfo
 										&& false !== ($fileModifiedTime = @filemtime($csvPathname.$fileRelPath)))
 									? $fileModifiedTime : null;
 		} elseif (null !== $cacheDate && !is_numeric($cacheDate)) {
-			throw new DomainException('cacheDate must be numeric or null.');
+			throw new \DomainException('cacheDate must be numeric or null.');
 		}
 		$this->cacheDate = $cacheDate;
 		return $this;
@@ -286,7 +296,7 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * {@inheritdoc}
 	 *
 	 * @param array $options
-	 * @return GASS_BotInfo_UserAgentStringInfo
+	 * @return GASS\BotInfo\UserAgentStringInfo
 	 * @access public
 	 */
 	public function setOptions(array $options) {

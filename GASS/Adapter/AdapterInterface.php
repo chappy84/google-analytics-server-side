@@ -30,19 +30,73 @@
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
+ * @subpackage	Adapter
  */
 
 /**
- * Crude PHP 5.2 implementation of PHP 5.3 function str_getcsv
- *
- * @link http://uk3.php.net/manual/en/function.str-getcsv.php
+ * @namespace
  */
-function str_getcsv($input, $delimiter = ',', $enclosure = '"', $escape = '\\') {
-	$input = trim($input, $enclosure." \n\t\r\0");
-	$csvElements = preg_split('/['.addslashes($enclosure).']\s*?'.addslashes($delimiter).'\s*?['.addslashes($enclosure).']/', $input);
-	$returnArray = array();
-	foreach ($csvElements as $element) {
-		$returnArray[] = trim($element);
-	}
-	return $returnArray;
+namespace GASS\Adapter;
+
+
+/**
+ * An Interface for adapters in general
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	Adapter
+ */
+interface AdapterInterface
+{
+
+	/**
+	 * Class level constructor
+	 *
+	 * @param array $cacheOptions
+	 * @access public
+	 */
+	public function __construct(array $options = array());
+
+
+	/**
+	 * Set Options related to class
+	 *
+	 * @param array $options
+	 * @return GASS\Adapter\AdapterInterface
+	 * @access public
+	 */
+	public function setOptions(array $options);
+
+
+	/**
+	 * Sets a specific option
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 * @return GASS\Adapter\AdapterInterface
+	 * @access public
+	 */
+	public function setOption($name, $value);
+
+
+	/**
+	 * Returns all options set
+	 *
+	 * @return array
+	 * @access public
+	 */
+	public function getOptions();
+
+
+	/**
+	 * Returns a specific option
+	 *
+	 * @param string $name
+	 * @return mixed
+	 * @access public
+	 */
+	public function getOption($name);
 }

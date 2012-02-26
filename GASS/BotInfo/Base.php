@@ -32,9 +32,26 @@
  * @package		GoogleAnalyticsServerSide
  * @subpackage	BotInfo
  */
-abstract class GASS_BotInfo_Base
-	extends GASS_Adapter_Base
-	implements GASS_BotInfo_Interface
+
+/**
+ * @namespace
+ */
+namespace GASS\BotInfo;
+
+
+/**
+ * Base class of all BotInfo adapters
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	BotInfo
+ */
+abstract class Base
+	extends \GASS\Adapter\Base
+	implements BotInfoInterface
 {
 
 	/**
@@ -90,12 +107,12 @@ abstract class GASS_BotInfo_Base
 	 * {@inheritdoc}
 	 *
 	 * @param string $remoteAddress
-	 * @return GASS_BotInfo_Base
+	 * @return GASS\BotInfo\Base
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
 		if (1 !== preg_match('/^(\d{1,3}\.){3}\d{1,3}$/', $remoteAddress)) {
-			throw new InvalidArgumentException('The Remote Address must be an IP address.');
+			throw new \InvalidArgumentException('The Remote Address must be an IP address.');
 		}
 		$this->remoteAddress = $remoteAddress;
 		return $this;
@@ -106,7 +123,7 @@ abstract class GASS_BotInfo_Base
 	 * {@inheritdoc}
 	 *
 	 * @param string $userAgent
-	 * @return GASS_BotInfo_Base
+	 * @return GASS\BotInfo\Base
 	 * @access public
 	 */
 	public function setUserAgent($userAgent) {

@@ -1,6 +1,16 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.8.0 Beta
+------------------
+
+- Converted to PHP 5.3 with namespaces instead of PHP 5.2 virtual namespaces  
+	( using @ralphschindler 's php-namespacer: https://github.com/ralphschindler/PHPTools )
+- Removed deprecated methods from main class
+- Removed get/setEvent, not in GA code and not needed, set is done directly in trackEvent
+- Removed support for old csv cache in UserAgentStringInfo which just stored user agents without IPs
+- BrowserCap renamed BrowsCap inline with PHP
+
 Version 0.7.11 Beta
 -------------------
 

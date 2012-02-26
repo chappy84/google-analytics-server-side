@@ -32,9 +32,25 @@
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Http
  */
-abstract class GASS_Http_Base
-	extends GASS_Adapter_Base
-	implements GASS_Http_Interface
+
+/**
+ * @namespace
+ */
+namespace GASS\Http;
+
+/**
+ * Base class for all Http adapters
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	Http
+ */
+abstract class Base
+	extends \GASS\Adapter\Base
+	implements HttpInterface
 {
 
 	/**
@@ -121,12 +137,12 @@ abstract class GASS_Http_Base
 	 * {@inheritdoc}
 	 *
 	 * @param string $acceptLanguage
-	 * @return GASS_Http_Base
+	 * @return GASS\Http\Base
 	 * @access public
 	 */
 	public function setAcceptLanguage($acceptLanguage) {
 		if (1 !== preg_match('/^([a-z]{2})(-[a-z]{2})??$/i', $acceptLanguage)) {
-			throw new InvalidArgumentException('The Accepted language must be composed of internationally recognised language iso codes.');
+			throw new \InvalidArgumentException('The Accepted language must be composed of internationally recognised language iso codes.');
 		}
 		$this->acceptLanguage = $acceptLanguage;
 		return $this;
@@ -137,12 +153,12 @@ abstract class GASS_Http_Base
 	 * {@inheritdoc}
 	 *
 	 * @param string $remoteAddress
-	 * @return GASS_Http_Base
+	 * @return GASS\Http\Base
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
 		if (1 !== preg_match('/^(\d{1,3}\.){3}\d{1,3}$/', $remoteAddress)) {
-			throw new InvalidArgumentException('The Remote Address must be an IP address.');
+			throw new \InvalidArgumentException('The Remote Address must be an IP address.');
 		}
 		$this->remoteAddress = $remoteAddress;
 		return $this;
@@ -153,7 +169,7 @@ abstract class GASS_Http_Base
 	 * {@inheritdoc}
 	 *
 	 * @param mixed $response
-	 * @return GASS_Http_Base
+	 * @return GASS\Http\Base
 	 * @access public
 	 */
 	public function setResponse($response) {
@@ -166,7 +182,7 @@ abstract class GASS_Http_Base
 	 * {@inheritdoc}
 	 *
 	 * @param string $userAgent
-	 * @return GASS_Http_Base
+	 * @return GASS\Http\Base
 	 * @access public
 	 */
 	public function setUserAgent($userAgent) {
@@ -185,7 +201,7 @@ abstract class GASS_Http_Base
 	 */
 	protected function checkResponseCode($code) {
 		if (!is_numeric($code)) {
-			throw new InvalidArgumentException('HTTP Status Code must be numeric.');
+			throw new \InvalidArgumentException('HTTP Status Code must be numeric.');
 		}
 		switch ($code) {
 			case '204':
@@ -317,7 +333,7 @@ abstract class GASS_Http_Base
 			default:
 		}
 		if (isset($message)) {
-			throw new RuntimeException($message, $code);
+			throw new \RuntimeException($message, $code);
 		}
 	}
 
@@ -327,7 +343,7 @@ abstract class GASS_Http_Base
 	 *
 	 * @param string $url
 	 * @param array $options
-	 * @return GASS_Http_Base
+	 * @return GASS\Http\Base
 	 * @access public
 	 */
 	public function request($url = null, array $options = array()) {

@@ -48,9 +48,9 @@ if (false === strpos($gassCurrentIncludePath, $gassCurrentDir)) {
  * @param string $name
  * @throws RuntimeException
  */
-function GASSAutoload($name) {
-	if (0 === strpos($name, 'GASS_')) {
-		$filePath = str_replace('_', DIRECTORY_SEPARATOR, $name);
+spl_autoload_register(function ($name) {
+	if (0 === strpos($name, 'GASS\\')) {
+		$filePath = str_replace('\\', DIRECTORY_SEPARATOR, $name);
 		$includePaths = explode(PATH_SEPARATOR, get_include_path());
 		$fileFound = false;
 		$classFound = false;
@@ -66,23 +66,9 @@ function GASSAutoload($name) {
 			}
 		}
 		if (!$fileFound) {
-			throw new RuntimeException('File could not be found for '.$name);
+			throw new \RuntimeException('File could not be found for '.$name);
 		} elseif (!$classFound) {
-			throw new RuntimeException('Class or Interface could not be found for '.$name);
+			throw new \RuntimeException('Class or Interface could not be found for '.$name);
 		}
 	}
-}
-
-
-/**
- * Adds the autoloader to the php auto-load stack
- */
-spl_autoload_register('GASSAutoload');
-
-/**
- * If lower than PHP 5.3 add in functionality
- * to ensure all functions work correctly
- */
-if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50300) {
-	require_once 'php-5.2-extras.php';
-}
+});

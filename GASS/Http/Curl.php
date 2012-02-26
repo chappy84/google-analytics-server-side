@@ -32,8 +32,24 @@
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Http
  */
-class GASS_Http_Curl
-	extends GASS_Http_Base
+
+/**
+ * @namespace
+ */
+namespace GASS\Http;
+
+/**
+ * cURL adapter for Http
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	Http
+ */
+class Curl
+	extends Base
 {
 
 	/**
@@ -65,7 +81,7 @@ class GASS_Http_Curl
 	 */
 	public function __construct(array $options = array()) {
 		if (!extension_loaded('curl')) {
-			throw new RuntimeException('cURL PHP extension is not loaded.');
+			throw new \RuntimeException('cURL PHP extension is not loaded.');
 		}
 		parent::__construct($options);
 	}
@@ -85,7 +101,7 @@ class GASS_Http_Curl
 			}
 			return curl_getinfo($this->curl, $infoOpt);
 		}
-		throw new DomainException('A cURL request has not been made yet.');
+		throw new \DomainException('A cURL request has not been made yet.');
 	}
 
 
@@ -93,7 +109,7 @@ class GASS_Http_Curl
 	 * {@inheritdoc}
 	 *
 	 * @param string $url
-	 * @return GASS_Http_Curl
+	 * @return GASS\Http\Curl
 	 * @access public
 	 */
 	public function setUrl($url) {
@@ -104,7 +120,7 @@ class GASS_Http_Curl
 	/**
 	 * Closes the curl connection if one is present
 	 *
-	 * @return GASS_Http_Curl
+	 * @return GASS\Http\Curl
 	 * @access protected
 	 */
 	protected function close() {
@@ -121,7 +137,7 @@ class GASS_Http_Curl
 	 *
 	 * @param string $url
 	 * @param array $options
-	 * @return GASS_Http_Curl
+	 * @return GASS\Http\Curl
 	 * @access public
 	 */
 	public function request($url = null, array $options = array()) {
@@ -147,11 +163,11 @@ class GASS_Http_Curl
 
 		$extraCurlOptions = $this->getOptions();
 		if (!empty($extraCurlOptions) && false === curl_setopt_array($this->curl, $extraCurlOptions)) {
-			throw new UnexpectedValueException('One of the extra curl options specified is invalid. Error: '.curl_error($this->curl));
+			throw new \UnexpectedValueException('One of the extra curl options specified is invalid. Error: '.curl_error($this->curl));
 		}
 
 		if (false === ($response = curl_exec($this->curl))) {
-			throw new RuntimeException('Source could not be retreived. Error: '.curl_error($this->curl));
+			throw new \RuntimeException('Source could not be retreived. Error: '.curl_error($this->curl));
 		}
 
 		$statusCode = $this->getInfo(CURLINFO_HTTP_CODE);

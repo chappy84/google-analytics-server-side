@@ -32,8 +32,24 @@
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Http
  */
-class GASS_Http_Stream
-	extends GASS_Http_Base
+
+/**
+ * @namespace
+ */
+namespace GASS\Http;
+
+/**
+ * Stream adapter for Http
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	Http
+ */
+class Stream
+	extends Base
 {
 
 	/**
@@ -70,7 +86,7 @@ class GASS_Http_Stream
 			}
 			return $this->responseHeaders;
 		}
-		throw new DomainException('A Http Request has not been made yet.');
+		throw new \DomainException('A Http Request has not been made yet.');
 	}
 
 
@@ -117,7 +133,7 @@ class GASS_Http_Stream
 	 * {@inheritdoc}
 	 *
 	 * @param string $url
-	 * @return GASS_Http_Stream
+	 * @return GASS\Http\Stream
 	 * @access public
 	 */
 	public function setUrl($url) {
@@ -130,7 +146,7 @@ class GASS_Http_Stream
 	 *
 	 * @param string $url
 	 * @param array $options
-	 * @return GASS_Http_Stream
+	 * @return GASS\Http\Stream
 	 * @access public
 	 */
 	public function request($url = null, array $options = array()) {
@@ -163,7 +179,7 @@ class GASS_Http_Stream
 		if (false === ($response = @file_get_contents(	parent::getOption('url')
 													,	false
 													,	$context))) {
-			throw new RuntimeException('Source could not be retreived.');
+			throw new \RuntimeException('Source could not be retreived.');
 		}
 		$this->setResponseHeaders($http_response_header);
 		if (null !== ($statusCode = $this->getInfo('Http-Code'))) {
@@ -201,7 +217,7 @@ class GASS_Http_Stream
 			$headers = explode("\n", $headers);
 		}
 		if (!is_array($headers)) {
-			throw new InvalidArgumentException('Headers must be provided in either string or numerically indexed array format.');
+			throw new \InvalidArgumentException('Headers must be provided in either string or numerically indexed array format.');
 		}
 		$returnHeaders = array();
 		foreach ($headers as $header) {

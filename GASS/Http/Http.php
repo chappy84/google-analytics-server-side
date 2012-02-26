@@ -30,31 +30,56 @@
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
- * @subpackage	BotInfo
+ * @subpackage	Http
  */
-class GASS_BotInfo
-	implements GASS_Interface
+
+/**
+ * @namespace
+ */
+namespace GASS\Http;
+
+/**
+ * Proxy class for dealing with all Http requests regardless of adapter
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	Http
+ */
+class Http
 {
 
 	/**
 	 * The current adapter in use
 	 *
-	 * @var GASS_BotInfo_Interface
+	 * @var string
 	 * @access private
 	 */
 	private $adapter;
 
 
 	/**
+	 * Singleton instance of GASS\Http
+	 *
+	 * @var GASS\Http
+	 * @static
+	 * @access protected
+	 */
+	protected static $instance;
+
+
+	/**
 	 * Class Constructor
 	 *
 	 * @param array $options
-	 * @param string $adapter [optional] - can be provided in $options aswell
-	 * @access public
+	 * @param string|GASS\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
+	 * @access protected
 	 */
 	public function __construct(array $options = array(), $adapter = null) {
 		if (null === $adapter) {
-			$adapter = (isset($options['adapter'])) ? $options['adapter'] : 'BrowserCap';
+			$adapter = (isset($options['adapter'])) ? $options['adapter'] : 'Stream';
 			unset($options['adapter']);
 		}
 		$this->setAdapter($adapter);
@@ -65,7 +90,39 @@ class GASS_BotInfo
 
 
 	/**
+	 * @throws RuntimeException
+	 * @final
+	 * @access public
+	 */
+	final public function __clone() {
+		throw new \RuntimeException('You cannot clone '.__CLASS__);
+	}
+
+
+	/**
+	 * Returns the current instance of GASS\Http
+	 * Accepts the same parameters as __construct
+	 *
+	 * @see GASS\Http::__construct
+	 * @param array $options
+	 * @param string|GASS\Http\HttpInterface $adapter
+	 * @return GASS\Http
+	 * @static
+	 * @access public
+	 */
+	public static function getInstance(array $options = array(), $adapter = null) {
+		$className = __CLASS__;
+		if (self::$instance === null || !self::$instance instanceof $className) {
+			self::$instance = new $className($options, $adapter);
+		}
+		return self::$instance;
+	}
+
+
+	/**
 	 * Call magic method
+	 *
+	 * N/B: Cannot implement __callStatic due to PHP 5.2 backwards compatability
 	 *
 	 * @param string $name
 	 * @param array $arguments
@@ -74,36 +131,38 @@ class GASS_BotInfo
 	 * @access public
 	 */
 	public function __call($name, $arguments) {
-		if ($this->adapter instanceof GASS_BotInfo_Interface) {
+		if ($this->adapter instanceof HttpInterface) {
 			return call_user_func_array(array($this->adapter, $name), $arguments);
 		}
-		throw new DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
+		throw new \DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
 	}
 
 
 	/**
 	 * Sets the current adapter to use
 	 *
-	 * @param string|GASS_BotInfo_Interface $adapter
+	 * @param string $adapter
 	 * @throws InvalidArgumentException
-	 * @return GASS_BotInfo
+	 * @return GASS\Http
 	 * @access public
 	 */
 	public function setAdapter($adapter) {
 		if (is_string($adapter)) {
-			$adapterName = 'GASS_BotInfo_'.ucfirst($adapter);
+			$adapterName = 'GASS\Http\\'.ucfirst($adapter);
 			$adapter = new $adapterName();
 		}
-		if ($adapter instanceof GASS_BotInfo_Interface) {
+		if ($adapter instanceof HttpInterface) {
 			$this->adapter = $adapter;
 			return $this;
 		}
-		throw new InvalidArgumentException('The GASS_BotInfo adapter must implement GASS_BotInfo_Interface.');
+		throw new \InvalidArgumentException('The GASS\Http adapter must implement GASS\Http\HttpInterface.');
 	}
 
 
 	/**
-	 * @return the $adapter
+	 * Returns the current adapter in use
+	 *
+	 * @return GASS\Http\HttpInterface
 	 * @access public
 	 */
 	public function getAdapter() {

@@ -30,56 +30,62 @@
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
- * @subpackage	Adapter
  */
-interface GASS_Adapter_Interface
+
+/**
+ * @namespace
+ */
+namespace GASS;
+
+/**
+ * Interface for GASS Proxy classes
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ */
+interface GASSInterface
 {
 
 	/**
-	 * Class level constructor
-	 *
-	 * @param array $cacheOptions
-	 * @access public
-	 */
-	public function __construct(array $options = array());
-
-
-	/**
-	 * Set Options related to class
+	 * Class Constructor
 	 *
 	 * @param array $options
-	 * @return GASS_Adapter_Interface
+	 * @param string|GASS_Adapter_Interface $adapter [optional] - can be provided in $options aswell
 	 * @access public
 	 */
-	public function setOptions(array $options);
+	public function __construct(array $options = array(), $adapter = null);
 
 
 	/**
-	 * Sets a specific option
+	 * Call magic method
 	 *
 	 * @param string $name
-	 * @param mixed $value
-	 * @return GASS_Adapter_Interface
-	 * @access public
-	 */
-	public function setOption($name, $value);
-
-
-	/**
-	 * Returns all options set
-	 *
-	 * @return array
-	 * @access public
-	 */
-	public function getOptions();
-
-
-	/**
-	 * Returns a specific option
-	 *
-	 * @param string $name
+	 * @param array $arguments
+	 * @throws DomainException
 	 * @return mixed
 	 * @access public
 	 */
-	public function getOption($name);
+	public function __call($name, $arguments);
+
+
+	/**
+	 * Set the adapter to use
+	 *
+	 * @param string|GASS_Adapter_Interface $adapter
+	 * @return GASS_Interface
+	 * @access public
+	 */
+	public function setAdapter($adapter);
+
+
+	/**
+	 * Get the instance of the current adapter in use
+	 *
+	 * @return GASS_Adapter_Interface
+	 * @access public
+	 */
+	public function getAdapter();
 }

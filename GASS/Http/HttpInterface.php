@@ -30,25 +30,49 @@
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
- * @subpackage	BotInfo
+ * @subpackage	Http
  */
-interface GASS_BotInfo_Interface
-	extends GASS_Adapter_Interface
+
+/**
+ * @namespace
+ */
+namespace GASS\Http;
+
+/**
+ * Interface for all Http Adapters
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	Http
+ */
+interface HttpInterface
+	extends \GASS\Adapter\AdapterInterface
 {
 
 	/**
-	 * Returns whether or not the provided user-agent is a bot or not
+	 * Returns the current Accepted Language for the sent headers
 	 *
-	 * @param string $userAgent [optional]
-	 * @param string $remoteAddress [optional]
-	 * @return boolean
+	 * @return string
 	 * @access public
 	 */
-	public function getIsBot($userAgent = null, $remoteAddress = null);
+	public function getAcceptLanguage();
 
 
 	/**
-	 * Get the remote user's ip address
+	 * Returns information related to the previously made request
+	 *
+	 * @param mixed $index [optional]
+	 * @return mixed
+	 * @access public
+	 */
+	public function getInfo($index = null);
+
+
+	/**
+	 * Returns the current Remote Address for the sent headers (X-Forwarded-For)
 	 *
 	 * @return string
 	 * @access public
@@ -57,7 +81,16 @@ interface GASS_BotInfo_Interface
 
 
 	/**
-	 * Get the user agent used in the class
+	 * Returns the existing request response
+	 *
+	 * @return mixed
+	 * @access public
+	 */
+	public function getResponse();
+
+
+	/**
+	 * Returns the current User-Agent for the sent headers
 	 *
 	 * @return string
 	 * @access public
@@ -66,21 +99,62 @@ interface GASS_BotInfo_Interface
 
 
 	/**
-	 * Sets the remote user's ip address
+	 * Sets the current Accepted Language for the sent headers
+	 *
+	 * @param string $acceptLanguage
+	 * @return GASS\Http\HttpInterface
+	 * @access public
+	 */
+	public function setAcceptLanguage($acceptLanguage);
+
+
+	/**
+	 * Sets the current Remote Address for the sent headers (X-Forwarded-For)
 	 *
 	 * @param string $remoteAddress
-	 * @return GASS_BotInfo_Interface
+	 * @return GASS\Http\HttpInterface
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress);
 
 
 	/**
-	 * Set the current user agent
+	 * Sets the existing request response
+	 *
+	 * @param mixed $response
+	 * @return GASS\Http\HttpInterface
+	 * @access public
+	 */
+	public function setResponse($response);
+
+
+	/**
+	 * Sets the Url to Request
+	 *
+	 * @param string $url
+	 * @return GASS\Http\HttpInterface
+	 * @access public
+	 */
+	public function setUrl($url);
+
+
+	/**
+	 * Sets the current User-Agent for the sent headers
 	 *
 	 * @param string $userAgent
-	 * @return GASS_BotInfo_Interface
+	 * @return GASS\Http\HttpInterface
 	 * @access public
 	 */
 	public function setUserAgent($userAgent);
+
+
+	/**
+	 * Makes a request with either the existing options set or the ones provided
+	 *
+	 * @param string $url
+	 * @param array $options
+	 * @return GASS\Http\HttpInterface
+	 * @access public
+	 */
+	public function request($url = null, array $options = array());
 }

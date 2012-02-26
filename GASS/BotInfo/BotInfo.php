@@ -30,18 +30,54 @@
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
+ * @subpackage	BotInfo
  */
-interface GASS_Interface
+
+/**
+ * @namespace
+ */
+namespace GASS\BotInfo;
+
+/**
+ * Proxy class for dealing with all BotInfo requests regardless of adapter
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	BotInfo
+ */
+class BotInfo
+	implements \GASS\GASSInterface
 {
+
+	/**
+	 * The current adapter in use
+	 *
+	 * @var GASS\BotInfo\BotInfoInterface
+	 * @access private
+	 */
+	private $adapter;
+
 
 	/**
 	 * Class Constructor
 	 *
 	 * @param array $options
-	 * @param string|GASS_Adapter_Interface $adapter [optional] - can be provided in $options aswell
+	 * @param string $adapter [optional] - can be provided in $options aswell
 	 * @access public
 	 */
-	public function __construct(array $options = array(), $adapter = null);
+	public function __construct(array $options = array(), $adapter = null) {
+		if (null === $adapter) {
+			$adapter = (isset($options['adapter'])) ? $options['adapter'] : 'BrowsCap';
+			unset($options['adapter']);
+		}
+		$this->setAdapter($adapter);
+		if (0 < func_num_args()) {
+			$this->setOptions($options);
+		}
+	}
 
 
 	/**
@@ -53,24 +89,40 @@ interface GASS_Interface
 	 * @return mixed
 	 * @access public
 	 */
-	public function __call($name, $arguments);
+	public function __call($name, $arguments) {
+		if ($this->adapter instanceof BotInfoInterface) {
+			return call_user_func_array(array($this->adapter, $name), $arguments);
+		}
+		throw new \DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
+	}
 
 
 	/**
-	 * Set the adapter to use
+	 * Sets the current adapter to use
 	 *
-	 * @param string|GASS_Adapter_Interface $adapter
-	 * @return GASS_Interface
+	 * @param string|GASS\BotInfo\BotInfoInterface $adapter
+	 * @throws InvalidArgumentException
+	 * @return GASS\BotInfo
 	 * @access public
 	 */
-	public function setAdapter($adapter);
+	public function setAdapter($adapter) {
+		if (is_string($adapter)) {
+			$adapterName = 'GASS\BotInfo\\'.ucfirst($adapter);
+			$adapter = new $adapterName();
+		}
+		if ($adapter instanceof BotInfoInterface) {
+			$this->adapter = $adapter;
+			return $this;
+		}
+		throw new \InvalidArgumentException('The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
+	}
 
 
 	/**
-	 * Get the instance of the current adapter in use
-	 *
-	 * @return GASS_Adapter_Interface
+	 * @return the $adapter
 	 * @access public
 	 */
-	public function getAdapter();
+	public function getAdapter() {
+		return $this->adapter;
+	}
 }

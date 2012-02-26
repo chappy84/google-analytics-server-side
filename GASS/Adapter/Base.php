@@ -32,8 +32,24 @@
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Adapter
  */
-abstract class GASS_Adapter_Base
-	implements GASS_Adapter_Interface
+
+/**
+ * @namespace
+ */
+namespace GASS\Adapter;
+
+/**
+ * Base class for use with adapters
+ *
+ * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license		http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author 		Tom Chapman
+ * @category	GoogleAnalyticsServerSide
+ * @package		GoogleAnalyticsServerSide
+ * @subpackage	Adapter
+ */
+abstract class Base
+	implements AdapterInterface
 {
 
 	/**
@@ -51,7 +67,7 @@ abstract class GASS_Adapter_Base
 	 * {@inheritdoc}
 	 *
 	 * @param array $options
-	 * @return GASS_Adapter_Base
+	 * @return GASS\Adapter\Base
 	 * @access public
 	 */
 	public function setOptions(array $options) {
@@ -67,7 +83,7 @@ abstract class GASS_Adapter_Base
 	 *
 	 * @param string $name
 	 * @param mixed $value
-	 * @return GASS_Adapter_Base
+	 * @return GASS\Adapter\Base
 	 * @access public
 	 */
 	public function setOption($name, $value) {
