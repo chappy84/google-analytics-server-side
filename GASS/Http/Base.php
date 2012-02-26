@@ -70,40 +70,56 @@ abstract class GASS_Http_Base
 	private $userAgent;
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::getAcceptLanguage()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return string
+	 * @access public
 	 */
 	public function getAcceptLanguage() {
 		return $this->acceptLanguage;
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::getRemoteAddress()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return string
+	 * @access public
 	 */
 	public function getRemoteAddress() {
 		return $this->remoteAddress;
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::getResponse()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return mixed
+	 * @access public
 	 */
 	public function getResponse() {
 		return $this->response;
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::getUserAgent()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return string
+	 * @access public
 	 */
 	public function getUserAgent() {
 		return $this->userAgent;
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::setAcceptLanguage()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param string $acceptLanguage
+	 * @return GASS_Http_Base
+	 * @access public
 	 */
 	public function setAcceptLanguage($acceptLanguage) {
 		if (1 !== preg_match('/^([a-z]{2})(-[a-z]{2})??$/i', $acceptLanguage)) {
@@ -114,8 +130,12 @@ abstract class GASS_Http_Base
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::setRemoteAddress()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param string $remoteAddress
+	 * @return GASS_Http_Base
+	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
 		if (1 !== preg_match('/^(\d{1,3}\.){3}\d{1,3}$/', $remoteAddress)) {
@@ -126,8 +146,12 @@ abstract class GASS_Http_Base
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::setResponse()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param mixed $response
+	 * @return GASS_Http_Base
+	 * @access public
 	 */
 	public function setResponse($response) {
 		$this->response = $response;
@@ -135,8 +159,12 @@ abstract class GASS_Http_Base
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::setUserAgent()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param string $userAgent
+	 * @return GASS_Http_Base
+	 * @access public
 	 */
 	public function setUserAgent($userAgent) {
 		$this->userAgent = $userAgent;

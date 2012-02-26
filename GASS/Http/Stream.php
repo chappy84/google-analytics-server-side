@@ -53,8 +53,12 @@ class GASS_Http_Stream
 	protected $responseHeaders = array();
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::getInfo()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param mixed $index [optional]
+	 * @return mixed
+	 * @access public
 	 */
 	public function getInfo($index = null) {
 		if (!empty($this->responseHeaders)) {
@@ -106,16 +110,25 @@ class GASS_Http_Stream
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::setUrl()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param string $url
+	 * @return GASS_Http_Stream
+	 * @access public
 	 */
 	public function setUrl($url) {
 		return parent::setOption('url', $url);
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Base::request()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param string $url
+	 * @param array $options
+	 * @return GASS_Http_Stream
+	 * @access public
 	 */
 	public function request($url = null, array $options = array()) {
 

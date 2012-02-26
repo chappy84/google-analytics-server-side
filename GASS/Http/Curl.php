@@ -68,8 +68,12 @@ class GASS_Http_Curl
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::getInfo()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param mixed $index [optional]
+	 * @return mixed
+	 * @access public
 	 */
 	public function getInfo($index = null) {
 		if (is_resource($this->curl)) {
@@ -82,8 +86,12 @@ class GASS_Http_Curl
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Interface::setUrl()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param string $url
+	 * @return GASS_Http_Curl
+	 * @access public
 	 */
 	public function setUrl($url) {
 		return $this->setOption(CURLOPT_URL, $url);
@@ -105,8 +113,13 @@ class GASS_Http_Curl
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Http_Base::request()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param string $url
+	 * @param array $options
+	 * @return GASS_Http_Curl
+	 * @access public
 	 */
 	public function request($url = null, array $options = array()) {
 

@@ -16,7 +16,7 @@ This PHP adaptation is maintained by [Tom Chapman][4].
 [3]: http://www.google.com/analytics
 [4]: http://tom-chapman.co.uk/
 
-USAGE
+Usage
 -----
 
 Google Analytics Server Side can be used simply in the following manner:
@@ -185,7 +185,7 @@ The Location will be reported as the location of the server if you use the GA Ac
 UA-XXXXXXX-X as provided by Google. If you alter this to the format MO-XXXXXXX-X then the location will be tracked
 correctly and appear on the location map as it does with the normal ECMAScript tracking.
 
-COOKIES
+Cookies
 -------
 
 Cookies are automatically set when either trackPageView or trackEvent are called.  

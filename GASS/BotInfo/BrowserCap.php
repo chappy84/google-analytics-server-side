@@ -291,13 +291,18 @@ class GASS_BotInfo_BrowserCap
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @param string $userAgent
+	 * @param string $userAgent [optional]
+	 * @param string $remoteAddress [optional]
 	 * @return boolean
 	 * @access public
 	 */
-	public function getIsBot($userAgent = null) {
-		if ($userAgent !== null) {
+	public function getIsBot($userAgent = null, $remoteAddress = null) {
+		$noArgs = func_num_args();
+		if ($noArgs >= 1) {
 			$this->setUserAgent($userAgent);
+		}
+		if ($noArgs >= 2) {
+			$this->setRemoteAddress($remoteAddress);
 		}
 		$browserDetails = $this->getBrowser();
 		return (false === $browserDetails

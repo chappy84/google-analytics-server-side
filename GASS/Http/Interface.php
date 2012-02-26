@@ -100,7 +100,7 @@ interface GASS_Http_Interface
 
 
 	/**
-	 * Returns the existing request response
+	 * Sets the existing request response
 	 *
 	 * @param mixed $response
 	 * @return GASS_Http_Interface

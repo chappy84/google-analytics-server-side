@@ -52,6 +52,16 @@ class GASS_BotInfo_UserAgentStringInfo
 
 
 	/**
+	 * List of IPs in use by bots that the class should ignore
+	 * array_format: 'IP address' => 'bot name'
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $botIps = array();
+
+
+	/**
 	 * Last date the cache was saved
 	 *
 	 * @var number|null
@@ -72,29 +82,21 @@ class GASS_BotInfo_UserAgentStringInfo
 
 
 	/**
-	 * Class level constructor
-	 *
-	 * @param array $cacheOptions
-	 * @access public
-	 */
-	public function __construct(array $options = array()) {
-		parent::__construct($options);
-	}
-
-
-	/**
 	 * Sets the bots list
 	 *
-	 * @return GASS_Bots
+	 * @return GASS_BotInfo_UserAgentStringInfo
 	 * @access public
 	 */
 	public function set() {
 		if (null === ($bots = $this->getFromCache())) {
 			$bots = $this->getFromWeb();
 		}
-		$bots = $this->parseCsv($bots);
-		$this->bots = (is_array($bots))
-						? $bots
+		$botInfo = $this->parseCsv($bots);
+		$this->bots = (is_array($botInfo->distinctBots))
+						? $botInfo->distinctBots
+						: array();
+		$this->botIps = (is_array($botInfo->distinctIPs))
+						? $botInfo->distinctIPs
 						: array();
 		return $this;
 	}
@@ -160,22 +162,30 @@ class GASS_BotInfo_UserAgentStringInfo
 	 * returns an array of bots in the default format
 	 *
 	 * @param string $fileContexts
-	 * @return array
+	 * @return stdClass
 	 * @access private
 	 */
 	private function parseCsv($fileContexts) {
 		$botList = explode("\n", $fileContexts);
-		$distinctBots = array();
+		$botInfo = new stdClass;
+		$botInfo->distinctBots = array();
+		$botInfo->distinctIPs = array();
 		foreach ($botList as $line) {
 			$line = trim($line);
 			if (!empty($line)) {
 				$csvLine = str_getcsv($line);
-				if (!isset($distinctBots[$csvLine[0]])) {
-					$distinctBots[$csvLine[0]] = (isset($csvLine[6])) ? $csvLine[6] : $csvLine[1];
+				$lineVals = count($csvLine);
+				if (!isset($botInfo->distinctBots[$csvLine[0]])) {
+					$botInfo->distinctBots[$csvLine[0]] = ($lineVals >= 7)
+															? $csvLine[6]
+															: (($lineVals >= 3) ? $csvLine[2] : $csvLine[1]);
+				}
+				if ($lineVals >= 3 && !isset($botInfo->distinctIPs[$csvLine[1]])) {
+					$botInfo->distinctIPs[$csvLine[1]] = $csvLine[0];
 				}
 			}
 		}
-		return $distinctBots;
+		return $botInfo;
 	}
 
 
@@ -190,8 +200,14 @@ class GASS_BotInfo_UserAgentStringInfo
 		if (null === $this->getCacheDate()
 				&& null !== ($csvPath = $this->getOption('cachePath')) && @is_writable($csvPath)) {
 			$csvLines = array();
-			foreach ($this->bots as $name => $value) {
-				$csvLines[] = '"'.addslashes($name).'","'.addslashes($value).'"';
+			if (!empty($this->botIps)) {
+				foreach ($this->botIps as $ipAddress => $name) {
+					$csvLines[] = '"'.addslashes($name).'","'.addslashes($ipAddress).'","'.addslashes($this->bots[$name]).'"';
+				}
+			} else {
+				foreach ($this->bots as $name => $userAgent) {
+					$csvLines[] = '"'.addslashes($name).'","'.addslashes($userAgent).'"';
+				}
 			}
 			$csvString = implode("\n", $csvLines);
 			if (false === @file_put_contents($csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'), $csvString, LOCK_EX)) {
@@ -238,26 +254,37 @@ class GASS_BotInfo_UserAgentStringInfo
 
 
 	/**
-	 * Returns whether or not the current user is a bot
+	 * {@inheritdoc}
 	 *
-	 * @param string $userAgent
+	 * @param string $userAgent [optional]
+	 * @param string $remoteAddress [optional]
 	 * @return boolean
 	 * @access public
 	 */
-	public function getIsBot($userAgent = null) {
+	public function getIsBot($userAgent = null, $remoteAddress = null) {
 		if (empty($this->bots)) {
 			$this->set();
 		}
-		if ($userAgent !== null) {
+		$noArgs = func_num_args();
+		if ($noArgs >= 1) {
 			$this->setUserAgent($userAgent);
 		}
+		if ($noArgs >= 2) {
+			$this->setRemoteAddress($remoteAddress);
+		}
 		$userAgent = $this->getUserAgent();
-		return (!empty($this->bots) && (in_array($userAgent, $this->bots) || array_key_exists($userAgent, $this->bots)));
+		$remoteAddress = $this->getRemoteAddress();
+		return ((!empty($this->bots) && (in_array($userAgent, $this->bots) || array_key_exists($userAgent, $this->bots)))
+					|| (!empty($this->botIps) && array_key_exists($remoteAddress, $this->botIps)));
 	}
 
 
-	/* (non-PHPdoc)
-	 * @see GASS_Adapter_Interface::setOptions()
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param array $options
+	 * @return GASS_BotInfo_UserAgentStringInfo
+	 * @access public
 	 */
 	public function setOptions(array $options) {
 		foreach ($options as $name => $value) {

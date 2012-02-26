@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.10 Beta
+ * @version		0.7.11 Beta
  * @example		$gass = new GoogleAnalyticsServerSide();
  *	    		$gass->setAccount('UA-XXXXXXX-X')
  *					 ->trackPageView();
@@ -475,7 +475,7 @@ class GoogleAnalyticsServerSide
 		$this->userAgent = $userAgent;
 		GASS_Http::getInstance()->setUserAgent($this->userAgent);
 		if ($this->botInfo instanceof GASS_BotInfo_Interface) {
-			$this->botInfo->setUserAgent($this->getUserAgent());
+			$this->botInfo->setUserAgent($this->userAgent);
 		}
 		return $this;
 	}
@@ -522,6 +522,9 @@ class GoogleAnalyticsServerSide
 		}
 		$this->remoteAddress = $remoteAddress;
 		GASS_Http::getInstance()->setRemoteAddress($this->remoteAddress);
+		if ($this->botInfo instanceof GASS_BotInfo_Interface) {
+			$this->botInfo->setRemoteAddress($this->remoteAddress);
+		}
 		return $this;
 	}
 
@@ -658,7 +661,7 @@ class GoogleAnalyticsServerSide
 	 * Alias method for setCustomVar
 	 *
 	 * @see GoogleAnalyticsServerSide::setCustomVar
-	 * @deprecated
+	 * @deprecated 0.7.8 Beta
 	 */
 	public function setCustomVariable() {
 		$arguments = func_get_args();
@@ -747,7 +750,8 @@ class GoogleAnalyticsServerSide
 			} else {
 				$this->botInfo = new GASS_BotInfo();
 			}
-			$this->botInfo->setUserAgent($this->getUserAgent());
+			$this->botInfo->setUserAgent($this->getUserAgent())
+						->setRemoteAddress($this->getRemoteAddress());
 		} else {
 			$this->botInfo = null;
 		}
@@ -1180,7 +1184,7 @@ class GoogleAnalyticsServerSide
 	 * Alias function for trackPageView
 	 *
 	 * @see GoogleAnalyticsServerSide::trackPageView
-	 * @deprecated
+	 * @deprecated 0.7.8 Beta
 	 */
 	public function createPageView() {
 		$arguments = func_get_args();
@@ -1219,7 +1223,7 @@ class GoogleAnalyticsServerSide
 	 * Alias function for trackEvent
 	 *
 	 * @see GoogleAnalyticsServerSide::trackEvent
-	 * @deprecated
+	 * @deprecated 0.7.8 Beta
 	 */
 	public function createEvent() {
 		$arguments = func_get_args();

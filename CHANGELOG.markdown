@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.11 Beta
+-------------------
+
+- Remove all non-PHPDoc doc blocks and replace with PHPDoc blocks so all works when PHPDoc run on project
+- GASS_BotInfo_UserAgentStringInfo now blocks per IP address as well as user agent string to ensure is blocking all bots in list
+
 Version 0.7.10 Beta
 -------------------
 

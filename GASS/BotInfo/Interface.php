@@ -34,13 +34,23 @@ interface GASS_BotInfo_Interface
 {
 
 	/**
-	 * Returns whether or not the provided user-agent is a trawler bot or not
+	 * Returns whether or not the provided user-agent is a bot or not
 	 *
 	 * @param string $userAgent [optional]
+	 * @param string $remoteAddress [optional]
 	 * @return boolean
 	 * @access public
 	 */
-	public function getIsBot($userAgent = null);
+	public function getIsBot($userAgent = null, $remoteAddress = null);
+
+
+	/**
+	 * Get the remote user's ip address
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function getRemoteAddress();
 
 
 	/**
@@ -53,7 +63,17 @@ interface GASS_BotInfo_Interface
 
 
 	/**
-	 * Set the current user agent for use in the class
+	 * Sets the remote user's ip address
+	 *
+	 * @param string $remoteAddress
+	 * @return GASS_BotInfo_Interface
+	 * @access public
+	 */
+	public function setRemoteAddress($remoteAddress);
+
+
+	/**
+	 * Set the current user agent
 	 *
 	 * @param string $userAgent
 	 * @return GASS_BotInfo_Interface

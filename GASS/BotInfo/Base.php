@@ -35,6 +35,15 @@ abstract class GASS_BotInfo_Base
 {
 
 	/**
+	 * The remote user's ip address
+	 *
+	 * @var string
+	 * @access protected
+	 */
+	protected $remoteAddress;
+
+
+	/**
 	 * The current user-agent
 	 *
 	 * @var string
@@ -58,8 +67,35 @@ abstract class GASS_BotInfo_Base
 	 * @return string
 	 * @access public
 	 */
+	public function getRemoteAddress() {
+		return $this->remoteAddress;
+	}
+
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function getUserAgent() {
 		return $this->userAgent;
+	}
+
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param string $remoteAddress
+	 * @return GASS_BotInfo_Base
+	 * @access public
+	 */
+	public function setRemoteAddress($remoteAddress) {
+		if (1 !== preg_match('/^(\d{1,3}\.){3}\d{1,3}$/', $remoteAddress)) {
+			throw new InvalidArgumentException('The Remote Address must be an IP address.');
+		}
+		$this->remoteAddress = $remoteAddress;
+		return $this;
 	}
 
 

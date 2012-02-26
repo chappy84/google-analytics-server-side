@@ -45,7 +45,7 @@ abstract class GASS_Adapter_Base
 
 
 	/**
-	 * Set Options related to class
+	 * {@inheritdoc}
 	 *
 	 * @param array $options
 	 * @return GASS_Adapter_Base
