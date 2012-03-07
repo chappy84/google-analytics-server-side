@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.8.1 Beta
+------------------
+
+- Add a __callStatic magic method to GASS\Http so adapter methods can be called statically
+- Ensure $php_errormsg has a value in GASS\Http\Stream so can be used when http request fails
+
 Version 0.8.0 Beta
 ------------------
 

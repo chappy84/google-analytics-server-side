@@ -122,19 +122,37 @@ class Http
 	/**
 	 * Call magic method
 	 *
-	 * N/B: Cannot implement __callStatic due to PHP 5.2 backwards compatability
-	 *
 	 * @param string $name
 	 * @param array $arguments
-	 * @throws DomainException
+	 * @throws \BadMethodCallException
 	 * @return mixed
 	 * @access public
 	 */
 	public function __call($name, $arguments) {
-		if ($this->adapter instanceof HttpInterface) {
+		if (method_exists($this->adapter, $name)) {
 			return call_user_func_array(array($this->adapter, $name), $arguments);
 		}
-		throw new \DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
+		throw new \BadMethodCallException(__METHOD__.' is not an available method in '.get_class($this->adapter));
+	}
+
+
+	/**
+	 * Call Static magic method
+	 *
+	 * @param string $name
+	 * @param array $arguments
+	 * @throws \BadMethodCallException
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
+	public static function __callStatic($name, $arguments) {
+		$instance = self::getInstance();
+		$adapter = $instance->getAdapter();
+		if (method_exists($adapter, $name)) {
+			return call_user_func_array(array($adapter, $name), $arguments);
+		}
+		throw new \BadMethodCallException(__METHOD__.' is not an available method in '.get_class($adapter));
 	}
 
 

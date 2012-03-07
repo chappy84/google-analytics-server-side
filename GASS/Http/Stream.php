@@ -106,7 +106,7 @@ class Stream
 	 *
 	 * @param string $name
 	 * @param mixed $value
-	 * @return GASS_Adapter_Base
+	 * @return GASS\Adapter\Base
 	 * @access public
 	 */
 	public function setOption($name, $value) {
@@ -179,7 +179,11 @@ class Stream
 		if (false === ($response = @file_get_contents(	parent::getOption('url')
 													,	false
 													,	$context))) {
-			throw new \RuntimeException('Source could not be retreived.');
+			if (!isset($php_errormsg)) {
+				$php_errormsg = 'error message not available, this could be because the ini '
+								.'setting "track_errors" is set to "Off" or XDebug is running';
+			}
+			throw new \RuntimeException('Source could not be retreived. Error: '.$php_errormsg);
 		}
 		$this->setResponseHeaders($http_response_header);
 		if (null !== ($statusCode = $this->getInfo('Http-Code'))) {

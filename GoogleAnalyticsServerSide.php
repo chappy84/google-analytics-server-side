@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.8.0 Beta
+ * @version		0.8.1 Beta
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
  * @example		$gass = new GoogleAnalyticsServerSide();
@@ -467,7 +467,7 @@ class GoogleAnalyticsServerSide
 	 */
 	public function setUserAgent($userAgent) {
 		$this->userAgent = $userAgent;
-		\GASS\Http\Http::getInstance()->setUserAgent($this->userAgent);
+		\GASS\Http\Http::setUserAgent($this->userAgent);
 		if ($this->botInfo instanceof \GASS\BotInfo\BotInfoInterface) {
 			$this->botInfo->setUserAgent($this->userAgent);
 		}
@@ -488,7 +488,7 @@ class GoogleAnalyticsServerSide
 			list($acceptLanguage, $other) = explode(',', $acceptLanguage, 2);
 		}
 		$this->acceptLanguage = strtolower($acceptLanguage);
-		\GASS\Http\Http::getInstance()->setAcceptLanguage($this->acceptLanguage);
+		\GASS\Http\Http::setAcceptLanguage($this->acceptLanguage);
 		return $this;
 	}
 
@@ -515,7 +515,7 @@ class GoogleAnalyticsServerSide
 			throw new \InvalidArgumentException('The Remote Address must be an IP address.');
 		}
 		$this->remoteAddress = $remoteAddress;
-		\GASS\Http\Http::getInstance()->setRemoteAddress($this->remoteAddress);
+		\GASS\Http\Http::setRemoteAddress($this->remoteAddress);
 		if ($this->botInfo instanceof \GASS\BotInfo\BotInfoInterface) {
 			$this->botInfo->setRemoteAddress($this->remoteAddress);
 		}
@@ -728,7 +728,7 @@ class GoogleAnalyticsServerSide
 			} elseif (is_array($http)) {
 				\GASS\Http\Http::getInstance($http);
 			}
-			\GASS\Http\Http::getInstance()->setAcceptLanguage($this->getAcceptLanguage())
+			\GASS\Http\Http::setAcceptLanguage($this->getAcceptLanguage())
 										->setRemoteAddress($this->getRemoteAddress())
 										->setUserAgent($this->getUserAgent());
 		}
@@ -1096,7 +1096,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setLatestVersionFromJs() {
-		$currentJs = \GASS\Http\Http::getInstance()->request(self::JS_URL)->getResponse();
+		$currentJs = \GASS\Http\Http::request(self::JS_URL)->getResponse();
 		$version = preg_replace('/^[\s\S]+\=function\(\)\{return[\'"]((\d+\.){2}\d+)[\'"][\s\S]+$/i', '$1', $currentJs);
 		if (preg_match('/^(\d+\.){2}\d+$/', $version)) {
 			$this->setVersion($version);
@@ -1222,7 +1222,7 @@ class GoogleAnalyticsServerSide
 
 		$utmUrl = self::GIF_URL.'?'.http_build_query($queryParams, null, '&');
 
-		\GASS\Http\Http::getInstance()->request($utmUrl);
+		\GASS\Http\Http::request($utmUrl);
 		return $this;
 	}
 }

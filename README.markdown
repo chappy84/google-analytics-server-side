@@ -197,7 +197,7 @@ PHP Version
 -----------
 
 The Bad News: This project is now a pure PHP 5.3 project. PHP themselves no longer support PHP 5.2 as of August 2011 
-and with PHP 5.4 on the way it's time we left 5.2 behind (sorry to all those on shared hosting stuck with it).  
+and with PHP 5.4 now available it's time we left 5.2 behind (sorry to all those on shared hosting stuck with it).  
    
 The Good News: I have however left a [PHP 5.2 Branch][10] which you can feel free to use, fork etc.. I will try 
 to fix any issues which arise in this branch. Please notify me of any issues via the bugs link at the top of 

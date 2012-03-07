@@ -193,7 +193,7 @@ class BrowsCap
 		}
 		$currentHttpUserAgent = Http\Http::getInstance()->getUserAgent();
 		if ($currentHttpUserAgent === null || '' == trim($currentHttpUserAgent)) {
-			throw new \RuntimeException(__CLASS__.' cannot be initialised before a user-agent has been set in the GASS_Http adapter.'
+			throw new \RuntimeException(__CLASS__.' cannot be initialised before a user-agent has been set in the GASS\Http adapter.'
 												.' The remote server rejects requests without a user-agent.');
 		}
 		$browscapSource = Http\Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();

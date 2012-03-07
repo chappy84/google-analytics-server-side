@@ -53,7 +53,7 @@ interface GASSInterface
 	 * Class Constructor
 	 *
 	 * @param array $options
-	 * @param string|GASS_Adapter_Interface $adapter [optional] - can be provided in $options aswell
+	 * @param string|GASS\Adapter\AdapterInterface $adapter [optional] - can be provided in $options aswell
 	 * @access public
 	 */
 	public function __construct(array $options = array(), $adapter = null);
@@ -74,8 +74,8 @@ interface GASSInterface
 	/**
 	 * Set the adapter to use
 	 *
-	 * @param string|GASS_Adapter_Interface $adapter
-	 * @return GASS_Interface
+	 * @param string|GASS\Adapter\AdapterInterface $adapter
+	 * @return GASS\GASSInterface
 	 * @access public
 	 */
 	public function setAdapter($adapter);
@@ -84,7 +84,7 @@ interface GASSInterface
 	/**
 	 * Get the instance of the current adapter in use
 	 *
-	 * @return GASS_Adapter_Interface
+	 * @return GASS\Adapter\AdapterInterface
 	 * @access public
 	 */
 	public function getAdapter();
