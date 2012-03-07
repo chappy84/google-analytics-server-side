@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.7.11 Beta
+ * @version		0.7.12 Beta
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
  * @example		$gass = new GoogleAnalyticsServerSide();
@@ -1138,7 +1138,7 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * Retreives the latest version of Google Analytics from the ga.js file
+	 * Retrieves the latest version of Google Analytics from the ga.js file
 	 *
 	 * @return GoogleAnalyticsServerSide
 	 * @access public

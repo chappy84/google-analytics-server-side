@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.12 Beta
+-------------------
+
+- Ensure $php_errormsg has a value in GASS_Http_Stream so can be used when http request fails
+- Correct spelling mistakes (retreive -> retrieve)
+
 Version 0.7.11 Beta
 -------------------
 

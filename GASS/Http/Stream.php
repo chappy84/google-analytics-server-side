@@ -163,7 +163,11 @@ class GASS_Http_Stream
 		if (false === ($response = @file_get_contents(	parent::getOption('url')
 													,	false
 													,	$context))) {
-			throw new RuntimeException('Source could not be retreived.');
+			if (!isset($php_errormsg)) {
+				$php_errormsg = 'error message not available, this could be because the ini '
+								.'setting "track_errors" is set to "Off" or XDebug is running';
+			}
+			throw new RuntimeException('Source could not be retrieved. Error: '.$php_errormsg);
 		}
 		$this->setResponseHeaders($http_response_header);
 		if (null !== ($statusCode = $this->getInfo('Http-Code'))) {

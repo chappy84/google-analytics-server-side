@@ -183,7 +183,7 @@ class GASS_BotInfo_BrowserCap
 		$browscapContents = trim($browscapSource);
 		if (empty($browscapContents)) {
 			throw new RuntimeException(	 'browscap ini file retrieved from external source seems to be empty. '
-										.'Please either set botInfo to null or ensure the php_browscap.ini file can be retreived.');
+										.'Please either set botInfo to null or ensure the php_browscap.ini file can be retrieved.');
 		}
 		if (false == @file_put_contents($browsCapLocation, $browscapContents)) {
 			throw new RuntimeException('Could not write to "'.$browsCapLocation.'", please check the permissions and try again.');
