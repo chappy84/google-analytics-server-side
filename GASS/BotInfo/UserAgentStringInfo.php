@@ -134,7 +134,7 @@ class UserAgentStringInfo
 
 
 	/**
-	 * Retreives the contents from the external csv source
+	 * Retrieves the contents from the external csv source
 	 * and then parses it into the class level variable bots
 	 *
 	 * @return array|null
@@ -160,7 +160,7 @@ class UserAgentStringInfo
 
 
 	/**
-	 * Retreives the bots csv from the default source
+	 * Retrieves the bots csv from the default source
 	 *
 	 * @return string
 	 * @throws RuntimeException
@@ -171,7 +171,7 @@ class UserAgentStringInfo
 		$botsCsv = trim($csvSource);
 		if (empty($botsCsv)) {
 			throw new \RuntimeException('Bots CSV retrieved from external source seems to be empty. '
-										.'Please either set botInfo to null or ensure the bots csv file can be retreived.');
+										.'Please either set botInfo to null or ensure the bots csv file can be retrieved.');
 		}
 		return $botsCsv;
 	}

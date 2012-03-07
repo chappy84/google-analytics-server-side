@@ -183,7 +183,7 @@ class Stream
 				$php_errormsg = 'error message not available, this could be because the ini '
 								.'setting "track_errors" is set to "Off" or XDebug is running';
 			}
-			throw new \RuntimeException('Source could not be retreived. Error: '.$php_errormsg);
+			throw new \RuntimeException('Source could not be retrieved. Error: '.$php_errormsg);
 		}
 		$this->setResponseHeaders($http_response_header);
 		if (null !== ($statusCode = $this->getInfo('Http-Code'))) {

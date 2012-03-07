@@ -1090,7 +1090,7 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * Retreives the latest version of Google Analytics from the ga.js file
+	 * Retrieves the latest version of Google Analytics from the ga.js file
 	 *
 	 * @return GoogleAnalyticsServerSide
 	 * @access public

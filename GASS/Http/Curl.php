@@ -167,7 +167,7 @@ class Curl
 		}
 
 		if (false === ($response = curl_exec($this->curl))) {
-			throw new \RuntimeException('Source could not be retreived. Error: '.curl_error($this->curl));
+			throw new \RuntimeException('Source could not be retrieved. Error: '.curl_error($this->curl));
 		}
 
 		$statusCode = $this->getInfo(CURLINFO_HTTP_CODE);
