@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.8.1 Beta
+ * @version		0.8.2 Beta
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
  * @example		$gass = new GoogleAnalyticsServerSide();
@@ -71,6 +71,15 @@ class GoogleAnalyticsServerSide
 	 * @var string
 	 */
 	const JS_URL = 'http://www.google-analytics.com/ga.js';
+
+
+	/**
+	 * Current contents of the ga.js file
+	 *
+	 * @var string
+	 * @access private
+	 */
+	private $currentJsFile;
 
 
 	/**
@@ -216,6 +225,59 @@ class GoogleAnalyticsServerSide
 
 
 	/**
+	 * Search engines and their query parameters
+	 * used to determine if referer is organic or not
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $searchEngines = array( array('daum'			=> 'q')
+								,	array('eniro'			=> 'search_word')
+								,	array('naver'			=> 'query')
+								,	array('pchome'			=> 'q')
+								,	array('images.google'	=> 'q')
+								,	array('google'			=> 'q')
+								,	array('yahoo'			=> 'p')
+								,	array('yahoo'			=> 'q')
+								,	array('msn'				=> 'q')
+								,	array('bing'			=> 'q')
+								,	array('aol'				=> 'query')
+								,	array('aol'				=> 'q')
+								,	array('lycos'			=> 'q')
+								,	array('lycos'			=> 'query')
+								,	array('ask'				=> 'q')
+								,	array('netscape'		=> 'query')
+								,	array('cnn'				=> 'query')
+								,	array('about'			=> 'terms')
+								,	array('mamma'			=> 'q')
+								,	array('voila'			=> 'rdata')
+								,	array('virgilio'		=> 'qs')
+								,	array('live'			=> 'q')
+								,	array('baidu'			=> 'wd')
+								,	array('alice'			=> 'qs')
+								,	array('yandex'			=> 'text')
+								,	array('najdi'			=> 'q')
+								,	array('seznam'			=> 'q')
+								,	array('rakuten'			=> 'qt')
+								,	array('biglobe'			=> 'q')
+								,	array('goo.ne'			=> 'MT')
+								,	array('wp'				=> 'szukaj')
+								,	array('onet'			=> 'qt')
+								,	array('yam'				=> 'k')
+								,	array('kvasir'			=> 'q')
+								,	array('ozu'				=> 'q')
+								,	array('terra'			=> 'query')
+								,	array('rambler'			=> 'query')
+								,	array('conduit'			=> 'q')
+								,	array('babylon'			=> 'q')
+								,	array('search-results'	=> 'q')
+								,	array('avg'				=> 'q')
+								,	array('comcast'			=> 'q')
+								,	array('incredimail'		=> 'q')
+								,	array('startsiden'		=> 'q'));
+
+
+	/**
 	 * Class to check if the current request is a bot or not
 	 *
 	 * @var null|GASS\BotInfo
@@ -268,8 +330,21 @@ class GoogleAnalyticsServerSide
 				$this->setCookie($name, $_COOKIE[$name], false);
 			}
 		}
-		$this->setOptions($options);
-		$this->setLatestVersionFromJs();
+		$this->setOptions($options)
+			->setVersionFromJs()
+			->setSearchEnginesFromJs();
+	}
+
+
+	/**
+	 * @return string
+	 * @access public
+	 */
+	public function getCurrentJsFile() {
+		if (empty($this->currentJsFile)) {
+			$this->setCurrentJsFile();
+		}
+		return $this->currentJsFile;
 	}
 
 
@@ -408,6 +483,15 @@ class GoogleAnalyticsServerSide
 
 
 	/**
+	 * @return array
+	 * @access public
+	 */
+	public function getSearchEngines() {
+		return $this->searchEngines;
+	}
+
+
+	/**
 	 * @return null|GASS\BotInfo
 	 * @access public
 	 */
@@ -442,6 +526,18 @@ class GoogleAnalyticsServerSide
 			}
 		}
 		throw new \OutOfRangeException($name.' is not an available option.');
+	}
+
+
+	/**
+	 * Sets the file contents of the latest ga.js version
+	 *
+	 * @return GoogleAnalyticsServerSide
+	 * @access public
+	 */
+	protected function setCurrentJsFile() {
+		$this->currentJsFile = trim(\GASS\Http\Http::request(self::JS_URL)->getResponse());
+		return $this;
 	}
 
 
@@ -681,6 +777,39 @@ class GoogleAnalyticsServerSide
 
 
 	/**
+	 * @param array $searchEngines
+	 * @throws InvalidArgumentException
+	 * @throws DomainException
+	 * @throws OutOfBoundsException
+	 * @return GoogleAnalyticsServerSide
+	 * @access public
+	 */
+	public function setSearchEngines($searchEngines) {
+		if (!is_array($searchEngines)) {
+			throw new InvalidArgumentException('$searchEngines must be an array.');
+		}
+		foreach ($searchEngines as $key => $searchEngine) {
+			if (!is_array($searchEngine) || 1 != count($searchEngine)) {
+				throw new DomainException('searchEngines entry '.$key.' invalid');
+			}
+			$arrayKeys = array_keys($searchEngine);
+			$name = $arrayKeys[0];
+			if (!is_string($name)
+					|| 1 !== preg_match('/^[a-z\.-]+$/', $name)) {
+				throw new OutOfBoundsException('search engine name "'.$name.'" is invalid');
+			}
+			$queryParameter = $searchEngine[$name];
+			if (!is_string($queryParameter)
+					|| 1 !== preg_match('/^[a-z_]+$/i', $queryParameter)) {
+				throw new DomainException('search engine query parameter "'.$queryParameter.'" is invalid');
+			}
+		}
+		$this->searchEngines = $searchEngines;
+		return $this;
+	}
+
+
+	/**
 	 * Sets confguration options for the BotInfo adapter to use, or the class adapter to use itself
 	 *
 	 * @param array|boolean|GASS\BotInfo\Interface|null $botInfo
@@ -908,7 +1037,7 @@ class GoogleAnalyticsServerSide
 			$this->setCustomVarsFromCookie($customVars);
 		}
 		if (isset($cookies['__utmz']) && null !== $cookies['__utmz']) {
-			list($domainId, $firstVisit, $session, $sessionVisits, $trafficSourceString) = explode('.', $cookies['__utmz'], 5);
+			list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters) = explode('.', $cookies['__utmz'], 5);
 		}
 
 		/**
@@ -928,7 +1057,6 @@ class GoogleAnalyticsServerSide
 		} elseif (!isset($cookies['__utmz'],$cookies['__utmb'])) {
 			$session++;
 		}
-		$sessionVisits = 1;
 		$pageVisits = (!isset($pageVisits) || !is_numeric($pageVisits)) ? 1 : ++$pageVisits;
 		$lastVisit = (!isset($currentVisit) || !is_numeric($currentVisit)) ? time() : $currentVisit;
 		$currentVisit = time();
@@ -936,14 +1064,46 @@ class GoogleAnalyticsServerSide
 		/**
 		 * Works out where the traffic came from and sets the end part of the utmz cookie accordingly
 		 */
+		$previousCampaignParameters = (!isset($campaignParameters) || false === strpos($campaignParameters, 'utmcsr='))
+										? '' : $campaignParameters;
 		$referer = $this->getDocumentReferer();
 		$serverName = $this->getServerName();
 		if (!empty($referer) && !empty($serverName) && false === strpos($referer, $serverName)
 				&& false !== ($refererParts = @parse_url($referer)) && isset($refererParts['host'], $refererParts['path'])) {
-			$trafficSourceString = 'utmcsr='.$refererParts['host'].'|utmccn=(referral)|utmcmd=referral|utmcct='.$refererParts['path'];
+			$refererSearchEngine = false;
+			foreach ($this->getSearchEngines() as $searchEngine) {
+				$searchEngineNames = array_keys($searchEngine);
+				$name = $searchEngineNames[0];
+				$refererDomainParts = explode('.', $refererParts['host']);
+				array_pop($refererDomainParts);
+				if (isset($refererParts['query']) && !empty($refererParts['query'])
+						&& ((false !== strpos($name, '.') && false !== strpos($refererParts['host'], $name))
+							|| in_array($name, $refererDomainParts))) {
+					$refererSearchEngine = $searchEngine;
+					break;
+				}
+			}
+			if (false === $refererSearchEngine) {
+				$campaignParameters = 'utmcsr='.$refererParts['host'].'|utmccn=(referral)|utmcmd=referral|utmcct='.$refererParts['path'];
+			} else {
+				$searchEngineNames = array_keys($searchEngine);
+				$name = $searchEngineNames[0];
+				$queryParameter = $refererSearchEngine[$name];
+				parse_str($refererParts['query'], $refererQueryParams);
+				$campaignParameters = 'utmcsr='.$name.'|utmccn=(organic)|utmcmd=organic|utmctr='.
+										((!array_key_exists($queryParameter, $refererQueryParams) || empty($refererQueryParams[$queryParameter]))
+											? '(not provided)'
+											: $refererQueryParams[$queryParameter]);
+			}
 		}
-		if (!isset($trafficSourceString) || false === strpos($trafficSourceString, 'utmcsr=')) {
-			$trafficSourceString = 'utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)';
+		if (!isset($campaignParameters) || false === strpos($campaignParameters, 'utmcsr=')) {
+			$campaignParameters = 'utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)';
+		}
+
+		if (!isset($campaignNumber) || !is_numeric($campaignNumber)) {
+			$campaignNumber = 1;
+		} elseif ($previousCampaignParameters != $campaignParameters) {
+			$campaignNumber++;
 		}
 
 		/**
@@ -952,7 +1112,7 @@ class GoogleAnalyticsServerSide
 		$this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session, $this->sendCookieHeaders);
 		$this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit, $this->sendCookieHeaders);
 		$this->setCookie('__utmc', $domainId, $this->sendCookieHeaders);
-		$this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$sessionVisits.'.'.$trafficSourceString, $this->sendCookieHeaders);
+		$this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$campaignNumber.'.'.$campaignParameters, $this->sendCookieHeaders);
 
 		$scope1Vars = $this->getCustomVarsByScope(1);
 		if (!empty($scope1Vars)) {
@@ -1090,16 +1250,46 @@ class GoogleAnalyticsServerSide
 
 
 	/**
-	 * Retrieves the latest version of Google Analytics from the ga.js file
+	 * Retrieves the current version of Google Analytics from the ga.js file
 	 *
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setLatestVersionFromJs() {
-		$currentJs = \GASS\Http\Http::request(self::JS_URL)->getResponse();
-		$version = preg_replace('/^[\s\S]+\=function\(\)\{return[\'"]((\d+\.){2}\d+)[\'"][\s\S]+$/i', '$1', $currentJs);
-		if (preg_match('/^(\d+\.){2}\d+$/', $version)) {
-			$this->setVersion($version);
+	public function setVersionFromJs() {
+		$currentJs = $this->getCurrentJsFile();
+		if (!empty($currentJs)) {
+			$regEx = '((\d+\.){2}\d+)';
+			$version = preg_replace('/^[\s\S]+\=function\(\)\{return[\'"]'.$regEx.'[\'"][\s\S]+$/i', '$1', $currentJs);
+			if (preg_match('/^'.$regEx.'$/', $version)) {
+				$this->setVersion($version);
+			}
+		}
+		return $this;
+	}
+
+
+	/**
+	 * Retrieves the current list of search engines and query parameters from the ga.js file
+	 *
+	 * @return GoogleAnalyticsServerSide
+	 * @access public
+	 */
+	public function setSearchEnginesFromJs() {
+		$currentJs = $this->getCurrentJsFile();
+		if (!empty($currentJs)) {
+			$regEx = '([a-z:,-_\.]+)';
+			$searchEngineString = preg_replace('/^[\s\S]+\=[\'"]'.$regEx.'[\'"]\.split\([\'"],[\'"]\)[\s\S]+$/i', '$1', $currentJs);
+			if (preg_match('/^'.$regEx.'$/i', $searchEngineString)) {
+				$searchEngineArray = explode(',', $searchEngineString);
+				$searchEngines = array();
+				foreach($searchEngineArray as $searchEngine) {
+					$searchEngineParts = explode(':', $searchEngine);
+					if (2 == count($searchEngineParts)) {
+						$searchEngines[] = array($searchEngineParts[0] => $searchEngineParts[1]);
+					}
+				}
+				$this->setSearchEngines($searchEngines);
+			}
 		}
 		return $this;
 	}
@@ -1176,6 +1366,7 @@ class GoogleAnalyticsServerSide
 	 *
 	 * Defenitions of the Analytics Parameters are stored at:
 	 * http://code.google.com/apis/analytics/docs/tracking/gaTrackingTroubleshooting.html
+	 * http://www.cheatography.com/jay-taylor/cheat-sheets/google-analytics-utm-parameters-v2/
 	 *
 	 * @param array $extraParams
 	 * @return boolean|GoogleAnalyticsServerSide
@@ -1198,6 +1389,7 @@ class GoogleAnalyticsServerSide
 		$documentReferer = (empty($documentReferer) && $documentReferer !== "0")
 							? '-'
 							: urldecode($documentReferer);
+		$account = $this->getAccount();
 
 		$this->setCookies();
 
@@ -1206,12 +1398,14 @@ class GoogleAnalyticsServerSide
 							,	'utmn'	=> rand(0, 0x7fffffff)
 							,	'utmhn'	=> $domainName
 							,	'utmr'	=> $documentReferer
-							,	'utmac'	=> $this->getAccount()
+							,	'utmac'	=> $account
 							,	'utmcc'	=> $this->getCookiesString()
 							,	'utmul' => $this->getAcceptLanguage()
 							,	'utmcs' => $this->getCharset()
-							,	'utmip'	=> $this->getIPToReport()
 							,	'utmu'	=> 'q~');
+		if (0 === strpos($account, 'MO-')) {
+			$queryParams['utmip'] = $this->getIPToReport();
+		}
 		$queryParams = array_merge($queryParams, $extraParams);
 
 		if (null !== ($customVarString = $this->getCustomVariableString())) {

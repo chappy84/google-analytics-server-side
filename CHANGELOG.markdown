@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.8.2 Beta
+------------------
+
+- Add in support for organic campaign parameters with __utmz cookies.
+- Only send utmip gif query parameter when using a mobile account, pointless otherwise.
+
 Version 0.8.1 Beta
 ------------------
 
