@@ -231,50 +231,47 @@ class GoogleAnalyticsServerSide
 	 * @var array
 	 * @access private
 	 */
-	private $searchEngines = array( array('daum'			=> 'q')
-								,	array('eniro'			=> 'search_word')
-								,	array('naver'			=> 'query')
-								,	array('pchome'			=> 'q')
-								,	array('images.google'	=> 'q')
-								,	array('google'			=> 'q')
-								,	array('yahoo'			=> 'p')
-								,	array('yahoo'			=> 'q')
-								,	array('msn'				=> 'q')
-								,	array('bing'			=> 'q')
-								,	array('aol'				=> 'query')
-								,	array('aol'				=> 'q')
-								,	array('lycos'			=> 'q')
-								,	array('lycos'			=> 'query')
-								,	array('ask'				=> 'q')
-								,	array('netscape'		=> 'query')
-								,	array('cnn'				=> 'query')
-								,	array('about'			=> 'terms')
-								,	array('mamma'			=> 'q')
-								,	array('voila'			=> 'rdata')
-								,	array('virgilio'		=> 'qs')
-								,	array('live'			=> 'q')
-								,	array('baidu'			=> 'wd')
-								,	array('alice'			=> 'qs')
-								,	array('yandex'			=> 'text')
-								,	array('najdi'			=> 'q')
-								,	array('seznam'			=> 'q')
-								,	array('rakuten'			=> 'qt')
-								,	array('biglobe'			=> 'q')
-								,	array('goo.ne'			=> 'MT')
-								,	array('wp'				=> 'szukaj')
-								,	array('onet'			=> 'qt')
-								,	array('yam'				=> 'k')
-								,	array('kvasir'			=> 'q')
-								,	array('ozu'				=> 'q')
-								,	array('terra'			=> 'query')
-								,	array('rambler'			=> 'query')
-								,	array('conduit'			=> 'q')
-								,	array('babylon'			=> 'q')
-								,	array('search-results'	=> 'q')
-								,	array('avg'				=> 'q')
-								,	array('comcast'			=> 'q')
-								,	array('incredimail'		=> 'q')
-								,	array('startsiden'		=> 'q'));
+	private $searchEngines = array( 'daum'			=> array('q')
+								,	'eniro'			=> array('search_word')
+								,	'naver'			=> array('query')
+								,	'pchome'		=> array('q')
+								,	'images.google'	=> array('q')
+								,	'google'		=> array('q')
+								,	'yahoo'			=> array('p', 'q')
+								,	'msn'			=> array('q')
+								,	'bing'			=> array('q')
+								,	'aol'			=> array('query', 'q')
+								,	'lycos'			=> array('q', 'query')
+								,	'ask'			=> array('q')
+								,	'netscape'		=> array('query')
+								,	'cnn'			=> array('query')
+								,	'about'			=> array('terms')
+								,	'mamma'			=> array('q')
+								,	'voila'			=> array('rdata')
+								,	'virgilio'		=> array('qs')
+								,	'live'			=> array('q')
+								,	'baidu'			=> array('wd')
+								,	'alice'			=> array('qs')
+								,	'yandex'		=> array('text')
+								,	'najdi'			=> array('q')
+								,	'seznam'		=> array('q')
+								,	'rakuten'		=> array('qt')
+								,	'biglobe'		=> array('q')
+								,	'goo.ne'		=> array('MT')
+								,	'wp'			=> array('szukaj')
+								,	'onet'			=> array('qt')
+								,	'yam'			=> array('k')
+								,	'kvasir'		=> array('q')
+								,	'ozu'			=> array('q')
+								,	'terra'			=> array('query')
+								,	'rambler'		=> array('query')
+								,	'conduit'		=> array('q')
+								,	'babylon'		=> array('q')
+								,	'search-results'=> array('q')
+								,	'avg'			=> array('q')
+								,	'comcast'		=> array('q')
+								,	'incredimail'	=> array('q')
+								,	'startsiden'	=> array('q'));
 
 
 	/**
@@ -788,20 +785,19 @@ class GoogleAnalyticsServerSide
 		if (!is_array($searchEngines)) {
 			throw new InvalidArgumentException('$searchEngines must be an array.');
 		}
-		foreach ($searchEngines as $key => $searchEngine) {
-			if (!is_array($searchEngine) || 1 != count($searchEngine)) {
-				throw new DomainException('searchEngines entry '.$key.' invalid');
+		foreach ($searchEngines as $searchEngine => $queryParams) {
+			if (!is_array($queryParams) || 1 > count($queryParams)) {
+				throw new DomainException('searchEngines entry '.$searchEngine.' invalid');
 			}
-			$arrayKeys = array_keys($searchEngine);
-			$name = $arrayKeys[0];
-			if (!is_string($name)
-					|| 1 !== preg_match('/^[a-z\.-]+$/', $name)) {
-				throw new OutOfBoundsException('search engine name "'.$name.'" is invalid');
+			if (!is_string($searchEngine)
+					|| 1 !== preg_match('/^[a-z\.-]+$/', $searchEngine)) {
+				throw new OutOfBoundsException('search engine name "'.$searchEngine.'" is invalid');
 			}
-			$queryParameter = $searchEngine[$name];
-			if (!is_string($queryParameter)
-					|| 1 !== preg_match('/^[a-z_]+$/i', $queryParameter)) {
-				throw new DomainException('search engine query parameter "'.$queryParameter.'" is invalid');
+			foreach ($queryParams as $queryParameter) {
+				if (!is_string($queryParameter)
+						|| 1 !== preg_match('/^[a-z_]+$/i', $queryParameter)) {
+					throw new DomainException('search engine query parameter "'.$queryParameter.'" is invalid');
+				}
 			}
 		}
 		$this->searchEngines = $searchEngines;
@@ -1071,14 +1067,13 @@ class GoogleAnalyticsServerSide
 		if (!empty($referer) && !empty($serverName) && false === strpos($referer, $serverName)
 				&& false !== ($refererParts = @parse_url($referer)) && isset($refererParts['host'], $refererParts['path'])) {
 			$refererSearchEngine = false;
-			foreach ($this->getSearchEngines() as $searchEngine) {
-				$searchEngineNames = array_keys($searchEngine);
-				$name = $searchEngineNames[0];
+			$searchEngines = $this->getSearchEngines();
+			foreach ($searchEngines as $searchEngine => $queryParams) {
 				$refererDomainParts = explode('.', $refererParts['host']);
 				array_pop($refererDomainParts);
 				if (isset($refererParts['query']) && !empty($refererParts['query'])
-						&& ((false !== strpos($name, '.') && false !== strpos($refererParts['host'], $name))
-							|| in_array($name, $refererDomainParts))) {
+						&& ((false !== strpos($searchEngine, '.') && false !== strpos($refererParts['host'], $searchEngine))
+							|| in_array($searchEngine, $refererDomainParts))) {
 					$refererSearchEngine = $searchEngine;
 					break;
 				}
@@ -1086,14 +1081,16 @@ class GoogleAnalyticsServerSide
 			if (false === $refererSearchEngine) {
 				$campaignParameters = 'utmcsr='.$refererParts['host'].'|utmccn=(referral)|utmcmd=referral|utmcct='.$refererParts['path'];
 			} else {
-				$searchEngineNames = array_keys($searchEngine);
-				$name = $searchEngineNames[0];
-				$queryParameter = $refererSearchEngine[$name];
+				$queryParameters = $searchEngines[$searchEngine];
 				parse_str($refererParts['query'], $refererQueryParams);
-				$campaignParameters = 'utmcsr='.$name.'|utmccn=(organic)|utmcmd=organic|utmctr='.
-										((!array_key_exists($queryParameter, $refererQueryParams) || empty($refererQueryParams[$queryParameter]))
-											? '(not provided)'
-											: $refererQueryParams[$queryParameter]);
+				$queryParamValue = '(not provided)';
+				foreach ($queryParameters as $queryParameter) {
+					if (array_key_exists($queryParameter, $refererQueryParams) && !empty($refererQueryParams[$queryParameter])) {
+						$queryParamValue = $refererQueryParams[$queryParameter];
+						break;
+					}
+				}
+				$campaignParameters = 'utmcsr='.$searchEngine.'|utmccn=(organic)|utmcmd=organic|utmctr='.$queryParamValue;
 			}
 		}
 		if (!isset($campaignParameters) || false === strpos($campaignParameters, 'utmcsr=')) {
@@ -1285,7 +1282,12 @@ class GoogleAnalyticsServerSide
 				foreach($searchEngineArray as $searchEngine) {
 					$searchEngineParts = explode(':', $searchEngine);
 					if (2 == count($searchEngineParts)) {
-						$searchEngines[] = array($searchEngineParts[0] => $searchEngineParts[1]);
+						if (isset($searchEngines[$searchEngineParts[0]])
+								&& is_array($searchEngines[$searchEngineParts[0]])) {
+							$searchEngines[$searchEngineParts[0]][] = $searchEngineParts[1];
+						} else {
+							$searchEngines[$searchEngineParts[0]] = array($searchEngineParts[1]);
+						}
 					}
 				}
 				$this->setSearchEngines($searchEngines);
@@ -1416,7 +1418,7 @@ class GoogleAnalyticsServerSide
 
 		$utmUrl = self::GIF_URL.'?'.http_build_query($queryParams, null, '&');
 
-		\GASS\Http\Http::request($utmUrl);
+// 		\GASS\Http\Http::request($utmUrl);
 		return $this;
 	}
 }
