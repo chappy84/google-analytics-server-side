@@ -24,7 +24,7 @@
  * 		employees. "Google" and "Google Analytics" are trademarks of
  * 		Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
@@ -42,7 +42,7 @@ use GASS\Http;
 /**
  * BrowsCap adapter which uses browscap ini file to negatively identify search engine bots
  *
- * @copyright	Copyright (c) 2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @category	GoogleAnalyticsServerSide
