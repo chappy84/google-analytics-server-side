@@ -1418,7 +1418,7 @@ class GoogleAnalyticsServerSide
 
 		$utmUrl = self::GIF_URL.'?'.http_build_query($queryParams, null, '&');
 
-// 		\GASS\Http\Http::request($utmUrl);
+		\GASS\Http\Http::request($utmUrl);
 		return $this;
 	}
 }
