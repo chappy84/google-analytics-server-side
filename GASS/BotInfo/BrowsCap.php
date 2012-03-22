@@ -42,6 +42,7 @@ use GASS\Http;
 /**
  * BrowsCap adapter which uses browscap ini file to positively identify allowed browsers
  *
+ * @uses		GASS\Http
  * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman

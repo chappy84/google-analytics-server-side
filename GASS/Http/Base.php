@@ -37,10 +37,12 @@
  * @namespace
  */
 namespace GASS\Http;
+use GASS\Validate;
 
 /**
  * Base class for all Http adapters
  *
+ * @uses		GASS\Validate
  * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
@@ -141,8 +143,9 @@ abstract class Base
 	 * @access public
 	 */
 	public function setAcceptLanguage($acceptLanguage) {
-		if (1 !== preg_match('/^([a-z]{2})(-[a-z]{2})??$/i', $acceptLanguage)) {
-			throw new \InvalidArgumentException('The Accepted language must be composed of internationally recognised language iso codes.');
+		$langValidator = new Validate\LanguageCode();
+		if (!$langValidator->isValid($acceptLanguage)) {
+			throw new \InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
 		}
 		$this->acceptLanguage = $acceptLanguage;
 		return $this;
@@ -157,8 +160,9 @@ abstract class Base
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
-		if (1 !== preg_match('/^(\d{1,3}\.){3}\d{1,3}$/', $remoteAddress)) {
-			throw new \InvalidArgumentException('The Remote Address must be an IP address.');
+		$ipValidator = new Validate\IpAddress();
+		if (!$ipValidator->isValid($remoteAddress)) {
+			throw new \InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
 		}
 		$this->remoteAddress = $remoteAddress;
 		return $this;

@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.8.3 Beta
+ * @version		0.8.4 Beta
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
  * @example		$gass = new GoogleAnalyticsServerSide();
@@ -580,8 +580,13 @@ class GoogleAnalyticsServerSide
 		if (false !== strpos($acceptLanguage, ',')) {
 			list($acceptLanguage, $other) = explode(',', $acceptLanguage, 2);
 		}
-		$this->acceptLanguage = strtolower($acceptLanguage);
-		\GASS\Http\Http::setAcceptLanguage($this->acceptLanguage);
+		$acceptLanguage = strtolower($acceptLanguage);
+		$langValidator = new \GASS\Validate\LanguageCode();
+		if (!$langValidator->isValid($acceptLanguage)) {
+			throw new \InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
+		}
+		$this->acceptLanguage = $acceptLanguage;
+		\GASS\Http\Http::setAcceptLanguage($acceptLanguage);
 		return $this;
 	}
 
@@ -604,8 +609,9 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
-		if (1 !== preg_match('/^(\d{1,3}\.){3}\d{1,3}$/', $remoteAddress)) {
-			throw new \InvalidArgumentException('The Remote Address must be an IP address.');
+		$ipValidator = new \GASS\Validate\IpAddress();
+		if (!$ipValidator->isValid($remoteAddress)) {
+			throw new \InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
 		}
 		$this->remoteAddress = $remoteAddress;
 		\GASS\Http\Http::setRemoteAddress($this->remoteAddress);
@@ -959,7 +965,10 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function getIPToReport($remoteAddress = null) {
-		$remoteAddress = (empty($remoteAddress)) ? $this->remoteAddress : $remoteAddress;
+		if ($remoteAddress !== null) {
+			$this->setRemoteAddress($remoteAddress);
+		}
+		$remoteAddress = $this->getRemoteAddress();
 		if (empty($remoteAddress)) {
 			return '';
 		}
