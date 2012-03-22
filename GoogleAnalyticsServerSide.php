@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
- * @version		0.8.2 Beta
+ * @version		0.8.3 Beta
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
  * @example		$gass = new GoogleAnalyticsServerSide();
