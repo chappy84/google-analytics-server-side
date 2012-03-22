@@ -816,7 +816,7 @@ class GoogleAnalyticsServerSide
 	public function setBotInfo($botInfo) {
 		if (!is_array($botInfo) && !is_bool($botInfo) && $botInfo !== null
 				&& !$botInfo instanceof \GASS\BotInfo\BotInfoInterface) {
-			throw new \InvalidArgumentException($name.' must be an array, boolean, null'
+			throw new \InvalidArgumentException('botInfo must be an array, boolean, null'
 												.' or a class which implements GASS\BotInfo\Interface.');
 		} elseif ($botInfo !== null && $botInfo !== false) {
 			if ($botInfo instanceof \GASS\BotInfo\BotInfoInterface) {
@@ -844,7 +844,7 @@ class GoogleAnalyticsServerSide
 	public function setHttp($http) {
 		if ($http !== null && !is_array($http)
 				&& !$http instanceof \GASS\Http\HttpInterface) {
-			throw new \InvalidArgumentException($name.' must be an array, null'
+			throw new \InvalidArgumentException('http must be an array, null'
 												.' or a class which implements GASS\Http\Interface.');
 		}
 		if ($http !== null) {
@@ -914,7 +914,7 @@ class GoogleAnalyticsServerSide
 		$eventValue = $event['value'];
 		unset($event['value']);
 		$eventValues = array();
-		foreach ($event as $key => $value) {
+		foreach ($event as $value) {
 			if (!empty($value)) {
 				$eventValues[] = $value;
 			}
@@ -938,7 +938,7 @@ class GoogleAnalyticsServerSide
 			$names = array();
 			$values = array();
 			$scopes = array();
-			foreach ($customVars as $key => $value) {
+			foreach ($customVars as $value) {
 				$names[] = $value['name'];
 				$values[] = $value['value'];
 				if (in_array($value['scope'], array(1,2))) {

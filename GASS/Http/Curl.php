@@ -99,7 +99,7 @@ class Curl
 			if ($index === null) {
 				$index = 0;
 			}
-			return curl_getinfo($this->curl, $infoOpt);
+			return curl_getinfo($this->curl, $index);
 		}
 		throw new \DomainException('A cURL request has not been made yet.');
 	}
@@ -148,7 +148,7 @@ class Curl
 		$this->curl = curl_init();
 
 		if (null !== ($userAgent = $this->getUserAgent())) {
-			curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+			curl_setopt($this->curl, CURLOPT_USERAGENT, $userAgent);
 		}
 		$extraHeaders = array();
 		if (null !== ($acceptedLanguage = $this->getAcceptLanguage())) {
@@ -158,7 +158,7 @@ class Curl
 			$extraHeaders[] = 'X-Forwarded-For: '.$remoteAddress;
 		}
 		if (!empty($extraHeaders)) {
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $extraHeaders);
+			curl_setopt($this->curl, CURLOPT_HTTPHEADER, $extraHeaders);
 		}
 
 		$extraCurlOptions = $this->getOptions();
