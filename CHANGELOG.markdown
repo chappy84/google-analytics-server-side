@@ -1,6 +1,11 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.7.13 Beta
+------------------
+
+- Fix a few issues existing in the code with un-defined / un-used variables
+
 Version 0.7.12 Beta
 -------------------
 
