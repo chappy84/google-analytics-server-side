@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.8.4 Beta
+------------------
+
+- Extract re-used validation into re-usable validator classes
+- Convert readme to github flavoured markdown  
+
 Version 0.8.3 Beta
 ------------------
 
