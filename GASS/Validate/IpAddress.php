@@ -61,7 +61,7 @@ class IpAddress
 	 */
 	public function isValid($value) {
 		$this->setValue($value);
-		if (!preg_match('/^(25[0-9]|2[0-4]\d|[01]?\d{1,2}){3}(25[0-9]|2[0-4]\d|[01]?\d{1,2})$/', $value)) {
+		if (!preg_match('/^(25\d|2[0-4]\d|[01]?\d{1,2}){3}(25\d|2[0-4]\d|[01]?\d{1,2})$/', $value)) {
 			$this->addMessage('"%value%" is an invalid IPv4 address');
 			return false;
 		}

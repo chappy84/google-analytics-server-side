@@ -21,9 +21,11 @@ Usage
 
 Google Analytics Server Side can be used simply in the following manner:
 
-	$gass = new GoogleAnalyticsServerSide();
-	$gass->setAccount('UA-XXXXXXX-X')
-		->trackPageView();
+```php
+$gass = new GoogleAnalyticsServerSide();
+$gass->setAccount('UA-XXXXXXX-X')
+	->trackPageView();
+```
 
 The class constructor accepts an optional associative array parameter of available
 configuration options. Basically if there's a public method to set the variable
@@ -31,14 +33,18 @@ then it can be passed as part of the array to the class.
 
 e.g.
 
-	$gass = new GoogleAnalyticsServerSide();
-	$gass->setAccount('UA-XXXXXXX-X')
-		->setBotInfo(true);
+```php
+$gass = new GoogleAnalyticsServerSide();
+$gass->setAccount('UA-XXXXXXX-X')
+	->setBotInfo(true);
+```
 
 could also be done like this:
 
-	$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'
-											,	'botInfo'	=> true));
+```php
+$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'
+										,	'botInfo'	=> true));
+```
 
 These options can also be set individually by the method setOption,
 or in one go with the method setOptions
@@ -71,7 +77,9 @@ All methods but get methods allow chaining for ease of use.
 
 ### Event Tracking
 
-	$gass->trackEvent('Category', 'Action', 'Label [optional]', Value [optional - integer], nonInteraction [optional - boolean]);
+```php
+$gass->trackEvent('Category', 'Action', 'Label [optional]', Value [optional - integer], nonInteraction [optional - boolean]);
+```
 
 N.B. trackEvent() does not require trackPageView() to be called first.  
 However if you do not call trackPageView first then set nonInteraction to true otherwise your pages/visit metric may become < 1.
@@ -98,20 +106,26 @@ There is one optional option as part of the array configuration parameter.
 
 e.g.
 
-	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> true
-											,	'account'	=> 'UA-XXXXXXX-X'));
+```php
+$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> true
+										,	'account'	=> 'UA-XXXXXXX-X'));
+```
 
 or
 
-	$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' => 'BrowsCap'
-																	,	'browscap'=> '/tmp/php_browscap.ini')
-											,	'account'	=> 'UA-XXXXXXX-X'));
+```php
+$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' => 'BrowsCap'
+																,	'browscap'=> '/tmp/php_browscap.ini')
+										,	'account'	=> 'UA-XXXXXXX-X'));
+```
 
 or
 
-	$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'))
-	$browsCapAdapter = new \GASS\BotInfo\BrowsCap;
-	$gass->setBotInfo($browsCapAdapter);
+```php
+$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'))
+$browsCapAdapter = new \GASS\BotInfo\BrowsCap;
+$gass->setBotInfo($browsCapAdapter);
+```
 
 When an update for the browscap ini file is available [on the server][6] the code will automatically download 
 the file into the location provided.
@@ -147,15 +161,19 @@ or via the setHttp parameter. This can either be an associative array or an inst
 
 e.g.
 
-	$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'
-											,	'http'		=> array(	'adapter'		=> 'Curl'
-																	,	CURLOPT_PROXY	=> 'http://exampleproxy.local:8080'));
+```php
+$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'
+										,	'http'		=> array(	'adapter'		=> 'Curl'
+																,	CURLOPT_PROXY	=> 'http://exampleproxy.local:8080'));
+```
 
 or
 
-	$httpAdapter = new \GASS\Http\Stream();
-	$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'));
-	$gass->setHttp($httpAdapter);
+```php
+$httpAdapter = new \GASS\Http\Stream();
+$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'));
+$gass->setHttp($httpAdapter);
+```
 
 ### Adapters
 
