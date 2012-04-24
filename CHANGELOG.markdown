@@ -6,6 +6,7 @@ Version 0.8.4 Beta
 
 - Extract re-used validation into re-usable validator classes
 - Convert readme to github flavoured markdown  
+- Added in PHPUnit tests
 
 Version 0.8.3 Beta
 ------------------

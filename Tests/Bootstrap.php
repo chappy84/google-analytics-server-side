@@ -29,42 +29,40 @@
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @package		GASSTests
  */
 
-/**
- * @namespace
- */
-namespace GASS\Validate;
+require_once '../core.php';
 
 /**
- * Interface for all Http Adapters
+ * Autoload function for all classes and interfaces in the
+ * GoogleAnalyticsServerSide virtual namespace
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @param string $name
+ * @throws RuntimeException
  */
-class IpAddress
-	extends Base
-{
-
-	/**
-	 * Returns whether or not the value is valid
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 * @access public
-	 */
-	public function isValid($value) {
-		$this->setValue($value);
-		if (!preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d{1,2})\.){3}(25[0-5]|2[0-4]\d|[01]?\d{1,2})$/', $value)) {
-			$this->addMessage('"%value%" is an invalid IPv4 address');
-			return false;
+spl_autoload_register(function ($name) {
+	if (0 === strpos($name, 'GASSTests\\')) {
+		$location = str_replace('Tests\\GASS\\', DIRECTORY_SEPARATOR, $name);
+		$filePath = str_replace('\\', DIRECTORY_SEPARATOR, $location);
+		$includePaths = explode(PATH_SEPARATOR, get_include_path());
+		$fileFound = false;
+		$classFound = false;
+		foreach ($includePaths as $includePath) {
+			$proposedPath = $includePath . DIRECTORY_SEPARATOR . $filePath . '.php';
+			if (@file_exists($proposedPath) && @is_readable($proposedPath)) {
+				$fileFound = true;
+				require_once $proposedPath;
+				if (class_exists($name) || interface_exists($name)) {
+					$classFound = true;
+					break;
+				}
+			}
 		}
-		return true;
+		if (!$fileFound) {
+			throw new \RuntimeException('File could not be found for '.$name);
+		} elseif (!$classFound) {
+			throw new \RuntimeException('Class or Interface could not be found for '.$name);
+		}
 	}
-}
+});

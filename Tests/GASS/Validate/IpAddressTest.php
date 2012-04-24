@@ -29,42 +29,6 @@
  * @author 		Tom Chapman
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
+ * @package		GASSTests
  * @subpackage	Validate
  */
-
-/**
- * @namespace
- */
-namespace GASS\Validate;
-
-/**
- * Interface for all Http Adapters
- *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
- */
-class IpAddress
-	extends Base
-{
-
-	/**
-	 * Returns whether or not the value is valid
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 * @access public
-	 */
-	public function isValid($value) {
-		$this->setValue($value);
-		if (!preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d{1,2})\.){3}(25[0-5]|2[0-4]\d|[01]?\d{1,2})$/', $value)) {
-			$this->addMessage('"%value%" is an invalid IPv4 address');
-			return false;
-		}
-		return true;
-	}
-}
