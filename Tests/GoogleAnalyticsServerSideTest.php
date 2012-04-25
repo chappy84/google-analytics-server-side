@@ -30,7 +30,7 @@
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
  * @package		GASSTests
- * @subpackage	GoogleAnalyticsServerSide
+ * @subpackage	GoogleAnalyticsServerSideTest
  */
 
 namespace GASSTests;
@@ -80,14 +80,26 @@ class GoogleAnalyticsServerSideTest
 	}
 
 
-	public function testSetUserAgent() {
+	public function testSetVersionExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Version must be a string.');
+		$this->gass->setVersion(array('5.2.3'));
+	}
+
+
+	public function testSetUserAgentValid() {
 		$userAgent = 'Mozilla/5.0 (compatible; Konqueror/2.2.2)';
-		$this->gass->setUserAgent($userAgent);
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setUserAgent($userAgent));
 		$this->assertEquals($userAgent, $this->gass->getUserAgent());
 		$this->assertEquals($userAgent, \GASS\Http\Http::getUserAgent());
 		if (null !== $this->gass->getBotInfo()) {
-			$this->assertEquals('en-gb', $this->gass->getBotInfo()->getUserAgent());
+			$this->assertEquals($userAgent, $this->gass->getBotInfo()->getUserAgent());
 		}
+	}
+
+
+	public function testSetUserAgentExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'User Agent must be a string.');
+		$this->gass->setUserAgent(array('Mozilla/5.0 (compatible; Konqueror/2.2.2)'));
 	}
 
 
@@ -122,13 +134,25 @@ class GoogleAnalyticsServerSideTest
 	}
 
 
-	public function testSetServerName() {
+	public function testSetAcceptLanguageExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Accept Language must be a string.');
+		$this->gass->setAcceptLanguage(array('en-gb'));
+	}
+
+
+	public function testSetServerNameValid() {
 		$serverName = 'www.example.com';
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setServerName($serverName));
 		$this->assertEquals($serverName, $this->gass->getServerName());
 		$serverName = 'localhost';
 		$this->gass->setServerName($serverName);
 		$this->assertEquals($serverName, $this->gass->getServerName());
+	}
+
+
+	public function testSetServerNameExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Server Name must be a string.');
+		$this->gass->setServerName(array('www.example.com'));
 	}
 
 
@@ -148,25 +172,31 @@ class GoogleAnalyticsServerSideTest
 
 	public function testSetRemoteAddressExceptionLetters() {
 		$this->setExpectedException('InvalidArgumentException');
-		$this->gass->setAcceptLanguage('abc.def.ghi.jkl');
+		$this->gass->setRemoteAddress('abc.def.ghi.jkl');
 	}
 
 
 	public function testSetRemoteAddressExceptionTooHighSegments() {
 		$this->setExpectedException('InvalidArgumentException');
-		$this->gass->setAcceptLanguage('500.500.500.500');
+		$this->gass->setRemoteAddress('500.500.500.500');
 	}
 
 
 	public function testSetRemoteAddressExceptionMissingSegments() {
 		$this->setExpectedException('InvalidArgumentException');
-		$this->gass->setAcceptLanguage('255.255');
+		$this->gass->setRemoteAddress('255.255');
 	}
 
 
 	public function testSetRemoteAddressExceptionInteger() {
 		$this->setExpectedException('InvalidArgumentException');
-		$this->gass->setAcceptLanguage('192');
+		$this->gass->setRemoteAddress('192');
+	}
+
+
+	public function testSetRemoteAddressExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Remote Address must be a string.');
+		$this->gass->setRemoteAddress(array('255.255.255.0'));
 	}
 
 
@@ -204,6 +234,12 @@ class GoogleAnalyticsServerSideTest
 	}
 
 
+	public function testSetAccountExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Account must be a string.');
+		$this->gass->setAccount(array('UA-1234-5'));
+	}
+
+
 	public function testSetDocumentRefererValid() {
 		$documentReferer = 'http://www.example.com/random.html?a=b';
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setDocumentReferer($documentReferer));
@@ -211,6 +247,12 @@ class GoogleAnalyticsServerSideTest
 		$documentReferer = 'http://localhost/random';
 		$this->gass->setDocumentReferer($documentReferer);
 		$this->assertEquals($documentReferer, $this->gass->getDocumentReferer());
+	}
+
+
+	public function testSetDocumentRefererExceptionMissingProtocol() {
+		$this->setExpectedException('InvalidArgumentException');
+		$this->gass->setDocumentReferer('www.example.com/random.html?a=b');
 	}
 
 
@@ -223,5 +265,157 @@ class GoogleAnalyticsServerSideTest
 	public function testSetDocumentRefererExceptionOnlyProtocol() {
 		$this->setExpectedException('InvalidArgumentException');
 		$this->gass->setDocumentReferer('http://');
+	}
+
+
+	public function testSetDocumentRefererExceptionInvalidHostname() {
+		$this->setExpectedException('InvalidArgumentException');
+		$this->gass->setDocumentReferer('http://www.example_1.com/');
+	}
+
+
+	public function testSetDocumentRefererExceptionInvalidProtocol() {
+		$this->setExpectedException('InvalidArgumentException');
+		$this->gass->setDocumentReferer('a%b://www.example.com/');
+	}
+
+
+	public function testSetDocumentRefererExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Document Referer must be a string.');
+		$this->gass->setDocumentReferer(array('http://localhost/random'));
+	}
+
+
+	public function testSetDocumentPathValid() {
+		$documentPath = '/abcdefg.html';
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setDocumentPath($documentPath));
+		$this->assertEquals($documentPath, $this->gass->getDocumentPath());
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setDocumentPath('/abcdefg.html?a=b&c=d'));
+		$this->assertEquals($documentPath, $this->gass->getDocumentPath());
+	}
+
+
+	public function testSetDocumentPathExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Document Path must be a string.');
+		$this->gass->setDocumentPath(array('/abcdefg.html'));
+	}
+
+
+	public function testSetPageTitleValid() {
+		$pageTitle = 'Abcdef Ghijk Lmnop';
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setPageTitle($pageTitle));
+		$this->assertEquals($pageTitle, $this->gass->getPageTitle());
+	}
+
+
+	public function testSetPageTitleExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Page Title must be a string.');
+		$this->gass->setPageTitle(array('Abcdef Ghijk Lmnop'));
+	}
+
+
+	public function testSetCustomVarValid() {
+		$customVar1 = array('index' => 1
+						,	'name'	=> 'Custom Var 1'
+						,	'value'	=> 'Custom Value 1'
+						,	'scope'	=> 3);
+		$customVar2 = array('index' => 5
+						,	'name'	=> 'Custom Var 5'
+						,	'value'	=> 'Custom Value 5'
+						,	'scope'	=> 2);
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setCustomVar($customVar1['name'], $customVar1['value']));
+		$this->gass->setCustomVar($customVar2['name'], $customVar2['value'], $customVar2['scope'], $customVar2['index']);
+		$customVars = $this->gass->getCustomVariables();
+		$this->assertArrayHasKey('index1', $customVars);
+		$this->assertEquals($customVar1, $customVars['index1']);
+		$this->assertEquals($customVar1['value'], $this->gass->getVisitorCustomVar(1));
+		$this->assertEquals(array(implode('=',$customVar1)), $this->gass->getCustomVarsByScope(3));
+		$this->assertArrayHasKey('index5', $customVars);
+		$this->assertEquals($customVar2, $customVars['index5']);
+		$this->assertEquals($customVar2['value'], $this->gass->getVisitorCustomVar(5));
+		$this->assertEquals(array(implode('=',$customVar2)), $this->gass->getCustomVarsByScope(2));
+	}
+
+
+	public function testSetCustomVarExceptionInvalidIndexTooHigh() {
+		$this->setExpectedException('OutOfBoundsException', 'The index must be an integer between 1 and 5.');
+		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 3, 6);
+	}
+
+
+	public function testSetCustomVarExceptionInvalidIndexTooLow() {
+		$this->setExpectedException('OutOfBoundsException', 'The index must be an integer between 1 and 5.');
+		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 3, 0);
+	}
+
+
+	public function testSetCustomVarExceptionInvalidScopeTooHigh() {
+		$this->setExpectedException('InvalidArgumentException', 'The Scope must be a value between 1 and 3');
+		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 4, 1);
+	}
+
+
+	public function testSetCustomVarExceptionInvalidScopeTooLow() {
+		$this->setExpectedException('InvalidArgumentException', 'The Scope must be a value between 1 and 3');
+		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 0, 1);
+	}
+
+
+	public function testSetCustomVarExceptionNameWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Custom Var Name must be a string.');
+		$this->gass->setCustomVar(array('Custom Var 1'), 'Custom Value 1');
+	}
+
+
+	public function testSetCustomVarExceptionValueWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Custom Var Value must be a string.');
+		$this->gass->setCustomVar('Custom Var 1', array('Custom Value 1'));
+	}
+
+
+	public function testSetCustomVarExceptionExceedsByteVarLimit() {
+		$this->setExpectedException('DomainException', 'The name / value combination exceeds the 64 byte custom var limit.');
+		$this->gass->setCustomVar('abcdefghijklmnopqrstuvwxyz123456', 'abcdefghijklmnopqrstuvwxyz1234567');
+	}
+
+
+	public function testSetCustomVarExceptionExceededVarCountLimit() {
+		$this->setExpectedException('OutOfBoundsException', 'You cannot add more than 5 custom variables.');
+		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1');
+		$this->gass->setCustomVar('Custom Var 2', 'Custom Value 2');
+		$this->gass->setCustomVar('Custom Var 3', 'Custom Value 3');
+		$this->gass->setCustomVar('Custom Var 4', 'Custom Value 4');
+		$this->gass->setCustomVar('Custom Var 5', 'Custom Value 5');
+		$this->gass->setCustomVar('Custom Var 6', 'Custom Value 6');
+	}
+
+
+	public function testDeleteCustomVarValid() {
+		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1');
+		$this->gass->setCustomVar('Custom Var 2', 'Custom Value 2');
+		$this->gass->setCustomVar('Custom Var 3', 'Custom Value 3');
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->deleteCustomVar(2));
+		$this->assertArrayNotHasKey('index2', $this->gass->getCustomVariables());
+	}
+
+
+	public function testDeleteCustomVarExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Custom Var Index must be a string.');
+		$this->gass->deleteCustomVar(array(1));
+	}
+
+
+	public function testSetCharsetValid() {
+		$charset = 'UTF-8';
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setCharset($charset));
+		$this->assertEquals($charset, $this->gass->getCharset());
+		$this->gass->setCharset(strtolower($charset));
+		$this->assertEquals($charset, $this->gass->getCharset());
+	}
+
+
+	public function testSetCharsetExceptionWrongDataType() {
+		$this->setExpectedException('InvalidArgumentException', 'Charset must be a string.');
+		$this->gass->setCharset(array('UTF-8'));
 	}
 }

@@ -527,6 +527,28 @@ class GoogleAnalyticsServerSide
 
 
 	/**
+	 * Checks whether a variable can be cast to string
+	 * Returns the var cast as string if so
+	 * Throws an InvalidArgumentException if not
+	 *
+	 * @param string $var
+	 * @param string $description
+	 * @throws \InvalidArgumentException
+	 * @return string
+	 * @access private
+	 */
+	private function getAsString($var, $description) {
+		if (!is_string($var)) {
+			if (!is_scalar($var) || (is_object($var) && !method_exists($var, '__toString'))) {
+				throw new \InvalidArgumentException($description.' must be a string.');
+			}
+			$var = (string)$var;
+		}
+		return $var;
+	}
+
+
+	/**
 	 * Sets the file contents of the latest ga.js version
 	 *
 	 * @return GoogleAnalyticsServerSide
@@ -545,6 +567,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setVersion($version) {
+		$version = $this->getAsString($version, 'Version');
 		if (1 !== preg_match('/^(\d+\.){2}\d+$/', $version)) {
 			throw new \InvalidArgumentException('Invalid version number provided: '.$version);
 		}
@@ -559,6 +582,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setUserAgent($userAgent) {
+		$userAgent = $this->getAsString($userAgent, 'User Agent');
 		$this->userAgent = $userAgent;
 		\GASS\Http\Http::setUserAgent($this->userAgent);
 		if ($this->botInfo instanceof \GASS\BotInfo\BotInfoInterface) {
@@ -574,6 +598,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setAcceptLanguage($acceptLanguage) {
+		$acceptLanguage = $this->getAsString($acceptLanguage, 'Accept Language');
 		if (false !== strpos($acceptLanguage, ';')) {
 			list($acceptLanguage, $other) = explode(';', $acceptLanguage, 2);
 		}
@@ -597,6 +622,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setServerName($serverName) {
+		$serverName = $this->getAsString($serverName, 'Server Name');
 		$this->serverName = $serverName;
 		return $this;
 	}
@@ -609,6 +635,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
+		$remoteAddress = $this->getAsString($remoteAddress, 'Remote Address');
 		$ipValidator = new \GASS\Validate\IpAddress();
 		if (!$ipValidator->isValid($remoteAddress)) {
 			throw new \InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
@@ -629,6 +656,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setAccount($account) {
+		$account = $this->getAsString($account, 'Account');
 		if (1 !== preg_match('/^(MO|UA)-\d{4,}-\d+$/',$account)) {
 			throw new \InvalidArgumentException('Google Analytics user account must be in the format: UA-XXXXXXX-X or MO-XXXXXXX-X');
 		}
@@ -644,8 +672,10 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setDocumentReferer($documentReferer) {
-		$documentReferer = trim($documentReferer);
-		if (!empty($documentReferer) && false === @parse_url($documentReferer)) {
+		$documentReferer = trim($this->getAsString($documentReferer, 'Document Referer'));
+		if (!empty($documentReferer)
+				&& (!preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $documentReferer)
+						|| false === @parse_url($documentReferer))) {
 			throw new \InvalidArgumentException('Document Referer must be a valid URL.');
 		}
 		$this->documentReferer = $documentReferer;
@@ -659,6 +689,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setDocumentPath($documentPath) {
+		$documentPath = $this->getAsString($documentPath, 'Document Path');
 		if (false !== ($queryPos = strpos($documentPath, '?'))) {
 			$documentPath = substr($documentPath, 0, $queryPos);
 		}
@@ -673,6 +704,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setPageTitle($pageTitle) {
+		$pageTitle = $this->getAsString($pageTitle, 'Page Title');
 		$this->pageTitle = $pageTitle;
 		return $this;
 	}
@@ -708,6 +740,8 @@ class GoogleAnalyticsServerSide
 		if (!is_int($scope) || $scope < 1 || $scope > 3) {
 			throw new \InvalidArgumentException('The Scope must be a value between 1 and 3');
 		}
+		$name = $this->getAsString($name, 'Custom Var Name');
+		$value = $this->getAsString($value, 'Custom Var Value');
 		if (64 < strlen($name.$value)) {
 			throw new \DomainException('The name / value combination exceeds the 64 byte custom var limit.');
 		}
@@ -763,6 +797,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function deleteCustomVar($index) {
+		$index = $this->getAsString($index, 'Custom Var Index');
 		unset($this->customVariables['index'.$index]);
 		return $this;
 	}
@@ -774,6 +809,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setCharset($charset) {
+		$charset = $this->getAsString($charset, 'Charset');
 		$this->charset = strtoupper($charset);
 		return $this;
 	}
@@ -787,7 +823,7 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setSearchEngines($searchEngines) {
+	public function setSearchEngines(array $searchEngines) {
 		if (!is_array($searchEngines)) {
 			throw new InvalidArgumentException('$searchEngines must be an array.');
 		}
@@ -893,6 +929,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setOption($name, $value) {
+		$name = $this->getAsString($name, 'Option Name');
 		$this->getOption($name);
 		$methodName = 'set'.ucfirst($name);
 		if (method_exists($this, $methodName)) {
@@ -913,7 +950,7 @@ class GoogleAnalyticsServerSide
 	 * @throws DomainException
 	 * @access public
 	 */
-	public function getEventString($event) {
+	public function getEventString(array $event) {
 		if (!is_array($event) || !isset($event['category'], $event['action'])) {
 			throw new \InvalidArgumentException('Event must be an associative array containing at least a category and action');
 		}
@@ -991,7 +1028,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function getDomainHash($domain = null){
-		$domain = ($domain === null) ? $this->serverName : $domain;
+		$domain = ($domain === null) ? $this->serverName : $this->getAsString($domain, 'Domain');
 		$a = 1;
 		$c = 0;
 		if (!empty($domain)) {
@@ -1173,6 +1210,9 @@ class GoogleAnalyticsServerSide
 	 * @access private
 	 */
 	private function setCookie($name, $value, $setHeader = true) {
+		$name = $this->getAsString($name, 'Cookie Name');
+		$name = trim($name);
+		$value = $this->getAsString($value, 'Cookie Value');
 		$value = trim($value);
 		if (empty($value)) {
 			throw new \LengthException('Cookie cannot have an empty value');
@@ -1209,6 +1249,9 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setSessionCookieTimeout($sessionCookieTimeout) {
+		if (!is_int($sessionCookieTimeout)) {
+			throw new \InvalidArgumentException('Session Cookie Timeout must be an integer.');
+		}
 		$this->sessionCookieTimeout = round($sessionCookieTimeout / 1000);
 		return $this;
 	}
@@ -1222,6 +1265,9 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setVisitorCookieTimeout($visitorCookieTimeout) {
+		if (!is_int($visitorCookieTimeout)) {
+			throw new \InvalidArgumentException('Visitor Cookie Timeout must be an integer.');
+		}
 		$this->visitorCookieTimeout = round($visitorCookieTimeout / 1000);
 		return $this;
 	}
@@ -1248,6 +1294,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	private function getCookie($name) {
+		$name = $this->getAsString($name, 'Cookie Name');
 		if (array_key_exists($name, $this->cookies)) {
 			return $this->cookies[$name];
 		}
@@ -1315,6 +1362,7 @@ class GoogleAnalyticsServerSide
 	 */
 	public function trackPageView($url = null) {
 		if ($url !== null) {
+			$url = $this->getAsString($url, 'Page View URL');
 			if (0 != strpos($url, '/')) {
 				if (false === ($urlParts = @parse_url($url))) {
 					throw new \DomainException('Url is invalid: '.$url);
@@ -1350,6 +1398,11 @@ class GoogleAnalyticsServerSide
 	public function trackEvent($category, $action, $label = null, $value = null, $nonInteraction = false) {
 		if (($category === null && $action !== null) || ($category !== null && $action === null)) {
 			throw new \InvalidArgumentException('Category and Action must be set for an Event');
+		}
+		$category = $this->getAsString($category, 'Event Category');
+		$action = $this->getAsString($action, 'Event Action');
+		if ($label !== null) {
+			$label = $this->getAsString($label, 'Event Label');
 		}
 		if ($value !== null && !is_int($value)) {
 			throw new \InvalidArgumentException('Value must be an integer.');
