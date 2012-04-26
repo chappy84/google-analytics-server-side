@@ -539,7 +539,7 @@ class GoogleAnalyticsServerSide
 	 */
 	private function getAsString($var, $description) {
 		if (!is_string($var)) {
-			if (!is_scalar($var) || (is_object($var) && !method_exists($var, '__toString'))) {
+			if (!is_scalar($var) && (!is_object($var) || !method_exists($var, '__toString'))) {
 				throw new \InvalidArgumentException($description.' must be a string.');
 			}
 			$var = (string)$var;
