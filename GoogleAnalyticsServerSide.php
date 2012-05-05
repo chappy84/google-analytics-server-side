@@ -88,7 +88,7 @@ class GoogleAnalyticsServerSide
 	 * @var string
 	 * @access private
 	 */
-	private $version = '5.2.5';
+	private $version = '5.3.0';
 
 
 	/**
@@ -539,7 +539,8 @@ class GoogleAnalyticsServerSide
 	 */
 	private function getAsString($var, $description) {
 		if (!is_string($var)) {
-			if (!is_scalar($var) || (is_object($var) && !method_exists($var, '__toString'))) {
+			if (!is_scalar($var) && !is_null($var)
+					&& (!is_object($var) || (is_object($var) && !method_exists($var, '__toString')))) {
 				throw new \InvalidArgumentException($description.' must be a string.');
 			}
 			$var = (string)$var;
@@ -883,7 +884,7 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setHttp($http) {
+	public function setHttp($http = null) {
 		if ($http !== null && !is_array($http)
 				&& !$http instanceof \GASS\Http\HttpInterface) {
 			throw new \InvalidArgumentException('http must be an array, null'
@@ -895,10 +896,10 @@ class GoogleAnalyticsServerSide
 			} elseif (is_array($http)) {
 				\GASS\Http\Http::getInstance($http);
 			}
-			\GASS\Http\Http::setAcceptLanguage($this->getAcceptLanguage())
-										->setRemoteAddress($this->getRemoteAddress())
-										->setUserAgent($this->getUserAgent());
 		}
+		\GASS\Http\Http::setAcceptLanguage($this->getAcceptLanguage())
+									->setRemoteAddress($this->getRemoteAddress())
+									->setUserAgent($this->getUserAgent());
 		$this->http = $http;
 		return $this;
 	}
@@ -909,7 +910,7 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setOptions(array $options = array()) {
+	public function setOptions(array $options) {
 		if (!is_array($options)) {
 			throw new \InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
 		}
@@ -945,27 +946,40 @@ class GoogleAnalyticsServerSide
 	/**
 	 * Returns the last saved event as a string for the URL parameters
 	 *
-	 * @param array $event
+	 * @param string $category
+	 * @param string $action
+	 * @param string $label [optional]
+	 * @param integer $value [optional]
 	 * @return string
 	 * @throws DomainException
 	 * @access public
 	 */
-	public function getEventString(array $event) {
-		if (!is_array($event) || !isset($event['category'], $event['action'])) {
-			throw new \InvalidArgumentException('Event must be an associative array containing at least a category and action');
-		}
-		$eventValue = $event['value'];
-		unset($event['value']);
-		$eventValues = array();
-		foreach ($event as $value) {
-			if (!empty($value)) {
-				$eventValues[] = $value;
+	public function getEventString($category, $action = null, $label = null, $value = null) {
+		// Deal with BC
+		if (is_array($category)) {
+			if (isset($category['action'])) {
+				$action = $category['action'];
 			}
+			if (isset($category['label'])) {
+				$label = $category['label'];
+			}
+			if (isset($category['value'])) {
+				$value = $category['value'];
+			}
+			$category = (isset($category['category'])) ? $category['category'] : null;
 		}
-		if (empty($eventValues)) {
-			throw new \DomainException('Event Cannot be Empty! Parameters must be passed to trackEvent.');
+		$category = $this->getAsString($category, 'Event Category');
+		$action = $this->getAsString($action, 'Event Action');
+		if (empty($category) || empty($action)) {
+			throw new \InvalidArgumentException('An event requires at least a category and action');
 		}
-		return '5('.implode($eventValues, '*').')'.(($eventValue !== null) ? '('.$eventValue.')' : '');
+		if ($label !== null) {
+			$label = $this->getAsString($label, 'Event Label');
+		}
+		if ($value !== null && !is_int($value)) {
+			throw new \InvalidArgumentException('Value must be an integer.');
+		}
+		return '5('.$category.'*'.$action.(empty($label) ? '' : '*'.$label).')'.(($value !== null) ? '('.$value.')' : '');
 	}
 
 
@@ -1028,7 +1042,8 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function getDomainHash($domain = null){
-		$domain = ($domain === null) ? $this->serverName : $this->getAsString($domain, 'Domain');
+		$domain = ($domain === null) ? $this->serverName
+									: $this->getAsString($domain, 'Domain');
 		$a = 1;
 		$c = 0;
 		if (!empty($domain)) {
@@ -1331,7 +1346,7 @@ class GoogleAnalyticsServerSide
 		$currentJs = $this->getCurrentJsFile();
 		if (!empty($currentJs)) {
 			$regEx = '([a-z:,-_\.]+)';
-			$searchEngineString = preg_replace('/^[\s\S]+\=[\'"]'.$regEx.'[\'"]\.split\([\'"],[\'"]\)[\s\S]+$/i', '$1', $currentJs);
+			$searchEngineString = preg_replace('/^[\s\S]+\=[\'"]'.$regEx.'[\'"]\.split\([\'"]\s+[\'"]\)[\s\S]+$/i', '$1', $currentJs);
 			if (preg_match('/^'.$regEx.'$/i', $searchEngineString)) {
 				$searchEngineArray = explode(',', $searchEngineString);
 				$searchEngines = array();
@@ -1396,27 +1411,11 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function trackEvent($category, $action, $label = null, $value = null, $nonInteraction = false) {
-		if (($category === null && $action !== null) || ($category !== null && $action === null)) {
-			throw new \InvalidArgumentException('Category and Action must be set for an Event');
-		}
-		$category = $this->getAsString($category, 'Event Category');
-		$action = $this->getAsString($action, 'Event Action');
-		if ($label !== null) {
-			$label = $this->getAsString($label, 'Event Label');
-		}
-		if ($value !== null && !is_int($value)) {
-			throw new \InvalidArgumentException('Value must be an integer.');
-		}
 		if (!is_bool($nonInteraction)) {
 			throw new \InvalidArgumentException('NonInteraction must be a boolean.');
 		}
-		$event = array(	'category'		=> $this->removeSpecialCustomVarChars($category)
-					,	'action'		=> $this->removeSpecialCustomVarChars($action)
-					,	'label'			=> $this->removeSpecialCustomVarChars($label)
-					,	'value'			=> $value);
-
 		$queryParams = array(	'utmt'	=> 'event'
-							,	'utme'	=> $this->getEventString($event));
+							,	'utme'	=> $this->getEventString($category, $action, $label, $value));
 		if ($nonInteraction === true) {
 			$queryParams['utmni'] = '1';
 		}
@@ -1443,7 +1442,6 @@ class GoogleAnalyticsServerSide
 			return false;
 		}
 
-
 		$domainName = $this->getServerName();
 		if (empty($domainName)) {
 			$domainName = '';
@@ -1454,7 +1452,6 @@ class GoogleAnalyticsServerSide
 							? '-'
 							: urldecode($documentReferer);
 		$account = $this->getAccount();
-
 		$this->setCookies();
 
 		// Construct the gif hit url.

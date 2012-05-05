@@ -1,8 +1,9 @@
 Google Analytics Server Side
 ============================
 
-Google Analytics Server Side is an implementation of [Google Analytics ECMAScript][1] code in [PHP][2]  
-It implements parts of the interface that would be available without ECMAScript in a Browser
+Google Analytics Server Side is an implementation of the 
+[Google Analytics Tracking ECMAScript][1] code in [PHP][2]. It implements parts of the 
+interface that would be available without ECMAScript in a Browser
 
 CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
 HOME: <http://github.com/chappy84/google-analytics-server-side>  
@@ -155,9 +156,10 @@ Http
 ----
 
 This is a singleton class which provides http functionality across all sections of the GASS framework.  
-This will default to using the Stream adapter and requires no options. All options should be passed as a
-configuration option to GoogleAnalyticsServerSide either via the configuration parameter in the 'http' element
-or via the setHttp parameter. This can either be an associative array or an instance of the required adapter
+This will default to using the Curl adapter if it's available otherwise it'll fall back to the Stream adapter.
+It requires no options. All options should be passed as a configuration option to GoogleAnalyticsServerSide 
+either via the configuration parameter in the 'http' element or via the setHttp parameter. This can either 
+be an associative array or an instance of the required adapter.
 
 e.g.
 

@@ -79,8 +79,12 @@ class Http
 	 */
 	public function __construct(array $options = array(), $adapter = null) {
 		if (null === $adapter) {
-			$adapter = (isset($options['adapter'])) ? $options['adapter'] : 'Stream';
-			unset($options['adapter']);
+			if (isset($options['adapter'])) {
+				$adapter = $options['adapter'];
+				unset($options['adapter']);
+			} else {
+				$adapter = extension_loaded('curl') ? 'Curl' : 'Stream';
+			}
 		}
 		$this->setAdapter($adapter);
 		if (0 < func_num_args()) {

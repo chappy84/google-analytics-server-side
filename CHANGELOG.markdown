@@ -7,6 +7,9 @@ Version 0.8.4 Beta
 - Extract re-used validation into re-usable validator classes
 - Convert readme to github flavoured markdown  
 - Added in PHPUnit tests
+- Search Engine information used for organic campaign info changed format in 5.3.0, update to deal with that
+- Altered parameters to getEventString. Includes code to deal with Backwards Compatibility.
+- Default GASS\Http adapter is now GASS\Http\Curl, falls back to GASS\Http\Stream if php cURL extension is not available
 
 Version 0.8.3 Beta
 ------------------
