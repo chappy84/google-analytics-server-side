@@ -17,6 +17,12 @@ This PHP adaptation is maintained by [Tom Chapman][4].
 [3]: http://www.google.com/analytics
 [4]: http://tom-chapman.co.uk/
 
+Build Status
+------------
+
+Master: [![Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=master)](http://travis-ci.org/chappy84/google-analytics-server-side)  
+Development: [![Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=development)](http://travis-ci.org/chappy84/google-analytics-server-side)
+
 Usage
 -----
 
