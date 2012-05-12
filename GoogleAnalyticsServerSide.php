@@ -300,7 +300,7 @@ class GoogleAnalyticsServerSide
 	 * @throws InvalidArgumentException
 	 * @access public
 	 */
-	public function __construct(array $options = array()) {
+	public function __construct($options = array()) {
 		if (!is_array($options)) {
 			throw new \InvalidArgumentException('Argument $options must be an array.');
 		}
@@ -826,7 +826,7 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setSearchEngines(array $searchEngines) {
+	public function setSearchEngines($searchEngines) {
 		if (!is_array($searchEngines)) {
 			throw new InvalidArgumentException('$searchEngines must be an array.');
 		}
@@ -912,7 +912,7 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setOptions(array $options) {
+	public function setOptions($options) {
 		if (!is_array($options)) {
 			throw new \InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
 		}

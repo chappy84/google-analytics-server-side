@@ -434,47 +434,47 @@ class GoogleAnalyticsServerSideTest
 
 	public function testSetSearchEnginesExceptionWrongDataType() {
 		$this->setExpectedException('InvalidArgumentException', '$searchEngines must be an array.');
-		$this->gass->setSearchEngines(new stdClass);
+		$this->gass->setSearchEngines(new \stdClass);
 	}
 
 
 	public function testSetSearchEnginesExceptionWrongQueryParamsDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'searchEngines entry testb invalid');
+		$this->setExpectedException('DomainException', 'searchEngines entry testb invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array('a')
-										,	'testb'	=> new stdClass));
+										,	'testb'	=> new \stdClass));
 	}
 
 
 	public function testSetSearchEnginesExceptionWrongQueryParamsCount() {
-		$this->setExpectedException('InvalidArgumentException', 'searchEngines entry testa invalid');
+		$this->setExpectedException('DomainException', 'searchEngines entry testa invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array()
 										,	'testb'	=> array('b')));
 	}
 
 
 	public function testSetSearchEnginesExceptionWrongNameDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'search engine name "1" is invalid');
+		$this->setExpectedException('OutOfBoundsException', 'search engine name "1" is invalid');
 		$this->gass->setSearchEngines(array(	1	=> array('a')
 										,	'testb'	=> array('b')));
 	}
 
 
 	public function testSetSearchEnginesExceptionInvalidNameCharacters() {
-		$this->setExpectedException('InvalidArgumentException', 'search engine name "test1" is invalid');
+		$this->setExpectedException('OutOfBoundsException', 'search engine name "test#" is invalid');
 		$this->gass->setSearchEngines(array('test#'	=> array('a')
 										,	'testb'	=> array('b')));
 	}
 
 
 	public function testSetSearchEnginesExceptionWrongQueryParameterDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'search engine name "1" is invalid');
+		$this->setExpectedException('DomainException', 'search engine query parameter "1" is invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array(1)
 										,	'testb'	=> array('b')));
 	}
 
 
 	public function testSetSearchEnginesExceptionInvalidQueryParameterCharacters() {
-		$this->setExpectedException('InvalidArgumentException', 'search engine name "test1" is invalid');
+		$this->setExpectedException('DomainException', 'search engine query parameter "a&" is invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array('a&')
 										,	'testb'	=> array('b')));
 	}
@@ -511,7 +511,7 @@ class GoogleAnalyticsServerSideTest
 		$this->setExpectedException('InvalidArgumentException'
 								,	'botInfo must be an array, boolean, null'
 									.' or a class which implements GASS\BotInfo\Interface.');
-		$this->gass->setBotInfo(new stdClass);
+		$this->gass->setBotInfo(new \stdClass);
 	}
 
 
@@ -536,13 +536,13 @@ class GoogleAnalyticsServerSideTest
 		$this->setExpectedException('InvalidArgumentException'
 								,	'http must be an array, null'
 									.' or a class which implements GASS\Http\Interface.');
-		$this->gass->setHttp(new stdClass);
+		$this->gass->setHttp(new \stdClass);
 	}
 
 
 	public function testSetOptionsExceptionWrongDataType() {
 		$this->setExpectedException('InvalidArgumentException', 'setOptions must be called with an array as an argument');
-		$this->gass->setOptions(new stdClass);
+		$this->gass->setOptions(new \stdClass);
 	}
 
 
@@ -589,7 +589,7 @@ class GoogleAnalyticsServerSideTest
 
 	public function testGetEventStringExceptionCategoryWrongDataType() {
 		$this->setExpectedException('InvalidArgumentException', 'Event Category must be a string.');
-		$this->gass->getEventString(new stdClass, 'Value');
+		$this->gass->getEventString(new \stdClass, 'Value');
 	}
 
 
@@ -601,7 +601,7 @@ class GoogleAnalyticsServerSideTest
 
 	public function testGetEventStringExceptionActionWrongDataType() {
 		$this->setExpectedException('InvalidArgumentException', 'Event Action must be a string.');
-		$this->gass->getEventString('Category', new stdClass);
+		$this->gass->getEventString('Category', new \stdClass);
 	}
 
 
@@ -613,7 +613,7 @@ class GoogleAnalyticsServerSideTest
 
 	public function testGetEventStringExceptionLabelWrongDataType() {
 		$this->setExpectedException('InvalidArgumentException', 'Event Label must be a string.');
-		$this->gass->getEventString('Category', 'Action', new stdClass);
+		$this->gass->getEventString('Category', 'Action', new \stdClass);
 	}
 
 
