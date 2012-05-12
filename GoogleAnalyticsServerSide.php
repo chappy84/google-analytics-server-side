@@ -328,8 +328,7 @@ class GoogleAnalyticsServerSide
 			}
 		}
 		$this->setOptions($options)
-			->setVersionFromJs()
-			->setSearchEnginesFromJs();
+			->setVersionFromJs();
 	}
 
 
@@ -484,6 +483,9 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function getSearchEngines() {
+		if (empty($this->searchEngines)) {
+			$this->setSearchEnginesFromJs();
+		}
 		return $this->searchEngines;
 	}
 
@@ -833,12 +835,12 @@ class GoogleAnalyticsServerSide
 				throw new DomainException('searchEngines entry '.$searchEngine.' invalid');
 			}
 			if (!is_string($searchEngine)
-					|| 1 !== preg_match('/^[a-z\.-]+$/', $searchEngine)) {
+					|| 1 !== preg_match('/^[a-z0-9\.-]+$/', $searchEngine)) {
 				throw new OutOfBoundsException('search engine name "'.$searchEngine.'" is invalid');
 			}
 			foreach ($queryParams as $queryParameter) {
 				if (!is_string($queryParameter)
-						|| 1 !== preg_match('/^[a-z_]+$/i', $queryParameter)) {
+						|| 1 !== preg_match('/^[a-z0-9_\-]+$/i', $queryParameter)) {
 					throw new DomainException('search engine query parameter "'.$queryParameter.'" is invalid');
 				}
 			}
@@ -1080,20 +1082,20 @@ class GoogleAnalyticsServerSide
 		/**
 		 * Get the correct values out of the google analytics cookies
 		 */
-		if (isset($cookies['__utma']) && null !== $cookies['__utma']) {
+		if (isset($cookies['__utma']) && !empty($cookies['__utma'])) {
 			list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma'], 6);
 		}
-		if (isset($cookies['__utmb']) && null !== $cookies['__utmb']) {
+		if (isset($cookies['__utmb']) && !empty($cookies['__utmb'])) {
 			list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb'], 4);
 		}
-		if (isset($cookies['__utmc']) && null !== $cookies['__utmc']) {
+		if (isset($cookies['__utmc']) && !empty($cookies['__utmc'])) {
 			$domainId = $cookies['__utmc'];
 		}
-		if (isset($cookies['__utmv']) && null !== $cookies['__utmv'] && false !== strpos($cookies['__utmv'], '.|')) {
+		if (isset($cookies['__utmv']) && !empty($cookies['__utmv']) && false !== strpos($cookies['__utmv'], '.|')) {
 			list($domainId, $customVars) = explode('.|', $cookies['__utmv'], 2);
 			$this->setCustomVarsFromCookie($customVars);
 		}
-		if (isset($cookies['__utmz']) && null !== $cookies['__utmz']) {
+		if (isset($cookies['__utmz']) && !empty($cookies['__utmz'])) {
 			list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters) = explode('.', $cookies['__utmz'], 5);
 		}
 
@@ -1442,16 +1444,15 @@ class GoogleAnalyticsServerSide
 			return false;
 		}
 
-		$domainName = $this->getServerName();
-		if (empty($domainName)) {
-			$domainName = '';
+		$account = (string) $this->getAccount();
+		if (empty($account)) {
+			throw new \DomainException('The account number must be set before any tracking can take place.');
 		}
-
-		$documentReferer = $this->getDocumentReferer();
+		$domainName = (string) $this->getServerName();
+		$documentReferer = (string) $this->getDocumentReferer();
 		$documentReferer = (empty($documentReferer) && $documentReferer !== "0")
 							? '-'
 							: urldecode($documentReferer);
-		$account = $this->getAccount();
 		$this->setCookies();
 
 		// Construct the gif hit url.
