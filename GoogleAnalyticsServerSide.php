@@ -1369,7 +1369,7 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function trackPageView($url = null) {
+	public function trackPageview($url = null) {
 		if ($url !== null) {
 			$url = $this->getAsString($url, 'Page View URL');
 			if (0 != strpos($url, '/')) {
