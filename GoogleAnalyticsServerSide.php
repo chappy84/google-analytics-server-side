@@ -585,8 +585,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setUserAgent($userAgent) {
-		$userAgent = $this->getAsString($userAgent, 'User Agent');
-		$this->userAgent = $userAgent;
+		$this->userAgent = $this->getAsString($userAgent, 'User Agent');
 		\GASS\Http\Http::setUserAgent($this->userAgent);
 		if ($this->botInfo instanceof \GASS\BotInfo\BotInfoInterface) {
 			$this->botInfo->setUserAgent($this->userAgent);
@@ -625,8 +624,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setServerName($serverName) {
-		$serverName = $this->getAsString($serverName, 'Server Name');
-		$this->serverName = $serverName;
+		$this->serverName = $this->getAsString($serverName, 'Server Name');
 		return $this;
 	}
 
@@ -707,8 +705,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setPageTitle($pageTitle) {
-		$pageTitle = $this->getAsString($pageTitle, 'Page Title');
-		$this->pageTitle = $pageTitle;
+		$this->pageTitle = $this->getAsString($pageTitle, 'Page Title');
 		return $this;
 	}
 
@@ -800,8 +797,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function deleteCustomVar($index) {
-		$index = $this->getAsString($index, 'Custom Var Index');
-		unset($this->customVariables['index'.$index]);
+		unset($this->customVariables['index'.$this->getAsString($index, 'Custom Var Index')]);
 		return $this;
 	}
 
@@ -812,8 +808,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setCharset($charset) {
-		$charset = $this->getAsString($charset, 'Charset');
-		$this->charset = strtoupper($charset);
+		$this->charset = strtoupper($this->getAsString($charset, 'Charset'));
 		return $this;
 	}
 
@@ -932,8 +927,7 @@ class GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setOption($name, $value) {
-		$name = $this->getAsString($name, 'Option Name');
-		$this->getOption($name);
+		$this->getOption($this->getAsString($name, 'Option Name'));
 		$methodName = 'set'.ucfirst($name);
 		if (method_exists($this, $methodName)) {
 			$reflectionMethod = new \ReflectionMethod($this, $methodName);
@@ -1227,10 +1221,8 @@ class GoogleAnalyticsServerSide
 	 * @access private
 	 */
 	private function setCookie($name, $value, $setHeader = true) {
-		$name = $this->getAsString($name, 'Cookie Name');
-		$name = trim($name);
-		$value = $this->getAsString($value, 'Cookie Value');
-		$value = trim($value);
+		$name = trim($this->getAsString($name, 'Cookie Name'));
+		$value = trim($this->getAsString($value, 'Cookie Value'));
 		if (empty($value)) {
 			throw new \LengthException('Cookie cannot have an empty value');
 		}

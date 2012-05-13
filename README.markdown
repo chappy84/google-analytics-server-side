@@ -2,8 +2,9 @@ Google Analytics Server Side
 ============================
 
 Google Analytics Server Side is an implementation of the 
-[Google Analytics Tracking ECMAScript][1] code in [PHP][2]. It implements parts of the 
-interface that would be available without ECMAScript in a Browser
+[Google Analytics Web Tracking ECMAScript][1] in [PHP][2].  
+It implements parts of the interface that would be available without ECMAScript in a 
+Browser.
 
 CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
 HOME: <http://github.com/chappy84/google-analytics-server-side>  
@@ -12,7 +13,7 @@ BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>
 Google Analytics was developed by [Google][3].  
 This PHP adaptation is maintained by [Tom Chapman][4].  
 
-[1]: http://code.google.com/apis/analytics/docs/tracking/home.html
+[1]: https://developers.google.com/analytics/devguides/collection/gajs/
 [2]: http://www.php.net/
 [3]: http://www.google.com/analytics
 [4]: http://tom-chapman.co.uk/
@@ -259,9 +260,9 @@ the first time.
 PHP Version
 -----------
 
-The Bad News: This project is now a pure PHP 5.3+ project. PHP themselves no longer 
-support PHP 5.2 as of August 2011 and with PHP 5.4 now available it's time we left 5.2 
-behind (sorry to all those on shared hosting stuck with it).  
+The Bad News: This project is now a PHP 5.3+ project. PHP themselves no longer support 
+PHP 5.2 as of August 2011 and with PHP 5.4 now available it's time we left 5.2 behind 
+(sorry to all those on shared hosting stuck with it).  
    
 The Good News: I have however left a [PHP 5.2 Branch][12] which you can feel free to use, 
 fork etc.. I will try to fix any issues which arise in this branch. Please notify me of 
