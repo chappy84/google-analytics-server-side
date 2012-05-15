@@ -221,7 +221,7 @@ class BrowsCap
 		} else {
 			$browsers = parse_ini_file($browscapLocation, true);
 		}
-		if ($browsers === false || empty($browsers)) {
+		if (empty($browsers)) {
 			throw new \RuntimeException('Browscap ini file could not be parsed.');
 		}
 		$this->browsers = $browsers;

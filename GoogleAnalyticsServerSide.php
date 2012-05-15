@@ -304,26 +304,26 @@ class GoogleAnalyticsServerSide
 		if (!is_array($options)) {
 			throw new \InvalidArgumentException('Argument $options must be an array.');
 		}
-		if (isset($_SERVER['SERVER_NAME']) && !empty($_SERVER['SERVER_NAME'])) {
+		if (!empty($_SERVER['SERVER_NAME'])) {
 			$this->setServerName($_SERVER['SERVER_NAME']);
 		}
-		if (isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR'])) {
+		if (!empty($_SERVER['REMOTE_ADDR'])) {
 			$this->setRemoteAddress($_SERVER['REMOTE_ADDR']);
 		}
-		if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
+		if (!empty($_SERVER['REQUEST_URI'])) {
 			$this->setDocumentPath($_SERVER['REQUEST_URI']);
 		}
-		if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
+		if (!empty($_SERVER['HTTP_USER_AGENT'])) {
 			$this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
 		}
-		if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
+		if (!empty($_SERVER['HTTP_REFERER'])) {
 			$this->setDocumentReferer($_SERVER['HTTP_REFERER']);
 		}
-		if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 			$this->setAcceptLanguage($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		}
 		foreach ($this->getCookies() as $name => $value) {
-			if (isset($_COOKIE[$name]) && !empty($_COOKIE[$name])) {
+			if (!empty($_COOKIE[$name])) {
 				$this->setCookie($name, $_COOKIE[$name], false);
 			}
 		}
@@ -1076,20 +1076,20 @@ class GoogleAnalyticsServerSide
 		/**
 		 * Get the correct values out of the google analytics cookies
 		 */
-		if (isset($cookies['__utma']) && !empty($cookies['__utma'])) {
+		if (!empty($cookies['__utma'])) {
 			list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma'], 6);
 		}
-		if (isset($cookies['__utmb']) && !empty($cookies['__utmb'])) {
+		if (!empty($cookies['__utmb'])) {
 			list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb'], 4);
 		}
-		if (isset($cookies['__utmc']) && !empty($cookies['__utmc'])) {
+		if (!empty($cookies['__utmc'])) {
 			$domainId = $cookies['__utmc'];
 		}
-		if (isset($cookies['__utmv']) && !empty($cookies['__utmv']) && false !== strpos($cookies['__utmv'], '.|')) {
+		if (!empty($cookies['__utmv']) && false !== strpos($cookies['__utmv'], '.|')) {
 			list($domainId, $customVars) = explode('.|', $cookies['__utmv'], 2);
 			$this->setCustomVarsFromCookie($customVars);
 		}
-		if (isset($cookies['__utmz']) && !empty($cookies['__utmz'])) {
+		if (!empty($cookies['__utmz'])) {
 			list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters) = explode('.', $cookies['__utmz'], 5);
 		}
 
@@ -1128,8 +1128,8 @@ class GoogleAnalyticsServerSide
 			foreach ($searchEngines as $searchEngine => $queryParams) {
 				$refererDomainParts = explode('.', $refererParts['host']);
 				array_pop($refererDomainParts);
-				if (isset($refererParts['query']) && !empty($refererParts['query'])
-						&& ((false !== strpos($searchEngine, '.') && false !== strpos($refererParts['host'], $searchEngine))
+				if (!empty($refererParts['query']) && ((false !== strpos($searchEngine, '.')
+						&& false !== strpos($refererParts['host'], $searchEngine))
 							|| in_array($searchEngine, $refererDomainParts))) {
 					$refererSearchEngine = $searchEngine;
 					break;

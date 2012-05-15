@@ -118,6 +118,15 @@ class Http
 		$className = __CLASS__;
 		if (self::$instance === null || !self::$instance instanceof $className) {
 			self::$instance = new $className($options, $adapter);
+		} elseif (0 < func_num_args()) {
+			if ($adapter === null && !empty($options['adapter'])) {
+				$adapter = $options['adapter'];
+				unset($options['adapter']);
+			}
+			if ($adapter !== null) {
+				self::$instance->setAdapter($adapter);
+			}
+			self::$instance->setOptions($options);
 		}
 		return self::$instance;
 	}

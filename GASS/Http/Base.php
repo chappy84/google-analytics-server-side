@@ -160,9 +160,11 @@ abstract class Base
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
-		$ipValidator = new Validate\IpAddress();
-		if (!$ipValidator->isValid($remoteAddress)) {
-			throw new \InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
+		if (!empty($remoteAddress)) {
+			$ipValidator = new Validate\IpAddress();
+			if (!$ipValidator->isValid($remoteAddress)) {
+				throw new \InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
+			}
 		}
 		$this->remoteAddress = $remoteAddress;
 		return $this;

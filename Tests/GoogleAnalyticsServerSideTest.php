@@ -39,13 +39,36 @@ class GoogleAnalyticsServerSideTest
 	extends \PHPUnit_Framework_TestCase {
 
 
+	/**
+	 * @var \GoogleAnalyticsServerSide
+	 */
 	protected $gass;
+
+
+	/**
+	 * @var \GASS\Http\Test
+	 */
+	protected $httpAdapter;
 
 
 	public function setUp() {
 		parent::setUp();
 		require_once __DIR__.DIRECTORY_SEPARATOR.'../GoogleAnalyticsServerSide.php';
-		$this->gass = new \GoogleAnalyticsServerSide();
+		$this->httpAdapter = new \GASS\Http\Test();
+		$this->httpAdapter->setResponse(file_get_contents('ga.js'));
+		$this->httpAdapter->setResponseHeaders(array(	'HTTP/1.0 200 OK'
+													,	'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT'
+													,	'X-Content-Type-Options: nosniff'
+													,	'Date: Tue, 15 May 2012 16:58:20 GMT'
+													,	'Expires: Wed, 16 May 2012 04:58:20 GMT'
+													,	'Content-Type: text/javascript'
+													,	'Vary: Accept-Encoding'
+													,	'X-Content-Type-Options: nosniff'
+													,	'Age: 8829'
+													,	'Cache-Control: max-age=43200, public'
+													,	'Server: GFE/2.0'));
+		\GASS\Http\Http::getInstance(array('adapter' => $this->httpAdapter));
+		$this->gass = new \GoogleAnalyticsServerSide;
 	}
 
 

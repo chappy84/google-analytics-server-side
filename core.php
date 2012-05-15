@@ -56,7 +56,7 @@ spl_autoload_register(function ($name) {
 		$classFound = false;
 		foreach ($includePaths as $includePath) {
 			$proposedPath = $includePath . DIRECTORY_SEPARATOR . $filePath . '.php';
-			if (@file_exists($proposedPath) && @is_readable($proposedPath)) {
+			if (@is_readable($proposedPath)) {
 				$fileFound = true;
 				require_once $proposedPath;
 				if (class_exists($name) || interface_exists($name)) {

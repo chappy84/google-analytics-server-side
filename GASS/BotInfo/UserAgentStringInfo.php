@@ -244,7 +244,6 @@ class UserAgentStringInfo
 		if (0 == func_num_args()) {
 			$fileRelPath = DIRECTORY_SEPARATOR.$this->getOption('cacheFilename');
 			$cacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
-										&& @file_exists($csvPathname.$fileRelPath)
 										&& @is_readable($csvPathname.$fileRelPath)
 										&& false !== ($fileModifiedTime = @filemtime($csvPathname.$fileRelPath)))
 									? $fileModifiedTime : null;
