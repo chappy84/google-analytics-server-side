@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
+use GASS\Exception;
 
 /**
  * Proxy class for dealing with all Http requests regardless of adapter
@@ -94,12 +95,12 @@ class Http
 
 
 	/**
-	 * @throws RuntimeException
+	 * @throws GASS\Exception\RuntimeException
 	 * @final
 	 * @access public
 	 */
 	final public function __clone() {
-		throw new \RuntimeException('You cannot clone '.__CLASS__);
+		throw new Exception\RuntimeException('You cannot clone '.__CLASS__);
 	}
 
 
@@ -137,7 +138,7 @@ class Http
 	 *
 	 * @param string $name
 	 * @param array $arguments
-	 * @throws \BadMethodCallException
+	 * @throws Exception\BadMethodCallException
 	 * @return mixed
 	 * @access public
 	 */
@@ -145,7 +146,7 @@ class Http
 		if (method_exists($this->adapter, $name)) {
 			return call_user_func_array(array($this->adapter, $name), $arguments);
 		}
-		throw new \BadMethodCallException(__METHOD__.' is not an available method in '.get_class($this->adapter));
+		throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($this->adapter));
 	}
 
 
@@ -154,7 +155,7 @@ class Http
 	 *
 	 * @param string $name
 	 * @param array $arguments
-	 * @throws \BadMethodCallException
+	 * @throws Exception\BadMethodCallException
 	 * @return mixed
 	 * @static
 	 * @access public
@@ -165,7 +166,7 @@ class Http
 		if (method_exists($adapter, $name)) {
 			return call_user_func_array(array($adapter, $name), $arguments);
 		}
-		throw new \BadMethodCallException(__METHOD__.' is not an available method in '.get_class($adapter));
+		throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($adapter));
 	}
 
 
@@ -173,7 +174,7 @@ class Http
 	 * Sets the current adapter to use
 	 *
 	 * @param string $adapter
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @return GASS\Http
 	 * @access public
 	 */
@@ -186,7 +187,7 @@ class Http
 			$this->adapter = $adapter;
 			return $this;
 		}
-		throw new \InvalidArgumentException('The GASS\Http adapter must implement GASS\Http\HttpInterface.');
+		throw new Exception\InvalidArgumentException('The GASS\Http adapter must implement GASS\Http\HttpInterface.');
 	}
 
 

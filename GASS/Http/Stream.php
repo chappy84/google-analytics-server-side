@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
+use GASS\Exception;
 
 /**
  * Stream adapter for Http
@@ -86,7 +87,7 @@ class Stream
 			}
 			return $this->responseHeaders;
 		}
-		throw new \DomainException('A Http Request has not been made yet.');
+		throw new Exception\DomainException('A Http Request has not been made yet.');
 	}
 
 
@@ -183,7 +184,7 @@ class Stream
 				$php_errormsg = 'error message not available, this could be because the ini '
 								.'setting "track_errors" is set to "Off" or XDebug is running';
 			}
-			throw new \RuntimeException('Source could not be retrieved. Error: '.$php_errormsg);
+			throw new Exception\RuntimeException('Source could not be retrieved. Error: '.$php_errormsg);
 		}
 		$this->setResponseHeaders($http_response_header);
 		if (null !== ($statusCode = $this->getInfo('Http-Code'))) {
@@ -212,7 +213,7 @@ class Stream
 	 * the $http_response_header or stream_context_create format
 	 *
 	 * @param string|array $headers
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @return array
 	 * @access private
 	 */
@@ -221,7 +222,7 @@ class Stream
 			$headers = explode("\n", $headers);
 		}
 		if (!is_array($headers)) {
-			throw new \InvalidArgumentException('Headers must be provided in either string or numerically indexed array format.');
+			throw new Exception\InvalidArgumentException('Headers must be provided in either string or numerically indexed array format.');
 		}
 		$returnHeaders = array();
 		foreach ($headers as $header) {

@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
+use GASS\Exception;
 
 /**
  * Stream adapter for Http
@@ -85,7 +86,7 @@ class Test
 			}
 			return $this->responseHeaders;
 		}
-		throw new \DomainException('A Http Request has not been made yet.');
+		throw new Exception\DomainException('A Http Request has not been made yet.');
 	}
 
 
@@ -173,7 +174,7 @@ class Test
 	 * the $http_response_header or stream_context_create format
 	 *
 	 * @param string|array $headers
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @return array
 	 * @access private
 	 */
@@ -182,7 +183,7 @@ class Test
 			$headers = explode("\n", $headers);
 		}
 		if (!is_array($headers)) {
-			throw new \InvalidArgumentException('Headers must be provided in either string or numerically indexed array format.');
+			throw new Exception\InvalidArgumentException('Headers must be provided in either string or numerically indexed array format.');
 		}
 		$returnHeaders = array();
 		foreach ($headers as $header) {

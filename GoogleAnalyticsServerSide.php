@@ -297,12 +297,12 @@ class GoogleAnalyticsServerSide
 	 * Sets all the variables it can from the request headers received from the Browser
 	 *
 	 * @param array $options
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
 	public function __construct($options = array()) {
 		if (!is_array($options)) {
-			throw new \InvalidArgumentException('Argument $options must be an array.');
+			throw new \GASS\Exception\InvalidArgumentException('Argument $options must be an array.');
 		}
 		if (!empty($_SERVER['SERVER_NAME'])) {
 			$this->setServerName($_SERVER['SERVER_NAME']);
@@ -438,7 +438,7 @@ class GoogleAnalyticsServerSide
 	 * Returns the value of the specified custom variable
 	 *
 	 * @param integer $index
-	 * @throws OutOfBoundsException
+	 * @throws GASS\Exception\OutOfBoundsException
 	 * @return string
 	 * @access public
 	 */
@@ -446,7 +446,7 @@ class GoogleAnalyticsServerSide
 		if (isset($this->customVariables['index'.$index])) {
 			return $this->customVariables['index'.$index]['value'];
 		}
-		throw new \OutOfBoundsException('The index: "'.$index.'" has not been set.');
+		throw new \GASS\Exception\OutOfBoundsException('The index: "'.$index.'" has not been set.');
 	}
 
 
@@ -512,7 +512,7 @@ class GoogleAnalyticsServerSide
 	 * Gets a specific option
 	 *
 	 * @param string $name
-	 * @throws OutOfRangeException
+	 * @throws GASS\Exception\OutOfRangeException
 	 * @return mixed
 	 * @access public
 	 */
@@ -524,7 +524,7 @@ class GoogleAnalyticsServerSide
 				return $this->$methodName();
 			}
 		}
-		throw new \OutOfRangeException($name.' is not an available option.');
+		throw new \GASS\Exception\OutOfRangeException($name.' is not an available option.');
 	}
 
 
@@ -535,7 +535,7 @@ class GoogleAnalyticsServerSide
 	 *
 	 * @param string $var
 	 * @param string $description
-	 * @throws \InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @return string
 	 * @access private
 	 */
@@ -543,7 +543,7 @@ class GoogleAnalyticsServerSide
 		if (!is_string($var)) {
 			if (!is_scalar($var) && !is_null($var)
 					&& (!is_object($var) || !method_exists($var, '__toString'))) {
-				throw new \InvalidArgumentException($description.' must be a string.');
+				throw new \GASS\Exception\InvalidArgumentException($description.' must be a string.');
 			}
 			$var = (string)$var;
 		}
@@ -566,13 +566,13 @@ class GoogleAnalyticsServerSide
 	/**
 	 * @param string $version
 	 * @return GoogleAnalyticsServerSide
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
 	public function setVersion($version) {
 		$version = $this->getAsString($version, 'Version');
 		if (1 !== preg_match('/^(\d+\.){2}\d+$/', $version)) {
-			throw new \InvalidArgumentException('Invalid version number provided: '.$version);
+			throw new \GASS\Exception\InvalidArgumentException('Invalid version number provided: '.$version);
 		}
 		$this->version = $version;
 		return $this;
@@ -610,7 +610,7 @@ class GoogleAnalyticsServerSide
 		$acceptLanguage = strtolower($acceptLanguage);
 		$langValidator = new \GASS\Validate\LanguageCode();
 		if (!$langValidator->isValid($acceptLanguage)) {
-			throw new \InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
+			throw new \GASS\Exception\InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
 		}
 		$this->acceptLanguage = $acceptLanguage;
 		\GASS\Http\Http::setAcceptLanguage($acceptLanguage);
@@ -632,14 +632,14 @@ class GoogleAnalyticsServerSide
 	/**
 	 * @param string $remoteAddress
 	 * @return GoogleAnalyticsServerSide
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
 	public function setRemoteAddress($remoteAddress) {
 		$remoteAddress = $this->getAsString($remoteAddress, 'Remote Address');
 		$ipValidator = new \GASS\Validate\IpAddress();
 		if (!$ipValidator->isValid($remoteAddress)) {
-			throw new \InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
+			throw new \GASS\Exception\InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
 		}
 		$this->remoteAddress = $remoteAddress;
 		\GASS\Http\Http::setRemoteAddress($this->remoteAddress);
@@ -653,13 +653,13 @@ class GoogleAnalyticsServerSide
 	/**
 	 * @param string $account
 	 * @return GoogleAnalyticsServerSide
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
 	public function setAccount($account) {
 		$account = $this->getAsString($account, 'Account');
 		if (1 !== preg_match('/^(MO|UA)-\d{4,}-\d+$/',$account)) {
-			throw new \InvalidArgumentException('Google Analytics user account must be in the format: UA-XXXXXXX-X or MO-XXXXXXX-X');
+			throw new \GASS\Exception\InvalidArgumentException('Google Analytics user account must be in the format: UA-XXXXXXX-X or MO-XXXXXXX-X');
 		}
 		$this->account = $account;
 		return $this;
@@ -669,7 +669,7 @@ class GoogleAnalyticsServerSide
 	/**
 	 * @param string $documentReferer
 	 * @return GoogleAnalyticsServerSide
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
 	public function setDocumentReferer($documentReferer) {
@@ -677,7 +677,7 @@ class GoogleAnalyticsServerSide
 		if (!empty($documentReferer)
 				&& (!preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $documentReferer)
 						|| false === @parse_url($documentReferer))) {
-			throw new \InvalidArgumentException('Document Referer must be a valid URL.');
+			throw new \GASS\Exception\InvalidArgumentException('Document Referer must be a valid URL.');
 		}
 		$this->documentReferer = $documentReferer;
 		return $this;
@@ -719,9 +719,9 @@ class GoogleAnalyticsServerSide
 	 * @param string $value
 	 * @param integer $scope [optional]
 	 * @param integer $index [optional]
-	 * @throws OutOfBoundsException
-	 * @throws InvalidArgumentException
-	 * @throws DomainException
+	 * @throws GASS\Exception\OutOfBoundsException
+	 * @throws GASS\Exception\InvalidArgumentException
+	 * @throws GASS\Exception\DomainException
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
@@ -732,18 +732,18 @@ class GoogleAnalyticsServerSide
 				$index++;
 			} while (isset($this->customVariables['index'.$index]) && $index < 6);
 			if ($index > 5) {
-				throw new \OutOfBoundsException('You cannot add more than 5 custom variables.');
+				throw new \GASS\Exception\OutOfBoundsException('You cannot add more than 5 custom variables.');
 			}
 		} elseif (!is_int($index) || $index < 1 || $index > 5) {
-			throw new \OutOfBoundsException('The index must be an integer between 1 and 5.');
+			throw new \GASS\Exception\OutOfBoundsException('The index must be an integer between 1 and 5.');
 		}
 		if (!is_int($scope) || $scope < 1 || $scope > 3) {
-			throw new \InvalidArgumentException('The Scope must be a value between 1 and 3');
+			throw new \GASS\Exception\InvalidArgumentException('The Scope must be a value between 1 and 3');
 		}
 		$name = $this->getAsString($name, 'Custom Var Name');
 		$value = $this->getAsString($value, 'Custom Var Value');
 		if (64 < strlen($name.$value)) {
-			throw new \DomainException('The name / value combination exceeds the 64 byte custom var limit.');
+			throw new \GASS\Exception\DomainException('The name / value combination exceeds the 64 byte custom var limit.');
 		}
 		$this->customVariables['index'.$index] = array(	'index'	=> (int)$index
 													,	'name'	=> (string)$this->removeSpecialCustomVarChars($name)
@@ -815,28 +815,28 @@ class GoogleAnalyticsServerSide
 
 	/**
 	 * @param array $searchEngines
-	 * @throws InvalidArgumentException
-	 * @throws DomainException
-	 * @throws OutOfBoundsException
+	 * @throws GASS\Exception\InvalidArgumentException
+	 * @throws GASS\Exception\DomainException
+	 * @throws GASS\Exception\OutOfBoundsException
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setSearchEngines($searchEngines) {
 		if (!is_array($searchEngines)) {
-			throw new InvalidArgumentException('$searchEngines must be an array.');
+			throw new \GASS\Exception\InvalidArgumentException('$searchEngines must be an array.');
 		}
 		foreach ($searchEngines as $searchEngine => $queryParams) {
 			if (!is_array($queryParams) || 1 > count($queryParams)) {
-				throw new DomainException('searchEngines entry '.$searchEngine.' invalid');
+				throw new \GASS\Exception\DomainException('searchEngines entry '.$searchEngine.' invalid');
 			}
 			if (!is_string($searchEngine)
 					|| 1 !== preg_match('/^[a-z0-9\.-]+$/', $searchEngine)) {
-				throw new OutOfBoundsException('search engine name "'.$searchEngine.'" is invalid');
+				throw new \GASS\Exception\OutOfBoundsException('search engine name "'.$searchEngine.'" is invalid');
 			}
 			foreach ($queryParams as $queryParameter) {
 				if (!is_string($queryParameter)
 						|| 1 !== preg_match('/^[a-z0-9_\-]+$/i', $queryParameter)) {
-					throw new DomainException('search engine query parameter "'.$queryParameter.'" is invalid');
+					throw new \GASS\Exception\DomainException('search engine query parameter "'.$queryParameter.'" is invalid');
 				}
 			}
 		}
@@ -849,14 +849,14 @@ class GoogleAnalyticsServerSide
 	 * Sets confguration options for the BotInfo adapter to use, or the class adapter to use itself
 	 *
 	 * @param array|boolean|GASS\BotInfo\Interface|null $botInfo
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setBotInfo($botInfo) {
 		if (!is_array($botInfo) && !is_bool($botInfo) && $botInfo !== null
 				&& !$botInfo instanceof \GASS\BotInfo\BotInfoInterface) {
-			throw new \InvalidArgumentException('botInfo must be an array, boolean, null'
+			throw new \GASS\Exception\InvalidArgumentException('botInfo must be an array, boolean, null'
 												.' or a class which implements GASS\BotInfo\Interface.');
 		} elseif ($botInfo !== null && $botInfo !== false) {
 			if ($botInfo instanceof \GASS\BotInfo\BotInfoInterface) {
@@ -877,14 +877,14 @@ class GoogleAnalyticsServerSide
 
 	/**
 	 * @param null|array|GASS\Http\Interface $http
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function setHttp($http = null) {
 		if ($http !== null && !is_array($http)
 				&& !$http instanceof \GASS\Http\HttpInterface) {
-			throw new \InvalidArgumentException('http must be an array, null'
+			throw new \GASS\Exception\InvalidArgumentException('http must be an array, null'
 												.' or a class which implements GASS\Http\Interface.');
 		}
 		if ($http !== null) {
@@ -909,7 +909,7 @@ class GoogleAnalyticsServerSide
 	 */
 	public function setOptions($options) {
 		if (!is_array($options)) {
-			throw new \InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
+			throw new \GASS\Exception\InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
 		}
 		foreach ($options as $name => $value) {
 			$this->setOption($name, $value);
@@ -947,7 +947,7 @@ class GoogleAnalyticsServerSide
 	 * @param string $label [optional]
 	 * @param integer $value [optional]
 	 * @return string
-	 * @throws DomainException
+	 * @throws GASS\Exception\DomainException
 	 * @access public
 	 */
 	public function getEventString($category, $action = null, $label = null, $value = null) {
@@ -967,13 +967,13 @@ class GoogleAnalyticsServerSide
 		$category = $this->getAsString($category, 'Event Category');
 		$action = $this->getAsString($action, 'Event Action');
 		if (empty($category) || empty($action)) {
-			throw new \InvalidArgumentException('An event requires at least a category and action');
+			throw new \GASS\Exception\InvalidArgumentException('An event requires at least a category and action');
 		}
 		if ($label !== null) {
 			$label = $this->getAsString($label, 'Event Label');
 		}
 		if ($value !== null && !is_int($value)) {
-			throw new \InvalidArgumentException('Value must be an integer.');
+			throw new \GASS\Exception\InvalidArgumentException('Value must be an integer.');
 		}
 		return '5('.$category.'*'.$action.(empty($label) ? '' : '*'.$label).')'.(($value !== null) ? '('.$value.')' : '');
 	}
@@ -1215,8 +1215,8 @@ class GoogleAnalyticsServerSide
 	 * @param string $name
 	 * @param string $value
 	 * @param boolean $setHeader
-	 * @throws LengthException
-	 * @throws OutOfBoundsException
+	 * @throws GASS\Exception\LengthException
+	 * @throws GASS\Exception\OutOfBoundsException
 	 * @return GoogleAnalyticsServerSide
 	 * @access private
 	 */
@@ -1224,7 +1224,7 @@ class GoogleAnalyticsServerSide
 		$name = trim($this->getAsString($name, 'Cookie Name'));
 		$value = trim($this->getAsString($value, 'Cookie Value'));
 		if (empty($value)) {
-			throw new \LengthException('Cookie cannot have an empty value');
+			throw new \GASS\Exception\LengthException('Cookie cannot have an empty value');
 		}
 		if (array_key_exists($name, $this->cookies) && !empty($value)) {
 			$this->cookies[$name] = $value;
@@ -1246,7 +1246,7 @@ class GoogleAnalyticsServerSide
 			}
 			return $this;
 		}
-		throw new \OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
+		throw new \GASS\Exception\OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
 	}
 
 
@@ -1259,7 +1259,7 @@ class GoogleAnalyticsServerSide
 	 */
 	public function setSessionCookieTimeout($sessionCookieTimeout) {
 		if (!is_int($sessionCookieTimeout)) {
-			throw new \InvalidArgumentException('Session Cookie Timeout must be an integer.');
+			throw new \GASS\Exception\InvalidArgumentException('Session Cookie Timeout must be an integer.');
 		}
 		$this->sessionCookieTimeout = round($sessionCookieTimeout / 1000);
 		return $this;
@@ -1275,7 +1275,7 @@ class GoogleAnalyticsServerSide
 	 */
 	public function setVisitorCookieTimeout($visitorCookieTimeout) {
 		if (!is_int($visitorCookieTimeout)) {
-			throw new \InvalidArgumentException('Visitor Cookie Timeout must be an integer.');
+			throw new \GASS\Exception\InvalidArgumentException('Visitor Cookie Timeout must be an integer.');
 		}
 		$this->visitorCookieTimeout = round($visitorCookieTimeout / 1000);
 		return $this;
@@ -1298,7 +1298,7 @@ class GoogleAnalyticsServerSide
 	 * Returns the current value of a google analytics cookie
 	 *
 	 * @param string $name
-	 * @throws OutOfBoundsException
+	 * @throws GASS\Exception\OutOfBoundsException
 	 * @return string
 	 * @access public
 	 */
@@ -1307,7 +1307,7 @@ class GoogleAnalyticsServerSide
 		if (array_key_exists($name, $this->cookies)) {
 			return $this->cookies[$name];
 		}
-		throw new \OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
+		throw new \GASS\Exception\OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
 	}
 
 
@@ -1374,7 +1374,7 @@ class GoogleAnalyticsServerSide
 			$url = $this->getAsString($url, 'Page View URL');
 			if (0 != strpos($url, '/')) {
 				if (false === ($urlParts = @parse_url($url))) {
-					throw new \DomainException('Url is invalid: '.$url);
+					throw new \GASS\Exception\DomainException('Url is invalid: '.$url);
 				}
 				$url = $urlParts['path'];
 				$this->setServerName($urlParts['host']);
@@ -1400,13 +1400,13 @@ class GoogleAnalyticsServerSide
 	 * @param string $label [optional]
 	 * @param integer $value [optional]
 	 * @param boolean $nonInteraction [optional]
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
 	public function trackEvent($category, $action, $label = null, $value = null, $nonInteraction = false) {
 		if (!is_bool($nonInteraction)) {
-			throw new \InvalidArgumentException('NonInteraction must be a boolean.');
+			throw new \GASS\Exception\InvalidArgumentException('NonInteraction must be a boolean.');
 		}
 		$queryParams = array(	'utmt'	=> 'event'
 							,	'utme'	=> $this->getEventString($category, $action, $label, $value));
@@ -1438,7 +1438,7 @@ class GoogleAnalyticsServerSide
 
 		$account = (string) $this->getAccount();
 		if (empty($account)) {
-			throw new \DomainException('The account number must be set before any tracking can take place.');
+			throw new \GASS\Exception\DomainException('The account number must be set before any tracking can take place.');
 		}
 		$domainName = (string) $this->getServerName();
 		$documentReferer = (string) $this->getDocumentReferer();

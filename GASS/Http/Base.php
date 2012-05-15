@@ -38,6 +38,7 @@
  */
 namespace GASS\Http;
 use GASS\Validate;
+use GASS\Exception;
 
 /**
  * Base class for all Http adapters
@@ -145,7 +146,7 @@ abstract class Base
 	public function setAcceptLanguage($acceptLanguage) {
 		$langValidator = new Validate\LanguageCode();
 		if (!$langValidator->isValid($acceptLanguage)) {
-			throw new \InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
+			throw new Exception\InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
 		}
 		$this->acceptLanguage = $acceptLanguage;
 		return $this;
@@ -163,7 +164,7 @@ abstract class Base
 		if (!empty($remoteAddress)) {
 			$ipValidator = new Validate\IpAddress();
 			if (!$ipValidator->isValid($remoteAddress)) {
-				throw new \InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
+				throw new Exception\InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
 			}
 		}
 		$this->remoteAddress = $remoteAddress;
@@ -201,13 +202,13 @@ abstract class Base
 	 * Checks the return code and throws an exception if an issue with the response
 	 *
 	 * @param integer $code
-	 * @throws InvalidArgumentException
-	 * @throws RuntimeException
+	 * @throws GASS\Exception\InvalidArgumentException
+	 * @throws GASS\Exception\RuntimeException
 	 * @access protected
 	 */
 	protected function checkResponseCode($code) {
 		if (!is_numeric($code)) {
-			throw new \InvalidArgumentException('HTTP Status Code must be numeric.');
+			throw new Exception\InvalidArgumentException('HTTP Status Code must be numeric.');
 		}
 		switch ($code) {
 			case '204':
@@ -339,7 +340,7 @@ abstract class Base
 			default:
 		}
 		if (isset($message)) {
-			throw new \RuntimeException($message, $code);
+			throw new Exception\RuntimeException($message, $code);
 		}
 	}
 

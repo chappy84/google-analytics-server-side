@@ -86,25 +86,25 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetVersionExceptionDecimal() {
-		$this->setExpectedException('InvalidArgumentException', 'Invalid version number provided: 5.23');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Invalid version number provided: 5.23');
 		$this->gass->setVersion('5.23');
 	}
 
 
 	public function testSetVersionExceptionInteger() {
-		$this->setExpectedException('InvalidArgumentException', 'Invalid version number provided: 523');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Invalid version number provided: 523');
 		$this->gass->setVersion('523');
 	}
 
 
 	public function testSetVersionExceptionString() {
-		$this->setExpectedException('InvalidArgumentException', 'Invalid version number provided: abc');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Invalid version number provided: abc');
 		$this->gass->setVersion('abc');
 	}
 
 
 	public function testSetVersionExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Version must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Version must be a string.');
 		$this->gass->setVersion(array('5.2.3'));
 	}
 
@@ -121,7 +121,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetUserAgentExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'User Agent must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'User Agent must be a string.');
 		$this->gass->setUserAgent(array('Mozilla/5.0 (compatible; Konqueror/2.2.2)'));
 	}
 
@@ -134,31 +134,31 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetAcceptLanguageExceptionTooLong() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setAcceptLanguage('abc,def;q=0.8');
 	}
 
 
 	public function testSetAcceptLanguageExceptionTooLong2() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setAcceptLanguage('AbCDefg');
 	}
 
 
 	public function testSetAcceptLanguageExceptionInvalidCountry() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setAcceptLanguage('ab-cde');
 	}
 
 
 	public function testSetAcceptLanguageExceptionInvalidLanguage() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setAcceptLanguage('abc-de');
 	}
 
 
 	public function testSetAcceptLanguageExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Accept Language must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Accept Language must be a string.');
 		$this->gass->setAcceptLanguage(array('en-gb'));
 	}
 
@@ -174,7 +174,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetServerNameExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Server Name must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Server Name must be a string.');
 		$this->gass->setServerName(array('www.example.com'));
 	}
 
@@ -194,31 +194,31 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetRemoteAddressExceptionLetters() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setRemoteAddress('abc.def.ghi.jkl');
 	}
 
 
 	public function testSetRemoteAddressExceptionTooHighSegments() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setRemoteAddress('500.500.500.500');
 	}
 
 
 	public function testSetRemoteAddressExceptionMissingSegments() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setRemoteAddress('255.255');
 	}
 
 
 	public function testSetRemoteAddressExceptionInteger() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setRemoteAddress('192');
 	}
 
 
 	public function testSetRemoteAddressExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Remote Address must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Remote Address must be a string.');
 		$this->gass->setRemoteAddress(array('255.255.255.0'));
 	}
 
@@ -234,31 +234,31 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetAccountExceptionInvalidFirstSegment() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setAccount('AB-1234567-0');
 	}
 
 
 	public function testSetAccountExceptionMissingFirstHyphen() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setAccount('UA1234567-0');
 	}
 
 
 	public function testSetAccountExceptionMissingSecondHyphen() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setAccount('UA-12345670');
 	}
 
 
 	public function testSetAccountExceptionLowerCaseFirstSegment() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setAccount('mo-1234567-0');
 	}
 
 
 	public function testSetAccountExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Account must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Account must be a string.');
 		$this->gass->setAccount(array('UA-1234-5'));
 	}
 
@@ -274,37 +274,37 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetDocumentRefererExceptionMissingProtocol() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setDocumentReferer('www.example.com/random.html?a=b');
 	}
 
 
 	public function testSetDocumentRefererExceptionMissingHostname() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setDocumentReferer('http:///random.html?a=b');
 	}
 
 
 	public function testSetDocumentRefererExceptionOnlyProtocol() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setDocumentReferer('http://');
 	}
 
 
 	public function testSetDocumentRefererExceptionInvalidHostname() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setDocumentReferer('http://www.example_1.com/');
 	}
 
 
 	public function testSetDocumentRefererExceptionInvalidProtocol() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$this->gass->setDocumentReferer('a%b://www.example.com/');
 	}
 
 
 	public function testSetDocumentRefererExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Document Referer must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Document Referer must be a string.');
 		$this->gass->setDocumentReferer(array('http://localhost/random'));
 	}
 
@@ -319,7 +319,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetDocumentPathExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Document Path must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Document Path must be a string.');
 		$this->gass->setDocumentPath(array('/abcdefg.html'));
 	}
 
@@ -332,7 +332,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetPageTitleExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Page Title must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Page Title must be a string.');
 		$this->gass->setPageTitle(array('Abcdef Ghijk Lmnop'));
 	}
 
@@ -362,49 +362,49 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetCustomVarExceptionInvalidIndexTooHigh() {
-		$this->setExpectedException('OutOfBoundsException', 'The index must be an integer between 1 and 5.');
+		$this->setExpectedException('GASS\Exception\OutOfBoundsException', 'The index must be an integer between 1 and 5.');
 		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 3, 6);
 	}
 
 
 	public function testSetCustomVarExceptionInvalidIndexTooLow() {
-		$this->setExpectedException('OutOfBoundsException', 'The index must be an integer between 1 and 5.');
+		$this->setExpectedException('GASS\Exception\OutOfBoundsException', 'The index must be an integer between 1 and 5.');
 		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 3, 0);
 	}
 
 
 	public function testSetCustomVarExceptionInvalidScopeTooHigh() {
-		$this->setExpectedException('InvalidArgumentException', 'The Scope must be a value between 1 and 3');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'The Scope must be a value between 1 and 3');
 		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 4, 1);
 	}
 
 
 	public function testSetCustomVarExceptionInvalidScopeTooLow() {
-		$this->setExpectedException('InvalidArgumentException', 'The Scope must be a value between 1 and 3');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'The Scope must be a value between 1 and 3');
 		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 0, 1);
 	}
 
 
 	public function testSetCustomVarExceptionNameWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Custom Var Name must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Custom Var Name must be a string.');
 		$this->gass->setCustomVar(array('Custom Var 1'), 'Custom Value 1');
 	}
 
 
 	public function testSetCustomVarExceptionValueWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Custom Var Value must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Custom Var Value must be a string.');
 		$this->gass->setCustomVar('Custom Var 1', array('Custom Value 1'));
 	}
 
 
 	public function testSetCustomVarExceptionExceedsByteVarLimit() {
-		$this->setExpectedException('DomainException', 'The name / value combination exceeds the 64 byte custom var limit.');
+		$this->setExpectedException('GASS\Exception\DomainException', 'The name / value combination exceeds the 64 byte custom var limit.');
 		$this->gass->setCustomVar('abcdefghijklmnopqrstuvwxyz123456', 'abcdefghijklmnopqrstuvwxyz1234567');
 	}
 
 
 	public function testSetCustomVarExceptionExceededVarCountLimit() {
-		$this->setExpectedException('OutOfBoundsException', 'You cannot add more than 5 custom variables.');
+		$this->setExpectedException('GASS\Exception\OutOfBoundsException', 'You cannot add more than 5 custom variables.');
 		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1');
 		$this->gass->setCustomVar('Custom Var 2', 'Custom Value 2');
 		$this->gass->setCustomVar('Custom Var 3', 'Custom Value 3');
@@ -425,7 +425,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testDeleteCustomVarExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Custom Var Index must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Custom Var Index must be a string.');
 		$this->gass->deleteCustomVar(array(1));
 	}
 
@@ -441,7 +441,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetCharsetExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Charset must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Charset must be a string.');
 		$this->gass->setCharset(array('UTF-8'));
 	}
 
@@ -456,48 +456,48 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetSearchEnginesExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', '$searchEngines must be an array.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', '$searchEngines must be an array.');
 		$this->gass->setSearchEngines(new \stdClass);
 	}
 
 
 	public function testSetSearchEnginesExceptionWrongQueryParamsDataType() {
-		$this->setExpectedException('DomainException', 'searchEngines entry testb invalid');
+		$this->setExpectedException('GASS\Exception\DomainException', 'searchEngines entry testb invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array('a')
 										,	'testb'	=> new \stdClass));
 	}
 
 
 	public function testSetSearchEnginesExceptionWrongQueryParamsCount() {
-		$this->setExpectedException('DomainException', 'searchEngines entry testa invalid');
+		$this->setExpectedException('GASS\Exception\DomainException', 'searchEngines entry testa invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array()
 										,	'testb'	=> array('b')));
 	}
 
 
 	public function testSetSearchEnginesExceptionWrongNameDataType() {
-		$this->setExpectedException('OutOfBoundsException', 'search engine name "1" is invalid');
+		$this->setExpectedException('GASS\Exception\OutOfBoundsException', 'search engine name "1" is invalid');
 		$this->gass->setSearchEngines(array(	1	=> array('a')
 										,	'testb'	=> array('b')));
 	}
 
 
 	public function testSetSearchEnginesExceptionInvalidNameCharacters() {
-		$this->setExpectedException('OutOfBoundsException', 'search engine name "test#" is invalid');
+		$this->setExpectedException('GASS\Exception\OutOfBoundsException', 'search engine name "test#" is invalid');
 		$this->gass->setSearchEngines(array('test#'	=> array('a')
 										,	'testb'	=> array('b')));
 	}
 
 
 	public function testSetSearchEnginesExceptionWrongQueryParameterDataType() {
-		$this->setExpectedException('DomainException', 'search engine query parameter "1" is invalid');
+		$this->setExpectedException('GASS\Exception\DomainException', 'search engine query parameter "1" is invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array(1)
 										,	'testb'	=> array('b')));
 	}
 
 
 	public function testSetSearchEnginesExceptionInvalidQueryParameterCharacters() {
-		$this->setExpectedException('DomainException', 'search engine query parameter "a&" is invalid');
+		$this->setExpectedException('GASS\Exception\DomainException', 'search engine query parameter "a&" is invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array('a&')
 										,	'testb'	=> array('b')));
 	}
@@ -531,7 +531,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetBotInfoExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException'
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
 								,	'botInfo must be an array, boolean, null'
 									.' or a class which implements GASS\BotInfo\Interface.');
 		$this->gass->setBotInfo(new \stdClass);
@@ -556,7 +556,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetHttpExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException'
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
 								,	'http must be an array, null'
 									.' or a class which implements GASS\Http\Interface.');
 		$this->gass->setHttp(new \stdClass);
@@ -564,7 +564,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetOptionsExceptionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'setOptions must be called with an array as an argument');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'setOptions must be called with an array as an argument');
 		$this->gass->setOptions(new \stdClass);
 	}
 
@@ -577,7 +577,7 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetOptionExceptionMissingOption() {
-		$this->setExpectedException('OutOfRangeException', 'Test is not an available option.');
+		$this->setExpectedException('GASS\Exception\OutOfRangeException', 'Test is not an available option.');
 		$this->gass->setOption('Test', 'Value');
 	}
 
@@ -611,31 +611,31 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testGetEventStringExceptionCategoryWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Event Category must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Event Category must be a string.');
 		$this->gass->getEventString(new \stdClass, 'Value');
 	}
 
 
 	public function testGetEventStringExceptionEmptyCategory() {
-		$this->setExpectedException('InvalidArgumentException', 'An event requires at least a category and action');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'An event requires at least a category and action');
 		$this->gass->getEventString('', 'Value');
 	}
 
 
 	public function testGetEventStringExceptionActionWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Event Action must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Event Action must be a string.');
 		$this->gass->getEventString('Category', new \stdClass);
 	}
 
 
 	public function testGetEventStringExceptionEmptyAction() {
-		$this->setExpectedException('InvalidArgumentException', 'An event requires at least a category and action');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'An event requires at least a category and action');
 		$this->gass->getEventString('Category', '');
 	}
 
 
 	public function testGetEventStringExceptionLabelWrongDataType() {
-		$this->setExpectedException('InvalidArgumentException', 'Event Label must be a string.');
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Event Label must be a string.');
 		$this->gass->getEventString('Category', 'Action', new \stdClass);
 	}
 

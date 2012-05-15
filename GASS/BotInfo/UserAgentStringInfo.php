@@ -38,6 +38,7 @@
  */
 namespace GASS\BotInfo;
 use GASS\Http;
+use GASS\Exception;
 
 /**
  * BrowsCap adapter which uses browscap ini file to negatively identify search engine bots
@@ -139,7 +140,7 @@ class UserAgentStringInfo
 	 * and then parses it into the class level variable bots
 	 *
 	 * @return array|null
-	 * @throws RuntimeException
+	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
 	private function getFromCache() {
@@ -151,7 +152,7 @@ class UserAgentStringInfo
 						&& false !== ($botsCsv = @file_get_contents($csvPath))) {
 					return $botsCsv;
 				} elseif (false === @unlink($csvPath)) {
-					throw new \RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
+					throw new Exception\RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
 				}
 			}
 		}
@@ -164,14 +165,14 @@ class UserAgentStringInfo
 	 * Retrieves the bots csv from the default source
 	 *
 	 * @return string
-	 * @throws RuntimeException
+	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
 	private function getFromWeb() {
 		$csvSource = Http\Http::getInstance()->request(self::CSV_URL)->getResponse();
 		$botsCsv = trim($csvSource);
 		if (empty($botsCsv)) {
-			throw new \RuntimeException('Bots CSV retrieved from external source seems to be empty. '
+			throw new Exception\RuntimeException('Bots CSV retrieved from external source seems to be empty. '
 										.'Please either set botInfo to null or ensure the bots csv file can be retrieved.');
 		}
 		return $botsCsv;
@@ -213,7 +214,7 @@ class UserAgentStringInfo
 	 * Saves the current list of bots to the cache directory for use next time the script is run
 	 *
 	 * @return GoogleAnalyticsServerSide
-	 * @throws RuntimeException
+	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
 	private function saveToCache() {
@@ -225,7 +226,7 @@ class UserAgentStringInfo
 			}
 			$csvString = implode("\n", $csvLines);
 			if (false === @file_put_contents($csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'), $csvString, LOCK_EX)) {
-				throw new \RuntimeException('Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'));
+				throw new Exception\RuntimeException('Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'));
 			}
 		}
 		return $this;
@@ -237,7 +238,7 @@ class UserAgentStringInfo
 	 *
 	 * @param integer $cacheDate [optional]
 	 * @return GoogleAnalyticsServerSide
-	 * @throws DomainException
+	 * @throws GASS\Exception\DomainException
 	 * @access private
 	 */
 	private function setCacheDate($cacheDate = null) {
@@ -248,7 +249,7 @@ class UserAgentStringInfo
 										&& false !== ($fileModifiedTime = @filemtime($csvPathname.$fileRelPath)))
 									? $fileModifiedTime : null;
 		} elseif (null !== $cacheDate && !is_numeric($cacheDate)) {
-			throw new \DomainException('cacheDate must be numeric or null.');
+			throw new Exception\DomainException('cacheDate must be numeric or null.');
 		}
 		$this->cacheDate = $cacheDate;
 		return $this;

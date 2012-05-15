@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\BotInfo;
+use GASS\Exception;
 
 /**
  * Proxy class for dealing with all BotInfo requests regardless of adapter
@@ -85,7 +86,7 @@ class BotInfo
 	 *
 	 * @param string $name
 	 * @param array $arguments
-	 * @throws DomainException
+	 * @throws GASS\Exception\DomainException
 	 * @return mixed
 	 * @access public
 	 */
@@ -93,7 +94,7 @@ class BotInfo
 		if ($this->adapter instanceof BotInfoInterface) {
 			return call_user_func_array(array($this->adapter, $name), $arguments);
 		}
-		throw new \DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
+		throw new Exception\DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
 	}
 
 
@@ -101,7 +102,7 @@ class BotInfo
 	 * Sets the current adapter to use
 	 *
 	 * @param string|GASS\BotInfo\BotInfoInterface $adapter
-	 * @throws InvalidArgumentException
+	 * @throws GASS\Exception\InvalidArgumentException
 	 * @return GASS\BotInfo
 	 * @access public
 	 */
@@ -114,7 +115,7 @@ class BotInfo
 			$this->adapter = $adapter;
 			return $this;
 		}
-		throw new \InvalidArgumentException('The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
+		throw new Exception\InvalidArgumentException('The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
 	}
 
 

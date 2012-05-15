@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
+use GASS\Exception;
 
 /**
  * cURL adapter for Http
@@ -76,12 +77,12 @@ class Curl
 	 * Class Constructor
 	 *
 	 * @param array $options
-	 * @throws RuntimeException
+	 * @throws GASS\Exception\RuntimeException
 	 * @access public
 	 */
 	public function __construct(array $options = array()) {
 		if (!extension_loaded('curl')) {
-			throw new \RuntimeException('cURL PHP extension is not loaded.');
+			throw new Exception\RuntimeException('cURL PHP extension is not loaded.');
 		}
 		parent::__construct($options);
 	}
@@ -101,7 +102,7 @@ class Curl
 			}
 			return curl_getinfo($this->curl, $index);
 		}
-		throw new \DomainException('A cURL request has not been made yet.');
+		throw new Exception\DomainException('A cURL request has not been made yet.');
 	}
 
 
@@ -163,11 +164,11 @@ class Curl
 
 		$extraCurlOptions = $this->getOptions();
 		if (!empty($extraCurlOptions) && false === curl_setopt_array($this->curl, $extraCurlOptions)) {
-			throw new \UnexpectedValueException('One of the extra curl options specified is invalid. Error: '.curl_error($this->curl));
+			throw new Exception\UnexpectedValueException('One of the extra curl options specified is invalid. Error: '.curl_error($this->curl));
 		}
 
 		if (false === ($response = curl_exec($this->curl))) {
-			throw new \RuntimeException('Source could not be retrieved. Error: '.curl_error($this->curl));
+			throw new Exception\RuntimeException('Source could not be retrieved. Error: '.curl_error($this->curl));
 		}
 
 		$statusCode = $this->getInfo(CURLINFO_HTTP_CODE);

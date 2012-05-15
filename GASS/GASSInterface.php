@@ -64,7 +64,7 @@ interface GASSInterface
 	 *
 	 * @param string $name
 	 * @param array $arguments
-	 * @throws DomainException
+	 * @throws GASS\Exception\DomainException
 	 * @return mixed
 	 * @access public
 	 */
