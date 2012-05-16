@@ -37,8 +37,9 @@
  * @namespace
  */
 namespace GASS\Http;
-use GASS\Validate;
-use GASS\Exception;
+use \GASS\Adapter;
+use \GASS\Exception;
+use \GASS\Validate;
 
 /**
  * Base class for all Http adapters
@@ -52,7 +53,7 @@ use GASS\Exception;
  * @subpackage	Http
  */
 abstract class Base
-	extends \GASS\Adapter\Base
+	extends Adapter\Base
 	implements HttpInterface
 {
 

@@ -37,8 +37,9 @@
  * @namespace
  */
 namespace GASS\BotInfo;
-use GASS\Validate;
-use GASS\Exception;
+use \GASS\Adapter;
+use \GASS\Exception;
+use \GASS\Validate;
 
 
 /**
@@ -53,7 +54,7 @@ use GASS\Exception;
  * @subpackage	BotInfo
  */
 abstract class Base
-	extends \GASS\Adapter\Base
+	extends Adapter\Base
 	implements BotInfoInterface
 {
 

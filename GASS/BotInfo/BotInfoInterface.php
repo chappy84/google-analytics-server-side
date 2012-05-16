@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\BotInfo;
+use \GASS\Adapter;
 
 /**
  * Interface all BotInfo adapters should conform to
@@ -49,7 +50,7 @@ namespace GASS\BotInfo;
  * @subpackage	BotInfo
  */
 interface BotInfoInterface
-	extends \GASS\Adapter\AdapterInterface
+	extends Adapter\AdapterInterface
 {
 
 	/**

@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
+use \GASS\Adapter;
 
 /**
  * Interface for all Http Adapters
@@ -49,7 +50,7 @@ namespace GASS\Http;
  * @subpackage	Http
  */
 interface HttpInterface
-	extends \GASS\Adapter\AdapterInterface
+	extends Adapter\AdapterInterface
 {
 
 	/**
