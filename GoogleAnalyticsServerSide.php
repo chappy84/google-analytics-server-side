@@ -72,6 +72,7 @@ class GoogleAnalyticsServerSide
 
 	/**
 	 * Location of the current JS file
+	 * Changelog: https://developers.google.com/analytics/community/gajs_changelog
 	 *
 	 * @var string
 	 */
@@ -236,47 +237,49 @@ class GoogleAnalyticsServerSide
 	 * @var array
 	 * @access private
 	 */
-	private $searchEngines = array( 'daum'			=> array('q')
-								,	'eniro'			=> array('search_word')
-								,	'naver'			=> array('query')
-								,	'pchome'		=> array('q')
-								,	'images.google'	=> array('q')
-								,	'google'		=> array('q')
-								,	'yahoo'			=> array('p', 'q')
-								,	'msn'			=> array('q')
-								,	'bing'			=> array('q')
-								,	'aol'			=> array('query', 'q')
-								,	'lycos'			=> array('q', 'query')
-								,	'ask'			=> array('q')
-								,	'netscape'		=> array('query')
-								,	'cnn'			=> array('query')
-								,	'about'			=> array('terms')
-								,	'mamma'			=> array('q')
-								,	'voila'			=> array('rdata')
-								,	'virgilio'		=> array('qs')
-								,	'live'			=> array('q')
-								,	'baidu'			=> array('wd')
-								,	'alice'			=> array('qs')
-								,	'yandex'		=> array('text')
-								,	'najdi'			=> array('q')
-								,	'seznam'		=> array('q')
-								,	'rakuten'		=> array('qt')
-								,	'biglobe'		=> array('q')
-								,	'goo.ne'		=> array('MT')
-								,	'wp'			=> array('szukaj')
-								,	'onet'			=> array('qt')
-								,	'yam'			=> array('k')
-								,	'kvasir'		=> array('q')
-								,	'ozu'			=> array('q')
-								,	'terra'			=> array('query')
-								,	'rambler'		=> array('query')
-								,	'conduit'		=> array('q')
-								,	'babylon'		=> array('q')
-								,	'search-results'=> array('q')
-								,	'avg'			=> array('q')
-								,	'comcast'		=> array('q')
-								,	'incredimail'	=> array('q')
-								,	'startsiden'	=> array('q'));
+	private $searchEngines = array( 'netscape' => array('query')
+								,	'eniro' => array('search_word')
+								,	'naver' => array('query')
+								,	'pchome' => array('q')
+								,	'images.google' => array('q')
+								,	'google' => array('q')
+								,	'yahoo' => array('p', 'q')
+								,	'msn' => array('q')
+								,	'bing' => array('q')
+								,	'aol' => array('query', 'q')
+								,	'lycos' => array('q', 'query')
+								,	'ask' => array('q')
+								,	'netscape' => array('query')
+								,	'cnn' => array('query')
+								,	'about' => array('terms')
+								,	'mamma' => array('q')
+								,	'voila' => array('rdata')
+								,	'virgilio' => array('qs')
+								,	'live' => array('q')
+								,	'baidu' => array('wd')
+								,	'alice' => array('qs')
+								,	'yandex' => array('text')
+								,	'najdi' => array('q')
+								,	'seznam' => array('q')
+								,	'rakuten' => array('qt')
+								,	'biglobe' => array('q')
+								,	'goo.ne' => array('MT')
+								,	'wp' => array('szukaj')
+								,	'onet' => array('qt')
+								,	'yam' => array('k')
+								,	'kvasir' => array('q')
+								,	'ozu' => array('q')
+								,	'terra' => array('query')
+								,	'rambler' => array('query')
+								,	'conduit' => array('q')
+								,	'babylon' => array('q')
+								,	'search-results' => array('q')
+								,	'avg' => array('q')
+								,	'comcast' => array('q')
+								,	'incredimail' => array('q')
+								,	'startsiden' => array('q')
+								,	'go.mail.ru' => array('q')
+								,	'search.centrum.cz' => array('q'));
 
 
 	/**
@@ -666,7 +669,7 @@ class GoogleAnalyticsServerSide
 		if (1 !== preg_match('/^(MO|UA)-\d{4,}-\d+$/',$account)) {
 			throw new Exception\InvalidArgumentException('Google Analytics user account must be in the format: UA-XXXXXXX-X or MO-XXXXXXX-X');
 		}
-		$this->account = $account;
+		$this->account = trim($account);
 		return $this;
 	}
 
@@ -747,8 +750,8 @@ class GoogleAnalyticsServerSide
 		}
 		$name = $this->getAsString($name, 'Custom Var Name');
 		$value = $this->getAsString($value, 'Custom Var Value');
-		if (64 < strlen($name.$value)) {
-			throw new Exception\DomainException('The name / value combination exceeds the 64 byte custom var limit.');
+		if (128 < strlen($name.$value)) {
+			throw new Exception\DomainException('The name / value combination exceeds the 128 byte custom var limit.');
 		}
 		$this->customVariables['index'.$index] = array(	'index'	=> (int)$index
 													,	'name'	=> (string)$this->removeSpecialCustomVarChars($name)
@@ -1344,10 +1347,10 @@ class GoogleAnalyticsServerSide
 	public function setSearchEnginesFromJs() {
 		$currentJs = $this->getCurrentJsFile();
 		if (!empty($currentJs)) {
-			$regEx = '([a-z:,-_\.]+)';
+			$regEx = '([a-z:\s-_\.]+)';
 			$searchEngineString = preg_replace('/^[\s\S]+\=[\'"]'.$regEx.'[\'"]\.split\([\'"]\s+[\'"]\)[\s\S]+$/i', '$1', $currentJs);
 			if (preg_match('/^'.$regEx.'$/i', $searchEngineString)) {
-				$searchEngineArray = explode(',', $searchEngineString);
+				$searchEngineArray = preg_split('#\s+#', $searchEngineString);
 				$searchEngines = array();
 				foreach($searchEngineArray as $searchEngine) {
 					$searchEngineParts = explode(':', $searchEngine);

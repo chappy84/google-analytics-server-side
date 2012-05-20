@@ -55,7 +55,7 @@ class GoogleAnalyticsServerSideTest
 		parent::setUp();
 		require_once __DIR__.DIRECTORY_SEPARATOR.'../GoogleAnalyticsServerSide.php';
 		$this->httpAdapter = new \GASS\Http\Test();
-		$this->httpAdapter->setResponse(file_get_contents('ga.js'));
+		$this->httpAdapter->setResponse(file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'ga.js'));
 		$this->httpAdapter->setResponseHeaders(array(	'HTTP/1.0 200 OK'
 													,	'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT'
 													,	'X-Content-Type-Options: nosniff'
@@ -398,8 +398,9 @@ class GoogleAnalyticsServerSideTest
 
 
 	public function testSetCustomVarExceptionExceedsByteVarLimit() {
-		$this->setExpectedException('GASS\Exception\DomainException', 'The name / value combination exceeds the 64 byte custom var limit.');
-		$this->gass->setCustomVar('abcdefghijklmnopqrstuvwxyz123456', 'abcdefghijklmnopqrstuvwxyz1234567');
+		$this->setExpectedException('GASS\Exception\DomainException', 'The name / value combination exceeds the 128 byte custom var limit.');
+		$this->gass->setCustomVar(	'abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz12'
+								,	'abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz123');
 	}
 
 
@@ -688,5 +689,88 @@ class GoogleAnalyticsServerSideTest
 		$this->assertNotEmpty($currentCookies['__utmc']);
 		$this->assertArrayHasKey('__utmz', $currentCookies);
 		$this->assertNotEmpty($currentCookies['__utmz']);
+	}
+
+
+	public function testGetCookiesStringValid() {
+		$this->gass->setServerName('www.example.com');
+		$this->gass->disableCookieHeaders();
+		$this->gass->setCookies();
+		$cookieString = $this->gass->getCookiesString();
+		$this->assertContains('__utma', $cookieString);
+		$this->assertContains('__utmb', $cookieString);
+		$this->assertContains('__utmc', $cookieString);
+		$this->assertContains('__utmz', $cookieString);
+		$this->assertNotContains('__utmv', $cookieString);
+	}
+
+
+	public function testSetSessionCookieTimeoutValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setSessionCookieTimeout(86400000));
+		$reflectionProperty = new \ReflectionProperty('GoogleAnalyticsServerSide', 'sessionCookieTimeout');
+		$reflectionProperty->setAccessible(true);
+		$this->assertEquals(86400, $reflectionProperty->getValue($this->gass));
+	}
+
+
+	public function testSetSessionCookieTimeoutExceptionFloatArgument() {
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
+								,	'Session Cookie Timeout must be an integer.');
+		$this->gass->setSessionCookieTimeout(86400.000);
+	}
+
+
+	public function testSetSessionCookieTimeoutExceptionStringArgument() {
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
+								,	'Session Cookie Timeout must be an integer.');
+		$this->gass->setSessionCookieTimeout('86400000');
+	}
+
+
+	public function testSetVisitorCookieTimeoutValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVisitorCookieTimeout(86400000));
+		$reflectionProperty = new \ReflectionProperty('GoogleAnalyticsServerSide', 'visitorCookieTimeout');
+		$reflectionProperty->setAccessible(true);
+		$this->assertEquals(86400, $reflectionProperty->getValue($this->gass));
+	}
+
+
+	public function testSetVisitorCookieTimeoutExceptionFloatArgument() {
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
+								,	'Visitor Cookie Timeout must be an integer.');
+		$this->gass->setVisitorCookieTimeout(86400.000);
+	}
+
+
+	public function testSetVisitorCookieTimeoutExceptionStringArgument() {
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
+								,	'Visitor Cookie Timeout must be an integer.');
+		$this->gass->setVisitorCookieTimeout('86400000');
+	}
+
+
+	public function testDisableCookieHeadersValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->disableCookieHeaders());
+		$reflectionProperty = new \ReflectionProperty('GoogleAnalyticsServerSide', 'sendCookieHeaders');
+		$reflectionProperty->setAccessible(true);
+		$this->assertEquals(false, $reflectionProperty->getValue($this->gass));
+	}
+
+
+	public function testSetVersionFromJsValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersion('1.1.1'));
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersionFromJs());
+		$this->assertEquals('5.3.0', $this->gass->getVersion());
+	}
+
+
+	public function testSetSearchEnginesFromJsValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setSearchEngines(array()));
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setSearchEnginesFromJs());
+		$jsSearchEngines = $this->gass->getSearchEngines();
+		$this->assertNotEmpty($jsSearchEngines);
+		$this->assertArrayHasKey('google', $jsSearchEngines);
+		$this->assertArrayHasKey('yahoo', $jsSearchEngines);
+		$this->assertArrayHasKey('ask', $jsSearchEngines);
 	}
 }
