@@ -595,7 +595,7 @@ class GoogleAnalyticsServerSide
 	public function setUserAgent($userAgent) {
 		$this->userAgent = $this->getAsString($userAgent, 'User Agent');
 		Http\Http::setUserAgent($this->userAgent);
-		if ($this->botInfo instanceof BotInfo\BotInfoInterface) {
+		if ($this->botInfo instanceof BotInfo\BotInfo) {
 			$this->botInfo->setUserAgent($this->userAgent);
 		}
 		return $this;
@@ -651,7 +651,7 @@ class GoogleAnalyticsServerSide
 		}
 		$this->remoteAddress = $remoteAddress;
 		Http\Http::setRemoteAddress($this->remoteAddress);
-		if ($this->botInfo instanceof BotInfo\BotInfoInterface) {
+		if ($this->botInfo instanceof BotInfo\BotInfo) {
 			$this->botInfo->setRemoteAddress($this->remoteAddress);
 		}
 		return $this;
@@ -1130,6 +1130,7 @@ class GoogleAnalyticsServerSide
 		$referer = $this->getDocumentReferer();
 		$serverName = $this->getServerName();
 		if (!empty($referer) && !empty($serverName) && false === strpos($referer, $serverName)
+				&& preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $referer)
 				&& false !== ($refererParts = @parse_url($referer)) && isset($refererParts['host'], $refererParts['path'])) {
 			$refererSearchEngine = false;
 			$searchEngines = $this->getSearchEngines();
@@ -1381,7 +1382,8 @@ class GoogleAnalyticsServerSide
 		if ($url !== null) {
 			$url = $this->getAsString($url, 'Page View URL');
 			if (0 != strpos($url, '/')) {
-				if (false === ($urlParts = @parse_url($url))) {
+				if (!preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $url)
+						|| false === ($urlParts = @parse_url($url))) {
 					throw new Exception\DomainException('Url is invalid: '.$url);
 				}
 				$url = $urlParts['path'];

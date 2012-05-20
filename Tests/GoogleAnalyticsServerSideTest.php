@@ -140,6 +140,13 @@ X-Content-Type-Options:nosniff');
 	}
 
 
+	public function testConstructExceptionWrongOptionsDataType() {
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
+								,	'Argument $options must be an array.');
+		$gass = new \GoogleAnalyticsServerSide(new \stdClass);
+	}
+
+
 	public function testSetVersionValid() {
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersion('1.2.3'));
 		$this->assertEquals('1.2.3', $this->gass->getVersion());
@@ -177,9 +184,10 @@ X-Content-Type-Options:nosniff');
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setUserAgent($userAgent));
 		$this->assertEquals($userAgent, $this->gass->getUserAgent());
 		$this->assertEquals($userAgent, \GASS\Http\Http::getUserAgent());
-		if (null !== $this->gass->getBotInfo()) {
-			$this->assertEquals($userAgent, $this->gass->getBotInfo()->getUserAgent());
-		}
+		$this->gass->setRemoteAddress('123.123.123.123');
+		$this->initialiseBotInfoBrowsCap();
+		$this->gass->setUserAgent($userAgent);
+		$this->assertEquals($userAgent, $this->gass->getBotInfo()->getUserAgent());
 	}
 
 
@@ -250,9 +258,9 @@ X-Content-Type-Options:nosniff');
 		$this->gass->setRemoteAddress($remoteAddress);
 		$this->assertEquals($remoteAddress, $this->gass->getRemoteAddress());
 		$this->assertEquals($remoteAddress, \GASS\Http\Http::getRemoteAddress());
-		if (null !== $this->gass->getBotInfo()) {
-			$this->assertEquals($remoteAddress, $this->gass->getBotInfo()->getRemoteAddress());
-		}
+		$this->initialiseBotInfoBrowsCap();
+		$this->gass->setRemoteAddress($remoteAddress);
+		$this->assertEquals($remoteAddress, $this->gass->getBotInfo()->getRemoteAddress());
 	}
 
 
@@ -478,6 +486,13 @@ X-Content-Type-Options:nosniff');
 	}
 
 
+	public function testGetVisitorCustomVarExceptionInvalidIndex() {
+		$this->setExpectedException('GASS\Exception\OutOfBoundsException'
+								,	'The index: "10" has not been set.');
+		$this->gass->getVisitorCustomVar(10);
+	}
+
+
 	public function testDeleteCustomVarValid() {
 		$this->gass->setCustomVar('Custom Var 1', 'Custom Value 1');
 		$this->gass->setCustomVar('Custom Var 2', 'Custom Value 2');
@@ -564,6 +579,12 @@ X-Content-Type-Options:nosniff');
 		$this->setExpectedException('GASS\Exception\DomainException', 'search engine query parameter "a&" is invalid');
 		$this->gass->setSearchEngines(array('testa'	=> array('a&')
 										,	'testb'	=> array('b')));
+	}
+
+
+	public function testGetSearchEnginesValid() {
+		$this->gass->setSearchEngines(array());
+		$this->assertNotEmpty($this->gass->getSearchEngines());
 	}
 
 
@@ -843,12 +864,21 @@ X-Content-Type-Options:nosniff');
 			->initialiseBrowserDetails()
 			->gass->disableCookieHeaders()
 				->setAccount('MO-00000-0');
+		$this->gass->setPageTitle('Example Page Title');
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->trackPageview());
 		$this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
 		$this->gass->trackPageview();
 		$this->gass->trackPageview('http://www.test.co.uk/example/path?q=other');
 		$this->initialiseBotInfoBrowsCap();
 		$this->gass->trackPageview();
+	}
+
+
+	public function testTrackPageviewExceptionInvalidUrl() {
+		$url = 'www.test.co.uk/example/path?q=other';
+		$this->setExpectedException('GASS\Exception\DomainException'
+								,	'Url is invalid: '.$url);
+		$this->gass->trackPageview($url);
 	}
 
 
@@ -884,7 +914,7 @@ X-Content-Type-Options:nosniff');
 		$this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
 		$this->gass->trackEvent($category, $action, $label, $value);
 		$this->initialiseBotInfoBrowsCap();
-		$this->gass->trackEvent($category, $action, $label, $value);
+		$this->gass->trackEvent($category, $action, $label, $value, true);
 	}
 
 
@@ -895,5 +925,15 @@ X-Content-Type-Options:nosniff');
 		$this->setExpectedException('GASS\Exception\DomainException'
 								,	'The account number must be set before any tracking can take place.');
 		$this->gass->trackEvent('Test Category', 'Test Action', 'Test Label', 1);
+	}
+
+
+	public function testTrackEventExceptionWrongNonInteractionDataType() {
+		$this->initialiseHttpTestAdapterResponseGif()
+			->initialiseBrowserDetails()
+			->gass->disableCookieHeaders();
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
+								,	'NonInteraction must be a boolean.');
+		$this->gass->trackEvent('Test Category', 'Test Action', 'Test Label', 1, 1);
 	}
 }
