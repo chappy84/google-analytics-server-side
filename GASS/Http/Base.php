@@ -37,9 +37,9 @@
  * @namespace
  */
 namespace GASS\Http;
-use \GASS\Adapter;
-use \GASS\Exception;
-use \GASS\Validate;
+use GASS\Adapter;
+use GASS\Exception;
+use GASS\Validate;
 
 /**
  * Base class for all Http adapters

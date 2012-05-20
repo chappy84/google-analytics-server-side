@@ -37,7 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
-use \GASS\Exception;
+use GASS\Exception;
 
 /**
  * cURL adapter for Http

@@ -37,7 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
-use \GASS\Exception;
+use GASS\Exception;
 
 /**
  * Proxy class for dealing with all Http requests regardless of adapter

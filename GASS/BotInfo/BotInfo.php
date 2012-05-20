@@ -37,7 +37,7 @@
  * @namespace
  */
 namespace GASS\BotInfo;
-use \GASS\Exception;
+use GASS\Exception;
 
 /**
  * Proxy class for dealing with all BotInfo requests regardless of adapter

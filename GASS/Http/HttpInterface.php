@@ -37,7 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
-use \GASS\Adapter;
+use GASS\Adapter;
 
 /**
  * Interface for all Http Adapters

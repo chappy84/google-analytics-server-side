@@ -37,9 +37,9 @@
  * @namespace
  */
 namespace GASS\BotInfo;
-use \GASS\Adapter;
-use \GASS\Exception;
-use \GASS\Validate;
+use GASS\Adapter;
+use GASS\Exception;
+use GASS\Validate;
 
 
 /**

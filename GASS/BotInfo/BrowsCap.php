@@ -37,8 +37,8 @@
  * @namespace
  */
 namespace GASS\BotInfo;
-use \GASS\Exception;
-use \GASS\Http;
+use GASS\Exception;
+use GASS\Http;
 
 /**
  * BrowsCap adapter which uses browscap ini file to positively identify allowed browsers

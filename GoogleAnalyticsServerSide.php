@@ -37,10 +37,10 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  *					 ->trackPageView();
  */
 
-use \GASS\BotInfo;
-use \GASS\Exception;
-use \GASS\Http;
-use \GASS\Validate;
+use GASS\BotInfo;
+use GASS\Exception;
+use GASS\Http;
+use GASS\Validate;
 
 /**
  * Main Google Analytics server Side Class

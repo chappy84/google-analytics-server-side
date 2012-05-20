@@ -37,7 +37,7 @@
  * @namespace
  */
 namespace GASS\BotInfo;
-use \GASS\Adapter;
+use GASS\Adapter;
 
 /**
  * Interface all BotInfo adapters should conform to
