@@ -237,48 +237,48 @@ class GoogleAnalyticsServerSide
 	 * @var array
 	 * @access private
 	 */
-	private $searchEngines = array( 'netscape' => array('query')
-								,	'eniro' => array('search_word')
-								,	'naver' => array('query')
-								,	'pchome' => array('q')
-								,	'images.google' => array('q')
-								,	'google' => array('q')
-								,	'yahoo' => array('p', 'q')
-								,	'msn' => array('q')
-								,	'bing' => array('q')
-								,	'aol' => array('query', 'q')
-								,	'lycos' => array('q', 'query')
-								,	'ask' => array('q')
-								,	'netscape' => array('query')
-								,	'cnn' => array('query')
-								,	'about' => array('terms')
-								,	'mamma' => array('q')
-								,	'voila' => array('rdata')
-								,	'virgilio' => array('qs')
-								,	'live' => array('q')
-								,	'baidu' => array('wd')
-								,	'alice' => array('qs')
-								,	'yandex' => array('text')
-								,	'najdi' => array('q')
-								,	'seznam' => array('q')
-								,	'rakuten' => array('qt')
-								,	'biglobe' => array('q')
-								,	'goo.ne' => array('MT')
-								,	'wp' => array('szukaj')
-								,	'onet' => array('qt')
-								,	'yam' => array('k')
-								,	'kvasir' => array('q')
-								,	'ozu' => array('q')
-								,	'terra' => array('query')
-								,	'rambler' => array('query')
-								,	'conduit' => array('q')
-								,	'babylon' => array('q')
-								,	'search-results' => array('q')
-								,	'avg' => array('q')
-								,	'comcast' => array('q')
-								,	'incredimail' => array('q')
-								,	'startsiden' => array('q')
-								,	'go.mail.ru' => array('q')
+	private $searchEngines = array( 'netscape'			=> array('query')
+								,	'eniro'				=> array('search_word')
+								,	'naver'				=> array('query')
+								,	'pchome'			=> array('q')
+								,	'images.google' 	=> array('q')
+								,	'google'			=> array('q')
+								,	'yahoo'				=> array('p', 'q')
+								,	'msn'				=> array('q')
+								,	'bing'				=> array('q')
+								,	'aol'				=> array('query', 'q')
+								,	'lycos'				=> array('q', 'query')
+								,	'ask'				=> array('q')
+								,	'netscape'			=> array('query')
+								,	'cnn'				=> array('query')
+								,	'about'				=> array('terms')
+								,	'mamma'				=> array('q')
+								,	'voila'				=> array('rdata')
+								,	'virgilio'			=> array('qs')
+								,	'live'				=> array('q')
+								,	'baidu'				=> array('wd')
+								,	'alice'				=> array('qs')
+								,	'yandex'			=> array('text')
+								,	'najdi'				=> array('q')
+								,	'seznam'			=> array('q')
+								,	'rakuten'			=> array('qt')
+								,	'biglobe'			=> array('q')
+								,	'goo.ne'			=> array('MT')
+								,	'wp'				=> array('szukaj')
+								,	'onet'				=> array('qt')
+								,	'yam'				=> array('k')
+								,	'kvasir'			=> array('q')
+								,	'ozu'				=> array('q')
+								,	'terra'				=> array('query')
+								,	'rambler'			=> array('query')
+								,	'conduit'			=> array('q')
+								,	'babylon'			=> array('q')
+								,	'search-results'	=> array('q')
+								,	'avg'				=> array('q')
+								,	'comcast'			=> array('q')
+								,	'incredimail'		=> array('q')
+								,	'startsiden'		=> array('q')
+								,	'go.mail.ru'		=> array('q')
 								,	'search.centrum.cz' => array('q'));
 
 
@@ -1389,10 +1389,7 @@ class GoogleAnalyticsServerSide
 			}
 			$this->setDocumentPath($url);
 		}
-		$queryParams = array();
-		$documentPath = $this->getDocumentPath();
-		$documentPath = (empty($documentPath)) ? '' : urldecode($documentPath);
-		$queryParams['utmp'] = $documentPath;
+		$queryParams = array('utmp' => urldecode((string) $this->getDocumentPath()));
 		if (null !== ($pageTitle = $this->getPageTitle()) && !empty($pageTitle)) {
 			$queryParams['utmdt'] = $pageTitle;
 		}
@@ -1450,7 +1447,7 @@ class GoogleAnalyticsServerSide
 		}
 		$domainName = (string) $this->getServerName();
 		$documentReferer = (string) $this->getDocumentReferer();
-		$documentReferer = (empty($documentReferer) && $documentReferer !== "0")
+		$documentReferer = (empty($documentReferer) && $documentReferer !== '0')
 							? '-'
 							: urldecode($documentReferer);
 		$this->setCookies();

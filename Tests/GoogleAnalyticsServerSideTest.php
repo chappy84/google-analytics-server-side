@@ -40,35 +40,98 @@ class GoogleAnalyticsServerSideTest
 
 
 	/**
+	 * @var string
+	 * @access protected
+	 */
+	protected $dependecyFilesFolder;
+
+
+	/**
 	 * @var \GoogleAnalyticsServerSide
+	 * @access protected
 	 */
 	protected $gass;
 
 
 	/**
 	 * @var \GASS\Http\Test
+	 * @access protected
 	 */
 	protected $httpAdapter;
+
+
+	public function __construct() {
+		parent::__construct();
+		$this->dependecyFilesFolder = __DIR__.DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR;
+	}
 
 
 	public function setUp() {
 		parent::setUp();
 		require_once __DIR__.DIRECTORY_SEPARATOR.'../GoogleAnalyticsServerSide.php';
 		$this->httpAdapter = new \GASS\Http\Test();
-		$this->httpAdapter->setResponse(file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'ga.js'));
-		$this->httpAdapter->setResponseHeaders(array(	'HTTP/1.0 200 OK'
-													,	'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT'
-													,	'X-Content-Type-Options: nosniff'
-													,	'Date: Tue, 15 May 2012 16:58:20 GMT'
-													,	'Expires: Wed, 16 May 2012 04:58:20 GMT'
-													,	'Content-Type: text/javascript'
-													,	'Vary: Accept-Encoding'
-													,	'X-Content-Type-Options: nosniff'
-													,	'Age: 8829'
-													,	'Cache-Control: max-age=43200, public'
-													,	'Server: GFE/2.0'));
+		$this->httpAdapter->setResponseHeaders('HTTP/1.0 200 OK
+Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT
+X-Content-Type-Options: nosniff
+Date: Tue, 15 May 2012 16:58:20 GMT
+Expires: Wed, 16 May 2012 04:58:20 GMT
+Content-Type: text/javascript
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+Age: 8829
+Cache-Control: max-age=43200, public
+Server: GFE/2.0');
+		$this->httpAdapter->setResponse(file_get_contents($this->dependecyFilesFolder.'ga.js'));
 		\GASS\Http\Http::getInstance(array('adapter' => $this->httpAdapter));
 		$this->gass = new \GoogleAnalyticsServerSide;
+	}
+
+
+	public function initialiseBotInfoBrowsCap() {
+		$browsCapIniFileLocation = $this->dependecyFilesFolder.'php_browscap.ini';
+		touch($browsCapIniFileLocation);
+		touch($this->dependecyFilesFolder.'latestVersionDate.txt');
+		$botInfoAdapter = new \GASS\BotInfo\BrowsCap(
+								array('browscap' => $browsCapIniFileLocation)
+							);
+		$this->gass->setBotInfo($botInfoAdapter);
+		return $this;
+	}
+
+
+	public function initialiseHttpTestAdapterResponseGif() {
+		$httpAdapter = new \GASS\Http\Test;
+		$httpAdapter->setResponseHeaders('Age:255669
+Cache-Control:private, no-cache, no-cache=Set-Cookie, proxy-revalidate
+Content-Length:35
+Content-Type:image/gif
+Date:Thu, 17 May 2012 21:28:01 GMT
+Expires:Wed, 19 Apr 2000 11:43:00 GMT
+Last-Modified:Wed, 21 Jan 2004 19:51:30 GMT
+Pragma:no-cache
+Server:GFE/2.0
+X-Content-Type-Options:nosniff');
+		$httpAdapter->setResponse(
+			implode(array(chr(0x47), chr(0x49), chr(0x46), chr(0x38), chr(0x39), chr(0x61),
+						chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x80), chr(0xff),
+						chr(0x00), chr(0xff), chr(0xff), chr(0xff), chr(0x00), chr(0x00),
+						chr(0x00), chr(0x2c), chr(0x00), chr(0x00), chr(0x00), chr(0x00),
+						chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x00), chr(0x02),
+						chr(0x02), chr(0x44), chr(0x01), chr(0x00), chr(0x3b)))
+		);
+		$this->gass->setHttp($httpAdapter);
+		return $this;
+	}
+
+
+	public function initialiseBrowserDetails() {
+		$this->gass->setServerName('www.example.com')
+					->setRemoteAddress('123.123.123.123')
+					->setDocumentPath('/path/to/page')
+					->setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) '
+									.'AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5')
+					->setAcceptLanguage('en');
+		return $this;
 	}
 
 
@@ -772,5 +835,65 @@ class GoogleAnalyticsServerSideTest
 		$this->assertArrayHasKey('google', $jsSearchEngines);
 		$this->assertArrayHasKey('yahoo', $jsSearchEngines);
 		$this->assertArrayHasKey('ask', $jsSearchEngines);
+	}
+
+
+	public function testTrackPageviewValid() {
+		$this->initialiseHttpTestAdapterResponseGif()
+			->initialiseBrowserDetails()
+			->gass->disableCookieHeaders()
+				->setAccount('MO-00000-0');
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->trackPageview());
+		$this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
+		$this->gass->trackPageview();
+		$this->gass->trackPageview('http://www.test.co.uk/example/path?q=other');
+		$this->initialiseBotInfoBrowsCap();
+		$this->gass->trackPageview();
+	}
+
+
+	public function testTrackPageviewExceptionMissingAccount() {
+		$this->initialiseHttpTestAdapterResponseGif()
+			->initialiseBrowserDetails()
+			->gass->disableCookieHeaders();
+		$this->setExpectedException('GASS\Exception\DomainException'
+								,	'The account number must be set before any tracking can take place.');
+		$this->gass->trackPageview();
+	}
+
+
+	/**
+	 * @depends testGetEventStringValid
+	 * @depends testGetEventStringExceptionActionWrongDataType
+	 * @depends testGetEventStringExceptionCategoryWrongDataType
+	 * @depends testGetEventStringExceptionEmptyAction
+	 * @depends testGetEventStringExceptionEmptyCategory
+	 * @depends testGetEventStringExceptionLabelWrongDataType
+	 */
+	public function testTrackEventValid() {
+		$this->initialiseHttpTestAdapterResponseGif()
+			->initialiseBrowserDetails()
+			->gass->disableCookieHeaders()
+				->setAccount('MO-00000-0');
+		$category = 'Test Category';
+		$action = 'Test Action';
+		$label = 'Test Label';
+		$value = 1;
+		$this->assertInstanceOf('GoogleAnalyticsServerSide'
+							,	$this->gass->trackEvent($category, $action, $label, $value));
+		$this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
+		$this->gass->trackEvent($category, $action, $label, $value);
+		$this->initialiseBotInfoBrowsCap();
+		$this->gass->trackEvent($category, $action, $label, $value);
+	}
+
+
+	public function testTrackEventExceptionMissingAccount() {
+		$this->initialiseHttpTestAdapterResponseGif()
+			->initialiseBrowserDetails()
+			->gass->disableCookieHeaders();
+		$this->setExpectedException('GASS\Exception\DomainException'
+								,	'The account number must be set before any tracking can take place.');
+		$this->gass->trackEvent('Test Category', 'Test Action', 'Test Label', 1);
 	}
 }
