@@ -60,14 +60,9 @@ class GoogleAnalyticsServerSideTest
 	protected $httpAdapter;
 
 
-	public function __construct() {
-		parent::__construct();
-		$this->dependecyFilesFolder = __DIR__.DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR;
-	}
-
-
 	public function setUp() {
 		parent::setUp();
+		$this->dependecyFilesFolder = __DIR__.DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR;
 		require_once __DIR__.DIRECTORY_SEPARATOR.'../GoogleAnalyticsServerSide.php';
 		$this->httpAdapter = new \GASS\Http\Test();
 		$this->httpAdapter->setResponseHeaders('HTTP/1.0 200 OK
@@ -804,9 +799,7 @@ X-Content-Type-Options:nosniff');
 
 	public function testSetSessionCookieTimeoutValid() {
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setSessionCookieTimeout(86400000));
-		$reflectionProperty = new \ReflectionProperty('GoogleAnalyticsServerSide', 'sessionCookieTimeout');
-		$reflectionProperty->setAccessible(true);
-		$this->assertEquals(86400, $reflectionProperty->getValue($this->gass));
+		$this->assertAttributeEquals(86400, 'sessionCookieTimeout', $this->gass);
 	}
 
 
@@ -826,9 +819,7 @@ X-Content-Type-Options:nosniff');
 
 	public function testSetVisitorCookieTimeoutValid() {
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVisitorCookieTimeout(86400000));
-		$reflectionProperty = new \ReflectionProperty('GoogleAnalyticsServerSide', 'visitorCookieTimeout');
-		$reflectionProperty->setAccessible(true);
-		$this->assertEquals(86400, $reflectionProperty->getValue($this->gass));
+		$this->assertAttributeEquals(86400, 'visitorCookieTimeout', $this->gass);
 	}
 
 
@@ -848,9 +839,7 @@ X-Content-Type-Options:nosniff');
 
 	public function testDisableCookieHeadersValid() {
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->disableCookieHeaders());
-		$reflectionProperty = new \ReflectionProperty('GoogleAnalyticsServerSide', 'sendCookieHeaders');
-		$reflectionProperty->setAccessible(true);
-		$this->assertEquals(false, $reflectionProperty->getValue($this->gass));
+		$this->assertAttributeEquals(false, 'sendCookieHeaders', $this->gass);
 	}
 
 
