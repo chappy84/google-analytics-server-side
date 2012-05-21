@@ -63,7 +63,8 @@ class GoogleAnalyticsServerSideTest
 	public function setUp() {
 		parent::setUp();
 		$this->dependecyFilesFolder = __DIR__.DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR;
-		require_once __DIR__.DIRECTORY_SEPARATOR.'../GoogleAnalyticsServerSide.php';
+		require_once __DIR__.DIRECTORY_SEPARATOR.'..'
+							.DIRECTORY_SEPARATOR.'GoogleAnalyticsServerSide.php';
 		$this->httpAdapter = new \GASS\Http\Test();
 		$this->httpAdapter->setResponseHeaders('HTTP/1.0 200 OK
 Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT
