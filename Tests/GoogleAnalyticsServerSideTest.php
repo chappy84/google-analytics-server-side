@@ -648,6 +648,13 @@ X-Content-Type-Options:nosniff');
 	}
 
 
+	public function testSetOptionsValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide'
+							,	$this->gass->setOptions(array(	'AcceptLanguage'	=> 'en-gb'
+															,	'remoteAddress'		=> '123.123.123.123')));
+	}
+
+
 	public function testSetOptionsExceptionWrongDataType() {
 		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'setOptions must be called with an array as an argument');
 		$this->gass->setOptions(new \stdClass);
@@ -722,6 +729,12 @@ X-Content-Type-Options:nosniff');
 	public function testGetEventStringExceptionLabelWrongDataType() {
 		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Event Label must be a string.');
 		$this->gass->getEventString('Category', 'Action', new \stdClass);
+	}
+
+
+	public function testGetEventStringExceptionValueWrongDataType() {
+		$this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Value must be an integer.');
+		$this->gass->getEventString('Category', 'Action', 'Label', '1');
 	}
 
 
