@@ -32,3 +32,71 @@
  * @package		GASSTests
  * @subpackage	Validate
  */
+
+namespace GASSTests\GASS\Validate;
+
+class IpAddressTest
+	extends \PHPUnit_Framework_TestCase
+{
+
+	/**
+	 * @var GASS\Validate\IpAddress
+	 * @access private
+	 */
+	private $ipValidator;
+
+
+	public function setUp() {
+		parent::setUp();
+		require_once __DIR__.DIRECTORY_SEPARATOR.'..'
+		.DIRECTORY_SEPARATOR.'..'
+		.DIRECTORY_SEPARATOR.'..'
+		.DIRECTORY_SEPARATOR.'core.php';
+		$this->ipValidator = new \GASS\Validate\IpAddress();
+	}
+
+
+	public function tearDown() {
+		parent::tearDown();
+	}
+
+
+	public function testIsValidValidIPv4Address() {
+		$this->assertTrue($this->ipValidator->isValid('0.0.0.0'));
+		$this->assertTrue($this->ipValidator->isValid('1.1.1.1'));
+		$this->assertTrue($this->ipValidator->isValid('10.0.0.1'));
+		$this->assertTrue($this->ipValidator->isValid('10.255.255.255'));
+		$this->assertTrue($this->ipValidator->isValid('99.99.99.99'));
+		$this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
+		$this->assertTrue($this->ipValidator->isValid('172.16.0.1'));
+		$this->assertTrue($this->ipValidator->isValid('172.31.255.255'));
+		$this->assertTrue($this->ipValidator->isValid('192.168.0.1'));
+		$this->assertTrue($this->ipValidator->isValid('192.168.255.255'));
+		$this->assertTrue($this->ipValidator->isValid('199.199.199.199'));
+		$this->assertTrue($this->ipValidator->isValid('255.255.255.255'));
+	}
+
+
+	public function testIsValidInvalidAddresses() {
+		$this->assertFalse($this->ipValidator->isValid('255.255.255.256'));
+		// Lets test if Numb3rs is wrong or not: http://www.youtube.com/watch?v=5ceaqtWhdnI
+		$this->assertFalse($this->ipValidator->isValid('275.3.6.128'));
+		$this->assertFalse($this->ipValidator->isValid('999.999.999.999'));
+		$this->assertFalse($this->ipValidator->isValid('::1'));
+		$this->assertFalse($this->ipValidator->isValid('1024.1024.1024.1024'));
+	}
+
+
+	public function testMessagesEmptyWhenValid() {
+		$this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
+		$this->assertEmpty($this->ipValidator->getMessages());
+	}
+
+
+	public function testMessagesWhenInvalid() {
+		$this->assertFalse($this->ipValidator->isValid('::1'));
+		$this->assertNotEmpty($validationMessages = $this->ipValidator->getMessages());
+		$this->assertEquals(1, count($validationMessages));
+		$this->assertEquals('"::1" is an invalid IPv4 address', $validationMessages[0]);
+	}
+}

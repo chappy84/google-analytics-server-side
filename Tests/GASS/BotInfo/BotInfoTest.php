@@ -33,7 +33,7 @@
  * @subpackage	BotInfo
  */
 
-namespace GASSTests\GASS;
+namespace GASSTests\GASS\BotInfo;
 
 class BotInfoTest
 	extends \PHPUnit_Framework_TestCase {
@@ -154,7 +154,7 @@ class BotInfoTest
 	}
 
 
-	public function testAdapterBaseSetRemoteAddressEExceptionInvalidAddress() {
+	public function testAdapterBaseSetRemoteAddressExceptionInvalidAddress() {
 		$botInfo = new \GASS\BotInfo\BotInfo();
 		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$botInfo->setRemoteAddress('test');
