@@ -40,10 +40,6 @@ class BotInfoTest
 
 	public function setUp() {
 		parent::setUp();
-		require_once __DIR__.DIRECTORY_SEPARATOR.'..'
-						.DIRECTORY_SEPARATOR.'..'
-						.DIRECTORY_SEPARATOR.'..'
-						.DIRECTORY_SEPARATOR.'core.php';
 	}
 
 

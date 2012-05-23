@@ -32,3 +32,77 @@
  * @package		GASSTests
  * @subpackage	Http
  */
+
+namespace GASSTests\GASS\Validate;
+
+class BaseTest
+	extends \PHPUnit_Framework_TestCase
+{
+
+	/**
+	 * @var GASS\Validate\IpAddress
+	 * @access private
+	 */
+	private $baseValidator;
+
+
+	public function setUp() {
+		parent::setUp();
+		$this->baseValidator = $this->getMockForAbstractClass('GASS\Validate\Base');
+	}
+
+
+	public function tearDown() {
+		parent::tearDown();
+	}
+
+
+	public function testSetMessagesValidPopulatedArray() {
+		$testMessages = array(	'Test Message 1'
+							,	'Test Message 2');
+		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages($testMessages));
+		$this->assertEquals($testMessages, $this->baseValidator->getMessages());
+	}
+
+
+	public function testSetMessagesValidEmptyArray() {
+		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages(array()));
+		$this->assertEquals(array(), $this->baseValidator->getMessages());
+	}
+
+
+	public function testSetMessagesInvalidDataType() {
+		$this->setExpectedException('PHPUnit_Framework_Error');
+		$this->baseValidator->setMessages('');
+	}
+
+
+	public function testSetValue() {
+		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setValue(array()));
+		$this->assertEquals(array(), $this->baseValidator->getValue());
+		$testString = 'TestValue';
+		$this->baseValidator->setValue($testString);
+		$this->assertEquals($testString, $this->baseValidator->getValue());
+		$testClass = new \stdClass;
+		$this->baseValidator->setValue($testClass);
+		$this->assertEquals($testClass, $this->baseValidator->getValue());
+		$testInteger = 1;
+		$this->baseValidator->setValue($testInteger);
+		$this->assertEquals($testInteger, $this->baseValidator->getValue());
+	}
+
+
+	public function testAddMessage() {
+		$this->assertInstanceOf('GASS\Validate\Base',
+			$this->baseValidator->addMessage(	'"%value%" is a test value for test message 1'
+											,	'Test value')
+								->setValue(2)
+								->addMessage('Test message 2 had value "%value%"')
+		);
+		$this->assertEquals(
+				array(	'"Test value" is a test value for test message 1',
+						'Test message 2 had value "2"'),
+				$this->baseValidator->getMessages()
+		);
+	}
+}

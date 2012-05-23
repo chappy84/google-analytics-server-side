@@ -123,6 +123,7 @@ abstract class Base
 	 * Adds a validation message;
 	 *
 	 * @param string $message
+	 * @return GASS\Validate\Base
 	 * @access public
 	 */
 	public function addMessage($message, $value = null) {
@@ -130,5 +131,6 @@ abstract class Base
 			$value = $this->getValue();
 		}
 		$this->messages[] = str_replace('%value%', (string)$value, $message);
+		return $this;
 	}
 }
