@@ -61,7 +61,7 @@ class LanguageCode
 	 */
 	public function isValid($value) {
 		$this->setValue($value);
-		if (1 !== preg_match('/^([a-z]{2})(-[a-z]{2})??$/i', $value)) {
+		if (1 !== preg_match('/^([a-z]{3}-)??([a-z]{2})$/i', $value)) {
 			$this->addMessage('"%value%" is an invalid language code.');
 			return false;
 		}
