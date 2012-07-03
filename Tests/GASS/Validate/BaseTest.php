@@ -40,7 +40,7 @@ class BaseTest
 {
 
 	/**
-	 * @var GASS\Validate\IpAddress
+	 * @var GASS\Validate\Base
 	 * @access private
 	 */
 	private $baseValidator;

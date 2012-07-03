@@ -220,7 +220,7 @@ X-Content-Type-Options:nosniff');
 
 	public function testSetAcceptLanguageExceptionInvalidLanguage() {
 		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
-		$this->gass->setAcceptLanguage('abc-de');
+		$this->gass->setAcceptLanguage('abcd-ef');
 	}
 
 
