@@ -130,7 +130,9 @@ abstract class Base
 		if ($value === null) {
 			$value = $this->getValue();
 		}
-		$this->messages[] = str_replace('%value%', (string)$value, $message);
+		$this->messages[] = (false !== strpos($message, '%value%'))
+							? str_replace('%value%', (string)$value, $message)
+							: $message;
 		return $this;
 	}
 }
