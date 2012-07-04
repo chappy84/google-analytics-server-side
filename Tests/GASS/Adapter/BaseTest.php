@@ -61,4 +61,17 @@ extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOptions($options));
 		$this->assertEquals($options, $this->baseAdapter->getOptions());
 	}
+
+
+	public function testSetOptionValid() {
+		$optionName = 'testOption2';
+		$optionValue = 'testValue2';
+		$this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOption($optionName, $optionValue));
+		$this->assertEquals($optionValue, $this->baseAdapter->getOption($optionName));
+	}
+
+
+	public function testGetOptionNotSetOption() {
+		$this->assertNull($this->baseAdapter->getOption('notSetOption'));
+	}
 }
