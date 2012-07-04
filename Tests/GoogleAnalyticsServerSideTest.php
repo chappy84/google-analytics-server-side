@@ -193,16 +193,37 @@ X-Content-Type-Options:nosniff');
 	}
 
 
-	public function testSetAcceptLanguageValid() {
+	public function testSetAcceptLanguageTwoCharPlusCountryValid() {
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en-GB,en;q=0.8'));
 		$this->assertEquals('en-gb', $this->gass->getAcceptLanguage());
 		$this->assertEquals('en-gb', \GASS\Http\Http::getAcceptLanguage());
 	}
 
 
+	public function testSetAcceptLanguageThreeCharPlusCountryValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil-PH,fil;q=0.8'));
+		$this->assertEquals('fil-ph', $this->gass->getAcceptLanguage());
+		$this->assertEquals('fil-ph', \GASS\Http\Http::getAcceptLanguage());
+	}
+
+
+	public function testSetAcceptLanguageTwoCharValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en,en-GB;q=0.8'));
+		$this->assertEquals('en', $this->gass->getAcceptLanguage());
+		$this->assertEquals('en', \GASS\Http\Http::getAcceptLanguage());
+	}
+
+
+	public function testSetAcceptLanguageThreeCharValid() {
+		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil,fil-PH;q=0.8'));
+		$this->assertEquals('fil', $this->gass->getAcceptLanguage());
+		$this->assertEquals('fil', \GASS\Http\Http::getAcceptLanguage());
+	}
+
+
 	public function testSetAcceptLanguageExceptionTooLong() {
 		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
-		$this->gass->setAcceptLanguage('abc,def;q=0.8');
+		$this->gass->setAcceptLanguage('abcd,efg;q=0.8');
 	}
 
 
