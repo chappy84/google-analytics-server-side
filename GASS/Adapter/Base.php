@@ -53,6 +53,15 @@ abstract class Base
 {
 
 	/**
+	 * Adapter options passed in as part of construct or setOption/s
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $options = array();
+
+
+	/**
 	 * Class constructor
 	 *
 	 * @param array $options

@@ -60,7 +60,11 @@ class LanguageCode
 	 * @access public
 	 */
 	public function isValid($value) {
-		$this->setValue($value);
+		$value = $this->setValue($value)->getValue();
+		if (!is_string($value)) {
+			$this->addMessage('The provided language code must be a string.');
+			return false;
+		}
 		if (1 !== preg_match('/^([a-z]{2,3})(-[a-z]{2})??$/i', $value)) {
 			$this->addMessage('"%value%" is an invalid language code.');
 			return false;

@@ -32,3 +32,33 @@
  * @package		GASSTests
  * @subpackage	Adapter
  */
+namespace GASSTests\GASS\Adapter;
+
+class BaseTest
+extends \PHPUnit_Framework_TestCase
+{
+
+	/**
+	 * @var GASS\BotInfo\Base
+	 * @access private
+	 */
+	private $baseAdapter;
+
+
+	public function setUp() {
+		parent::setUp();
+		$this->baseAdapter = $this->getMockForAbstractClass('GASS\Adapter\Base');
+	}
+
+
+	public function tearDown() {
+		parent::tearDown();
+	}
+
+
+	public function testSetOptionsValid() {
+		$options = array('testOption1' => 'testValue1');
+		$this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOptions($options));
+		$this->assertEquals($options, $this->baseAdapter->getOptions());
+	}
+}
