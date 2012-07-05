@@ -868,7 +868,7 @@ X-Content-Type-Options:nosniff');
 	public function testSetVersionFromJsValid() {
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersion('1.1.1'));
 		$this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersionFromJs());
-		$this->assertEquals('5.3.0', $this->gass->getVersion());
+		$this->assertEquals('5.3.3', $this->gass->getVersion());
 	}
 
 
