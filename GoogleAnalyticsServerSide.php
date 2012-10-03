@@ -37,7 +37,6 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  *					 ->trackPageView();
  */
 
-use GASS;
 use GASS\BotInfo;
 use GASS\Exception;
 use GASS\Http;
