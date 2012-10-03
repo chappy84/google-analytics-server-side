@@ -38,6 +38,7 @@
  */
 namespace GASS\BotInfo;
 use GASS\Exception;
+use GASS\Proxy;
 
 /**
  * Proxy class for dealing with all BotInfo requests regardless of adapter
@@ -50,7 +51,7 @@ use GASS\Exception;
  * @subpackage	BotInfo
  */
 class BotInfo
-	implements \GASS\GASSInterface
+	implements Proxy\ProxyInterface
 {
 
 	/**

@@ -35,7 +35,7 @@
 /**
  * @namespace
  */
-namespace GASS;
+namespace GASS\Proxy;
 
 /**
  * Interface for GASS Proxy classes
@@ -46,7 +46,7 @@ namespace GASS;
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
  */
-interface GASSInterface
+interface ProxyInterface
 {
 
 	/**
@@ -75,7 +75,7 @@ interface GASSInterface
 	 * Set the adapter to use
 	 *
 	 * @param string|GASS\Adapter\AdapterInterface $adapter
-	 * @return GASS\GASSInterface
+	 * @return GASS\ProxyInterface
 	 * @access public
 	 */
 	public function setAdapter($adapter);
