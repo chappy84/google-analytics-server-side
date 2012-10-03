@@ -48,7 +48,5 @@ namespace GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Exception
  */
-class RangeException
-	extends \RangeException
-	implements ExceptionInterface
+class RangeException extends \RangeException implements ExceptionInterface
 {}

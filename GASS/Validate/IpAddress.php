@@ -48,8 +48,7 @@ namespace GASS\Validate;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Validate
  */
-class IpAddress
-	extends Base
+class IpAddress extends Base
 {
 
 	/**
@@ -59,7 +58,8 @@ class IpAddress
 	 * @return boolean
 	 * @access public
 	 */
-	public function isValid($value) {
+	public function isValid($value) 
+	{
 		$value = $this->setValue($value)->getValue();
 		if (!is_string($value)) {
 			$this->addMessage('The provided IP address must be a string.');

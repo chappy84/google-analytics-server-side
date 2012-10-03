@@ -48,7 +48,5 @@ namespace GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Exception
  */
-class BadMethodCallException
-	extends \BadMethodCallException
-	implements ExceptionInterface
+class BadMethodCallException extends \BadMethodCallException implements ExceptionInterface
 {}

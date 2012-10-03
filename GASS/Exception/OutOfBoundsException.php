@@ -48,7 +48,5 @@ namespace GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Exception
  */
-class OutOfBoundsException
-	extends \OutOfBoundsException
-	implements ExceptionInterface
+class OutOfBoundsException extends \OutOfBoundsException implements ExceptionInterface
 {}

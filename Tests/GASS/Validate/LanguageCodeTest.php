@@ -35,8 +35,7 @@
 
 namespace GASSTests\GASS\Validate;
 
-class LanguageCodeTest
-	extends \PHPUnit_Framework_TestCase
+class LanguageCodeTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
@@ -46,17 +45,20 @@ class LanguageCodeTest
 	private $languageValidator;
 
 
-	public function setUp() {
+	public function setUp() 
+	{
 		$this->languageValidator = new \GASS\Validate\LanguageCode();
 	}
 
 
-	public function tearDown() {
+	public function tearDown() 
+	{
 		parent::tearDown();
 	}
 
 
-	public function testIsValidValidLanguageCodes() {
+	public function testIsValidValidLanguageCodes() 
+	{
 		$this->assertTrue($this->languageValidator->isValid('en-gb'));
 		$this->assertTrue($this->languageValidator->isValid('fil-ph'));
 		$this->assertTrue($this->languageValidator->isValid('en'));
@@ -64,7 +66,8 @@ class LanguageCodeTest
 	}
 
 
-	public function testIsValidInvalidLanguageCodes() {
+	public function testIsValidInvalidLanguageCodes() 
+	{
 		$this->assertFalse($this->languageValidator->isValid('abcd'));
 		$this->assertFalse($this->languageValidator->isValid('abcd-ef'));
 		$this->assertFalse($this->languageValidator->isValid('ab-cde'));
@@ -72,13 +75,15 @@ class LanguageCodeTest
 	}
 
 
-	public function testMessagesEmptyWhenValid() {
+	public function testMessagesEmptyWhenValid() 
+	{
 		$this->assertTrue($this->languageValidator->isValid('en-gb'));
 		$this->assertEmpty($this->languageValidator->getMessages());
 	}
 
 
-	public function testMessagesWhenInvalid() {
+	public function testMessagesWhenInvalid() 
+	{
 		$this->assertFalse($this->languageValidator->isValid('ab-cde'));
 		$this->assertNotEmpty($validationMessages = $this->languageValidator->getMessages());
 		$this->assertEquals(1, count($validationMessages));

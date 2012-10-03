@@ -53,9 +53,7 @@ use GASS\Validate;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	BotInfo
  */
-abstract class Base
-	extends Adapter\Base
-	implements BotInfoInterface
+abstract class Base extends Adapter\Base implements BotInfoInterface
 {
 
 	/**
@@ -91,7 +89,8 @@ abstract class Base
 	 * @return string
 	 * @access public
 	 */
-	public function getRemoteAddress() {
+	public function getRemoteAddress() 
+	{
 		return $this->remoteAddress;
 	}
 
@@ -102,7 +101,8 @@ abstract class Base
 	 * @return string
 	 * @access public
 	 */
-	public function getUserAgent() {
+	public function getUserAgent() 
+	{
 		return $this->userAgent;
 	}
 
@@ -114,7 +114,8 @@ abstract class Base
 	 * @return GASS\BotInfo\Base
 	 * @access public
 	 */
-	public function setRemoteAddress($remoteAddress) {
+	public function setRemoteAddress($remoteAddress) 
+	{
 		$ipValidator = new Validate\IpAddress();
 		if (!$ipValidator->isValid($remoteAddress)) {
 			throw new Exception\InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
@@ -131,7 +132,8 @@ abstract class Base
 	 * @return GASS\BotInfo\Base
 	 * @access public
 	 */
-	public function setUserAgent($userAgent) {
+	public function setUserAgent($userAgent) 
+	{
 		$this->userAgent = $userAgent;
 		return $this;
 	}

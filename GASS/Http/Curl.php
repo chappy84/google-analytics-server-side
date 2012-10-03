@@ -49,8 +49,7 @@ use GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Http
  */
-class Curl
-	extends Base
+class Curl extends Base
 {
 
 	/**
@@ -80,7 +79,8 @@ class Curl
 	 * @throws GASS\Exception\RuntimeException
 	 * @access public
 	 */
-	public function __construct(array $options = array()) {
+	public function __construct(array $options = array()) 
+	{
 		if (!extension_loaded('curl')) {
 			throw new Exception\RuntimeException('cURL PHP extension is not loaded.');
 		}
@@ -95,7 +95,8 @@ class Curl
 	 * @return mixed
 	 * @access public
 	 */
-	public function getInfo($index = null) {
+	public function getInfo($index = null) 
+	{
 		if (is_resource($this->curl)) {
 			if ($index === null) {
 				$index = 0;
@@ -113,7 +114,8 @@ class Curl
 	 * @return GASS\Http\Curl
 	 * @access public
 	 */
-	public function setUrl($url) {
+	public function setUrl($url) 
+	{
 		return $this->setOption(CURLOPT_URL, $url);
 	}
 
@@ -124,7 +126,8 @@ class Curl
 	 * @return GASS\Http\Curl
 	 * @access protected
 	 */
-	protected function close() {
+	protected function close() 
+	{
 		if (is_resource($this->curl)){
 			curl_close($this->curl);
 		}
@@ -141,7 +144,8 @@ class Curl
 	 * @return GASS\Http\Curl
 	 * @access public
 	 */
-	public function request($url = null, array $options = array()) {
+	public function request($url = null, array $options = array()) 
+	{
 
 		parent::request($url, $options);
 
@@ -185,7 +189,8 @@ class Curl
 	 *
 	 * @access public
 	 */
-	public function __destruct() {
+	public function __destruct() 
+	{
 		$this->close();
 	}
 }

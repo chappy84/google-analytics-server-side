@@ -48,7 +48,5 @@ namespace GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Exception
  */
-class RuntimeException
-	extends \RuntimeException
-	implements ExceptionInterface
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {}

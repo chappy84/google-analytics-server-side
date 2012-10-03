@@ -49,8 +49,7 @@ use GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Http
  */
-class Stream
-	extends Base
+class Stream extends Base
 {
 
 	/**
@@ -80,7 +79,8 @@ class Stream
 	 * @return mixed
 	 * @access public
 	 */
-	public function getInfo($index = null) {
+	public function getInfo($index = null) 
+	{
 		if (!empty($this->responseHeaders)) {
 			if ($index !== null) {
 				return (isset($this->responseHeaders[$index])) ? $this->responseHeaders[$index] : null;
@@ -97,7 +97,8 @@ class Stream
 	 * @return array
 	 * @access public
 	 */
-	public function getOptions() {
+	public function getOptions() 
+	{
 		return $this->options['context']['http'];
 	}
 
@@ -110,7 +111,8 @@ class Stream
 	 * @return GASS\Adapter\Base
 	 * @access public
 	 */
-	public function setOption($name, $value) {
+	public function setOption($name, $value) 
+	{
 		$this->options['context']['http'][$name] = $value;
 		return $this;
 	}
@@ -123,7 +125,8 @@ class Stream
 	 * @return mixed
 	 * @access public
 	 */
-	public function getOption($name) {
+	public function getOption($name) 
+	{
 		return (isset($this->options['context']['http'][$name]))
 				? $this->options['context']['http'][$name]
 				: null;
@@ -137,7 +140,8 @@ class Stream
 	 * @return GASS\Http\Stream
 	 * @access public
 	 */
-	public function setUrl($url) {
+	public function setUrl($url) 
+	{
 		return parent::setOption('url', $url);
 	}
 
@@ -150,7 +154,8 @@ class Stream
 	 * @return GASS\Http\Stream
 	 * @access public
 	 */
-	public function request($url = null, array $options = array()) {
+	public function request($url = null, array $options = array()) 
+	{
 
 		parent::request($url, $options);
 
@@ -203,7 +208,8 @@ class Stream
 	 * @param array $responseHeaders
 	 * @access private
 	 */
-	private function setResponseHeaders($responseHeaders) {
+	private function setResponseHeaders($responseHeaders) 
+	{
 		$this->responseHeaders = $this->parseHeaders($responseHeaders);
 	}
 
@@ -217,7 +223,8 @@ class Stream
 	 * @return array
 	 * @access private
 	 */
-	private function parseHeaders($headers) {
+	private function parseHeaders($headers) 
+	{
 		if (is_string($headers)) {
 			$headers = explode("\n", $headers);
 		}

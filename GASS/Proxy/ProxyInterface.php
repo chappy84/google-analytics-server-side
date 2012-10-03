@@ -30,6 +30,7 @@
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
+ * @subpackage	Proxy
  */
 
 /**
@@ -45,6 +46,7 @@ namespace GASS\Proxy;
  * @author 		Tom Chapman
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
+ * @subpackage	Proxy
  */
 interface ProxyInterface
 {

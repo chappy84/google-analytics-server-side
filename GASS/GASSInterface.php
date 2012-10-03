@@ -30,23 +30,21 @@
  * @link		http://github.com/chappy84/google-analytics-server-side
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
- * @subpackage	Exception
  */
 
 /**
  * @namespace
  */
-namespace GASS\Exception;
+namespace GASS;
 
 /**
- * Interface for all Http Adapters
+ * Interface for GASS Proxy classes
  *
  * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
  * @license		http://www.gnu.org/copyleft/gpl.html  GPL
  * @author 		Tom Chapman
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
- * @subpackage	Exception
  */
-class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
+interface GASSInterface
 {}

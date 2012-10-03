@@ -78,7 +78,8 @@ class Http
 	 * @param string|GASS\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
 	 * @access protected
 	 */
-	public function __construct(array $options = array(), $adapter = null) {
+	public function __construct(array $options = array(), $adapter = null) 
+	{
 		if (null === $adapter) {
 			if (isset($options['adapter'])) {
 				$adapter = $options['adapter'];
@@ -99,7 +100,8 @@ class Http
 	 * @final
 	 * @access public
 	 */
-	final public function __clone() {
+	final public function __clone() 
+	{
 		throw new Exception\RuntimeException('You cannot clone '.__CLASS__);
 	}
 
@@ -115,7 +117,8 @@ class Http
 	 * @static
 	 * @access public
 	 */
-	public static function getInstance(array $options = array(), $adapter = null) {
+	public static function getInstance(array $options = array(), $adapter = null) 
+	{
 		$className = __CLASS__;
 		if (self::$instance === null || !self::$instance instanceof $className) {
 			self::$instance = new $className($options, $adapter);
@@ -142,7 +145,8 @@ class Http
 	 * @return mixed
 	 * @access public
 	 */
-	public function __call($name, $arguments) {
+	public function __call($name, $arguments) 
+	{
 		if (method_exists($this->adapter, $name)) {
 			return call_user_func_array(array($this->adapter, $name), $arguments);
 		}
@@ -160,7 +164,8 @@ class Http
 	 * @static
 	 * @access public
 	 */
-	public static function __callStatic($name, $arguments) {
+	public static function __callStatic($name, $arguments) 
+	{
 		$instance = self::getInstance();
 		$adapter = $instance->getAdapter();
 		if (method_exists($adapter, $name)) {
@@ -178,7 +183,8 @@ class Http
 	 * @return GASS\Http
 	 * @access public
 	 */
-	public function setAdapter($adapter) {
+	public function setAdapter($adapter) 
+	{
 		if (is_string($adapter)) {
 			$adapterName = 'GASS\Http\\'.ucfirst($adapter);
 			$adapter = new $adapterName();
@@ -197,7 +203,8 @@ class Http
 	 * @return GASS\Http\HttpInterface
 	 * @access public
 	 */
-	public function getAdapter() {
+	public function getAdapter() 
+	{
 		return $this->adapter;
 	}
 }

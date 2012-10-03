@@ -51,8 +51,7 @@ use GASS\Http;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	BotInfo
  */
-class UserAgentStringInfo
-	extends Base
+class UserAgentStringInfo extends Base
 {
 
 	/**
@@ -109,7 +108,8 @@ class UserAgentStringInfo
 	 * @return GASS\BotInfo\UserAgentStringInfo
 	 * @access public
 	 */
-	public function set() {
+	public function set() 
+	{
 		if (null === ($bots = $this->getFromCache())) {
 			$bots = $this->getFromWeb();
 		}
@@ -130,7 +130,8 @@ class UserAgentStringInfo
 	 * @return array
 	 * @access public
 	 */
-	public function get() {
+	public function get() 
+	{
 		return $this->bots;
 	}
 
@@ -143,7 +144,8 @@ class UserAgentStringInfo
 	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
-	private function getFromCache() {
+	private function getFromCache() 
+	{
 		if (null !== ($csvPathname = $this->getOption('cachePath'))) {
 			$this->setCacheDate();
 			if (null !== ($lastCacheDate = $this->getCacheDate())) {
@@ -168,7 +170,8 @@ class UserAgentStringInfo
 	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
-	private function getFromWeb() {
+	private function getFromWeb() 
+	{
 		$csvSource = Http\Http::getInstance()->request(self::CSV_URL)->getResponse();
 		$botsCsv = trim($csvSource);
 		if (empty($botsCsv)) {
@@ -187,7 +190,8 @@ class UserAgentStringInfo
 	 * @return stdClass
 	 * @access private
 	 */
-	private function parseCsv($fileContexts) {
+	private function parseCsv($fileContexts) 
+	{
 		$botList = explode("\n", $fileContexts);
 		$botInfo = new \stdClass;
 		$botInfo->distinctBots = array();
@@ -217,7 +221,8 @@ class UserAgentStringInfo
 	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
-	private function saveToCache() {
+	private function saveToCache() 
+	{
 		if (null === $this->getCacheDate()
 				&& null !== ($csvPath = $this->getOption('cachePath')) && @is_writable($csvPath)) {
 			$csvLines = array();
@@ -241,7 +246,8 @@ class UserAgentStringInfo
 	 * @throws GASS\Exception\DomainException
 	 * @access private
 	 */
-	private function setCacheDate($cacheDate = null) {
+	private function setCacheDate($cacheDate = null) 
+	{
 		if (0 == func_num_args()) {
 			$fileRelPath = DIRECTORY_SEPARATOR.$this->getOption('cacheFilename');
 			$cacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
@@ -262,7 +268,8 @@ class UserAgentStringInfo
 	 * @return number|null
 	 * @access public
 	 */
-	public function getCacheDate() {
+	public function getCacheDate() 
+	{
 		return $this->cacheDate;
 	}
 
@@ -275,7 +282,8 @@ class UserAgentStringInfo
 	 * @return boolean
 	 * @access public
 	 */
-	public function getIsBot($userAgent = null, $remoteAddress = null) {
+	public function getIsBot($userAgent = null, $remoteAddress = null) 
+	{
 		if (empty($this->bots)) {
 			$this->set();
 		}
@@ -300,7 +308,8 @@ class UserAgentStringInfo
 	 * @return GASS\BotInfo\UserAgentStringInfo
 	 * @access public
 	 */
-	public function setOptions(array $options) {
+	public function setOptions(array $options) 
+	{
 		foreach ($options as $name => $value) {
 			$this->getOption($name);
 		}
@@ -313,7 +322,8 @@ class UserAgentStringInfo
 	 *
 	 * @access public
 	 */
-	public function __destruct() {
+	public function __destruct() 
+	{
 		$this->saveToCache();
 	}
 }

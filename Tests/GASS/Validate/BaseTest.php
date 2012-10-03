@@ -35,8 +35,7 @@
 
 namespace GASSTests\GASS\Validate;
 
-class BaseTest
-	extends \PHPUnit_Framework_TestCase
+class BaseTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
@@ -46,18 +45,21 @@ class BaseTest
 	private $baseValidator;
 
 
-	public function setUp() {
+	public function setUp() 
+	{
 		parent::setUp();
 		$this->baseValidator = $this->getMockForAbstractClass('GASS\Validate\Base');
 	}
 
 
-	public function tearDown() {
+	public function tearDown() 
+	{
 		parent::tearDown();
 	}
 
 
-	public function testSetMessagesValidPopulatedArray() {
+	public function testSetMessagesValidPopulatedArray() 
+	{
 		$testMessages = array(	'Test Message 1'
 							,	'Test Message 2');
 		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages($testMessages));
@@ -65,19 +67,22 @@ class BaseTest
 	}
 
 
-	public function testSetMessagesValidEmptyArray() {
+	public function testSetMessagesValidEmptyArray() 
+	{
 		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages(array()));
 		$this->assertEquals(array(), $this->baseValidator->getMessages());
 	}
 
 
-	public function testSetMessagesInvalidDataType() {
+	public function testSetMessagesInvalidDataType() 
+	{
 		$this->setExpectedException('PHPUnit_Framework_Error');
 		$this->baseValidator->setMessages('');
 	}
 
 
-	public function testSetValue() {
+	public function testSetValue() 
+	{
 		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setValue(array()));
 		$this->assertEquals(array(), $this->baseValidator->getValue());
 		$testString = 'TestValue';
@@ -92,7 +97,8 @@ class BaseTest
 	}
 
 
-	public function testAddMessage() {
+	public function testAddMessage() 
+	{
 		$this->assertInstanceOf('GASS\Validate\Base',
 			$this->baseValidator->addMessage(	'"%value%" is a test value for test message 1'
 											,	'Test value')

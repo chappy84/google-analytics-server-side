@@ -48,7 +48,5 @@ namespace GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Exception
  */
-class DomainException
-	extends \DomainException
-	implements ExceptionInterface
+class DomainException extends \DomainException implements ExceptionInterface
 {}

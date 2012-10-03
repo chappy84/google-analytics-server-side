@@ -48,8 +48,7 @@ namespace GASS\Adapter;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Adapter
  */
-abstract class Base
-	implements AdapterInterface
+abstract class Base implements AdapterInterface
 {
 
 	/**
@@ -67,7 +66,8 @@ abstract class Base
 	 * @param array $options
 	 * @access public
 	 */
-	public function __construct(array $options = array()) {
+	public function __construct(array $options = array()) 
+	{
 		$this->setOptions($options);
 	}
 
@@ -79,7 +79,8 @@ abstract class Base
 	 * @return GASS\Adapter\Base
 	 * @access public
 	 */
-	public function setOptions(array $options) {
+	public function setOptions(array $options) 
+	{
 		foreach ($options as $name => $value) {
 			$this->setOption($name, $value);
 		}
@@ -95,7 +96,8 @@ abstract class Base
 	 * @return GASS\Adapter\Base
 	 * @access public
 	 */
-	public function setOption($name, $value) {
+	public function setOption($name, $value) 
+	{
 		$this->options[$name] = $value;
 		return $this;
 	}
@@ -107,7 +109,8 @@ abstract class Base
 	 * @return array
 	 * @access public
 	 */
-	public function getOptions() {
+	public function getOptions() 
+	{
 		return $this->options;
 	}
 
@@ -119,7 +122,8 @@ abstract class Base
 	 * @return mixed
 	 * @access public
 	 */
-	public function getOption($name) {
+	public function getOption($name) 
+	{
 		return (isset($this->options[$name]))
 				? $this->options[$name]
 				: null;

@@ -52,9 +52,7 @@ use GASS\Validate;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Http
  */
-abstract class Base
-	extends Adapter\Base
-	implements HttpInterface
+abstract class Base extends Adapter\Base implements HttpInterface
 {
 
 	/**
@@ -99,7 +97,8 @@ abstract class Base
 	 * @return string
 	 * @access public
 	 */
-	public function getAcceptLanguage() {
+	public function getAcceptLanguage() 
+	{
 		return $this->acceptLanguage;
 	}
 
@@ -110,7 +109,8 @@ abstract class Base
 	 * @return string
 	 * @access public
 	 */
-	public function getRemoteAddress() {
+	public function getRemoteAddress() 
+	{
 		return $this->remoteAddress;
 	}
 
@@ -121,7 +121,8 @@ abstract class Base
 	 * @return mixed
 	 * @access public
 	 */
-	public function getResponse() {
+	public function getResponse() 
+	{
 		return $this->response;
 	}
 
@@ -132,7 +133,8 @@ abstract class Base
 	 * @return string
 	 * @access public
 	 */
-	public function getUserAgent() {
+	public function getUserAgent() 
+	{
 		return $this->userAgent;
 	}
 
@@ -144,7 +146,8 @@ abstract class Base
 	 * @return GASS\Http\Base
 	 * @access public
 	 */
-	public function setAcceptLanguage($acceptLanguage) {
+	public function setAcceptLanguage($acceptLanguage) 
+	{
 		$langValidator = new Validate\LanguageCode();
 		if (!$langValidator->isValid($acceptLanguage)) {
 			throw new Exception\InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
@@ -161,7 +164,8 @@ abstract class Base
 	 * @return GASS\Http\Base
 	 * @access public
 	 */
-	public function setRemoteAddress($remoteAddress) {
+	public function setRemoteAddress($remoteAddress) 
+	{
 		if (!empty($remoteAddress)) {
 			$ipValidator = new Validate\IpAddress();
 			if (!$ipValidator->isValid($remoteAddress)) {
@@ -180,7 +184,8 @@ abstract class Base
 	 * @return GASS\Http\Base
 	 * @access public
 	 */
-	public function setResponse($response) {
+	public function setResponse($response) 
+	{
 		$this->response = $response;
 		return $this;
 	}
@@ -193,7 +198,8 @@ abstract class Base
 	 * @return GASS\Http\Base
 	 * @access public
 	 */
-	public function setUserAgent($userAgent) {
+	public function setUserAgent($userAgent) 
+	{
 		$this->userAgent = $userAgent;
 		return $this;
 	}
@@ -207,7 +213,8 @@ abstract class Base
 	 * @throws GASS\Exception\RuntimeException
 	 * @access protected
 	 */
-	protected function checkResponseCode($code) {
+	protected function checkResponseCode($code) 
+	{
 		if (!is_numeric($code)) {
 			throw new Exception\InvalidArgumentException('HTTP Status Code must be numeric.');
 		}
@@ -354,7 +361,8 @@ abstract class Base
 	 * @return GASS\Http\Base
 	 * @access public
 	 */
-	public function request($url = null, array $options = array()) {
+	public function request($url = null, array $options = array()) 
+	{
 		if ($url !== null) {
 			$this->setUrl($url);
 		}

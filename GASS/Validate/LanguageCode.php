@@ -48,8 +48,7 @@ namespace GASS\Validate;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Validate
  */
-class LanguageCode
-	extends Base
+class LanguageCode extends Base
 {
 
 	/**
@@ -59,7 +58,8 @@ class LanguageCode
 	 * @return boolean
 	 * @access public
 	 */
-	public function isValid($value) {
+	public function isValid($value) 
+	{
 		$value = $this->setValue($value)->getValue();
 		if (!is_string($value)) {
 			$this->addMessage('The provided language code must be a string.');

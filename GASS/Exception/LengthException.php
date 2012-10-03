@@ -48,7 +48,5 @@ namespace GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Exception
  */
-class LengthException
-	extends \LengthException
-	implements ExceptionInterface
+class LengthException extends \LengthException implements ExceptionInterface
 {}

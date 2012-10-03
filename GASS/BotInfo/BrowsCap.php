@@ -51,8 +51,7 @@ use GASS\Http;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	BotInfo
  */
-class BrowsCap
-	extends Base
+class BrowsCap extends Base
 {
 
 	/**
@@ -104,7 +103,8 @@ class BrowsCap
 	 * @param array $options
 	 * @access public
 	 */
-	public function __construct(array $options = array()) {
+	public function __construct(array $options = array()) 
+	{
 		if (!isset($options['browscap'])
 				&& false !== ($browsCapLocation = ini_get('browscap'))
 				&& '' != trim($browsCapLocation)) {
@@ -120,7 +120,8 @@ class BrowsCap
 	 * @return integer
 	 * @access public
 	 */
-	public function getLatestVersionDate() {
+	public function getLatestVersionDate() 
+	{
 		if ($this->latestVersionDate === null) {
 			$this->setLatestVersionDate();
 		}
@@ -134,7 +135,8 @@ class BrowsCap
 	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
-	private function setLatestVersionDate() {
+	private function setLatestVersionDate() 
+	{
 		$browsCapLocation = $this->getOption('browscap');
 		$directory = dirname($browsCapLocation);
 		$latestVersionDateFile = $directory.DIRECTORY_SEPARATOR.'latestVersionDate.txt';
@@ -162,7 +164,8 @@ class BrowsCap
 	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
-	private function checkIniFile() {
+	private function checkIniFile() 
+	{
 		if (null === ($browsCapLocation = $this->getOption('browscap'))) {
 			throw new Exception\RuntimeException('The browscap option has not been specified, please set this and try again.');
 		}
@@ -187,7 +190,8 @@ class BrowsCap
 	 * @throws GASS\Exception\RuntimeException
 	 * @access private
 	 */
-	private function updateIniFile() {
+	private function updateIniFile() 
+	{
 		$browsCapLocation = $this->getOption('browscap');
 		$directory = dirname($browsCapLocation);
 		if ((!@file_exists($directory) && !mkdir($directory, 0777, true)) || !@is_writable($directory)) {
@@ -215,7 +219,8 @@ class BrowsCap
 	 *
 	 * @access private
 	 */
-	private function loadIniFile() {
+	private function loadIniFile() 
+	{
 		$browscapLocation = $this->getOption('browscap');
 		if (defined('PHP_VERSION_ID') && PHP_VERSION_ID >= 50300) {
 			$browsers = parse_ini_file($browscapLocation, true, INI_SCANNER_RAW);
@@ -236,7 +241,8 @@ class BrowsCap
 	 * @return array|boolean
 	 * @access private
 	 */
-	private function getBrowserDetails($index) {
+	private function getBrowserDetails($index) 
+	{
 		if (isset($this->browsers[$index])) {
 			$browserDetails = $this->browsers[$index];
 			if (isset($browserDetails['Parent'])) {
@@ -259,7 +265,8 @@ class BrowsCap
 	 * @return boolean|object|array
 	 * @access public
 	 */
-	public function getBrowser($userAgent = null, $returnArray = false) {
+	public function getBrowser($userAgent = null, $returnArray = false) 
+	{
 		if (empty($this->browsers)) {
 			$this->checkIniFile();
 		}
@@ -302,7 +309,8 @@ class BrowsCap
 	 * @return string
 	 * @access private
 	 */
-	private function getBrowserRegex($browserPattern) {
+	private function getBrowserRegex($browserPattern) 
+	{
 		$regEx = preg_quote($browserPattern);
 		$regEx = str_replace(array('\?', '\*'), array('.', '.*'), $regEx);
 		return '?^'.strtolower($regEx).'$?i';
@@ -317,7 +325,8 @@ class BrowsCap
 	 * @return boolean
 	 * @access public
 	 */
-	public function getIsBot($userAgent = null, $remoteAddress = null) {
+	public function getIsBot($userAgent = null, $remoteAddress = null) 
+	{
 		$noArgs = func_num_args();
 		if ($noArgs >= 1) {
 			$this->setUserAgent($userAgent);

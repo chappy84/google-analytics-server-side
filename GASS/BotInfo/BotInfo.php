@@ -50,8 +50,7 @@ use GASS\Proxy;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	BotInfo
  */
-class BotInfo
-	implements Proxy\ProxyInterface
+class BotInfo implements Proxy\ProxyInterface
 {
 
 	/**
@@ -70,7 +69,8 @@ class BotInfo
 	 * @param string $adapter [optional] - can be provided in $options aswell
 	 * @access public
 	 */
-	public function __construct(array $options = array(), $adapter = null) {
+	public function __construct(array $options = array(), $adapter = null) 
+	{
 		if (null === $adapter) {
 			$adapter = (isset($options['adapter'])) ? $options['adapter'] : 'BrowsCap';
 			unset($options['adapter']);
@@ -91,7 +91,8 @@ class BotInfo
 	 * @return mixed
 	 * @access public
 	 */
-	public function __call($name, $arguments) {
+	public function __call($name, $arguments) 
+	{
 		if ($this->adapter instanceof BotInfoInterface) {
 			if (method_exists($this->adapter, $name)) {
 				return call_user_func_array(array($this->adapter, $name), $arguments);
@@ -110,7 +111,8 @@ class BotInfo
 	 * @return GASS\BotInfo
 	 * @access public
 	 */
-	public function setAdapter($adapter) {
+	public function setAdapter($adapter) 
+	{
 		if (is_string($adapter)) {
 			$adapterName = 'GASS\BotInfo\\'.ucfirst($adapter);
 			$adapter = new $adapterName();
@@ -127,7 +129,8 @@ class BotInfo
 	 * @return the $adapter
 	 * @access public
 	 */
-	public function getAdapter() {
+	public function getAdapter() 
+	{
 		return $this->adapter;
 	}
 }

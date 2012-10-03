@@ -48,7 +48,5 @@ namespace GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Exception
  */
-class UnderflowException
-	extends \UnderflowException
-	implements ExceptionInterface
+class UnderflowException extends \UnderflowException implements ExceptionInterface
 {}

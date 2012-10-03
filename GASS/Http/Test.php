@@ -49,9 +49,7 @@ use GASS\Exception;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Http
  */
-class Test
-	extends Base
-	implements HttpInterface
+class Test extends Base implements HttpInterface
 {
 
 	/**
@@ -79,7 +77,8 @@ class Test
 	 * @return mixed
 	 * @access public
 	 */
-	public function getInfo($index = null) {
+	public function getInfo($index = null) 
+	{
 		if (!empty($this->responseHeaders)) {
 			if ($index !== null) {
 				return (isset($this->responseHeaders[$index])) ? $this->responseHeaders[$index] : null;
@@ -96,7 +95,8 @@ class Test
 	 * @return array
 	 * @access public
 	 */
-	public function getOptions() {
+	public function getOptions() 
+	{
 		return $this->options;
 	}
 
@@ -109,7 +109,8 @@ class Test
 	 * @return GASS\Adapter\Base
 	 * @access public
 	 */
-	public function setOption($name, $value) {
+	public function setOption($name, $value) 
+	{
 		$this->options[$name] = $value;
 		return $this;
 	}
@@ -122,7 +123,8 @@ class Test
 	 * @return mixed
 	 * @access public
 	 */
-	public function getOption($name) {
+	public function getOption($name) 
+	{
 		return (isset($this->options[$name]))
 				? $this->options[$name]
 				: null;
@@ -136,7 +138,8 @@ class Test
 	 * @return GASS\Http\Stream
 	 * @access public
 	 */
-	public function setUrl($url) {
+	public function setUrl($url) 
+	{
 		return parent::setOption('url', $url);
 	}
 
@@ -149,7 +152,8 @@ class Test
 	 * @return GASS\Http\Stream
 	 * @access public
 	 */
-	public function request($url = null, array $options = array()) {
+	public function request($url = null, array $options = array()) 
+	{
 		parent::request($url, $options);
 		if (null !== ($statusCode = $this->getInfo('Http-Code'))) {
 			$this->checkResponseCode($statusCode);
@@ -164,7 +168,8 @@ class Test
 	 * @param array $responseHeaders
 	 * @access private
 	 */
-	public function setResponseHeaders($responseHeaders) {
+	public function setResponseHeaders($responseHeaders) 
+	{
 		$this->responseHeaders = $this->parseHeaders($responseHeaders);
 	}
 
@@ -178,7 +183,8 @@ class Test
 	 * @return array
 	 * @access private
 	 */
-	private function parseHeaders($headers) {
+	private function parseHeaders($headers) 
+	{
 		if (is_string($headers)) {
 			$headers = explode("\n", $headers);
 		}

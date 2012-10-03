@@ -35,41 +35,46 @@
 
 namespace GASSTests\GASS\BotInfo;
 
-class BotInfoTest
-	extends \PHPUnit_Framework_TestCase {
+class BotInfoTest extends \PHPUnit_Framework_TestCase {
 
-	public function setUp() {
+	public function setUp() 
+	{
 		parent::setUp();
 	}
 
 
-	public function tearDown() {
+	public function tearDown() 
+	{
 		parent::tearDown();
 	}
 
 
-	public function testConstructValidNoArguments() {
+	public function testConstructValidNoArguments() 
+	{
 		$botInfo = new \GASS\BotInfo\BotInfo();
 		$this->assertInstanceOf('GASS\BotInfo\BotInfo', $botInfo);
 		$this->assertInstanceOf('GASS\BotInfo\BrowsCap', $botInfo->getAdapter());
 	}
 
 
-	public function testConstructValidAdapterInOptions() {
+	public function testConstructValidAdapterInOptions() 
+	{
 		$botInfo = new \GASS\BotInfo\BotInfo(array('adapter' => 'UserAgentStringInfo'));
 		$this->assertInstanceOf('GASS\BotInfo\BotInfo', $botInfo);
 		$this->assertInstanceOf('GASS\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
 	}
 
 
-	public function testConstructValidAdapterParameter() {
+	public function testConstructValidAdapterParameter() 
+	{
 		$botInfo = new \GASS\BotInfo\BotInfo(array(), 'UserAgentStringInfo');
 		$this->assertInstanceOf('GASS\BotInfo\BotInfo', $botInfo);
 		$this->assertInstanceOf('GASS\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
 	}
 
 
-	public function testConstructValidOptions() {
+	public function testConstructValidOptions() 
+	{
 		$browscapLocation = '/tmp/php_browscap.ini';
 		$botInfo = new \GASS\BotInfo\BotInfo(array('browscap' => $browscapLocation));
 		$this->assertInstanceOf('GASS\BotInfo\BotInfo', $botInfo);
@@ -79,7 +84,8 @@ class BotInfoTest
 	}
 
 
-	public function testSetAdapterValidString() {
+	public function testSetAdapterValidString() 
+	{
 		$botInfo = new \GASS\BotInfo\BotInfo();
 		$botInfo->setAdapter('BrowsCap');
 		$this->assertInstanceOf('GASS\BotInfo\BrowsCap', $botInfo->getAdapter());
@@ -88,7 +94,8 @@ class BotInfoTest
 	}
 
 
-	public function testSetAdapterValidClass() {
+	public function testSetAdapterValidClass() 
+	{
 		$botInfo = new \GASS\BotInfo\BotInfo();
 		$botInfo->setAdapter(new \GASS\BotInfo\BrowsCap());
 		$this->assertInstanceOf('GASS\BotInfo\BrowsCap', $botInfo->getAdapter());
@@ -97,7 +104,8 @@ class BotInfoTest
 	}
 
 
-	public function testSetAdapterExceptionAdapterWrongInstance() {
+	public function testSetAdapterExceptionAdapterWrongInstance() 
+	{
 		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
 								,	'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
 		$botInfo = new \GASS\BotInfo\BotInfo();
@@ -105,7 +113,8 @@ class BotInfoTest
 	}
 
 
-	public function testSetAdapterExceptionAdapterWrongDataType() {
+	public function testSetAdapterExceptionAdapterWrongDataType() 
+	{
 		$this->setExpectedException('GASS\Exception\InvalidArgumentException'
 								,	'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
 		$botInfo = new \GASS\BotInfo\BotInfo();
@@ -113,7 +122,8 @@ class BotInfoTest
 	}
 
 
-	public function testSetAdapterExceptionAdapterMissingString() {
+	public function testSetAdapterExceptionAdapterMissingString() 
+	{
 		$this->setExpectedException('RuntimeException'
 								,	'File could not be found for GASS\BotInfo\Test');
 		$botInfo = new \GASS\BotInfo\BotInfo();
@@ -121,7 +131,8 @@ class BotInfoTest
 	}
 
 
-	public function testCallMagicMethodValid() {
+	public function testCallMagicMethodValid() 
+	{
 		$browscapLocation = '/tmp/php_browscap.ini';
 		$botInfo = new \GASS\BotInfo\BotInfo(array('browscap' => $browscapLocation));
 		$this->assertInstanceOf('GASS\BotInfo\BotInfo', $botInfo);
@@ -131,7 +142,8 @@ class BotInfoTest
 	}
 
 
-	public function testCallMagicMethodExceptionNoAdapter() {
+	public function testCallMagicMethodExceptionNoAdapter() 
+	{
 		$botInfo = new \GASS\BotInfo\BotInfo();
 		$reflectionProperty = new \ReflectionProperty('GASS\BotInfo\BotInfo', 'adapter');
 		$reflectionProperty->setAccessible(true);
@@ -142,7 +154,8 @@ class BotInfoTest
 	}
 
 
-	public function testCallMagicMethodExceptionMissingMethod() {
+	public function testCallMagicMethodExceptionMissingMethod() 
+	{
 		$botInfo = new \GASS\BotInfo\BotInfo();
 		$this->setExpectedException('GASS\Exception\BadMethodCallException'
 								,	'Method GASS\BotInfo\BrowsCap::testMethod does not exist.');
@@ -150,7 +163,8 @@ class BotInfoTest
 	}
 
 
-	public function testAdapterBaseSetRemoteAddressExceptionInvalidAddress() {
+	public function testAdapterBaseSetRemoteAddressExceptionInvalidAddress() 
+	{
 		$botInfo = new \GASS\BotInfo\BotInfo();
 		$this->setExpectedException('GASS\Exception\InvalidArgumentException');
 		$botInfo->setRemoteAddress('test');

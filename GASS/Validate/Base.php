@@ -50,9 +50,7 @@ use GASS\Adapter;
  * @package		GoogleAnalyticsServerSide
  * @subpackage	Validate
  */
-abstract class Base
-	extends Adapter\Base
-	implements Validate
+abstract class Base extends Adapter\Base implements Validate
 {
 
 	/**
@@ -77,7 +75,8 @@ abstract class Base
 	 * @return array
 	 * @access public
 	 */
-	public function getMessages() {
+	public function getMessages()
+	{
 		return $this->messages;
 	}
 
@@ -88,7 +87,8 @@ abstract class Base
 	 * @return mixed
 	 * @access public
 	 */
-	public function getValue() {
+	public function getValue()
+	{
 		return $this->value;
 	}
 
@@ -100,7 +100,8 @@ abstract class Base
 	 * @return \GASS\Validate\Base
 	 * @access public
 	 */
-	public function setMessages(array $messages) {
+	public function setMessages(array $messages)
+	{
 		$this->messages = $messages;
 		return $this;
 	}
@@ -113,7 +114,8 @@ abstract class Base
 	 * @return \GASS\Validate\Base
 	 * @access public
 	 */
-	public function setValue($value) {
+	public function setValue($value)
+	{
 		$this->value = $value;
 		return $this;
 	}
@@ -126,7 +128,8 @@ abstract class Base
 	 * @return GASS\Validate\Base
 	 * @access public
 	 */
-	public function addMessage($message, $value = null) {
+	public function addMessage($message, $value = null)
+	{
 		if ($value === null) {
 			$value = $this->getValue();
 		}

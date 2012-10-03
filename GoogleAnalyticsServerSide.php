@@ -37,6 +37,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'core.php';
  *					 ->trackPageView();
  */
 
+use GASS;
 use GASS\BotInfo;
 use GASS\Exception;
 use GASS\Http;
@@ -51,7 +52,7 @@ use GASS\Validate;
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
  */
-class GoogleAnalyticsServerSide
+class GoogleAnalyticsServerSide implements GASS\GASSInterface
 {
 
 	/**
@@ -308,7 +309,8 @@ class GoogleAnalyticsServerSide
 	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
-	public function __construct($options = array()) {
+	public function __construct($options = array())
+	{
 		if (!is_array($options)) {
 			throw new Exception\InvalidArgumentException('Argument $options must be an array.');
 		}
@@ -344,7 +346,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getCurrentJsFile() {
+	public function getCurrentJsFile()
+	{
 		if (empty($this->currentJsFile)) {
 			$this->setCurrentJsFile();
 		}
@@ -356,7 +359,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getVersion() {
+	public function getVersion()
+	{
 		return $this->version;
 	}
 
@@ -365,7 +369,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getUserAgent() {
+	public function getUserAgent()
+	{
 		return $this->userAgent;
 	}
 
@@ -374,7 +379,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getAcceptLanguage() {
+	public function getAcceptLanguage()
+	{
 		return $this->acceptLanguage;
 	}
 
@@ -383,7 +389,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getServerName() {
+	public function getServerName()
+	{
 		return $this->serverName;
 	}
 
@@ -392,7 +399,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getRemoteAddress() {
+	public function getRemoteAddress()
+	{
 		return $this->remoteAddress;
 	}
 
@@ -401,7 +409,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getAccount() {
+	public function getAccount()
+	{
 		return $this->account;
 	}
 
@@ -410,7 +419,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getDocumentReferer() {
+	public function getDocumentReferer()
+	{
 		return $this->documentReferer;
 	}
 
@@ -419,7 +429,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getDocumentPath() {
+	public function getDocumentPath()
+	{
 		return $this->documentPath;
 	}
 
@@ -428,7 +439,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getPageTitle() {
+	public function getPageTitle()
+	{
 		return $this->pageTitle;
 	}
 
@@ -437,7 +449,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getCustomVariables() {
+	public function getCustomVariables()
+	{
 		return $this->customVariables;
 	}
 
@@ -450,7 +463,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getVisitorCustomVar($index) {
+	public function getVisitorCustomVar($index)
+	{
 		if (isset($this->customVariables['index'.$index])) {
 			return $this->customVariables['index'.$index]['value'];
 		}
@@ -465,7 +479,8 @@ class GoogleAnalyticsServerSide
 	 * @return array
 	 * @access public
 	 */
-	public function getCustomVarsByScope($scope = 3) {
+	public function getCustomVarsByScope($scope = 3)
+	{
 		$customVars = $this->getCustomVariables();
 		$returnArray = array();
 		foreach($customVars as $customVar) {
@@ -481,7 +496,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getCharset() {
+	public function getCharset()
+	{
 		return $this->charset;
 	}
 
@@ -490,7 +506,8 @@ class GoogleAnalyticsServerSide
 	 * @return array
 	 * @access public
 	 */
-	public function getSearchEngines() {
+	public function getSearchEngines()
+	{
 		if (empty($this->searchEngines)) {
 			$this->setSearchEnginesFromJs();
 		}
@@ -502,7 +519,8 @@ class GoogleAnalyticsServerSide
 	 * @return null|GASS\BotInfo
 	 * @access public
 	 */
-	public function getBotInfo() {
+	public function getBotInfo()
+	{
 		return $this->botInfo;
 	}
 
@@ -511,7 +529,8 @@ class GoogleAnalyticsServerSide
 	 * @return null|array|GASS\Http\Interface
 	 * @access public
 	 */
-	public function getHttp() {
+	public function getHttp()
+	{
 		return $this->http;
 	}
 
@@ -524,7 +543,8 @@ class GoogleAnalyticsServerSide
 	 * @return mixed
 	 * @access public
 	 */
-	public function getOption($name) {
+	public function getOption($name)
+	{
 		$methodName = 'get'.ucfirst($name);
 		if (method_exists($this, $methodName)) {
 			$reflectionMethod = new \ReflectionMethod($this, $methodName);
@@ -547,7 +567,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access private
 	 */
-	private function getAsString($var, $description) {
+	private function getAsString($var, $description)
+	{
 		if (!is_string($var)) {
 			if (!is_scalar($var) && !is_null($var)
 					&& (!is_object($var) || !method_exists($var, '__toString'))) {
@@ -565,7 +586,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	protected function setCurrentJsFile() {
+	protected function setCurrentJsFile()
+	{
 		$this->currentJsFile = trim(Http\Http::request(self::JS_URL)->getResponse());
 		return $this;
 	}
@@ -577,7 +599,8 @@ class GoogleAnalyticsServerSide
 	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
-	public function setVersion($version) {
+	public function setVersion($version)
+	{
 		$version = $this->getAsString($version, 'Version');
 		if (1 !== preg_match('/^(\d+\.){2}\d+$/', $version)) {
 			throw new Exception\InvalidArgumentException('Invalid version number provided: '.$version);
@@ -592,7 +615,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setUserAgent($userAgent) {
+	public function setUserAgent($userAgent)
+	{
 		$this->userAgent = $this->getAsString($userAgent, 'User Agent');
 		Http\Http::setUserAgent($this->userAgent);
 		if ($this->botInfo instanceof BotInfo\BotInfo) {
@@ -607,7 +631,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setAcceptLanguage($acceptLanguage) {
+	public function setAcceptLanguage($acceptLanguage)
+	{
 		$acceptLanguage = $this->getAsString($acceptLanguage, 'Accept Language');
 		if (false !== strpos($acceptLanguage, ';')) {
 			list($acceptLanguage, $other) = explode(';', $acceptLanguage, 2);
@@ -631,7 +656,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setServerName($serverName) {
+	public function setServerName($serverName)
+	{
 		$this->serverName = $this->getAsString($serverName, 'Server Name');
 		return $this;
 	}
@@ -643,7 +669,8 @@ class GoogleAnalyticsServerSide
 	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
-	public function setRemoteAddress($remoteAddress) {
+	public function setRemoteAddress($remoteAddress)
+	{
 		$remoteAddress = $this->getAsString($remoteAddress, 'Remote Address');
 		$ipValidator = new Validate\IpAddress();
 		if (!$ipValidator->isValid($remoteAddress)) {
@@ -664,7 +691,8 @@ class GoogleAnalyticsServerSide
 	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
-	public function setAccount($account) {
+	public function setAccount($account)
+	{
 		$account = $this->getAsString($account, 'Account');
 		if (1 !== preg_match('/^(MO|UA)-\d{4,}-\d+$/',$account)) {
 			throw new Exception\InvalidArgumentException('Google Analytics user account must be in the format: UA-XXXXXXX-X or MO-XXXXXXX-X');
@@ -680,7 +708,8 @@ class GoogleAnalyticsServerSide
 	 * @throws GASS\Exception\InvalidArgumentException
 	 * @access public
 	 */
-	public function setDocumentReferer($documentReferer) {
+	public function setDocumentReferer($documentReferer)
+	{
 		$documentReferer = trim($this->getAsString($documentReferer, 'Document Referer'));
 		if (!empty($documentReferer)
 				&& (!preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $documentReferer)
@@ -697,7 +726,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setDocumentPath($documentPath) {
+	public function setDocumentPath($documentPath)
+	{
 		$documentPath = $this->getAsString($documentPath, 'Document Path');
 		if (false !== ($queryPos = strpos($documentPath, '?'))) {
 			$documentPath = substr($documentPath, 0, $queryPos);
@@ -712,7 +742,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setPageTitle($pageTitle) {
+	public function setPageTitle($pageTitle)
+	{
 		$this->pageTitle = $this->getAsString($pageTitle, 'Page Title');
 		return $this;
 	}
@@ -733,7 +764,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setCustomVar($name, $value, $scope = 3, $index = null) {
+	public function setCustomVar($name, $value, $scope = 3, $index = null)
+	{
 		if ($index === null) {
 			$index = 0;
 			do {
@@ -767,7 +799,8 @@ class GoogleAnalyticsServerSide
 	 * @param string $customVarsString
 	 * @access private
 	 */
-	private function setCustomVarsFromCookie($customVarsString){
+	private function setCustomVarsFromCookie($customVarsString)
+	{
 		if (!empty($customVarsString)) {
 			if (false !== strpos($customVarsString, '^')) {
 				$customVars = explode('^', $customVarsString);
@@ -792,7 +825,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access private
 	 */
-	private function removeSpecialCustomVarChars($value) {
+	private function removeSpecialCustomVarChars($value)
+	{
 		return str_replace(array('*', '(', ')', '^'), ' ', $value);
 	}
 
@@ -804,7 +838,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function deleteCustomVar($index) {
+	public function deleteCustomVar($index)
+	{
 		unset($this->customVariables['index'.$this->getAsString($index, 'Custom Var Index')]);
 		return $this;
 	}
@@ -815,7 +850,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setCharset($charset) {
+	public function setCharset($charset)
+	{
 		$this->charset = strtoupper($this->getAsString($charset, 'Charset'));
 		return $this;
 	}
@@ -829,7 +865,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setSearchEngines($searchEngines) {
+	public function setSearchEngines($searchEngines)
+	{
 		if (!is_array($searchEngines)) {
 			throw new Exception\InvalidArgumentException('$searchEngines must be an array.');
 		}
@@ -861,7 +898,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setBotInfo($botInfo) {
+	public function setBotInfo($botInfo)
+	{
 		if (!is_array($botInfo) && !is_bool($botInfo) && $botInfo !== null
 				&& !$botInfo instanceof BotInfo\BotInfoInterface) {
 			throw new Exception\InvalidArgumentException('botInfo must be an array, boolean, null'
@@ -889,7 +927,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setHttp($http = null) {
+	public function setHttp($http = null)
+	{
 		if ($http !== null && !is_array($http)
 				&& !$http instanceof Http\HttpInterface) {
 			throw new Exception\InvalidArgumentException('http must be an array, null'
@@ -915,7 +954,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setOptions($options) {
+	public function setOptions($options)
+	{
 		if (!is_array($options)) {
 			throw new Exception\InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
 		}
@@ -934,7 +974,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setOption($name, $value) {
+	public function setOption($name, $value)
+	{
 		$this->getOption($this->getAsString($name, 'Option Name'));
 		$methodName = 'set'.ucfirst($name);
 		if (method_exists($this, $methodName)) {
@@ -958,7 +999,8 @@ class GoogleAnalyticsServerSide
 	 * @throws GASS\Exception\DomainException
 	 * @access public
 	 */
-	public function getEventString($category, $action = null, $label = null, $value = null) {
+	public function getEventString($category, $action = null, $label = null, $value = null)
+	{
 		// Deal with BC
 		if (is_array($category)) {
 			if (isset($category['action'])) {
@@ -993,7 +1035,8 @@ class GoogleAnalyticsServerSide
 	 * @return string|null
 	 * @access public
 	 */
-	public function getCustomVariableString() {
+	public function getCustomVariableString()
+	{
 		$customVars = $this->getCustomVariables();
 		if (!empty($customVars)) {
 			$names = array();
@@ -1019,7 +1062,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getIPToReport($remoteAddress = null) {
+	public function getIPToReport($remoteAddress = null)
+	{
 		if ($remoteAddress !== null) {
 			$this->setRemoteAddress($remoteAddress);
 		}
@@ -1045,7 +1089,8 @@ class GoogleAnalyticsServerSide
 	 * @return integer
 	 * @access public
 	 */
-	public function getDomainHash($domain = null){
+	public function getDomainHash($domain = null)
+	{
 		$domain = ($domain === null) ? $this->serverName
 									: $this->getAsString($domain, 'Domain');
 		$a = 1;
@@ -1073,7 +1118,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setCookies(array $cookies = array()) {
+	public function setCookies(array $cookies = array())
+	{
 		$cookies = (empty($cookies)) ? $this->getCookies() : $cookies;
 
 		// Check the cookies provided are valid for this class, getCookie will throw the exception if the name isn't valid
@@ -1193,7 +1239,8 @@ class GoogleAnalyticsServerSide
 	 * @return array
 	 * @access public
 	 */
-	public function getCookies() {
+	public function getCookies()
+	{
 		return $this->cookies;
 	}
 
@@ -1204,7 +1251,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	public function getCookiesString() {
+	public function getCookiesString()
+	{
 		$cookieParts = array();
 		$currentCookies = $this->getCookies();
 		unset($currentCookies['__utmv']);
@@ -1229,7 +1277,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access private
 	 */
-	private function setCookie($name, $value, $setHeader = true) {
+	private function setCookie($name, $value, $setHeader = true)
+	{
 		$name = trim($this->getAsString($name, 'Cookie Name'));
 		$value = trim($this->getAsString($value, 'Cookie Value'));
 		if (empty($value)) {
@@ -1266,7 +1315,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setSessionCookieTimeout($sessionCookieTimeout) {
+	public function setSessionCookieTimeout($sessionCookieTimeout)
+	{
 		if (!is_int($sessionCookieTimeout)) {
 			throw new Exception\InvalidArgumentException('Session Cookie Timeout must be an integer.');
 		}
@@ -1282,7 +1332,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setVisitorCookieTimeout($visitorCookieTimeout) {
+	public function setVisitorCookieTimeout($visitorCookieTimeout)
+	{
 		if (!is_int($visitorCookieTimeout)) {
 			throw new Exception\InvalidArgumentException('Visitor Cookie Timeout must be an integer.');
 		}
@@ -1297,7 +1348,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function disableCookieHeaders() {
+	public function disableCookieHeaders()
+	{
 		$this->sendCookieHeaders = false;
 		return $this;
 	}
@@ -1311,7 +1363,8 @@ class GoogleAnalyticsServerSide
 	 * @return string
 	 * @access public
 	 */
-	private function getCookie($name) {
+	private function getCookie($name)
+	{
 		$name = $this->getAsString($name, 'Cookie Name');
 		if (array_key_exists($name, $this->cookies)) {
 			return $this->cookies[$name];
@@ -1326,7 +1379,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setVersionFromJs() {
+	public function setVersionFromJs()
+	{
 		$currentJs = $this->getCurrentJsFile();
 		if (!empty($currentJs)) {
 			$regEx = '((\d+\.){2}\d+)';
@@ -1345,7 +1399,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function setSearchEnginesFromJs() {
+	public function setSearchEnginesFromJs()
+	{
 		$currentJs = $this->getCurrentJsFile();
 		if (!empty($currentJs)) {
 			$regEx = '([a-z:\s-_\.]+)';
@@ -1378,7 +1433,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function trackPageview($url = null) {
+	public function trackPageview($url = null)
+	{
 		if ($url !== null) {
 			$url = $this->getAsString($url, 'Page View URL');
 			if (0 != strpos($url, '/')) {
@@ -1411,7 +1467,8 @@ class GoogleAnalyticsServerSide
 	 * @return GoogleAnalyticsServerSide
 	 * @access public
 	 */
-	public function trackEvent($category, $action, $label = null, $value = null, $nonInteraction = false) {
+	public function trackEvent($category, $action, $label = null, $value = null, $nonInteraction = false)
+	{
 		if (!is_bool($nonInteraction)) {
 			throw new Exception\InvalidArgumentException('NonInteraction must be a boolean.');
 		}
@@ -1436,8 +1493,8 @@ class GoogleAnalyticsServerSide
 	 * @return boolean|GoogleAnalyticsServerSide
 	 * @access private
 	 */
-	private function track(array $extraParams = array()) {
-
+	private function track(array $extraParams = array())
+	{
 		if ($this->botInfo !== null
 				&& $this->botInfo->getIsBot()) {
 			return false;

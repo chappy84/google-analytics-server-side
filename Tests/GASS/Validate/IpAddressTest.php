@@ -35,8 +35,7 @@
 
 namespace GASSTests\GASS\Validate;
 
-class IpAddressTest
-	extends \PHPUnit_Framework_TestCase
+class IpAddressTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
@@ -46,17 +45,20 @@ class IpAddressTest
 	private $ipValidator;
 
 
-	public function setUp() {
+	public function setUp() 
+	{
 		$this->ipValidator = new \GASS\Validate\IpAddress();
 	}
 
 
-	public function tearDown() {
+	public function tearDown() 
+	{
 		parent::tearDown();
 	}
 
 
-	public function testIsValidValidIPv4Address() {
+	public function testIsValidValidIPv4Address() 
+	{
 		$this->assertTrue($this->ipValidator->isValid('0.0.0.0'));
 		$this->assertTrue($this->ipValidator->isValid('1.1.1.1'));
 		$this->assertTrue($this->ipValidator->isValid('10.0.0.1'));
@@ -72,7 +74,8 @@ class IpAddressTest
 	}
 
 
-	public function testIsValidInvalidAddresses() {
+	public function testIsValidInvalidAddresses() 
+	{
 		$this->assertFalse($this->ipValidator->isValid('255.255.255.256'));
 		// Lets test if Numb3rs is wrong or not: http://www.youtube.com/watch?v=5ceaqtWhdnI
 		$this->assertFalse($this->ipValidator->isValid('275.3.6.128'));
@@ -82,13 +85,15 @@ class IpAddressTest
 	}
 
 
-	public function testMessagesEmptyWhenValid() {
+	public function testMessagesEmptyWhenValid() 
+	{
 		$this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
 		$this->assertEmpty($this->ipValidator->getMessages());
 	}
 
 
-	public function testMessagesWhenInvalid() {
+	public function testMessagesWhenInvalid() 
+	{
 		$this->assertFalse($this->ipValidator->isValid('::1'));
 		$this->assertNotEmpty($validationMessages = $this->ipValidator->getMessages());
 		$this->assertEquals(1, count($validationMessages));
