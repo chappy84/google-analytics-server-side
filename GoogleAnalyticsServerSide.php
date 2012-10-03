@@ -51,7 +51,7 @@ use GASS\Validate;
  * @category	GoogleAnalyticsServerSide
  * @package		GoogleAnalyticsServerSide
  */
-class GoogleAnalyticsServerSide implements GASS\GASSInterface
+class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 {
 
 	/**
