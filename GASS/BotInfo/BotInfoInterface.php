@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\BotInfo;
+
 use GASS\Adapter;
 
 /**

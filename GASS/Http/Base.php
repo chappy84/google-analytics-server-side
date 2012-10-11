@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
+
 use GASS\Adapter;
 use GASS\Exception;
 use GASS\Validate;

@@ -94,7 +94,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 	 * @var string
 	 * @access private
 	 */
-	private $version = '5.3.3';
+	private $version = '5.3.6';
 
 
 	/**

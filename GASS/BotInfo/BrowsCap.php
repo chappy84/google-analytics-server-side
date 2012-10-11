@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\BotInfo;
+
 use GASS\Exception;
 use GASS\Http;
 
@@ -222,11 +223,7 @@ class BrowsCap extends Base
 	private function loadIniFile() 
 	{
 		$browscapLocation = $this->getOption('browscap');
-		if (defined('PHP_VERSION_ID') && PHP_VERSION_ID >= 50300) {
-			$browsers = parse_ini_file($browscapLocation, true, INI_SCANNER_RAW);
-		} else {
-			$browsers = parse_ini_file($browscapLocation, true);
-		}
+		$browsers = parse_ini_file($browscapLocation, true, INI_SCANNER_RAW);
 		if (empty($browsers)) {
 			throw new Exception\RuntimeException('Browscap ini file could not be parsed.');
 		}

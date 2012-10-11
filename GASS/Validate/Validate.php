@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\Validate;
+
 use GASS\Adapter;
 
 /**

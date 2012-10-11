@@ -37,6 +37,7 @@
  * @namespace
  */
 namespace GASS\Http;
+
 use GASS\Exception;
 
 /**
