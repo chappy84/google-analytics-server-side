@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Http
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Http
  */
 
 /**
@@ -43,169 +43,170 @@ use GASS\Exception;
 /**
  * Proxy class for dealing with all Http requests regardless of adapter
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Http
+ * @uses        GASS\Exception
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Http
  */
 class Http
 {
 
-	/**
-	 * The current adapter in use
-	 *
-	 * @var string
-	 * @access private
-	 */
-	private $adapter;
+    /**
+     * The current adapter in use
+     *
+     * @var string
+     * @access private
+     */
+    private $adapter;
 
 
-	/**
-	 * Singleton instance of GASS\Http
-	 *
-	 * @var GASS\Http
-	 * @static
-	 * @access protected
-	 */
-	protected static $instance;
+    /**
+     * Singleton instance of GASS\Http
+     *
+     * @var GASS\Http
+     * @static
+     * @access protected
+     */
+    protected static $instance;
 
 
-	/**
-	 * Class Constructor
-	 *
-	 * @param array $options
-	 * @param string|GASS\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
-	 * @access protected
-	 */
-	public function __construct(array $options = array(), $adapter = null) 
-	{
-		if (null === $adapter) {
-			if (isset($options['adapter'])) {
-				$adapter = $options['adapter'];
-				unset($options['adapter']);
-			} else {
-				$adapter = extension_loaded('curl') ? 'Curl' : 'Stream';
-			}
-		}
-		$this->setAdapter($adapter);
-		if (0 < func_num_args()) {
-			$this->setOptions($options);
-		}
-	}
+    /**
+     * Class Constructor
+     *
+     * @param array $options
+     * @param string|GASS\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
+     * @access protected
+     */
+    public function __construct(array $options = array(), $adapter = null)
+    {
+        if (null === $adapter) {
+            if (isset($options['adapter'])) {
+                $adapter = $options['adapter'];
+                unset($options['adapter']);
+            } else {
+                $adapter = extension_loaded('curl') ? 'Curl' : 'Stream';
+            }
+        }
+        $this->setAdapter($adapter);
+        if (0 < func_num_args()) {
+            $this->setOptions($options);
+        }
+    }
 
 
-	/**
-	 * @throws GASS\Exception\RuntimeException
-	 * @final
-	 * @access public
-	 */
-	final public function __clone() 
-	{
-		throw new Exception\RuntimeException('You cannot clone '.__CLASS__);
-	}
+    /**
+     * @throws GASS\Exception\RuntimeException
+     * @final
+     * @access public
+     */
+    final public function __clone()
+    {
+        throw new Exception\RuntimeException('You cannot clone '.__CLASS__);
+    }
 
 
-	/**
-	 * Returns the current instance of GASS\Http
-	 * Accepts the same parameters as __construct
-	 *
-	 * @see GASS\Http::__construct
-	 * @param array $options
-	 * @param string|GASS\Http\HttpInterface $adapter
-	 * @return GASS\Http
-	 * @static
-	 * @access public
-	 */
-	public static function getInstance(array $options = array(), $adapter = null) 
-	{
-		$className = __CLASS__;
-		if (self::$instance === null || !self::$instance instanceof $className) {
-			self::$instance = new $className($options, $adapter);
-		} elseif (0 < func_num_args()) {
-			if ($adapter === null && !empty($options['adapter'])) {
-				$adapter = $options['adapter'];
-				unset($options['adapter']);
-			}
-			if ($adapter !== null) {
-				self::$instance->setAdapter($adapter);
-			}
-			self::$instance->setOptions($options);
-		}
-		return self::$instance;
-	}
+    /**
+     * Returns the current instance of GASS\Http
+     * Accepts the same parameters as __construct
+     *
+     * @see GASS\Http::__construct
+     * @param array $options
+     * @param string|GASS\Http\HttpInterface $adapter
+     * @return GASS\Http
+     * @static
+     * @access public
+     */
+    public static function getInstance(array $options = array(), $adapter = null)
+    {
+        $className = __CLASS__;
+        if (self::$instance === null || !self::$instance instanceof $className) {
+            self::$instance = new $className($options, $adapter);
+        } elseif (0 < func_num_args()) {
+            if ($adapter === null && !empty($options['adapter'])) {
+                $adapter = $options['adapter'];
+                unset($options['adapter']);
+            }
+            if ($adapter !== null) {
+                self::$instance->setAdapter($adapter);
+            }
+            self::$instance->setOptions($options);
+        }
+        return self::$instance;
+    }
 
 
-	/**
-	 * Call magic method
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @throws Exception\BadMethodCallException
-	 * @return mixed
-	 * @access public
-	 */
-	public function __call($name, $arguments) 
-	{
-		if (method_exists($this->adapter, $name)) {
-			return call_user_func_array(array($this->adapter, $name), $arguments);
-		}
-		throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($this->adapter));
-	}
+    /**
+     * Call magic method
+     *
+     * @param string $name
+     * @param array $arguments
+     * @throws Exception\BadMethodCallException
+     * @return mixed
+     * @access public
+     */
+    public function __call($name, $arguments)
+    {
+        if (method_exists($this->adapter, $name)) {
+            return call_user_func_array(array($this->adapter, $name), $arguments);
+        }
+        throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($this->adapter));
+    }
 
 
-	/**
-	 * Call Static magic method
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @throws Exception\BadMethodCallException
-	 * @return mixed
-	 * @static
-	 * @access public
-	 */
-	public static function __callStatic($name, $arguments) 
-	{
-		$instance = self::getInstance();
-		$adapter = $instance->getAdapter();
-		if (method_exists($adapter, $name)) {
-			return call_user_func_array(array($adapter, $name), $arguments);
-		}
-		throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($adapter));
-	}
+    /**
+     * Call Static magic method
+     *
+     * @param string $name
+     * @param array $arguments
+     * @throws Exception\BadMethodCallException
+     * @return mixed
+     * @static
+     * @access public
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        $instance = self::getInstance();
+        $adapter = $instance->getAdapter();
+        if (method_exists($adapter, $name)) {
+            return call_user_func_array(array($adapter, $name), $arguments);
+        }
+        throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($adapter));
+    }
 
 
-	/**
-	 * Sets the current adapter to use
-	 *
-	 * @param string $adapter
-	 * @throws GASS\Exception\InvalidArgumentException
-	 * @return GASS\Http
-	 * @access public
-	 */
-	public function setAdapter($adapter) 
-	{
-		if (is_string($adapter)) {
-			$adapterName = 'GASS\Http\\'.ucfirst($adapter);
-			$adapter = new $adapterName();
-		}
-		if ($adapter instanceof HttpInterface) {
-			$this->adapter = $adapter;
-			return $this;
-		}
-		throw new Exception\InvalidArgumentException('The GASS\Http adapter must implement GASS\Http\HttpInterface.');
-	}
+    /**
+     * Sets the current adapter to use
+     *
+     * @param string $adapter
+     * @throws GASS\Exception\InvalidArgumentException
+     * @return GASS\Http
+     * @access public
+     */
+    public function setAdapter($adapter)
+    {
+        if (is_string($adapter)) {
+            $adapterName = 'GASS\Http\\'.ucfirst($adapter);
+            $adapter = new $adapterName();
+        }
+        if ($adapter instanceof HttpInterface) {
+            $this->adapter = $adapter;
+            return $this;
+        }
+        throw new Exception\InvalidArgumentException('The GASS\Http adapter must implement GASS\Http\HttpInterface.');
+    }
 
 
-	/**
-	 * Returns the current adapter in use
-	 *
-	 * @return GASS\Http\HttpInterface
-	 * @access public
-	 */
-	public function getAdapter() 
-	{
-		return $this->adapter;
-	}
+    /**
+     * Returns the current adapter in use
+     *
+     * @return GASS\Http\HttpInterface
+     * @access public
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
 }

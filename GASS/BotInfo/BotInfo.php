@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	BotInfo
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  BotInfo
  */
 
 /**
@@ -44,94 +44,96 @@ use GASS\Proxy;
 /**
  * Proxy class for dealing with all BotInfo requests regardless of adapter
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	BotInfo
+ * @uses        GASS\Exception
+ * @uses        GASS\Proxy
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  BotInfo
  */
 class BotInfo implements Proxy\ProxyInterface
 {
 
-	/**
-	 * The current adapter in use
-	 *
-	 * @var GASS\BotInfo\BotInfoInterface
-	 * @access private
-	 */
-	private $adapter;
+    /**
+     * The current adapter in use
+     *
+     * @var GASS\BotInfo\BotInfoInterface
+     * @access private
+     */
+    private $adapter;
 
 
-	/**
-	 * Class Constructor
-	 *
-	 * @param array $options
-	 * @param string $adapter [optional] - can be provided in $options aswell
-	 * @access public
-	 */
-	public function __construct(array $options = array(), $adapter = null) 
-	{
-		if (null === $adapter) {
-			$adapter = (isset($options['adapter'])) ? $options['adapter'] : 'BrowsCap';
-			unset($options['adapter']);
-		}
-		$this->setAdapter($adapter);
-		if (0 < func_num_args()) {
-			$this->setOptions($options);
-		}
-	}
+    /**
+     * Class Constructor
+     *
+     * @param array $options
+     * @param string $adapter [optional] - can be provided in $options aswell
+     * @access public
+     */
+    public function __construct(array $options = array(), $adapter = null)
+    {
+        if (null === $adapter) {
+            $adapter = (isset($options['adapter'])) ? $options['adapter'] : 'BrowsCap';
+            unset($options['adapter']);
+        }
+        $this->setAdapter($adapter);
+        if (0 < func_num_args()) {
+            $this->setOptions($options);
+        }
+    }
 
 
-	/**
-	 * Call magic method
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @throws GASS\Exception\DomainException
-	 * @return mixed
-	 * @access public
-	 */
-	public function __call($name, $arguments) 
-	{
-		if ($this->adapter instanceof BotInfoInterface) {
-			if (method_exists($this->adapter, $name)) {
-				return call_user_func_array(array($this->adapter, $name), $arguments);
-			}
-			throw new Exception\BadMethodCallException('Method '.get_class($this->adapter).'::'.$name.' does not exist.');
-		}
-		throw new Exception\DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
-	}
+    /**
+     * Call magic method
+     *
+     * @param string $name
+     * @param array $arguments
+     * @throws GASS\Exception\DomainException
+     * @return mixed
+     * @access public
+     */
+    public function __call($name, $arguments)
+    {
+        if ($this->adapter instanceof BotInfoInterface) {
+            if (method_exists($this->adapter, $name)) {
+                return call_user_func_array(array($this->adapter, $name), $arguments);
+            }
+            throw new Exception\BadMethodCallException('Method '.get_class($this->adapter).'::'.$name.' does not exist.');
+        }
+        throw new Exception\DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
+    }
 
 
-	/**
-	 * Sets the current adapter to use
-	 *
-	 * @param string|GASS\BotInfo\BotInfoInterface $adapter
-	 * @throws GASS\Exception\InvalidArgumentException
-	 * @return GASS\BotInfo
-	 * @access public
-	 */
-	public function setAdapter($adapter) 
-	{
-		if (is_string($adapter)) {
-			$adapterName = 'GASS\BotInfo\\'.ucfirst($adapter);
-			$adapter = new $adapterName();
-		}
-		if ($adapter instanceof BotInfoInterface) {
-			$this->adapter = $adapter;
-			return $this;
-		}
-		throw new Exception\InvalidArgumentException('The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
-	}
+    /**
+     * Sets the current adapter to use
+     *
+     * @param string|GASS\BotInfo\BotInfoInterface $adapter
+     * @throws GASS\Exception\InvalidArgumentException
+     * @return GASS\BotInfo
+     * @access public
+     */
+    public function setAdapter($adapter)
+    {
+        if (is_string($adapter)) {
+            $adapterName = 'GASS\BotInfo\\'.ucfirst($adapter);
+            $adapter = new $adapterName();
+        }
+        if ($adapter instanceof BotInfoInterface) {
+            $this->adapter = $adapter;
+            return $this;
+        }
+        throw new Exception\InvalidArgumentException('The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
+    }
 
 
-	/**
-	 * @return the $adapter
-	 * @access public
-	 */
-	public function getAdapter() 
-	{
-		return $this->adapter;
-	}
+    /**
+     * @return the $adapter
+     * @access public
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
 }

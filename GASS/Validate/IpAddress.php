@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 
 /**
@@ -41,34 +41,34 @@ namespace GASS\Validate;
 /**
  * Interface for all Http Adapters
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 class IpAddress extends Base
 {
 
-	/**
-	 * Returns whether or not the value is valid
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 * @access public
-	 */
-	public function isValid($value) 
-	{
-		$value = $this->setValue($value)->getValue();
-		if (!is_string($value)) {
-			$this->addMessage('The provided IP address must be a string.');
-			return false;
-		}
-		if (!preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d{1,2})\.){3}(25[0-5]|2[0-4]\d|[01]?\d{1,2})$/', $value)) {
-			$this->addMessage('"%value%" is an invalid IPv4 address');
-			return false;
-		}
-		return true;
-	}
+    /**
+     * Returns whether or not the value is valid
+     *
+     * @param mixed $value
+     * @return boolean
+     * @access public
+     */
+    public function isValid($value)
+    {
+        $value = $this->setValue($value)->getValue();
+        if (!is_string($value)) {
+            $this->addMessage('The provided IP address must be a string.');
+            return false;
+        }
+        if (!preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d{1,2})\.){3}(25[0-5]|2[0-4]\d|[01]?\d{1,2})$/', $value)) {
+            $this->addMessage('"%value%" is an invalid IPv4 address');
+            return false;
+        }
+        return true;
+    }
 }

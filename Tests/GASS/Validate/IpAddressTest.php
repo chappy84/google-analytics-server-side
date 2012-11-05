@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GASSTests
- * @subpackage	Validate
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 
 namespace GASSTests\GASS\Validate;
@@ -38,65 +38,65 @@ namespace GASSTests\GASS\Validate;
 class IpAddressTest extends \PHPUnit_Framework_TestCase
 {
 
-	/**
-	 * @var GASS\Validate\IpAddress
-	 * @access private
-	 */
-	private $ipValidator;
+    /**
+     * @var GASS\Validate\IpAddress
+     * @access private
+     */
+    private $ipValidator;
 
 
-	public function setUp() 
-	{
-		$this->ipValidator = new \GASS\Validate\IpAddress();
-	}
+    public function setUp()
+    {
+        $this->ipValidator = new \GASS\Validate\IpAddress();
+    }
 
 
-	public function tearDown() 
-	{
-		parent::tearDown();
-	}
+    public function tearDown()
+    {
+        parent::tearDown();
+    }
 
 
-	public function testIsValidValidIPv4Address() 
-	{
-		$this->assertTrue($this->ipValidator->isValid('0.0.0.0'));
-		$this->assertTrue($this->ipValidator->isValid('1.1.1.1'));
-		$this->assertTrue($this->ipValidator->isValid('10.0.0.1'));
-		$this->assertTrue($this->ipValidator->isValid('10.255.255.255'));
-		$this->assertTrue($this->ipValidator->isValid('99.99.99.99'));
-		$this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
-		$this->assertTrue($this->ipValidator->isValid('172.16.0.1'));
-		$this->assertTrue($this->ipValidator->isValid('172.31.255.255'));
-		$this->assertTrue($this->ipValidator->isValid('192.168.0.1'));
-		$this->assertTrue($this->ipValidator->isValid('192.168.255.255'));
-		$this->assertTrue($this->ipValidator->isValid('199.199.199.199'));
-		$this->assertTrue($this->ipValidator->isValid('255.255.255.255'));
-	}
+    public function testIsValidValidIPv4Address()
+    {
+        $this->assertTrue($this->ipValidator->isValid('0.0.0.0'));
+        $this->assertTrue($this->ipValidator->isValid('1.1.1.1'));
+        $this->assertTrue($this->ipValidator->isValid('10.0.0.1'));
+        $this->assertTrue($this->ipValidator->isValid('10.255.255.255'));
+        $this->assertTrue($this->ipValidator->isValid('99.99.99.99'));
+        $this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
+        $this->assertTrue($this->ipValidator->isValid('172.16.0.1'));
+        $this->assertTrue($this->ipValidator->isValid('172.31.255.255'));
+        $this->assertTrue($this->ipValidator->isValid('192.168.0.1'));
+        $this->assertTrue($this->ipValidator->isValid('192.168.255.255'));
+        $this->assertTrue($this->ipValidator->isValid('199.199.199.199'));
+        $this->assertTrue($this->ipValidator->isValid('255.255.255.255'));
+    }
 
 
-	public function testIsValidInvalidAddresses() 
-	{
-		$this->assertFalse($this->ipValidator->isValid('255.255.255.256'));
-		// Lets test if Numb3rs is wrong or not: http://www.youtube.com/watch?v=5ceaqtWhdnI
-		$this->assertFalse($this->ipValidator->isValid('275.3.6.128'));
-		$this->assertFalse($this->ipValidator->isValid('999.999.999.999'));
-		$this->assertFalse($this->ipValidator->isValid('::1'));
-		$this->assertFalse($this->ipValidator->isValid('1024.1024.1024.1024'));
-	}
+    public function testIsValidInvalidAddresses()
+    {
+        $this->assertFalse($this->ipValidator->isValid('255.255.255.256'));
+        // Lets test if Numb3rs is wrong or not: http://www.youtube.com/watch?v=5ceaqtWhdnI
+        $this->assertFalse($this->ipValidator->isValid('275.3.6.128'));
+        $this->assertFalse($this->ipValidator->isValid('999.999.999.999'));
+        $this->assertFalse($this->ipValidator->isValid('::1'));
+        $this->assertFalse($this->ipValidator->isValid('1024.1024.1024.1024'));
+    }
 
 
-	public function testMessagesEmptyWhenValid() 
-	{
-		$this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
-		$this->assertEmpty($this->ipValidator->getMessages());
-	}
+    public function testMessagesEmptyWhenValid()
+    {
+        $this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
+        $this->assertEmpty($this->ipValidator->getMessages());
+    }
 
 
-	public function testMessagesWhenInvalid() 
-	{
-		$this->assertFalse($this->ipValidator->isValid('::1'));
-		$this->assertNotEmpty($validationMessages = $this->ipValidator->getMessages());
-		$this->assertEquals(1, count($validationMessages));
-		$this->assertEquals('"::1" is an invalid IPv4 address', $validationMessages[0]);
-	}
+    public function testMessagesWhenInvalid()
+    {
+        $this->assertFalse($this->ipValidator->isValid('::1'));
+        $this->assertNotEmpty($validationMessages = $this->ipValidator->getMessages());
+        $this->assertEquals(1, count($validationMessages));
+        $this->assertEquals('"::1" is an invalid IPv4 address', $validationMessages[0]);
+    }
 }

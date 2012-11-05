@@ -32,7 +32,7 @@ Google Analytics Server Side can be used simply in the following manner:
 ```php
 $gass = new GoogleAnalyticsServerSide();
 $gass->setAccount('UA-XXXXXXX-X')
-	->trackPageView();
+    ->trackPageView();
 ```
 
 The class constructor accepts an optional associative array parameter of available
@@ -44,14 +44,14 @@ e.g.
 ```php
 $gass = new GoogleAnalyticsServerSide();
 $gass->setAccount('UA-XXXXXXX-X')
-	->setBotInfo(true);
+    ->setBotInfo(true);
 ```
 
 could also be done like this:
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'
-										,	'botInfo'	=> true));
+$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X',
+    										'botInfo'	=> true));
 ```
 
 These options can also be set individually by the method setOption,
@@ -144,16 +144,16 @@ where the [php_browscap.ini file][8] is located / can be downloaded to.
 e.g.
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> true
-										,	'account'	=> 'UA-XXXXXXX-X'));
+$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> true,
+    										'account'	=> 'UA-XXXXXXX-X'));
 ```
 
 or
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' => 'BrowsCap'
-																,	'browscap'=> '/tmp/php_browscap.ini')
-										,	'account'	=> 'UA-XXXXXXX-X'));
+$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' => 'BrowsCap',
+    																'browscap'=> '/tmp/php_browscap.ini'),
+    										'account'	=> 'UA-XXXXXXX-X'));
 ```
 
 or
@@ -204,9 +204,9 @@ array or an instance of the required adapter.
 e.g.
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'
-										,	'http'		=> array(	'adapter'		=> 'Curl'
-																,	CURLOPT_PROXY	=> 'http://exampleproxy.local:8080'));
+$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X',
+    										'http'		=> array(	'adapter'		=> 'Curl',
+    																CURLOPT_PROXY	=> 'http://exampleproxy.local:8080'));
 ```
 
 or

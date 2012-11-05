@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Adapter
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Adapter
  */
 
 /**
@@ -41,91 +41,91 @@ namespace GASS\Adapter;
 /**
  * Base class for use with adapters
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Adapter
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Adapter
  */
 abstract class Base implements AdapterInterface
 {
 
-	/**
-	 * Adapter options passed in as part of construct or setOption/s
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $options = array();
+    /**
+     * Adapter options passed in as part of construct or setOption/s
+     *
+     * @var array
+     * @access protected
+     */
+    protected $options = array();
 
 
-	/**
-	 * Class constructor
-	 *
-	 * @param array $options
-	 * @access public
-	 */
-	public function __construct(array $options = array()) 
-	{
-		$this->setOptions($options);
-	}
+    /**
+     * Class constructor
+     *
+     * @param array $options
+     * @access public
+     */
+    public function __construct(array $options = array())
+    {
+        $this->setOptions($options);
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @param array $options
-	 * @return GASS\Adapter\Base
-	 * @access public
-	 */
-	public function setOptions(array $options) 
-	{
-		foreach ($options as $name => $value) {
-			$this->setOption($name, $value);
-		}
-		return $this;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param array $options
+     * @return GASS\Adapter\Base
+     * @access public
+     */
+    public function setOptions(array $options)
+    {
+        foreach ($options as $name => $value) {
+            $this->setOption($name, $value);
+        }
+        return $this;
+    }
 
 
-	/**
-	 * Sets a specific option
-	 *
-	 * @param string $name
-	 * @param mixed $value
-	 * @return GASS\Adapter\Base
-	 * @access public
-	 */
-	public function setOption($name, $value) 
-	{
-		$this->options[$name] = $value;
-		return $this;
-	}
+    /**
+     * Sets a specific option
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return GASS\Adapter\Base
+     * @access public
+     */
+    public function setOption($name, $value)
+    {
+        $this->options[$name] = $value;
+        return $this;
+    }
 
 
-	/**
-	 * Returns all options set
-	 *
-	 * @return array
-	 * @access public
-	 */
-	public function getOptions() 
-	{
-		return $this->options;
-	}
+    /**
+     * Returns all options set
+     *
+     * @return array
+     * @access public
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
 
 
-	/**
-	 * Returns a specific option
-	 *
-	 * @param string $name
-	 * @return mixed
-	 * @access public
-	 */
-	public function getOption($name) 
-	{
-		return (isset($this->options[$name]))
-				? $this->options[$name]
-				: null;
-	}
+    /**
+     * Returns a specific option
+     *
+     * @param string $name
+     * @return mixed
+     * @access public
+     */
+    public function getOption($name)
+    {
+        return (isset($this->options[$name]))
+                ? $this->options[$name]
+                : null;
+    }
 }

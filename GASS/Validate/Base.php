@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 
 /**
@@ -43,100 +43,100 @@ use GASS\Adapter;
 /**
  * Interface for all Http Adapters
  *
- * @uses		GASS\Adapter
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @uses        GASS\Adapter
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 abstract class Base extends Adapter\Base implements Validate
 {
 
-	/**
-	 * @var array
-	 * @access private
-	 */
-	private $messages = array();
+    /**
+     * @var array
+     * @access private
+     */
+    private $messages = array();
 
 
-	/**
-	 * The value currently being validated
-	 *
-	 * @var mixed
-	 * @access private
-	 */
-	private $value;
+    /**
+     * The value currently being validated
+     *
+     * @var mixed
+     * @access private
+     */
+    private $value;
 
 
-	/**
-	 * Get the validation messages
-	 *
-	 * @return array
-	 * @access public
-	 */
-	public function getMessages()
-	{
-		return $this->messages;
-	}
+    /**
+     * Get the validation messages
+     *
+     * @return array
+     * @access public
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 
 
-	/**
-	 * Returns the value being validated
-	 *
-	 * @return mixed
-	 * @access public
-	 */
-	public function getValue()
-	{
-		return $this->value;
-	}
+    /**
+     * Returns the value being validated
+     *
+     * @return mixed
+     * @access public
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
 
-	/**
-	 * Set the validation messages
-	 *
-	 * @param array $messages
-	 * @return \GASS\Validate\Base
-	 * @access public
-	 */
-	public function setMessages(array $messages)
-	{
-		$this->messages = $messages;
-		return $this;
-	}
+    /**
+     * Set the validation messages
+     *
+     * @param array $messages
+     * @return \GASS\Validate\Base
+     * @access public
+     */
+    public function setMessages(array $messages)
+    {
+        $this->messages = $messages;
+        return $this;
+    }
 
 
-	/**
-	 * Sets the value being validated
-	 *
-	 * @param mixed $value
-	 * @return \GASS\Validate\Base
-	 * @access public
-	 */
-	public function setValue($value)
-	{
-		$this->value = $value;
-		return $this;
-	}
+    /**
+     * Sets the value being validated
+     *
+     * @param mixed $value
+     * @return \GASS\Validate\Base
+     * @access public
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
 
 
-	/**
-	 * Adds a validation message;
-	 *
-	 * @param string $message
-	 * @return GASS\Validate\Base
-	 * @access public
-	 */
-	public function addMessage($message, $value = null)
-	{
-		if ($value === null) {
-			$value = $this->getValue();
-		}
-		$this->messages[] = (false !== strpos($message, '%value%'))
-							? str_replace('%value%', (string)$value, $message)
-							: $message;
-		return $this;
-	}
+    /**
+     * Adds a validation message;
+     *
+     * @param string $message
+     * @return GASS\Validate\Base
+     * @access public
+     */
+    public function addMessage($message, $value = null)
+    {
+        if ($value === null) {
+            $value = $this->getValue();
+        }
+        $this->messages[] = (false !== strpos($message, '%value%'))
+                            ? str_replace('%value%', (string)$value, $message)
+                            : $message;
+        return $this;
+    }
 }

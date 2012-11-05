@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	BotInfo
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  BotInfo
  */
 
 /**
@@ -46,96 +46,98 @@ use GASS\Validate;
 /**
  * Base class of all BotInfo adapters
  *
- * @uses		GASS\Validate
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	BotInfo
+ * @uses        GASS\Adapter
+ * @uses        GASS\Exception
+ * @uses        GASS\Validate
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  BotInfo
  */
 abstract class Base extends Adapter\Base implements BotInfoInterface
 {
 
-	/**
-	 * The remote user's ip address
-	 *
-	 * @var string
-	 * @access protected
-	 */
-	protected $remoteAddress;
+    /**
+     * The remote user's ip address
+     *
+     * @var string
+     * @access protected
+     */
+    protected $remoteAddress;
 
 
-	/**
-	 * The current user-agent
-	 *
-	 * @var string
-	 * @access protected
-	 */
-	protected $userAgent;
+    /**
+     * The current user-agent
+     *
+     * @var string
+     * @access protected
+     */
+    protected $userAgent;
 
 
-	/**
-	 * Class options
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $options = array();
+    /**
+     * Class options
+     *
+     * @var array
+     * @access protected
+     */
+    protected $options = array();
 
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @return string
-	 * @access public
-	 */
-	public function getRemoteAddress() 
-	{
-		return $this->remoteAddress;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     * @access public
+     */
+    public function getRemoteAddress()
+    {
+        return $this->remoteAddress;
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @return string
-	 * @access public
-	 */
-	public function getUserAgent() 
-	{
-		return $this->userAgent;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     * @access public
+     */
+    public function getUserAgent()
+    {
+        return $this->userAgent;
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @param string $remoteAddress
-	 * @return GASS\BotInfo\Base
-	 * @access public
-	 */
-	public function setRemoteAddress($remoteAddress) 
-	{
-		$ipValidator = new Validate\IpAddress();
-		if (!$ipValidator->isValid($remoteAddress)) {
-			throw new Exception\InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
-		}
-		$this->remoteAddress = $remoteAddress;
-		return $this;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $remoteAddress
+     * @return GASS\BotInfo\Base
+     * @access public
+     */
+    public function setRemoteAddress($remoteAddress)
+    {
+        $ipValidator = new Validate\IpAddress();
+        if (!$ipValidator->isValid($remoteAddress)) {
+            throw new Exception\InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
+        }
+        $this->remoteAddress = $remoteAddress;
+        return $this;
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @param string $userAgent
-	 * @return GASS\BotInfo\Base
-	 * @access public
-	 */
-	public function setUserAgent($userAgent) 
-	{
-		$this->userAgent = $userAgent;
-		return $this;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $userAgent
+     * @return GASS\BotInfo\Base
+     * @access public
+     */
+    public function setUserAgent($userAgent)
+    {
+        $this->userAgent = $userAgent;
+        return $this;
+    }
 }

@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Http
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Http
  */
 
 /**
@@ -43,155 +43,156 @@ use GASS\Exception;
 /**
  * cURL adapter for Http
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Http
+ * @uses        GASS\Exception
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Http
  */
 class Curl extends Base
 {
 
-	/**
-	 * Curl instance
-	 *
-	 * @var resource
-	 * @access protected
-	 */
-	protected $curl;
+    /**
+     * Curl instance
+     *
+     * @var resource
+     * @access protected
+     */
+    protected $curl;
 
 
-	/**
-	 * Class options
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $options = array(	CURLOPT_RETURNTRANSFER	=> 1
-							,	CURLOPT_CONNECTTIMEOUT	=> 5
-							,	CURLOPT_FOLLOWLOCATION	=> true);
+    /**
+     * Class options
+     *
+     * @var array
+     * @access protected
+     */
+    protected $options = array(  CURLOPT_RETURNTRANSFER    => 1,
+                                 CURLOPT_CONNECTTIMEOUT    => 5,
+                                 CURLOPT_FOLLOWLOCATION    => true);
 
 
-	/**
-	 * Class Constructor
-	 *
-	 * @param array $options
-	 * @throws GASS\Exception\RuntimeException
-	 * @access public
-	 */
-	public function __construct(array $options = array()) 
-	{
-		if (!extension_loaded('curl')) {
-			throw new Exception\RuntimeException('cURL PHP extension is not loaded.');
-		}
-		parent::__construct($options);
-	}
+    /**
+     * Class Constructor
+     *
+     * @param array $options
+     * @throws GASS\Exception\RuntimeException
+     * @access public
+     */
+    public function __construct(array $options = array())
+    {
+        if (!extension_loaded('curl')) {
+            throw new Exception\RuntimeException('cURL PHP extension is not loaded.');
+        }
+        parent::__construct($options);
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @param mixed $index [optional]
-	 * @return mixed
-	 * @access public
-	 */
-	public function getInfo($index = null) 
-	{
-		if (is_resource($this->curl)) {
-			if ($index === null) {
-				$index = 0;
-			}
-			return curl_getinfo($this->curl, $index);
-		}
-		throw new Exception\DomainException('A cURL request has not been made yet.');
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $index [optional]
+     * @return mixed
+     * @access public
+     */
+    public function getInfo($index = null)
+    {
+        if (is_resource($this->curl)) {
+            if ($index === null) {
+                $index = 0;
+            }
+            return curl_getinfo($this->curl, $index);
+        }
+        throw new Exception\DomainException('A cURL request has not been made yet.');
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @param string $url
-	 * @return GASS\Http\Curl
-	 * @access public
-	 */
-	public function setUrl($url) 
-	{
-		return $this->setOption(CURLOPT_URL, $url);
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $url
+     * @return GASS\Http\Curl
+     * @access public
+     */
+    public function setUrl($url)
+    {
+        return $this->setOption(CURLOPT_URL, $url);
+    }
 
 
-	/**
-	 * Closes the curl connection if one is present
-	 *
-	 * @return GASS\Http\Curl
-	 * @access protected
-	 */
-	protected function close() 
-	{
-		if (is_resource($this->curl)){
-			curl_close($this->curl);
-		}
-		$this->curl = null;
-		return $this;
-	}
+    /**
+     * Closes the curl connection if one is present
+     *
+     * @return GASS\Http\Curl
+     * @access protected
+     */
+    protected function close()
+    {
+        if (is_resource($this->curl)){
+            curl_close($this->curl);
+        }
+        $this->curl = null;
+        return $this;
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @param string $url
-	 * @param array $options
-	 * @return GASS\Http\Curl
-	 * @access public
-	 */
-	public function request($url = null, array $options = array()) 
-	{
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $url
+     * @param array $options
+     * @return GASS\Http\Curl
+     * @access public
+     */
+    public function request($url = null, array $options = array())
+    {
 
-		parent::request($url, $options);
+        parent::request($url, $options);
 
-		$this->close();
-		$this->curl = curl_init();
+        $this->close();
+        $this->curl = curl_init();
 
-		if (null !== ($userAgent = $this->getUserAgent())) {
-			curl_setopt($this->curl, CURLOPT_USERAGENT, $userAgent);
-		}
-		$extraHeaders = array();
-		if (null !== ($acceptedLanguage = $this->getAcceptLanguage())) {
-			$extraHeaders[] = 'Accepts-Language: '.$acceptedLanguage;
-		}
-		if (null !== ($remoteAddress = $this->getRemoteAddress())) {
-			$extraHeaders[] = 'X-Forwarded-For: '.$remoteAddress;
-		}
-		if (!empty($extraHeaders)) {
-			curl_setopt($this->curl, CURLOPT_HTTPHEADER, $extraHeaders);
-		}
+        if (null !== ($userAgent = $this->getUserAgent())) {
+            curl_setopt($this->curl, CURLOPT_USERAGENT, $userAgent);
+        }
+        $extraHeaders = array();
+        if (null !== ($acceptedLanguage = $this->getAcceptLanguage())) {
+            $extraHeaders[] = 'Accepts-Language: '.$acceptedLanguage;
+        }
+        if (null !== ($remoteAddress = $this->getRemoteAddress())) {
+            $extraHeaders[] = 'X-Forwarded-For: '.$remoteAddress;
+        }
+        if (!empty($extraHeaders)) {
+            curl_setopt($this->curl, CURLOPT_HTTPHEADER, $extraHeaders);
+        }
 
-		$extraCurlOptions = $this->getOptions();
-		if (!empty($extraCurlOptions) && false === curl_setopt_array($this->curl, $extraCurlOptions)) {
-			throw new Exception\UnexpectedValueException('One of the extra curl options specified is invalid. Error: '.curl_error($this->curl));
-		}
+        $extraCurlOptions = $this->getOptions();
+        if (!empty($extraCurlOptions) && false === curl_setopt_array($this->curl, $extraCurlOptions)) {
+            throw new Exception\UnexpectedValueException('One of the extra curl options specified is invalid. Error: '.curl_error($this->curl));
+        }
 
-		if (false === ($response = curl_exec($this->curl))) {
-			throw new Exception\RuntimeException('Source could not be retrieved. Error: '.curl_error($this->curl));
-		}
+        if (false === ($response = curl_exec($this->curl))) {
+            throw new Exception\RuntimeException('Source could not be retrieved. Error: '.curl_error($this->curl));
+        }
 
-		$statusCode = $this->getInfo(CURLINFO_HTTP_CODE);
-		$this->checkResponseCode($statusCode);
+        $statusCode = $this->getInfo(CURLINFO_HTTP_CODE);
+        $this->checkResponseCode($statusCode);
 
-		$this->setResponse($response);
+        $this->setResponse($response);
 
-		return $this;
-	}
+        return $this;
+    }
 
 
-	/**
-	 * Class Destructor
-	 *
-	 * @access public
-	 */
-	public function __destruct() 
-	{
-		$this->close();
-	}
+    /**
+     * Class Destructor
+     *
+     * @access public
+     */
+    public function __destruct()
+    {
+        $this->close();
+    }
 }

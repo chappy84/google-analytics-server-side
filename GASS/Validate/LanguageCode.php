@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 
 /**
@@ -41,34 +41,34 @@ namespace GASS\Validate;
 /**
  * Interface for all Http Adapters
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 class LanguageCode extends Base
 {
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 * @access public
-	 */
-	public function isValid($value) 
-	{
-		$value = $this->setValue($value)->getValue();
-		if (!is_string($value)) {
-			$this->addMessage('The provided language code must be a string.');
-			return false;
-		}
-		if (1 !== preg_match('/^([a-z]{2,3})(-[a-z]{2})??$/i', $value)) {
-			$this->addMessage('"%value%" is an invalid language code.');
-			return false;
-		}
-		return true;
-	}
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $value
+     * @return boolean
+     * @access public
+     */
+    public function isValid($value)
+    {
+        $value = $this->setValue($value)->getValue();
+        if (!is_string($value)) {
+            $this->addMessage('The provided language code must be a string.');
+            return false;
+        }
+        if (1 !== preg_match('/^([a-z]{2,3})(-[a-z]{2})??$/i', $value)) {
+            $this->addMessage('"%value%" is an invalid language code.');
+            return false;
+        }
+        return true;
+    }
 }

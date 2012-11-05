@@ -21,15 +21,15 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
  */
 
 /**
@@ -38,7 +38,7 @@
 $gassCurrentDir = dirname(__FILE__);
 $gassCurrentIncludePath = get_include_path();
 if (false === strpos($gassCurrentIncludePath, $gassCurrentDir)) {
-	set_include_path($gassCurrentIncludePath.PATH_SEPARATOR.$gassCurrentDir);
+    set_include_path($gassCurrentIncludePath.PATH_SEPARATOR.$gassCurrentDir);
 }
 
 /**
@@ -49,26 +49,26 @@ if (false === strpos($gassCurrentIncludePath, $gassCurrentDir)) {
  * @throws RuntimeException
  */
 spl_autoload_register(function ($name) {
-	if (0 === strpos($name, 'GASS\\')) {
-		$filePath = str_replace('\\', DIRECTORY_SEPARATOR, $name);
-		$includePaths = explode(PATH_SEPARATOR, get_include_path());
-		$fileFound = false;
-		$classFound = false;
-		foreach ($includePaths as $includePath) {
-			$proposedPath = $includePath . DIRECTORY_SEPARATOR . $filePath . '.php';
-			if (@is_readable($proposedPath)) {
-				$fileFound = true;
-				require_once $proposedPath;
-				if (class_exists($name) || interface_exists($name)) {
-					$classFound = true;
-					break;
-				}
-			}
-		}
-		if (!$fileFound) {
-			throw new \RuntimeException('File could not be found for '.$name);
-		} elseif (!$classFound) {
-			throw new \RuntimeException('Class or Interface could not be found for '.$name);
-		}
-	}
+    if (0 === strpos($name, 'GASS\\')) {
+        $filePath = str_replace('\\', DIRECTORY_SEPARATOR, $name);
+        $includePaths = explode(PATH_SEPARATOR, get_include_path());
+        $fileFound = false;
+        $classFound = false;
+        foreach ($includePaths as $includePath) {
+            $proposedPath = $includePath . DIRECTORY_SEPARATOR . $filePath . '.php';
+            if (@is_readable($proposedPath)) {
+                $fileFound = true;
+                require_once $proposedPath;
+                if (class_exists($name) || interface_exists($name)) {
+                    $classFound = true;
+                    break;
+                }
+            }
+        }
+        if (!$fileFound) {
+            throw new \RuntimeException('File could not be found for '.$name);
+        } elseif (!$classFound) {
+            throw new \RuntimeException('Class or Interface could not be found for '.$name);
+        }
+    }
 });

@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 
 /**
@@ -43,33 +43,33 @@ use GASS\Adapter;
 /**
  * Interface for all Http Adapters
  *
- * @uses		GASS\Adapter
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Validate
+ * @uses        GASS\Adapter
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Validate
  */
 interface Validate
-	extends Adapter\AdapterInterface
+    extends Adapter\AdapterInterface
 {
 
-	/**
-	 * Returns whether or not the value is valid
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 * @access public
-	 */
-	public function isValid($value);
+    /**
+     * Returns whether or not the value is valid
+     *
+     * @param mixed $value
+     * @return boolean
+     * @access public
+     */
+    public function isValid($value);
 
 
-	/**
-	 * Returns any issues that occurred during validation
-	 *
-	 * @return array
-	 * @access public
-	 */
-	public function getMessages();
+    /**
+     * Returns any issues that occurred during validation
+     *
+     * @return array
+     * @access public
+     */
+    public function getMessages();
 }

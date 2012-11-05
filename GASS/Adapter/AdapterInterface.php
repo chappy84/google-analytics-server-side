@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Adapter
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Adapter
  */
 
 /**
@@ -42,61 +42,61 @@ namespace GASS\Adapter;
 /**
  * An Interface for adapters in general
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Adapter
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Adapter
  */
 interface AdapterInterface
 {
 
-	/**
-	 * Class level constructor
-	 *
-	 * @param array $cacheOptions
-	 * @access public
-	 */
-	public function __construct(array $options = array());
+    /**
+     * Class level constructor
+     *
+     * @param array $cacheOptions
+     * @access public
+     */
+    public function __construct(array $options = array());
 
 
-	/**
-	 * Set Options related to class
-	 *
-	 * @param array $options
-	 * @return GASS\Adapter\AdapterInterface
-	 * @access public
-	 */
-	public function setOptions(array $options);
+    /**
+     * Set Options related to class
+     *
+     * @param array $options
+     * @return GASS\Adapter\AdapterInterface
+     * @access public
+     */
+    public function setOptions(array $options);
 
 
-	/**
-	 * Sets a specific option
-	 *
-	 * @param string $name
-	 * @param mixed $value
-	 * @return GASS\Adapter\AdapterInterface
-	 * @access public
-	 */
-	public function setOption($name, $value);
+    /**
+     * Sets a specific option
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return GASS\Adapter\AdapterInterface
+     * @access public
+     */
+    public function setOption($name, $value);
 
 
-	/**
-	 * Returns all options set
-	 *
-	 * @return array
-	 * @access public
-	 */
-	public function getOptions();
+    /**
+     * Returns all options set
+     *
+     * @return array
+     * @access public
+     */
+    public function getOptions();
 
 
-	/**
-	 * Returns a specific option
-	 *
-	 * @param string $name
-	 * @return mixed
-	 * @access public
-	 */
-	public function getOption($name);
+    /**
+     * Returns a specific option
+     *
+     * @param string $name
+     * @return mixed
+     * @access public
+     */
+    public function getOption($name);
 }

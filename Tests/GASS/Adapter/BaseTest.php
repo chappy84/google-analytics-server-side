@@ -21,61 +21,61 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GASSTests
- * @subpackage	Adapter
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Adapter
  */
 namespace GASSTests\GASS\Adapter;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
 
-	/**
-	 * @var GASS\BotInfo\Base
-	 * @access private
-	 */
-	private $baseAdapter;
+    /**
+     * @var GASS\BotInfo\Base
+     * @access private
+     */
+    private $baseAdapter;
 
 
-	public function setUp() 
-	{
-		parent::setUp();
-		$this->baseAdapter = $this->getMockForAbstractClass('GASS\Adapter\Base');
-	}
+    public function setUp()
+    {
+        parent::setUp();
+        $this->baseAdapter = $this->getMockForAbstractClass('GASS\Adapter\Base');
+    }
 
 
-	public function tearDown() 
-	{
-		parent::tearDown();
-	}
+    public function tearDown()
+    {
+        parent::tearDown();
+    }
 
 
-	public function testSetOptionsValid() 
-	{
-		$options = array('testOption1' => 'testValue1');
-		$this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOptions($options));
-		$this->assertEquals($options, $this->baseAdapter->getOptions());
-	}
+    public function testSetOptionsValid()
+    {
+        $options = array('testOption1' => 'testValue1');
+        $this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOptions($options));
+        $this->assertEquals($options, $this->baseAdapter->getOptions());
+    }
 
 
-	public function testSetOptionValid() 
-	{
-		$optionName = 'testOption2';
-		$optionValue = 'testValue2';
-		$this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOption($optionName, $optionValue));
-		$this->assertEquals($optionValue, $this->baseAdapter->getOption($optionName));
-	}
+    public function testSetOptionValid()
+    {
+        $optionName = 'testOption2';
+        $optionValue = 'testValue2';
+        $this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOption($optionName, $optionValue));
+        $this->assertEquals($optionValue, $this->baseAdapter->getOption($optionName));
+    }
 
 
-	public function testGetOptionNotSetOption() 
-	{
-		$this->assertNull($this->baseAdapter->getOption('notSetOption'));
-	}
+    public function testGetOptionNotSetOption()
+    {
+        $this->assertNull($this->baseAdapter->getOption('notSetOption'));
+    }
 }

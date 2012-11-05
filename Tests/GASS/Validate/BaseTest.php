@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GASSTests
- * @subpackage	Http
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Http
  */
 
 namespace GASSTests\GASS\Validate;
@@ -38,77 +38,77 @@ namespace GASSTests\GASS\Validate;
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
 
-	/**
-	 * @var GASS\Validate\Base
-	 * @access private
-	 */
-	private $baseValidator;
+    /**
+     * @var GASS\Validate\Base
+     * @access private
+     */
+    private $baseValidator;
 
 
-	public function setUp() 
-	{
-		parent::setUp();
-		$this->baseValidator = $this->getMockForAbstractClass('GASS\Validate\Base');
-	}
+    public function setUp()
+    {
+        parent::setUp();
+        $this->baseValidator = $this->getMockForAbstractClass('GASS\Validate\Base');
+    }
 
 
-	public function tearDown() 
-	{
-		parent::tearDown();
-	}
+    public function tearDown()
+    {
+        parent::tearDown();
+    }
 
 
-	public function testSetMessagesValidPopulatedArray() 
-	{
-		$testMessages = array(	'Test Message 1'
-							,	'Test Message 2');
-		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages($testMessages));
-		$this->assertEquals($testMessages, $this->baseValidator->getMessages());
-	}
+    public function testSetMessagesValidPopulatedArray()
+    {
+        $testMessages = array(  'Test Message 1',
+                                'Test Message 2');
+        $this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages($testMessages));
+        $this->assertEquals($testMessages, $this->baseValidator->getMessages());
+    }
 
 
-	public function testSetMessagesValidEmptyArray() 
-	{
-		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages(array()));
-		$this->assertEquals(array(), $this->baseValidator->getMessages());
-	}
+    public function testSetMessagesValidEmptyArray()
+    {
+        $this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages(array()));
+        $this->assertEquals(array(), $this->baseValidator->getMessages());
+    }
 
 
-	public function testSetMessagesInvalidDataType() 
-	{
-		$this->setExpectedException('PHPUnit_Framework_Error');
-		$this->baseValidator->setMessages('');
-	}
+    public function testSetMessagesInvalidDataType()
+    {
+        $this->setExpectedException('PHPUnit_Framework_Error');
+        $this->baseValidator->setMessages('');
+    }
 
 
-	public function testSetValue() 
-	{
-		$this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setValue(array()));
-		$this->assertEquals(array(), $this->baseValidator->getValue());
-		$testString = 'TestValue';
-		$this->baseValidator->setValue($testString);
-		$this->assertEquals($testString, $this->baseValidator->getValue());
-		$testClass = new \stdClass;
-		$this->baseValidator->setValue($testClass);
-		$this->assertEquals($testClass, $this->baseValidator->getValue());
-		$testInteger = 1;
-		$this->baseValidator->setValue($testInteger);
-		$this->assertEquals($testInteger, $this->baseValidator->getValue());
-	}
+    public function testSetValue()
+    {
+        $this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setValue(array()));
+        $this->assertEquals(array(), $this->baseValidator->getValue());
+        $testString = 'TestValue';
+        $this->baseValidator->setValue($testString);
+        $this->assertEquals($testString, $this->baseValidator->getValue());
+        $testClass = new \stdClass;
+        $this->baseValidator->setValue($testClass);
+        $this->assertEquals($testClass, $this->baseValidator->getValue());
+        $testInteger = 1;
+        $this->baseValidator->setValue($testInteger);
+        $this->assertEquals($testInteger, $this->baseValidator->getValue());
+    }
 
 
-	public function testAddMessage() 
-	{
-		$this->assertInstanceOf('GASS\Validate\Base',
-			$this->baseValidator->addMessage(	'"%value%" is a test value for test message 1'
-											,	'Test value')
-								->setValue(2)
-								->addMessage('Test message 2 had value "%value%"')
-		);
-		$this->assertEquals(
-				array(	'"Test value" is a test value for test message 1',
-						'Test message 2 had value "2"'),
-				$this->baseValidator->getMessages()
-		);
-	}
+    public function testAddMessage()
+    {
+        $this->assertInstanceOf('GASS\Validate\Base',
+            $this->baseValidator->addMessage(    '"%value%" is a test value for test message 1',
+                                                 'Test value')
+                                ->setValue(2)
+                                ->addMessage('Test message 2 had value "%value%"')
+        );
+        $this->assertEquals(
+                array(  '"Test value" is a test value for test message 1',
+                        'Test message 2 had value "2"'),
+                $this->baseValidator->getMessages()
+        );
+    }
 }

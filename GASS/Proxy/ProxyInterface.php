@@ -21,16 +21,16 @@
  * http://www.gnu.org/copyleft/gpl.html.
  *
  * N/B: This code is nether written or endorsed by Google or any of it's
- * 		employees. "Google" and "Google Analytics" are trademarks of
- * 		Google Inc. and it's respective subsidiaries.
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @link		http://github.com/chappy84/google-analytics-server-side
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Proxy
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Proxy
  */
 
 /**
@@ -41,53 +41,53 @@ namespace GASS\Proxy;
 /**
  * Interface for GASS Proxy classes
  *
- * @copyright	Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
- * @license		http://www.gnu.org/copyleft/gpl.html  GPL
- * @author 		Tom Chapman
- * @category	GoogleAnalyticsServerSide
- * @package		GoogleAnalyticsServerSide
- * @subpackage	Proxy
+ * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @author      Tom Chapman
+ * @category    GoogleAnalyticsServerSide
+ * @package     GoogleAnalyticsServerSide
+ * @subpackage  Proxy
  */
 interface ProxyInterface
 {
 
-	/**
-	 * Class Constructor
-	 *
-	 * @param array $options
-	 * @param string|GASS\Adapter\AdapterInterface $adapter [optional] - can be provided in $options aswell
-	 * @access public
-	 */
-	public function __construct(array $options = array(), $adapter = null);
+    /**
+     * Class Constructor
+     *
+     * @param array $options
+     * @param string|GASS\Adapter\AdapterInterface $adapter [optional] - can be provided in $options aswell
+     * @access public
+     */
+    public function __construct(array $options = array(), $adapter = null);
 
 
-	/**
-	 * Call magic method
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @throws GASS\Exception\DomainException
-	 * @return mixed
-	 * @access public
-	 */
-	public function __call($name, $arguments);
+    /**
+     * Call magic method
+     *
+     * @param string $name
+     * @param array $arguments
+     * @throws GASS\Exception\DomainException
+     * @return mixed
+     * @access public
+     */
+    public function __call($name, $arguments);
 
 
-	/**
-	 * Set the adapter to use
-	 *
-	 * @param string|GASS\Adapter\AdapterInterface $adapter
-	 * @return GASS\ProxyInterface
-	 * @access public
-	 */
-	public function setAdapter($adapter);
+    /**
+     * Set the adapter to use
+     *
+     * @param string|GASS\Adapter\AdapterInterface $adapter
+     * @return GASS\ProxyInterface
+     * @access public
+     */
+    public function setAdapter($adapter);
 
 
-	/**
-	 * Get the instance of the current adapter in use
-	 *
-	 * @return GASS\Adapter\AdapterInterface
-	 * @access public
-	 */
-	public function getAdapter();
+    /**
+     * Get the instance of the current adapter in use
+     *
+     * @return GASS\Adapter\AdapterInterface
+     * @access public
+     */
+    public function getAdapter();
 }
