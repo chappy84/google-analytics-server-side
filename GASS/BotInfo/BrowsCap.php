@@ -146,8 +146,8 @@ class BrowsCap extends Base
                 || false === ($fileSaveTime = @filemtime($latestVersionDateFile))
                 || $fileSaveTime < time() - 86400) {
             $latestDateString = trim(Http\Http::getInstance()
-                                                ->request(self::VERSION_DATE_URL)
-                                                ->getResponse());
+                                              ->request(self::VERSION_DATE_URL)
+                                              ->getResponse());
             if (false === @file_put_contents($latestVersionDateFile, trim($latestDateString))) {
                 throw new Exception\RuntimeException('Cannot save latest version date to file: '.$latestVersionDateFile);
             }

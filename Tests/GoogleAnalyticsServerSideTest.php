@@ -125,11 +125,11 @@ X-Content-Type-Options:nosniff');
     public function initialiseBrowserDetails()
     {
         $this->gass->setServerName('www.example.com')
-                    ->setRemoteAddress('123.123.123.123')
-                    ->setDocumentPath('/path/to/page')
-                    ->setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) '
-                                    .'AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5')
-                    ->setAcceptLanguage('en');
+                   ->setRemoteAddress('123.123.123.123')
+                   ->setDocumentPath('/path/to/page')
+                   ->setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) '
+                                  .'AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5')
+                   ->setAcceptLanguage('en');
         return $this;
     }
 
@@ -1047,8 +1047,8 @@ X-Content-Type-Options:nosniff');
     public function testTrackEventExceptionMissingAccount()
     {
         $this->initialiseHttpTestAdapterResponseGif()
-            ->initialiseBrowserDetails()
-            ->gass->disableCookieHeaders();
+             ->initialiseBrowserDetails()
+             ->gass->disableCookieHeaders();
         $this->setExpectedException('GASS\Exception\DomainException',
                                     'The account number must be set before any tracking can take place.');
         $this->gass->trackEvent('Test Category', 'Test Action', 'Test Label', 1);

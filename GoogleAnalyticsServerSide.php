@@ -337,7 +337,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             }
         }
         $this->setOptions($options)
-            ->setVersionFromJs();
+             ->setVersionFromJs();
     }
 
 
@@ -912,7 +912,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
                 $this->botInfo = new BotInfo\BotInfo();
             }
             $this->botInfo->setUserAgent($this->getUserAgent())
-                        ->setRemoteAddress($this->getRemoteAddress());
+                          ->setRemoteAddress($this->getRemoteAddress());
         } else {
             $this->botInfo = null;
         }
@@ -941,8 +941,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             }
         }
         Http\Http::setAcceptLanguage($this->getAcceptLanguage())
-                                    ->setRemoteAddress($this->getRemoteAddress())
-                                    ->setUserAgent($this->getUserAgent());
+                 ->setRemoteAddress($this->getRemoteAddress())
+                 ->setUserAgent($this->getUserAgent());
         $this->http = $http;
         return $this;
     }

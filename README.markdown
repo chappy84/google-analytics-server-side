@@ -32,7 +32,7 @@ Google Analytics Server Side can be used simply in the following manner:
 ```php
 $gass = new GoogleAnalyticsServerSide();
 $gass->setAccount('UA-XXXXXXX-X')
-    ->trackPageView();
+     ->trackPageView();
 ```
 
 The class constructor accepts an optional associative array parameter of available
@@ -44,7 +44,7 @@ e.g.
 ```php
 $gass = new GoogleAnalyticsServerSide();
 $gass->setAccount('UA-XXXXXXX-X')
-    ->setBotInfo(true);
+     ->setBotInfo(true);
 ```
 
 could also be done like this:
