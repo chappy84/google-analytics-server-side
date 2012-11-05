@@ -10,6 +10,7 @@ Version 0.8.4 Beta
 - Search Engine information used for organic campaign info changed format in 5.3.0, update to deal with that
 - Altered parameters to getEventString. Includes code to deal with Backwards Compatibility.
 - Default GASS\Http adapter is now GASS\Http\Curl, falls back to GASS\Http\Stream if php cURL extension is not available
+- Code to full PSR-2 compliant
 
 Version 0.8.3 Beta
 ------------------

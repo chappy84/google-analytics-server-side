@@ -109,7 +109,11 @@ All methods but get methods allow chaining for ease of use.
 Event tracking is implemented using the [same functionality as in the ga.js tracking code][6]
 
 ```php
-$gass->trackEvent('Category', 'Action', 'Label [optional]', Value [optional - integer], nonInteraction [optional - boolean]);
+$gass->trackEvent('Category',                             // string
+                  'Action',                               // string
+                  'Label',                                // string [optional]
+                  Value,                                  // integer [optional]
+                  nonInteraction);                        // boolean [optional]
 ```
 
 N.B. trackEvent() does not require trackPageView() to be called first.  
