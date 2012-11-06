@@ -43,8 +43,7 @@ require_once '../core.php';
  * @param string $name
  * @throws RuntimeException
  */
-spl_autoload_register(function ($name)
-    {
+spl_autoload_register(function ($name) {
     if (0 === strpos($name, 'GASSTests\\')) {
         $location = str_replace('Tests\\GASS\\', DIRECTORY_SEPARATOR, $name);
         $filePath = str_replace('\\', DIRECTORY_SEPARATOR, $location);

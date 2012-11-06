@@ -35,9 +35,8 @@
 
 namespace GASSTests;
 
-class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase {
-
-
+class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @var string
      * @access protected

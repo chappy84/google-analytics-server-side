@@ -35,8 +35,8 @@
 
 namespace GASSTests\GASS\BotInfo;
 
-class BotInfoTest extends \PHPUnit_Framework_TestCase {
-
+class BotInfoTest extends \PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         parent::setUp();
