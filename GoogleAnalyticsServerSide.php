@@ -482,7 +482,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     {
         $customVars = $this->getCustomVariables();
         $returnArray = array();
-        foreach($customVars as $customVar) {
+        foreach ($customVars as $customVar) {
             if ($customVar['scope'] == $scope) {
                 $returnArray[] = implode('=', $customVar);
             }
@@ -573,7 +573,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
                     && (!is_object($var) || !method_exists($var, '__toString'))) {
                 throw new Exception\InvalidArgumentException($description.' must be a string.');
             }
-            $var = (string)$var;
+            $var = (string) $var;
         }
         return $var;
     }
@@ -784,10 +784,10 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         if (128 < strlen($name.$value)) {
             throw new Exception\DomainException('The name / value combination exceeds the 128 byte custom var limit.');
         }
-        $this->customVariables['index'.$index] = array(  'index'    => (int)$index,
-                                                         'name'     => (string)$this->removeSpecialCustomVarChars($name),
-                                                         'value'    => (string)$this->removeSpecialCustomVarChars($value),
-                                                         'scope'    => (int)$scope);
+        $this->customVariables['index'.$index] = array(  'index'    => (int) $index,
+                                                         'name'     => (string) $this->removeSpecialCustomVarChars($name),
+                                                         'value'    => (string) $this->removeSpecialCustomVarChars($value),
+                                                         'scope'    => (int) $scope);
         return $this;
     }
 
@@ -1096,7 +1096,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $c = 0;
         if (!empty($domain)) {
             $a = 0;
-            for($h = strlen($domain)-1; $h>=0; $h--){
+            for ($h = strlen($domain)-1; $h>=0; $h--) {
                 $o = ord($domain[$h]);
                 $a = ($a << 6 & 268435455) + $o + ($o << 14);
                 $c = $a & 266338304;
@@ -1407,7 +1407,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             if (preg_match('/^'.$regEx.'$/i', $searchEngineString)) {
                 $searchEngineArray = preg_split('#\s+#', $searchEngineString);
                 $searchEngines = array();
-                foreach($searchEngineArray as $searchEngine) {
+                foreach ($searchEngineArray as $searchEngine) {
                     $searchEngineParts = explode(':', $searchEngine);
                     if (2 == count($searchEngineParts)) {
                         if (isset($searchEngines[$searchEngineParts[0]])

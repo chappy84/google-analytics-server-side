@@ -294,7 +294,7 @@ class BrowsCap extends Base
                 }
                 $returnBrowsDet[strtolower($key)] = $value;
             }
-            return ($returnArray === true) ? $returnBrowsDet : (object)$returnBrowsDet;
+            return ($returnArray === true) ? $returnBrowsDet : (object) $returnBrowsDet;
         }
         return false;
     }

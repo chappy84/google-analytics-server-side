@@ -130,7 +130,7 @@ class Curl extends Base
      */
     protected function close()
     {
-        if (is_resource($this->curl)){
+        if (is_resource($this->curl)) {
             curl_close($this->curl);
         }
         $this->curl = null;

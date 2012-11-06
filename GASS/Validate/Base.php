@@ -135,7 +135,7 @@ abstract class Base extends Adapter\Base implements Validate
             $value = $this->getValue();
         }
         $this->messages[] = (false !== strpos($message, '%value%'))
-                            ? str_replace('%value%', (string)$value, $message)
+                            ? str_replace('%value%', (string) $value, $message)
                             : $message;
         return $this;
     }
