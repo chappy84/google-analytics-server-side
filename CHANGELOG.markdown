@@ -1,6 +1,13 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.8.5 Beta
+------------------
+
+- Code to PSR-2 compliant  
+    ( using @fabpot's php coding standards fixer: https://github.com/fabpot/PHP-CS-Fixer )
+- Update URLs for the browscap project now Gary Keith has transfered ownership to a new project leader
+
 Version 0.8.4 Beta
 ------------------
 
@@ -10,9 +17,6 @@ Version 0.8.4 Beta
 - Search Engine information used for organic campaign info changed format in 5.3.0, update to deal with that
 - Altered parameters to getEventString. Includes code to deal with Backwards Compatibility.
 - Default GASS\Http adapter is now GASS\Http\Curl, falls back to GASS\Http\Stream if php cURL extension is not available
-- Code to PSR-2 compliant  
-    ( using @fabpot's php coding standards fixer: https://github.com/fabpot/PHP-CS-Fixer )
-- Update URLs for the browscap project now Gary Keith has transfered ownership to a new project leader
 
 Version 0.8.3 Beta
 ------------------
