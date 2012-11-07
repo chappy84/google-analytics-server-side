@@ -191,7 +191,7 @@ There are three options as part of the array configuration parameter:
 This can be implemented in the same way as the BrowsCap adapter.
 
 [7]: http://www.php.net/manual/en/misc.configuration.php#ini.browscap
-[8]: http://browsers.garykeith.com/downloads.asp
+[8]: http://tempdownloads.browserscap.com/ 
 [9]: http://user-agent-string.info/download
 
 Http

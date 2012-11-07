@@ -61,7 +61,7 @@ class BrowsCap extends Base
      *
      * @var string
      */
-    const BROWSCAP_URL = 'http://browsers.garykeith.com/stream.asp?PHP_BrowsCapINI';
+    const BROWSCAP_URL = 'http://tempdownloads.browserscap.com/stream.php?PHP_BrowsCapINI';
 
 
     /**
@@ -69,7 +69,7 @@ class BrowsCap extends Base
      *
      * @var string
      */
-    const VERSION_DATE_URL = 'http://browsers.garykeith.com/version-date';
+    const VERSION_DATE_URL = 'http://tempdownloads.browserscap.com/versions/version-date.php';
 
 
     /**

@@ -10,7 +10,8 @@ Version 0.8.4 Beta
 - Search Engine information used for organic campaign info changed format in 5.3.0, update to deal with that
 - Altered parameters to getEventString. Includes code to deal with Backwards Compatibility.
 - Default GASS\Http adapter is now GASS\Http\Curl, falls back to GASS\Http\Stream if php cURL extension is not available
-- Code to full PSR-2 compliant
+- Code to PSR-2 compliant
+    ( using @fabpot's php coding standards fixer: https://github.com/fabpot/PHP-CS-Fixer )
 
 Version 0.8.3 Beta
 ------------------
@@ -34,11 +35,22 @@ Version 0.8.0 Beta
 ------------------
 
 - Converted to PHP 5.3 with namespaces instead of PHP 5.2 virtual namespaces  
-    ( using @ralphschindler 's php-namespacer: https://github.com/ralphschindler/PHPTools )
+    ( using @ralphschindler's php-namespacer: https://github.com/ralphschindler/PHPTools )
 - Removed deprecated methods from main class
 - Removed get/setEvent, not in GA code and not needed, set is done directly in trackEvent
 - Removed support for old csv cache in UserAgentStringInfo which just stored user agents without IPs
 - BrowserCap renamed BrowsCap inline with PHP
+
+Version 0.7.13 Beta
+------------------
+
+- Fix a few issues existing in the code with un-defined / un-used variables
+
+Version 0.7.12 Beta
+-------------------
+
+- Ensure $php_errormsg has a value in GASS_Http_Stream so can be used when http request fails
+- Correct spelling mistakes (retreive -> retrieve)
 
 Version 0.7.11 Beta
 -------------------
