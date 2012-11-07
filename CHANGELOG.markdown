@@ -12,6 +12,7 @@ Version 0.8.4 Beta
 - Default GASS\Http adapter is now GASS\Http\Curl, falls back to GASS\Http\Stream if php cURL extension is not available
 - Code to PSR-2 compliant
     ( using @fabpot's php coding standards fixer: https://github.com/fabpot/PHP-CS-Fixer )
+- Update URLs for the browscap project now Gary Keith has transfered ownership to a new project leader
 
 Version 0.8.3 Beta
 ------------------
