@@ -71,4 +71,4 @@ spl_autoload_register(function ($name) {
             throw new \RuntimeException('Class or Interface could not be found for '.$name);
         }
     }
-});
+}, true, true);
