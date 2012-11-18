@@ -35,7 +35,7 @@
 /**
  * Add the current path to the include path if it's not already in there
  */
-$gassCurrentDir = dirname(__FILE__);
+$gassCurrentDir = __DIR__;
 $gassCurrentIncludePath = get_include_path();
 if (false === strpos($gassCurrentIncludePath, $gassCurrentDir)) {
     set_include_path($gassCurrentIncludePath.PATH_SEPARATOR.$gassCurrentDir);
