@@ -29,7 +29,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'core.php';
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @version     0.8.5 Beta
+ * @version     0.8.6 Beta
  * @category    GoogleAnalyticsServerSide
  * @package     GoogleAnalyticsServerSide
  * @example     $gass = new GoogleAnalyticsServerSide();
@@ -94,7 +94,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @var string
      * @access private
      */
-    private $version = '5.3.6';
+    private $version = '5.3.8';
 
 
     /**
@@ -134,16 +134,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 
 
     /**
-     * Google Analytics Account ID for the site
-     * value for utmac
-     *
-     * @var string
-     * @access private
-     */
-    private $account;
-
-
-    /**
      * Document Referer
      * value for utmr
      *
@@ -161,6 +151,25 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @access public
      */
     private $documentPath;
+
+
+    /**
+     * The value of the Do Not Track header
+     *
+     * @var integer|null
+     * @access private
+     */
+    private $doNotTrack;
+
+
+    /**
+     * Google Analytics Account ID for the site
+     * value for utmac
+     *
+     * @var string
+     * @access private
+     */
+    private $account;
 
 
     /**
@@ -301,6 +310,15 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 
 
     /**
+     * Whether or not to ignore the Do Not Track header
+     *
+     * @var boolean
+     * @access private
+     */
+    private $ignoreDoNotTrack = false;
+
+
+    /**
      * Class Level Constructor
      * Sets all the variables it can from the request headers received from the Browser
      *
@@ -330,6 +348,9 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         }
         if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $this->setAcceptLanguage($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        }
+        if (array_key_exists('HTTP_DNT', $_SERVER)) {
+            $this->setDoNotTrack($_SERVER['HTTP_DNT']);
         }
         foreach ($this->getCookies() as $name => $value) {
             if (!empty($_COOKIE[$name])) {
@@ -431,6 +452,15 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     public function getDocumentPath()
     {
         return $this->documentPath;
+    }
+
+
+    /**
+     * @return integer|null
+     */
+    public function getDoNotTrack()
+    {
+        return $this->doNotTrack;
     }
 
 
@@ -737,6 +767,23 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 
 
     /**
+     * @param integer|null $doNotTrack
+     * @return GoogleAnalyticsServerSide
+     * @access public
+     */
+    public function setDoNotTrack($doNotTrack)
+    {
+        if (!in_array($doNotTrack, array(1, 0, null, '1', '0', 'null'))) {
+            throw new Exception\InvalidArgumentException('$doNotTrack must have a value of 1, 0 or null');
+        } else if (is_string($doNotTrack)) {
+            $doNotTrack = ($doNotTrack === 'null') ? null : (int) $doNotTrack;
+        }
+        $this->doNotTrack = $doNotTrack;
+        return $this;
+    }
+
+
+    /**
      * @param string $pageTitle
      * @return GoogleAnalyticsServerSide
      * @access public
@@ -744,6 +791,21 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     public function setPageTitle($pageTitle)
     {
         $this->pageTitle = $this->getAsString($pageTitle, 'Page Title');
+        return $this;
+    }
+
+
+    /**
+     * @param boolean $ignoreDoNotTrack
+     * @return GoogleAnalyticsServerSide
+     * @access public
+     */
+    public function ignoreDoNotTrack($ignoreDoNotTrack = true)
+    {
+        if (!is_bool($ignoreDoNotTrack)) {
+            throw new Exception\InvalidArgumentException('$ignoreDoNotTrack must be a boolean.');
+        }
+        $this->ignoreDoNotTrack = $ignoreDoNotTrack;
         return $this;
     }
 
@@ -1494,8 +1556,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     private function track(array $extraParams = array())
     {
-        if ($this->botInfo !== null
-                && $this->botInfo->getIsBot()) {
+        if ((1 === $this->getDoNotTrack() && !$this->ignoreDoNotTrack)
+                || ($this->botInfo !== null && $this->botInfo->getIsBot())) {
             return false;
         }
 

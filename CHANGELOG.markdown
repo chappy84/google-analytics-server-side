@@ -1,6 +1,13 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.8.6 Beta
+------------------
+
+- Ensure the autoloader function is requested first so any other implemented autoloaders
+don't throw Exceptions when trying to load files from this framework
+- Add Do Not Track header functionality enabled by default. This can be disabled by calling ignoreDoNotTrack.
+
 Version 0.8.5 Beta
 ------------------
 
