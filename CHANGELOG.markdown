@@ -83,7 +83,8 @@ Version 0.7.10 Beta
 Version 0.7.9 Beta
 ------------------
 
-- Ensure user can use the Mobile GA accounts starting in "MO-" aswell. Lets utmip provide the user's location to GA.
+- 4: Ensure user can use the Mobile GA accounts starting in "MO-" aswell. Lets utmip provide the user's location to GA.
+  (https://github.com/chappy84/google-analytics-server-side/issues/4)
 - Remove un-required method call.
 - Silence parse_url when an issue occurs, return value is checked.
 
@@ -105,7 +106,8 @@ Version 0.7.7 Beta
 - Ensure the BrowserCap latest version date isn't retrieved more than once a day form the server.
 Store the version date in a one day cache file in same dir as php_browscap.ini. 
 - Make createPageView compatible with Google's trackPageView.
-- Fix issue chappy84/google-analytics-server-side#6 raised by skl with the event value being passed wrongly to Google.
+- 6: Fix issue with the event value being passed wrongly to Google.
+  (https://github.com/chappy84/google-analytics-server-side/issues/6)
 
 Version 0.7.6 Beta
 ------------------
@@ -136,6 +138,8 @@ Version 0.7.2 Beta
 ------------------
 
 - Check event value is integer.
+- 5: Readme updates from #skl
+  (https://github.com/chappy84/google-analytics-server-side/issues/5)
 
 Version 0.7.1 Beta
 ------------------
@@ -155,12 +159,16 @@ Version 0.7.0 Beta
 Version 0.6.4 Beta
 ------------------
 
-- Ensure bots.csv is not empty when received from url and ensure lines in csv aren't empty before dealing with them.
+- 3: Ensure bots.csv is not empty when received from url and ensure lines in csv aren't empty before dealing with them.
+  (https://github.com/chappy84/google-analytics-server-side/pull/3)
 
 Version 0.6.3 Beta
 ------------------
 
-- Ensure set cookie headers are only sent out once.
+- 1: Ensure set cookie headers are only sent out once.
+  (https://github.com/chappy84/google-analytics-server-side/issues/1)
+- 2: Readme Updates from #skl
+  (https://github.com/chappy84/google-analytics-server-side/issues/2)
 
 Version 0.6.2 Beta
 ------------------
