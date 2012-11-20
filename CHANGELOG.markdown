@@ -138,7 +138,7 @@ Version 0.7.2 Beta
 ------------------
 
 - Check event value is integer.
-- 5: Readme updates from #skl
+- 5: Readme updates from @skl
   (https://github.com/chappy84/google-analytics-server-side/issues/5)
 
 Version 0.7.1 Beta
@@ -167,7 +167,7 @@ Version 0.6.3 Beta
 
 - 1: Ensure set cookie headers are only sent out once.
   (https://github.com/chappy84/google-analytics-server-side/issues/1)
-- 2: Readme Updates from #skl
+- 2: Readme Updates from @skl
   (https://github.com/chappy84/google-analytics-server-side/issues/2)
 
 Version 0.6.2 Beta
