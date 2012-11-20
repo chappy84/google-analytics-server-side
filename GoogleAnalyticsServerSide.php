@@ -565,6 +565,16 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 
 
     /**
+     * @return boolean
+     * @access public
+     */
+    public function getIgnoreDoNotTrack()
+    {
+        return $this->ignoreDoNotTrack;
+    }
+
+
+    /**
      * Gets a specific option
      *
      * @param string $name
@@ -800,7 +810,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @return GoogleAnalyticsServerSide
      * @access public
      */
-    public function ignoreDoNotTrack($ignoreDoNotTrack = true)
+    public function setIgnoreDoNotTrack($ignoreDoNotTrack = true)
     {
         if (!is_bool($ignoreDoNotTrack)) {
             throw new Exception\InvalidArgumentException('$ignoreDoNotTrack must be a boolean.');
@@ -1556,7 +1566,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     private function track(array $extraParams = array())
     {
-        if ((1 === $this->getDoNotTrack() && !$this->ignoreDoNotTrack)
+        if ((1 === $this->getDoNotTrack() && !$this->getIgnoreDoNotTrack())
                 || ($this->botInfo !== null && $this->botInfo->getIsBot())) {
             return false;
         }
