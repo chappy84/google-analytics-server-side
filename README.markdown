@@ -1,10 +1,10 @@
 Google Analytics Server Side
 ============================
 
-Google Analytics Server Side is an implementation of the 
-[Google Analytics Web Tracking ECMAScript][1] in [PHP][2].  
-It implements parts of the interface that would be available without ECMAScript in a 
-Browser.
+Google Analytics Server Side is an implementation of the [Google Analytics Web Tracking ECMAScript][1] in [PHP][2].  
+It provides Server Side Google Analytics Tracking with a small easy to use PHP 5.3+ framework.  
+Implemented are the parts of the interface that would be available without [ECMAScript][5] in a 
+browser to detect certain features such as screen resolution / colour, flash / java plugin version etc.
 
 CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
 HOME: <http://github.com/chappy84/google-analytics-server-side>  
@@ -17,6 +17,7 @@ This PHP adaptation is maintained by [Tom Chapman][4].
 [2]: http://www.php.net/
 [3]: http://www.google.com/analytics
 [4]: http://tom-chapman.co.uk/
+[5]: http://en.wikipedia.org/wiki/ECMAScript
 
 Build Status
 ------------
@@ -57,7 +58,7 @@ $gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X',
 These options can also be set individually by the method setOption,
 or in one go with the method setOptions
 
-Most of the [current basic methods][5] available in ga.js tracking code have been 
+Most of the [current basic methods][6] available in ga.js tracking code have been 
 implemented.  
 The methods implemented are:
 
@@ -106,7 +107,7 @@ All methods but get methods allow chaining for ease of use.
 
 ### Event Tracking
 
-Event tracking is implemented using the [same functionality as in the ga.js tracking code][6]
+Event tracking is implemented using the [same functionality as in the ga.js tracking code][7]
 
 ```php
 $gass->trackEvent('Category',             // string
@@ -120,8 +121,8 @@ N.B. trackEvent() does not require trackPageView() to be called first.
 However if you do not call trackPageView first or set nonInteraction to true then your 
 pages/visit metric may become less than 1.
 
-[5]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration
-[6]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEventTracking
+[6]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration
+[7]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEventTracking
 
 BotInfo
 -------
@@ -142,8 +143,8 @@ There are two adapters available in the GASS framework
 #### BrowsCap
 There is one optional option as part of the array configuration parameter. 
 
-- browscap: This is the same as the php ini setting [browscap][7], a file-system location 
-where the [php_browscap.ini file][8] is located / can be downloaded to.
+- browscap: This is the same as the php ini setting [browscap][8], a file-system location 
+where the [php_browscap.ini file][9] is located / can be downloaded to.
 
 e.g.
 
@@ -168,7 +169,7 @@ $browsCapAdapter = new \GASS\BotInfo\BrowsCap;
 $gass->setBotInfo($browsCapAdapter);
 ```
 
-When an update for the browscap ini file is available [on the server][8] the code will 
+When an update for the browscap ini file is available [on the server][9] the code will 
 automatically download the file into the location provided.
 
 N/B: You MUST either provide the browscap setting or have it set in php.ini, otherwise 
@@ -181,7 +182,7 @@ functionality will work without the need to restart the web-server.
 
 #### UserAgentStringInfo
 This was the previous default for Google Analytics Server Side which downloads a csv list 
-of search engine crawlers from [user-agent-string.info][9].  
+of search engine crawlers from [user-agent-string.info][10].  
 There are three options as part of the array configuration parameter:
 
 - cachePath: where to save the list of bots downloaded from user-agent-string.info (required)
@@ -190,9 +191,9 @@ There are three options as part of the array configuration parameter:
 
 This can be implemented in the same way as the BrowsCap adapter.
 
-[7]: http://www.php.net/manual/en/misc.configuration.php#ini.browscap
-[8]: http://tempdownloads.browserscap.com/ 
-[9]: http://user-agent-string.info/download
+[8]: http://www.php.net/manual/en/misc.configuration.php#ini.browscap
+[9]: http://tempdownloads.browserscap.com/ 
+[10]: http://user-agent-string.info/download
 
 Http
 ----
@@ -227,7 +228,7 @@ There are two Adapters available to GASS\Http, these are:
 
 #### Stream
 Stream creates a stream context and utilises this stream with file_get_contents. See 
-[php's example][10]. Any options provided to this class will go into the 'http' array for 
+[php's example][11]. Any options provided to this class will go into the 'http' array for 
 the stream context, thus you may pass any headers or proxy information etc. into this to 
 use in the connection when made.
 
@@ -235,11 +236,11 @@ use in the connection when made.
 This utilises the php extension cURL. cURL is recommended, however as it's not always 
 available the code defaults to stream to allow all servers make http requests in the 
 correct way.  
-Any options provided to this class must be passed using the [curl constants][11] as 
+Any options provided to this class must be passed using the [curl constants][12] as 
 identifiers (associative array keys or option names).
 
-[10]: http://www.php.net/file_get_contents#example-2118
-[11]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
+[11]: http://www.php.net/file_get_contents#example-2118
+[12]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
 
 Location
 --------
@@ -268,12 +269,12 @@ The Bad News: This project is now a PHP 5.3+ project. PHP themselves no longer s
 PHP 5.2 as of August 2011 and with PHP 5.4 now available it's time we left 5.2 behind 
 (sorry to all those on shared hosting stuck with it).  
    
-The Good News: I have however left a [PHP 5.2 Branch][12] which you can feel free to use, 
+The Good News: I have however left a [PHP 5.2 Branch][13] which you can feel free to use, 
 fork etc.. I will try to fix any issues which arise in this branch. Please notify me of 
 any issues via the bugs link at the top of this readme, or via a pull request from your 
 fork if you've attempted a fix yourself.
 
-[12]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+[13]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 Quick Note on External Frameworks
 ---------------------------------
