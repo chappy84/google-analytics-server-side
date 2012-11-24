@@ -51,8 +51,8 @@ $gass->setAccount('UA-XXXXXXX-X')
 could also be done like this:
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X',
-    										'botInfo'	=> true));
+$gass = new GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X',
+                                            'botInfo' => true));
 ```
 
 These options can also be set individually by the method setOption,
@@ -110,11 +110,11 @@ All methods but get methods allow chaining for ease of use.
 Event tracking is implemented using the [same functionality as in the ga.js tracking code][7]
 
 ```php
-$gass->trackEvent('Category',             // string
-                  'Action',               // string
-                  'Label',                // string [optional]
-                  Value,                  // integer [optional]
-                  nonInteraction);        // boolean [optional]
+$gass->trackEvent(string $category, 
+                  string $action, 
+                 [string $label, 
+                 [int    $value, 
+                 [bool   $nonInteraction = false]]]);
 ```
 
 N.B. trackEvent() does not require trackPageView() to be called first.  
@@ -149,22 +149,22 @@ where the [php_browscap.ini file][9] is located / can be downloaded to.
 e.g.
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> true,
-    										'account'	=> 'UA-XXXXXXX-X'));
+$gass = new GoogleAnalyticsServerSide(array('botInfo' => true,
+                                            'account' => 'UA-XXXXXXX-X'));
 ```
 
 or
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('botInfo' 	=> array(	'adapter' => 'BrowsCap',
-    																'browscap'=> '/tmp/php_browscap.ini'),
-    										'account'	=> 'UA-XXXXXXX-X'));
+$gass = new GoogleAnalyticsServerSide(array('botInfo' => array('adapter' => 'BrowsCap',
+                                                               'browscap'=> '/tmp/php_browscap.ini'),
+                                            'account' => 'UA-XXXXXXX-X'));
 ```
 
 or
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'))
+$gass = new GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'))
 $browsCapAdapter = new \GASS\BotInfo\BrowsCap;
 $gass->setBotInfo($browsCapAdapter);
 ```
@@ -209,16 +209,16 @@ array or an instance of the required adapter.
 e.g.
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X',
-    										'http'		=> array(	'adapter'		=> 'Curl',
-    																CURLOPT_PROXY	=> 'http://exampleproxy.local:8080'));
+$gass = new GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X',
+                                            'http'    => array('adapter'     => 'Curl',
+                                                               CURLOPT_PROXY => 'http://exampleproxy.local:8080'));
 ```
 
 or
 
 ```php
 $httpAdapter = new \GASS\Http\Stream();
-$gass = new GoogleAnalyticsServerSide(array('account'	=> 'UA-XXXXXXX-X'));
+$gass = new GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'));
 $gass->setHttp($httpAdapter);
 ```
 
