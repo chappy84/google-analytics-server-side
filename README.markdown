@@ -234,7 +234,7 @@ use in the connection when made.
 
 #### Curl
 This utilises the php extension cURL. cURL is recommended, however as it's not always 
-available the code defaults to stream to allow all servers make http requests in the 
+available the code falls back to stream to allow all servers make http requests in the 
 correct way.  
 Any options provided to this class must be passed using the [curl constants][12] as 
 identifiers (associative array keys or option names).
