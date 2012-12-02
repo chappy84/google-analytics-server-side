@@ -360,8 +360,10 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         if (array_key_exists('HTTP_DNT', $_SERVER)) {
             $this->setDoNotTrack($_SERVER['HTTP_DNT']);
         }
-        $this->setOptions($options)
-             ->setVersionFromJs();
+        $this->setOptions($options);
+        if (!isset($options['version'])) {
+             $this->setVersionFromJs();
+        }
     }
 
 
