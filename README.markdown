@@ -1,8 +1,8 @@
 Google Analytics Server Side
 ============================
 
-Google Analytics Server Side is an implementation of the [Google Analytics Web Tracking ECMAScript][1] in [PHP][2].  
-It provides Server Side Google Analytics Tracking with a small easy to use PHP 5.3+ framework.  
+Google Analytics Server Side is an implementation of the [Google Analytics web tracking ECMAScript][1] in [PHP][2].  
+It provides server side Google Analytics tracking with a small easy to use PHP 5.3+ framework.  
 Implemented are the parts of the interface that would be available without [ECMAScript][5] in a 
 browser to detect certain features such as screen resolution / colour, flash / java plugin version etc.
 
@@ -269,18 +269,12 @@ legislation ever introduced by bureaucrats that don't understand either the tech
 itself or the ridiculously easy work arounds using such things as Javascript, Flash, 
 Silverlight, etc. See [@samyk][13]'s [evercookie][14] if you don't know.
 
-Anyway, in response to this since Google themselves deal with the [Do Not Track][15] header 
-and obey the user's preference then this framework should silently deal with this 
-header in the same way, thus the code deals with the user's preference by default.
+Anyway, in response to this, since Google themselves deal with the [Do Not Track][15] header 
+and to obey the user's preference this framework should silently deal with this 
+header in the same way, thus the user's preference is taken into accepted by default.
 
 This framework however provides the developer the option to ignore the user's preference.  
 You can do this by making the following call:
-
-```php
-$gass->setIgnoreDoNotTrack();
-```
-
-or 
 
 ```php
 $gass->setIgnoreDoNotTrack(true);
@@ -306,7 +300,7 @@ framework on the supported minor versions 5.3 and 5.4. This is done by default o
 bug fix point release of that minor point version to ensure it works. If you find any bugs 
 in previous point releases then please raise an issue via the link at the top of this readme.  
    
-#### A Note on PHP 5.2
+#### PHP 5.2
 
 A [PHP 5.2 Branch][18] has been left which you can feel free to use, fork etc.. Any issues 
 which arise in this branch will have a fix attempted as soon as time is available. Please 
