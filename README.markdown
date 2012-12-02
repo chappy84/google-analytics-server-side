@@ -271,7 +271,7 @@ Silverlight, etc. See [@samyk][13]'s [evercookie][14] if you don't know.
 
 Anyway, in response to this, since Google themselves deal with the [Do Not Track][15] header 
 and to obey the user's preference this framework should silently deal with this 
-header in the same way, thus the user's preference is taken into accepted by default.
+header in the same way, thus the user's preference is accepted by default.
 
 This framework however provides the developer the option to ignore the user's preference.  
 You can do this by making the following call:
