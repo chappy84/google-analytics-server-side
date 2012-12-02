@@ -242,10 +242,10 @@ identifiers (associative array keys or option names).
 [11]: http://www.php.net/file_get_contents#example-2118
 [12]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
 
-Location
---------
+End User Location
+-----------------
 
-The Location will be reported as the location of the server if you use the GA Account 
+The End User's Location will be reported as the location of the server if you use the GA Account 
 number in the format UA-XXXXXXX-X as provided by Google. If you alter this to the format 
 MO-XXXXXXX-X then the location will be tracked correctly and appear on the location map as 
 it does with the normal ECMAScript tracking.
