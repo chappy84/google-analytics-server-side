@@ -238,6 +238,14 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
                                  '__utmv'    => null,
                                  '__utmz'    => null);
 
+    /**
+     * Whether or not setCookies has been called
+     *
+     * @var boolean
+     * @access private
+     */
+    private $setCookiesCalled = false;
+
 
     /**
      * Search engines and their query parameters
@@ -351,11 +359,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         }
         if (array_key_exists('HTTP_DNT', $_SERVER)) {
             $this->setDoNotTrack($_SERVER['HTTP_DNT']);
-        }
-        foreach ($this->getCookies() as $name => $value) {
-            if (!empty($_COOKIE[$name])) {
-                $this->setCookie($name, $_COOKIE[$name], false);
-            }
         }
         $this->setOptions($options)
              ->setVersionFromJs();
@@ -1163,7 +1166,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     public function getDomainHash($domain = null)
     {
         $domain = ($domain === null) ? $this->serverName
-                                    : $this->getAsString($domain, 'Domain');
+                                     : $this->getAsString($domain, 'Domain');
         $a = 1;
         $c = 0;
         if (!empty($domain)) {
@@ -1182,9 +1185,9 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     /**
      * Sets the google analytics cookies with the relevant values. For the relevant sections
      * see: https://developers.google.com/analytics/resources/concepts/gaConceptsCookies
-     * see: http://www.analyticsevangelist.com/google-analytics/how-to-read-google-analytics-cookies/
-     * see: http://www.cheatography.com/jay-taylor/cheat-sheets/google-analytics-cookies-v2/
-     * see: http://www.tutkiun.com/2011/04/a-google-analytics-cookie-explained.html
+     *      http://www.analyticsevangelist.com/google-analytics/how-to-read-google-analytics-cookies/
+     *      http://www.cheatography.com/jay-taylor/cheat-sheets/google-analytics-cookies-v2/
+     *      http://www.tutkiun.com/2011/04/a-google-analytics-cookie-explained.html
      *
      * @param array $cookies [optional]
      * @return GoogleAnalyticsServerSide
@@ -1192,6 +1195,11 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     public function setCookies(array $cookies = array())
     {
+        $doNotTrack = (1 === $this->getDoNotTrack() && !$this->getIgnoreDoNotTrack()) ? true : false;
+        if (!$this->setCookiesCalled && !$doNotTrack && empty($cookies)) {
+            $this->setCookiesFromRequestHeaders();
+        }
+        $this->setCookiesCalled = true;
         $cookies = (empty($cookies)) ? $this->getCookies() : $cookies;
 
         // Check the cookies provided are valid for this class, getCookie will throw the exception if the name isn't valid
@@ -1199,33 +1207,24 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             $this->getCookie($name);
         }
 
-        $doNotTrackHeader = $this->getDoNotTrack();
-        $doNotTrack = ($doNotTrackHeader === 1 && !$this->getIgnoreDoNotTrack()) ? true : false;
-
         /**
-         * Don't retrieve the current values from cookies if obeying do not track
+         * Get the correct values out of the google analytics cookies
          */
-        if (!$doNotTrack) {
-
-            /**
-             * Get the correct values out of the google analytics cookies
-             */
-            if (!empty($cookies['__utma'])) {
-                list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma'], 6);
-            }
-            if (!empty($cookies['__utmb'])) {
-                list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb'], 4);
-            }
-            if (!empty($cookies['__utmc'])) {
-                $domainId = $cookies['__utmc'];
-            }
-            if (!empty($cookies['__utmv']) && false !== strpos($cookies['__utmv'], '.|')) {
-                list($domainId, $customVars) = explode('.|', $cookies['__utmv'], 2);
-                $this->setCustomVarsFromCookie($customVars);
-            }
-            if (!empty($cookies['__utmz'])) {
-                list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters) = explode('.', $cookies['__utmz'], 5);
-            }
+        if (!empty($cookies['__utma'])) {
+            list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma'], 6);
+        }
+        if (!empty($cookies['__utmb'])) {
+            list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb'], 4);
+        }
+        if (!empty($cookies['__utmc'])) {
+            $domainId = $cookies['__utmc'];
+        }
+        if (!empty($cookies['__utmv']) && false !== strpos($cookies['__utmv'], '.|')) {
+            list($domainId, $customVars) = explode('.|', $cookies['__utmv'], 2);
+            $this->setCustomVarsFromCookie($customVars);
+        }
+        if (!empty($cookies['__utmz'])) {
+            list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters) = explode('.', $cookies['__utmz'], 5);
         }
 
         /**
@@ -1454,6 +1453,23 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             return $this->cookies[$name];
         }
         throw new Exception\OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
+    }
+
+
+    /**
+     * Sets the cookies values inside the class from
+     * the cookies sent with the request headers
+     *
+     * @return GoogleAnalyticsServerSide
+     * @access public
+     */
+    public function setCookiesFromRequestHeaders() {
+        foreach ($this->getCookies() as $name => $value) {
+            if (!empty($_COOKIE[$name])) {
+                $this->setCookie($name, $_COOKIE[$name], false);
+            }
+        }
+        return $this;
     }
 
 
