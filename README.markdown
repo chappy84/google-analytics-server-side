@@ -262,6 +262,39 @@ You do have the option to turn off the sending of the cookie headers to the brow
 can be done by calling disableCookieHeaders before calling trackPageView / trackEvent for 
 the first time.
 
+#### EU Cookie Law and the Do Not Track header
+
+Yep, as European web developers we all hate one of the most idiotic and stupid pieces of 
+legislation ever introduced by bureaucrats that don't understand either the technology 
+itself or the ridiculously easy work arounds using such things as Javascript, Flash, 
+Silverlight, etc. See @samyk's [evercookie][13] if you don't know.
+
+Anyway, in response to this since Google themselves deal with the [Do Not Track][14] header 
+and obey the user's preference then this framework should silently deal with this 
+header in the same way, thus the code deals with the user's preference by default.
+
+This framework however provides the developer the option to ignore the user's preference.  
+You can do this by making the following call:
+
+```php
+$gass->setIgnoreDoNotTrack();
+```
+
+or 
+
+```php
+$gass->setIgnoreDoNotTrack(true);
+```
+
+To reverse this and no longer ignore the Do Not Track header you can make the following call:
+
+```php
+$gass->setIgnoreDoNotTrack(false);
+```
+
+[13]: https://github.com/samyk/evercookie
+[14]: http://www.w3.org/TR/tracking-dnt/
+
 PHP Version
 -----------
 
@@ -269,12 +302,12 @@ The Bad News: This project is now a PHP 5.3+ project. PHP themselves no longer s
 PHP 5.2 as of August 2011 and with PHP 5.4 now available it's time we left 5.2 behind 
 (sorry to all those on shared hosting stuck with it).  
    
-The Good News: I have however left a [PHP 5.2 Branch][13] which you can feel free to use, 
-fork etc.. I will try to fix any issues which arise in this branch. Please notify me of 
-any issues via the bugs link at the top of this readme, or via a pull request from your 
-fork if you've attempted a fix yourself.
+The Good News: A [PHP 5.2 Branch][13] has been left which you can feel free to use, 
+fork etc.. Any issues which arise in this branch will have a fix attempted as soon as 
+time is available. Please lodge any issues via the bugs link at the top of this readme, 
+or via a pull request from your fork if you've attempted a fix yourself.
 
-[13]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+[15]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 Quick Note on External Frameworks
 ---------------------------------

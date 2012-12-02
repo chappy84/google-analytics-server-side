@@ -777,16 +777,16 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 
 
     /**
-     * @param integer|null $doNotTrack
+     * @param integer|string|null $doNotTrack
      * @return GoogleAnalyticsServerSide
      * @access public
      */
     public function setDoNotTrack($doNotTrack)
     {
-        if (!in_array($doNotTrack, array(1, 0, null, '1', '0', 'null'))) {
-            throw new Exception\InvalidArgumentException('$doNotTrack must have a value of 1, 0 or null');
+        if (!in_array($doNotTrack, array(1, 0, null, '1', '0', 'null', 'unset'))) {
+            throw new Exception\InvalidArgumentException('$doNotTrack must have a value of 1, 0, \'unset\' or null');
         } else if (is_string($doNotTrack)) {
-            $doNotTrack = ($doNotTrack === 'null') ? null : (int) $doNotTrack;
+            $doNotTrack = (is_numeric($doNotTrack)) ? (int) $doNotTrack : null;
         }
         $this->doNotTrack = $doNotTrack;
         return $this;
@@ -1181,6 +1181,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 
     /**
      * Sets the google analytics cookies with the relevant values. For the relevant sections
+     * see: https://developers.google.com/analytics/resources/concepts/gaConceptsCookies
      * see: http://www.analyticsevangelist.com/google-analytics/how-to-read-google-analytics-cookies/
      * see: http://www.cheatography.com/jay-taylor/cheat-sheets/google-analytics-cookies-v2/
      * see: http://www.tutkiun.com/2011/04/a-google-analytics-cookie-explained.html
@@ -1198,24 +1199,33 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             $this->getCookie($name);
         }
 
+        $doNotTrackHeader = $this->getDoNotTrack();
+        $doNotTrack = ($doNotTrackHeader === 1 && !$this->getIgnoreDoNotTrack()) ? true : false;
+
         /**
-         * Get the correct values out of the google analytics cookies
+         * Don't retrieve the current values from cookies if obeying do not track
          */
-        if (!empty($cookies['__utma'])) {
-            list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma'], 6);
-        }
-        if (!empty($cookies['__utmb'])) {
-            list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb'], 4);
-        }
-        if (!empty($cookies['__utmc'])) {
-            $domainId = $cookies['__utmc'];
-        }
-        if (!empty($cookies['__utmv']) && false !== strpos($cookies['__utmv'], '.|')) {
-            list($domainId, $customVars) = explode('.|', $cookies['__utmv'], 2);
-            $this->setCustomVarsFromCookie($customVars);
-        }
-        if (!empty($cookies['__utmz'])) {
-            list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters) = explode('.', $cookies['__utmz'], 5);
+        if (!$doNotTrack) {
+
+            /**
+             * Get the correct values out of the google analytics cookies
+             */
+            if (!empty($cookies['__utma'])) {
+                list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma'], 6);
+            }
+            if (!empty($cookies['__utmb'])) {
+                list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb'], 4);
+            }
+            if (!empty($cookies['__utmc'])) {
+                $domainId = $cookies['__utmc'];
+            }
+            if (!empty($cookies['__utmv']) && false !== strpos($cookies['__utmv'], '.|')) {
+                list($domainId, $customVars) = explode('.|', $cookies['__utmv'], 2);
+                $this->setCustomVarsFromCookie($customVars);
+            }
+            if (!empty($cookies['__utmz'])) {
+                list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters) = explode('.', $cookies['__utmz'], 5);
+            }
         }
 
         /**
@@ -1286,20 +1296,23 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             $campaignNumber++;
         }
 
+        $sendCookieHeaders = ($this->sendCookieHeaders && !$doNotTrack) ? true : false;
         /**
          * Set the cookies to the required values
          */
-        $this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session, $this->sendCookieHeaders);
-        $this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit, $this->sendCookieHeaders);
-        $this->setCookie('__utmc', $domainId, $this->sendCookieHeaders);
-        $this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$campaignNumber.'.'.$campaignParameters, $this->sendCookieHeaders);
+        $this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session, $sendCookieHeaders);
+        $this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit, $sendCookieHeaders);
+        $this->setCookie('__utmc', $domainId, $sendCookieHeaders);
+        $this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$campaignNumber.'.'.$campaignParameters, $sendCookieHeaders);
 
         $scope1Vars = $this->getCustomVarsByScope(1);
         if (!empty($scope1Vars)) {
-            $this->setCookie('__utmv', $domainId.'.|'.implode('^', $scope1Vars), $this->sendCookieHeaders);
+            $this->setCookie('__utmv', $domainId.'.|'.implode('^', $scope1Vars), $sendCookieHeaders);
         }
 
-        $this->disableCookieHeaders();
+        if ($sendCookieHeaders) {
+            $this->disableCookieHeaders();
+        }
         return $this;
     }
 
@@ -1566,8 +1579,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     private function track(array $extraParams = array())
     {
-        if ((1 === $this->getDoNotTrack() && !$this->getIgnoreDoNotTrack())
-                || ($this->botInfo !== null && $this->botInfo->getIsBot())) {
+        if ($this->botInfo !== null && $this->botInfo->getIsBot()) {
             return false;
         }
 
