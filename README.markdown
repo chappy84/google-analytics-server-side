@@ -267,9 +267,9 @@ the first time.
 Yep, as European web developers we all hate one of the most idiotic and stupid pieces of 
 legislation ever introduced by bureaucrats that don't understand either the technology 
 itself or the ridiculously easy work arounds using such things as Javascript, Flash, 
-Silverlight, etc. See @samyk's [evercookie][13] if you don't know.
+Silverlight, etc. See [@samyk][13]'s [evercookie][14] if you don't know.
 
-Anyway, in response to this since Google themselves deal with the [Do Not Track][14] header 
+Anyway, in response to this since Google themselves deal with the [Do Not Track][15] header 
 and obey the user's preference then this framework should silently deal with this 
 header in the same way, thus the code deals with the user's preference by default.
 
@@ -292,8 +292,9 @@ To reverse this and no longer ignore the Do Not Track header you can make the fo
 $gass->setIgnoreDoNotTrack(false);
 ```
 
-[13]: https://github.com/samyk/evercookie
-[14]: http://www.w3.org/TR/tracking-dnt/
+[13]: https://github.com/samyk
+[14]: https://github.com/samyk/evercookie
+[15]: http://www.w3.org/TR/tracking-dnt/
 
 PHP Version
 -----------
@@ -307,7 +308,7 @@ fork etc.. Any issues which arise in this branch will have a fix attempted as so
 time is available. Please lodge any issues via the bugs link at the top of this readme, 
 or via a pull request from your fork if you've attempted a fix yourself.
 
-[15]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+[16]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 Quick Note on External Frameworks
 ---------------------------------
