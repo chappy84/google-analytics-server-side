@@ -299,16 +299,23 @@ $gass->setIgnoreDoNotTrack(false);
 PHP Version
 -----------
 
-The Bad News: This project is now a PHP 5.3+ project. PHP themselves no longer support 
-PHP 5.2 as of August 2011 and with PHP 5.4 now available it's time we left 5.2 behind 
-(sorry to all those on shared hosting stuck with it).  
-   
-The Good News: A [PHP 5.2 Branch][13] has been left which you can feel free to use, 
-fork etc.. Any issues which arise in this branch will have a fix attempted as soon as 
-time is available. Please lodge any issues via the bugs link at the top of this readme, 
-or via a pull request from your fork if you've attempted a fix yourself.
+The minimum supported version is PHP 5.3.3
 
-[16]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+This framework uses [PHPUnit][16], via [TravisCI][17], to test the functionality of the 
+framework on the supported minor versions 5.3 and 5.4. This is done by default on the latest 
+bug fix point release of that minor point version to ensure it works. If you find any bugs 
+in previous point releases then please raise an issue via the link at the top of this readme.  
+   
+#### A Note on PHP 5.2
+
+A [PHP 5.2 Branch][18] has been left which you can feel free to use, fork etc.. Any issues 
+which arise in this branch will have a fix attempted as soon as time is available. Please 
+lodge any issues via the bugs link at the top of this readme, or via a pull request from 
+your fork if you've attempted a fix yourself.
+
+[16]: https://github.com/sebastianbergmann/phpunit
+[17]: https://travis-ci.org/
+[18]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 Quick Note on External Frameworks
 ---------------------------------
