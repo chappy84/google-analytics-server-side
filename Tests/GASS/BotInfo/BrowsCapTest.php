@@ -32,3 +32,94 @@
  * @package     GoogleAnalyticsServerSide
  * @subpackage  BotInfo
  */
+
+namespace GASSTests\GASS\BotInfo;
+
+class BrowsCapTest extends \PHPUnit_Framework_TestCase
+{
+    private $iniFileLocation;
+
+    
+    public function setUp()
+    {
+        parent::setUp();
+        $this->iniFileLocation = realpath(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR
+                                          .'dependency-files'.DIRECTORY_SEPARATOR.'php_browscap.ini');
+    }
+
+
+    public function tearDown()
+    {
+        parent::tearDown();
+    }
+
+
+    public function testConstructValidNoArguments()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap();
+        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
+    }
+
+
+    public function testConstructValidBrowscapInOptions()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                        'browscap' => $this->iniFileLocation
+                    ));
+        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
+        $this->assertEquals($this->iniFileLocation, $browsCap->getOption('browscap'));
+    }
+
+
+    public function testConstructValidUnknownOptions()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                        'tripe' => $this->iniFileLocation
+                    ));
+        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
+        $this->assertEquals($this->iniFileLocation, $browsCap->getOption('tripe'));
+    }
+
+
+    public function testGetLatestVersionDate()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                        'browscap' => $this->iniFileLocation
+                    ));
+        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
+        $this->assertEquals($this->iniFileLocation, $browsCap->getOption('browscap'));
+        $this->assertEquals(strtotime(file_get_contents(dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt')),
+                            $browsCap->getLatestVersionDate());
+    }
+
+
+    public function testGetBrowserValid()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                        'browscap' => $this->iniFileLocation
+                    ));
+        $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
+        $browserResult = $browsCap->getBrowser($firefoxUserAgent);
+        $this->assertEquals($firefoxUserAgent, $browsCap->getUserAgent());
+        $this->assertInstanceOf('stdClass', $browserResult);
+        $this->assertEquals('MacOSX', $browserResult->platform);
+        $this->assertEquals('Firefox', $browserResult->browser);
+        $this->assertEquals('17.0', $browserResult->version);
+        $this->assertEquals('17', $browserResult->majorver);
+        $this->assertEquals('0', $browserResult->minorver);
+        $this->assertEquals(true, $browserResult->cookies);
+        $this->assertEquals(true, $browserResult->javascript);
+
+        $googleBotUserAgent = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+        $crawlerResult = $browsCap->getBrowser($googleBotUserAgent);
+        $this->assertEquals($googleBotUserAgent, $browsCap->getUserAgent());
+        $this->assertInstanceOf('stdClass', $crawlerResult);
+        $this->assertEquals('unknown', $crawlerResult->platform);
+        $this->assertEquals('Googlebot', $crawlerResult->browser);
+        $this->assertEquals('2.1', $crawlerResult->version);
+        $this->assertEquals('2', $crawlerResult->majorver);
+        $this->assertEquals('1', $crawlerResult->minorver);
+        $this->assertEquals(false, $crawlerResult->cookies);
+        $this->assertEquals(false, $crawlerResult->javascript);
+    }
+}
