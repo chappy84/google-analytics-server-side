@@ -39,10 +39,11 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 {
     private $iniFileLocation;
 
-    
+
     public function setUp()
     {
         parent::setUp();
+        \GASS\Http\Http::getInstance(array(), new \GASS\Http\Test);
         $this->iniFileLocation = realpath(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR
                                           .'dependency-files'.DIRECTORY_SEPARATOR.'php_browscap.ini');
     }
@@ -121,5 +122,64 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1', $crawlerResult->minorver);
         $this->assertEquals(false, $crawlerResult->cookies);
         $this->assertEquals(false, $crawlerResult->javascript);
+    }
+
+
+    public function testGetBrowserValidReturnArray()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                'browscap' => $this->iniFileLocation
+        ));
+        $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
+        $browserResult = $browsCap->getBrowser($firefoxUserAgent, true);
+        $this->assertTrue(is_array($browserResult));
+        $this->assertNotEmpty($browserResult);
+        $this->assertArrayHasKey('browser', $browserResult);
+    }
+
+    public function testGetBrowserNoArguments()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                'browscap' => $this->iniFileLocation
+        ));
+        $this->assertEquals(false, $browsCap->getBrowser());
+        $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
+        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap->setUserAgent($firefoxUserAgent));
+        $browserResult = $browsCap->getBrowser();
+        $this->assertEquals($firefoxUserAgent, $browsCap->getUserAgent());
+        $this->assertInstanceOf('stdClass', $browserResult);
+    }
+
+    public function testGetBrowserEmptyUserAgent()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                        'browscap' => $this->iniFileLocation
+                    ));
+        $this->assertEquals(false, $browsCap->getBrowser(''));
+    }
+
+    public function testGetIsBotValid()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                'browscap' => $this->iniFileLocation
+        ));
+        $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
+        $this->assertFalse($browsCap->getIsBot($firefoxUserAgent));
+        $this->assertEquals($firefoxUserAgent, $browsCap->getUserAgent());
+        $googleBotUserAgent = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+        $this->assertTrue($browsCap->getIsBot($googleBotUserAgent));
+        $this->assertEquals($googleBotUserAgent, $browsCap->getUserAgent());
+        $this->assertTrue($browsCap->getIsBot(''));
+        $this->assertEquals('', $browsCap->getUserAgent());
+    }
+
+    public function testGetIsBotSetRemoteAddress()
+    {
+        $browsCap = new \GASS\BotInfo\BrowsCap(array(
+                'browscap' => $this->iniFileLocation
+        ));
+        $testIpAddress = '123.123.123.123';
+        $browsCap->getIsBot('', $testIpAddress);
+        $this->assertEquals($testIpAddress, $browsCap->getRemoteAddress());
     }
 }

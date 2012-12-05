@@ -281,7 +281,8 @@ class BrowsCap extends Base
                 break;
             }
         }
-        if (false !== ($browserDetails = $this->getBrowserDetails($browser))) {
+        if (false !== ($browserDetails = $this->getBrowserDetails($browser))
+                && 'Default Browser' !== $browserDetails['Browser']) {
             $returnBrowsDet = array();
             $browserRegex = $this->getBrowserRegex($browser);
             $returnBrowsDet['browser_name_regex'] = substr($browserRegex, 0, strlen($browserRegex) - 1);
