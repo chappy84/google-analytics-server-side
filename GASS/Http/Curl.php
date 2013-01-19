@@ -24,7 +24,7 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
@@ -44,7 +44,7 @@ use GASS\Exception;
  * cURL adapter for Http
  *
  * @uses        GASS\Exception
- * @copyright   Copyright (c) 2011-2012 Tom Chapman (http://tom-chapman.co.uk/)
+ * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @category    GoogleAnalyticsServerSide
