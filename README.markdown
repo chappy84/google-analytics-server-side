@@ -31,7 +31,7 @@ Usage
 Google Analytics Server Side can be used simply in the following manner:
 
 ```php
-$gass = new GoogleAnalyticsServerSide();
+$gass = new GoogleAnalyticsServerSide;
 $gass->setAccount('UA-XXXXXXX-X')
      ->trackPageView();
 ```
@@ -43,7 +43,7 @@ then it can be passed as part of the array to the class.
 e.g.
 
 ```php
-$gass = new GoogleAnalyticsServerSide();
+$gass = new GoogleAnalyticsServerSide;
 $gass->setAccount('UA-XXXXXXX-X')
      ->setBotInfo(true);
 ```
@@ -217,8 +217,8 @@ $gass = new GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X',
 or
 
 ```php
-$httpAdapter = new \GASS\Http\Stream();
 $gass = new GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'));
+$httpAdapter = new \GASS\Http\Stream;
 $gass->setHttp($httpAdapter);
 ```
 
