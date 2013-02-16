@@ -94,7 +94,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @var string
      * @access private
      */
-    private $version = '5.3.8';
+    private $version = '5.3.9';
 
 
     /**
@@ -1505,7 +1505,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     {
         $currentJs = $this->getCurrentJsFile();
         if (!empty($currentJs)) {
-            $regEx = '([a-z:\s-_\.]+)';
+            $regEx = '([a-z0-9:\s-_\.]+)';
             $searchEngineString = preg_replace('/^[\s\S]+\=[\'"]'.$regEx.'[\'"]\.split\([\'"]\s+[\'"]\)[\s\S]+$/i', '$1', $currentJs);
             if (preg_match('/^'.$regEx.'$/i', $searchEngineString)) {
                 $searchEngineArray = preg_split('#\s+#', $searchEngineString);
