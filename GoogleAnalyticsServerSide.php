@@ -254,7 +254,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @var array
      * @access private
      */
-    private $searchEngines = array(  'netscape'          => array('query'),
+    private $searchEngines = array(  'daum'              => array('q'),
                                      'eniro'             => array('search_word'),
                                      'naver'             => array('query'),
                                      'pchome'            => array('q'),
@@ -296,7 +296,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
                                      'incredimail'       => array('q'),
                                      'startsiden'        => array('q'),
                                      'go.mail.ru'        => array('q'),
-                                     'search.centrum.cz' => array('q'));
+                                     'search.centrum.cz' => array('q'),
+                                     '360.cn'            => array('q'));
 
 
     /**
