@@ -98,6 +98,16 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
 
 
     /**
+     * Whether or not setVersion has been called, used
+     * to determine whther or ot to set from ga.js file
+     *
+     * @var boolean
+     * @access private
+     */
+    private $setVersionCalled = false;
+
+
+    /**
      * Browser User Agent
      *
      * @var string
@@ -299,6 +309,15 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
                                      'search.centrum.cz' => array('q'),
                                      '360.cn'            => array('q'));
 
+    /**
+     * Whether or not setSearchEngines has been called, used
+     * to determine whther or ot to set from ga.js file
+     *
+     * @var boolean
+     * @access private
+     */
+    private $setSearchEnginesCalled = false;
+
 
     /**
      * Class to check if the current request is a bot or not
@@ -362,9 +381,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             $this->setDoNotTrack($_SERVER['HTTP_DNT']);
         }
         $this->setOptions($options);
-        if (!isset($options['version'])) {
-             $this->setVersionFromJs();
-        }
     }
 
 
@@ -387,6 +403,9 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     public function getVersion()
     {
+        if (!$this->setVersionCalled) {
+            $this->setVersionFromJs();
+        }
         return $this->version;
     }
 
@@ -543,7 +562,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     public function getSearchEngines()
     {
-        if (empty($this->searchEngines)) {
+        if (empty($this->searchEngines) && !$this->setSearchEnginesCalled) {
             $this->setSearchEnginesFromJs();
         }
         return $this->searchEngines;
@@ -646,6 +665,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     public function setVersion($version)
     {
+        $this->setVersionCalled = true;
         $version = $this->getAsString($version, 'Version');
         if (1 !== preg_match('/^(\d+\.){2}\d+$/', $version)) {
             throw new Exception\InvalidArgumentException('Invalid version number provided: '.$version);
@@ -944,6 +964,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     public function setSearchEngines($searchEngines)
     {
+        $this->setSearchEnginesCalled = true;
         if (!is_array($searchEngines)) {
             throw new Exception\InvalidArgumentException('$searchEngines must be an array.');
         }

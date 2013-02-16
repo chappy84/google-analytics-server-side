@@ -669,7 +669,7 @@ X-Content-Type-Options:nosniff');
     public function testGetSearchEnginesValid()
     {
         $this->gass->setSearchEngines(array());
-        $this->assertNotEmpty($this->gass->getSearchEngines());
+        $this->assertEmpty($this->gass->getSearchEngines());
     }
 
 
