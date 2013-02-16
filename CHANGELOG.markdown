@@ -9,6 +9,7 @@ don't throw Exceptions when trying to load files from this framework
 - Add Do Not Track header functionality enabled by default. This can be disabled by calling the setIgnoreDoNotTrack method.
 - Update to deal with new search providers containing numerical characters in their names
 - Ensure ga.js file only retrieved if the user hasn't manually set the version and search engines
+- Ensure HTTP curl adapter doesn't overwrite any user defined headers
 
 Version 0.8.5 Beta
 ------------------

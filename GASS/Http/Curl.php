@@ -155,9 +155,11 @@ class Curl extends Base
         $this->curl = curl_init();
 
         if (null !== ($userAgent = $this->getUserAgent())) {
-            curl_setopt($this->curl, CURLOPT_USERAGENT, $userAgent);
+            $this->setOption(CURLOPT_USERAGENT, $userAgent);
         }
-        $extraHeaders = array();
+
+        $currentHeaders = $this->getOption(CURLOPT_HEADER);
+        $extraHeaders = (is_array($currentHeaders)) ? $currentHeaders : array();
         if (null !== ($acceptedLanguage = $this->getAcceptLanguage())) {
             $extraHeaders[] = 'Accepts-Language: '.$acceptedLanguage;
         }
@@ -165,7 +167,7 @@ class Curl extends Base
             $extraHeaders[] = 'X-Forwarded-For: '.$remoteAddress;
         }
         if (!empty($extraHeaders)) {
-            curl_setopt($this->curl, CURLOPT_HTTPHEADER, $extraHeaders);
+            $this->setOption(CURLOPT_HEADER, $extraHeaders);
         }
 
         $extraCurlOptions = $this->getOptions();
