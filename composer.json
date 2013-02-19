@@ -2,7 +2,7 @@
     "name": "chappy84/google-analytics-server-side",
     "description": "Google Analytics Server Side",
     "homepage": "http://chappy84.github.com/google-analytics-server-side/",
-    "license": "GPL-2.0+",
+    "license": "GPL-3.0+",
     "require": {
         "php": ">=5.3.3"
     },
