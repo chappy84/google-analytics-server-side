@@ -33,7 +33,7 @@
  * @subpackage  BotInfo
  */
 
-namespace GASSTests\GASS\BotInfo;
+namespace GassTests\Gass\BotInfo;
 
 class BrowsCapTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,7 +42,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        \GASS\Http\Http::getInstance(array(), new \GASS\Http\Test);
+        \Gass\Http\Http::getInstance(array(), new \Gass\Http\Test);
         $this->iniFileLocation = realpath(
             dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR.'php_browscap.ini'
         );
@@ -55,7 +55,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function getBrowscapWithIni()
     {
-        return new \GASS\BotInfo\BrowsCap(
+        return new \Gass\BotInfo\BrowsCap(
             array(
                 'browscap' => $this->iniFileLocation
             )
@@ -65,9 +65,9 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function setTestHttpForVersionDateFile()
     {
         $latestVersionDateFile = dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt';
-        $httpAdapter = new \GASS\Http\Test;
+        $httpAdapter = new \Gass\Http\Test;
         $httpAdapter->addRequestQueueItem(
-            \GASS\BotInfo\BrowsCap::VERSION_DATE_URL,
+            \Gass\BotInfo\BrowsCap::VERSION_DATE_URL,
             'HTTP/1.1 200 Ok'."\n".
             'Connection:Keep-Alive'."\n".
             'Content-Length:31'."\n".
@@ -79,30 +79,30 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
             'X-Powered-By:PHP/5.3.19',
             file_get_contents($latestVersionDateFile)
         );
-        \GASS\Http\Http::getInstance(array(), $httpAdapter);
+        \Gass\Http\Http::getInstance(array(), $httpAdapter);
     }
 
     public function testConstructValidNoArguments()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap();
-        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
+        $browsCap = new \Gass\BotInfo\BrowsCap;
+        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $browsCap);
     }
 
     public function testConstructValidBrowscapInOptions()
     {
         $browsCap = $this->getBrowscapWithIni();
-        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
+        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $browsCap);
         $this->assertEquals($this->iniFileLocation, $browsCap->getOption('browscap'));
     }
 
     public function testConstructValidUnknownOptions()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(
+        $browsCap = new \Gass\BotInfo\BrowsCap(
             array(
                 'tripe' => $this->iniFileLocation
             )
         );
-        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
+        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $browsCap);
         $this->assertEquals($this->iniFileLocation, $browsCap->getOption('tripe'));
     }
 
@@ -110,7 +110,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     {
         $browsCap = $this->getBrowscapWithIni();
         $this->setTestHttpForVersionDateFile();
-        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
+        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $browsCap);
         $this->assertEquals($this->iniFileLocation, $browsCap->getOption('browscap'));
         $this->assertEquals(
             strtotime(file_get_contents(dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt')),
@@ -161,7 +161,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $browsCap = $this->getBrowscapWithIni();
         $this->assertEquals(false, $browsCap->getBrowser());
         $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
-        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap->setUserAgent($firefoxUserAgent));
+        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $browsCap->setUserAgent($firefoxUserAgent));
         $browserResult = $browsCap->getBrowser();
         $this->assertEquals($firefoxUserAgent, $browsCap->getUserAgent());
         $this->assertInstanceOf('stdClass', $browserResult);
@@ -197,10 +197,10 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function testCheckIniFileEmptyBrowscapRuntimeException()
     {
         $this->setExpectedException(
-            'GASS\Exception\RuntimeException',
+            'Gass\Exception\RuntimeException',
             'The browscap option has not been specified, please set this and try again.'
         );
-        $browscap = new \GASS\BotInfo\Browscap;
+        $browscap = new \Gass\BotInfo\Browscap;
         $browscap->getBrowser();
     }
 }

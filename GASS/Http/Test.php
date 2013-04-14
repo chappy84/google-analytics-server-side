@@ -36,14 +36,14 @@
 /**
  * @namespace
  */
-namespace GASS\Http;
+namespace Gass\Http;
 
-use GASS\Exception;
+use Gass\Exception;
 
 /**
  * Stream adapter for Http
  *
- * @uses        GASS\Exception
+ * @uses        Gass\Exception
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -111,7 +111,7 @@ class Test extends Base implements HttpInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return GASS\Adapter\Base
+     * @return Gass\Adapter\Base
      * @access public
      */
     public function setOption($name, $value)
@@ -138,7 +138,7 @@ class Test extends Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param string $url
-     * @return GASS\Http\Stream
+     * @return Gass\Http\Stream
      * @access public
      */
     public function setUrl($url)
@@ -151,7 +151,7 @@ class Test extends Base implements HttpInterface
      *
      * @param string $url
      * @param array $options
-     * @return GASS\Http\Stream
+     * @return Gass\Http\Stream
      * @access public
      */
     public function request($url = null, array $options = array())
@@ -181,7 +181,7 @@ class Test extends Base implements HttpInterface
      * @param string $url
      * @param string|array $responseHeaders
      * @param string $responseBody
-     * @return \GASS\Http\Test
+     * @return \Gass\Http\Test
      * @access public
      */
     public function addRequestQueueItem($url, $responseHeaders, $responseBody)
@@ -210,7 +210,7 @@ class Test extends Base implements HttpInterface
      * the $http_response_header or stream_context_create format
      *
      * @param string|array $headers
-     * @throws GASS\Exception\InvalidArgumentException
+     * @throws Gass\Exception\InvalidArgumentException
      * @return array
      * @access private
      */

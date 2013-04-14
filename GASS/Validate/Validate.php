@@ -36,14 +36,14 @@
 /**
  * @namespace
  */
-namespace GASS\Validate;
+namespace Gass\Validate;
 
-use GASS\Adapter;
+use Gass\Adapter;
 
 /**
  * Interface for all Http Adapters
  *
- * @uses        GASS\Adapter
+ * @uses        Gass\Adapter
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman

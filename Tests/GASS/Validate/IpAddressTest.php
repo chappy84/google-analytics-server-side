@@ -33,20 +33,20 @@
  * @subpackage  Validate
  */
 
-namespace GASSTests\GASS\Validate;
+namespace GassTests\Gass\Validate;
 
 class IpAddressTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var GASS\Validate\IpAddress
+     * @var Gass\Validate\IpAddress
      * @access private
      */
     private $ipValidator;
 
     public function setUp()
     {
-        $this->ipValidator = new \GASS\Validate\IpAddress();
+        $this->ipValidator = new \Gass\Validate\IpAddress;
     }
 
     public function tearDown()

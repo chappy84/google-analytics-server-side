@@ -30,45 +30,8 @@
  * @link        http://github.com/chappy84/google-analytics-server-side
  * @category    GoogleAnalyticsServerSide
  * @package     GoogleAnalyticsServerSide
- * @subpackage  GASSTests
+ * @subpackage  GassTests
  */
 
 date_default_timezone_set('Europe/London');
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core.php';
-
-/**
- * Autoload function for all classes and interfaces in the
- * GoogleAnalyticsServerSide virtual namespace
- *
- * @param string $name
- * @throws RuntimeException
- */
-spl_autoload_register(
-    function ($name) {
-        if (0 === strpos($name, 'GASSTests\\')) {
-            $location = str_replace('Tests\\GASS\\', DIRECTORY_SEPARATOR, $name);
-            $filePath = str_replace('\\', DIRECTORY_SEPARATOR, $location);
-            $includePaths = explode(PATH_SEPARATOR, get_include_path());
-            $fileFound = false;
-            $classFound = false;
-            foreach ($includePaths as $includePath) {
-                $proposedPath = $includePath . DIRECTORY_SEPARATOR . $filePath . '.php';
-                if (@is_readable($proposedPath)) {
-                    $fileFound = true;
-                    require_once $proposedPath;
-                    if (class_exists($name) || interface_exists($name)) {
-                        $classFound = true;
-                        break;
-                    }
-                }
-            }
-            if (!$fileFound) {
-                throw new \RuntimeException('File could not be found for '.$name);
-            } elseif (!$classFound) {
-                throw new \RuntimeException('Class or Interface could not be found for '.$name);
-            }
-        }
-    },
-    true,
-    true
-);
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Gass' . DIRECTORY_SEPARATOR . 'Bootstrap.php';

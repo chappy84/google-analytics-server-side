@@ -36,7 +36,7 @@
 /**
  * @namespace
  */
-namespace GASS\Validate;
+namespace Gass\Validate;
 
 /**
  * Interface for all Http Adapters

@@ -36,14 +36,14 @@
 /**
  * @namespace
  */
-namespace GASS\Http;
+namespace Gass\Http;
 
-use GASS\Exception;
+use Gass\Exception;
 
 /**
  * Stream adapter for Http
  *
- * @uses        GASS\Exception
+ * @uses        Gass\Exception
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -106,7 +106,7 @@ class Stream extends Base
      *
      * @param string $name
      * @param mixed $value
-     * @return GASS\Adapter\Base
+     * @return Gass\Adapter\Base
      * @access public
      */
     public function setOption($name, $value)
@@ -133,7 +133,7 @@ class Stream extends Base
      * {@inheritdoc}
      *
      * @param string $url
-     * @return GASS\Http\Stream
+     * @return Gass\Http\Stream
      * @access public
      */
     public function setUrl($url)
@@ -146,7 +146,7 @@ class Stream extends Base
      *
      * @param string $url
      * @param array $options
-     * @return GASS\Http\Stream
+     * @return Gass\Http\Stream
      * @access public
      */
     public function request($url = null, array $options = array())
@@ -213,7 +213,7 @@ class Stream extends Base
      * the $http_response_header or stream_context_create format
      *
      * @param string|array $headers
-     * @throws GASS\Exception\InvalidArgumentException
+     * @throws Gass\Exception\InvalidArgumentException
      * @return array
      * @access private
      */

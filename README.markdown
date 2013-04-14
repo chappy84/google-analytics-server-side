@@ -41,7 +41,7 @@ Usage
 Google Analytics Server Side can be used simply in the following manner:
 
 ```php
-$gass = new GoogleAnalyticsServerSide;
+$gass = new \Gass\GoogleAnalyticsServerSide;
 $gass->setAccount('UA-XXXXXXX-X')
     ->trackPageView();
 ```
@@ -53,7 +53,7 @@ then it can be passed as part of the array to the class.
 e.g.
 
 ```php
-$gass = new GoogleAnalyticsServerSide;
+$gass = new \Gass\GoogleAnalyticsServerSide;
 $gass->setAccount('UA-XXXXXXX-X')
     ->setBotInfo(true);
 ```
@@ -61,7 +61,7 @@ $gass->setAccount('UA-XXXXXXX-X')
 could also be done like this:
 
 ```php
-$gass = new GoogleAnalyticsServerSide(
+$gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
 		'account' => 'UA-XXXXXXX-X',
         'botInfo' => true
@@ -149,8 +149,8 @@ adapter you want to use into the class.  The code will default to the BrowsCap a
 Setting this to true will use the default. If you pass an associative array, this will be 
 passed to BotInfo and through to the Adapter. When providing an associative array you can 
 also pass the element 'adapter' which will tell BotInfo which class to use as the Adapter. 
-You can also pass an instance of a GASS\BotInfo Adapter which will be used by the 
-GASS\BotInfo Class.
+You can also pass an instance of a Gass\BotInfo Adapter which will be used by the 
+Gass\BotInfo Class.
 
 ### Adapters
 
@@ -165,7 +165,7 @@ where the [php_browscap.ini file][12] is located / can be downloaded to.
 e.g.
 
 ```php
-$gass = new GoogleAnalyticsServerSide(
+$gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
 		'botInfo' => true,
         'account' => 'UA-XXXXXXX-X'
@@ -176,7 +176,7 @@ $gass = new GoogleAnalyticsServerSide(
 or
 
 ```php
-$gass = new GoogleAnalyticsServerSide(
+$gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
 		'botInfo' => array(
 			'adapter' => 'BrowsCap',
@@ -190,8 +190,8 @@ $gass = new GoogleAnalyticsServerSide(
 or
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'))
-$browsCapAdapter = new \GASS\BotInfo\BrowsCap;
+$gass = new \Gass\GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'))
+$browsCapAdapter = new \Gass\BotInfo\BrowsCap;
 $gass->setBotInfo($browsCapAdapter);
 ```
 
@@ -235,7 +235,7 @@ array or an instance of the required adapter.
 e.g.
 
 ```php
-$gass = new GoogleAnalyticsServerSide(
+$gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
 		'account' => 'UA-XXXXXXX-X',
         'http'    => array(
@@ -249,14 +249,14 @@ $gass = new GoogleAnalyticsServerSide(
 or
 
 ```php
-$gass = new GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'));
-$httpAdapter = new \GASS\Http\Stream;
+$gass = new \Gass\GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'));
+$httpAdapter = new \Gass\Http\Stream;
 $gass->setHttp($httpAdapter);
 ```
 
 ### Adapters
 
-There are two Adapters available to GASS\Http, these are:
+There are two Adapters available to Gass\Http, these are:
 
 #### Stream
 Stream creates a stream context and utilises this stream with file_get_contents. See 

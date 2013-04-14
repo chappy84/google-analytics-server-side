@@ -36,14 +36,14 @@
 /**
  * @namespace
  */
-namespace GASS\Http;
+namespace Gass\Http;
 
-use GASS\Exception;
+use Gass\Exception;
 
 /**
  * Proxy class for dealing with all Http requests regardless of adapter
  *
- * @uses        GASS\Exception
+ * @uses        Gass\Exception
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -63,9 +63,9 @@ class Http
     private $adapter;
 
     /**
-     * Singleton instance of GASS\Http
+     * Singleton instance of Gass\Http
      *
-     * @var GASS\Http
+     * @var Gass\Http
      * @static
      * @access protected
      */
@@ -75,7 +75,7 @@ class Http
      * Class Constructor
      *
      * @param array $options
-     * @param string|GASS\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
+     * @param string|Gass\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
      * @access protected
      */
     public function __construct(array $options = array(), $adapter = null)
@@ -95,7 +95,7 @@ class Http
     }
 
     /**
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\RuntimeException
      * @final
      * @access public
      */
@@ -105,13 +105,13 @@ class Http
     }
 
     /**
-     * Returns the current instance of GASS\Http
+     * Returns the current instance of Gass\Http
      * Accepts the same parameters as __construct
      *
-     * @see GASS\Http::__construct
+     * @see Gass\Http::__construct
      * @param array $options
-     * @param string|GASS\Http\HttpInterface $adapter
-     * @return GASS\Http
+     * @param string|Gass\Http\HttpInterface $adapter
+     * @return Gass\Http
      * @static
      * @access public
      */
@@ -176,27 +176,27 @@ class Http
      * Sets the current adapter to use
      *
      * @param string $adapter
-     * @throws GASS\Exception\InvalidArgumentException
-     * @return GASS\Http
+     * @throws Gass\Exception\InvalidArgumentException
+     * @return Gass\Http
      * @access public
      */
     public function setAdapter($adapter)
     {
         if (is_string($adapter)) {
-            $adapterName = 'GASS\Http\\'.ucfirst($adapter);
+            $adapterName = 'Gass\Http\\'.ucfirst($adapter);
             $adapter = new $adapterName();
         }
         if ($adapter instanceof HttpInterface) {
             $this->adapter = $adapter;
             return $this;
         }
-        throw new Exception\InvalidArgumentException('The GASS\Http adapter must implement GASS\Http\HttpInterface.');
+        throw new Exception\InvalidArgumentException('The Gass\Http adapter must implement Gass\Http\HttpInterface.');
     }
 
     /**
      * Returns the current adapter in use
      *
-     * @return GASS\Http\HttpInterface
+     * @return Gass\Http\HttpInterface
      * @access public
      */
     public function getAdapter()

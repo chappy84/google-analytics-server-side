@@ -36,16 +36,16 @@
 /**
  * @namespace
  */
-namespace GASS\BotInfo;
+namespace Gass\BotInfo;
 
-use GASS\Exception;
-use GASS\Proxy;
+use Gass\Exception;
+use Gass\Proxy;
 
 /**
  * Proxy class for dealing with all BotInfo requests regardless of adapter
  *
- * @uses        GASS\Exception
- * @uses        GASS\Proxy
+ * @uses        Gass\Exception
+ * @uses        Gass\Proxy
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -59,7 +59,7 @@ class BotInfo implements Proxy\ProxyInterface
     /**
      * The current adapter in use
      *
-     * @var GASS\BotInfo\BotInfoInterface
+     * @var Gass\BotInfo\BotInfoInterface
      * @access private
      */
     private $adapter;
@@ -88,7 +88,7 @@ class BotInfo implements Proxy\ProxyInterface
      *
      * @param string $name
      * @param array $arguments
-     * @throws GASS\Exception\DomainException
+     * @throws Gass\Exception\DomainException
      * @return mixed
      * @access public
      */
@@ -108,15 +108,15 @@ class BotInfo implements Proxy\ProxyInterface
     /**
      * Sets the current adapter to use
      *
-     * @param string|GASS\BotInfo\BotInfoInterface $adapter
-     * @throws GASS\Exception\InvalidArgumentException
-     * @return GASS\BotInfo
+     * @param string|Gass\BotInfo\BotInfoInterface $adapter
+     * @throws Gass\Exception\InvalidArgumentException
+     * @return Gass\BotInfo
      * @access public
      */
     public function setAdapter($adapter)
     {
         if (is_string($adapter)) {
-            $adapterName = 'GASS\BotInfo\\'.ucfirst($adapter);
+            $adapterName = 'Gass\BotInfo\\'.ucfirst($adapter);
             $adapter = new $adapterName();
         }
         if ($adapter instanceof BotInfoInterface) {
@@ -124,7 +124,7 @@ class BotInfo implements Proxy\ProxyInterface
             return $this;
         }
         throw new Exception\InvalidArgumentException(
-            'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.'
+            'The Gass\BotInfo adapter must implement Gass\BotInfo\BotInfoInterface.'
         );
     }
 

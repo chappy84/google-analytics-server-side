@@ -1,20 +1,30 @@
 {
-    "name": "chappy84/google-analytics-server-side",
-    "description": "Google Analytics Server Side",
-    "homepage": "http://chappy84.github.com/google-analytics-server-side/",
-    "license": "GPL-3.0+",
-    "require": {
-        "php": ">=5.3.3"
+    "name" : "chappy84/google-analytics-server-side",
+    "description" : "Google Analytics Server Side",
+    "authors" : [
+        {
+            "name" : "Tom Chapman",
+            "homepage" : "http://tom-chapman.co.uk",
+            "role" : "Author, Maintainer"
+        }
+    ],
+    "homepage" : "http://chappy84.github.com/google-analytics-server-side/",
+    "license" : [
+        "GPL-3.0+"
+    ],
+    "require" : {
+        "php" : ">=5.3.3"
     },
-    "require-dev": {
-        "phpunit/PHPUnit": "3.7.*"
+    "require-dev" : {
+        "phpunit/PHPUnit" : "3.7.*"
     },
-    "autoload": {
-        "psr-0": {
-            "GASS\\": ""
-        },
-        "files": [
-            "core.php"
-        ]
+    "autoload" : {
+        "psr-0" : {
+            "Gass\" : ""
+        }
+    },
+    "support" : {
+        "source" : "https://github.com/chappy84/google-analytics-server-side",
+        "issues" : "https://github.com/chappy84/google-analytics-server-side/issues"
     }
 }

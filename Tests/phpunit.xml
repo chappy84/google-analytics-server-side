@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./Bootstrap.php" colors="true">
+<phpunit bootstrap="./Bootstrap.php"
+         colors="true">
     <php>
         <server name="SERVER_NAME" value="www.example.com"/>
         <server name="REMOTE_ADDR" value="8.8.4.4"/>

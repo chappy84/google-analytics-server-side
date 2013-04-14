@@ -36,18 +36,18 @@
 /**
  * @namespace
  */
-namespace GASS\BotInfo;
+namespace Gass\BotInfo;
 
-use GASS\Adapter;
-use GASS\Exception;
-use GASS\Validate;
+use Gass\Adapter;
+use Gass\Exception;
+use Gass\Validate;
 
 /**
  * Base class of all BotInfo adapters
  *
- * @uses        GASS\Adapter
- * @uses        GASS\Exception
- * @uses        GASS\Validate
+ * @uses        Gass\Adapter
+ * @uses        Gass\Exception
+ * @uses        Gass\Validate
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -66,7 +66,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      */
     protected $remoteAddress;
 
-
     /**
      * The current user-agent
      *
@@ -75,7 +74,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      */
     protected $userAgent;
 
-
     /**
      * Class options
      *
@@ -83,7 +81,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * @access protected
      */
     protected $options = array();
-
 
     /**
      * {@inheritdoc}
@@ -96,7 +93,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
         return $this->remoteAddress;
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -108,17 +104,16 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
         return $this->userAgent;
     }
 
-
     /**
      * {@inheritdoc}
      *
      * @param string $remoteAddress
-     * @return GASS\BotInfo\Base
+     * @return Gass\BotInfo\Base
      * @access public
      */
     public function setRemoteAddress($remoteAddress)
     {
-        $ipValidator = new Validate\IpAddress();
+        $ipValidator = new Validate\IpAddress;
         if (!$ipValidator->isValid($remoteAddress)) {
             throw new Exception\InvalidArgumentException(
                 'Remote Address validation errors: '.
@@ -133,7 +128,7 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * {@inheritdoc}
      *
      * @param string $userAgent
-     * @return GASS\BotInfo\Base
+     * @return Gass\BotInfo\Base
      * @access public
      */
     public function setUserAgent($userAgent)

@@ -35,10 +35,10 @@
 /**
  * @namespace
  */
-namespace GASS;
+namespace Gass;
 
 /**
- * Interface for GASS Proxy classes
+ * Interface for Gass Proxy classes
  *
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
@@ -46,6 +46,6 @@ namespace GASS;
  * @category    GoogleAnalyticsServerSide
  * @package     GoogleAnalyticsServerSide
  */
-interface GASSInterface
+interface GassInterface
 {
 }

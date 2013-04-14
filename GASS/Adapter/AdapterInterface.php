@@ -36,7 +36,7 @@
 /**
  * @namespace
  */
-namespace GASS\Adapter;
+namespace Gass\Adapter;
 
 /**
  * An Interface for adapters in general
@@ -63,7 +63,7 @@ interface AdapterInterface
      * Set Options related to class
      *
      * @param array $options
-     * @return GASS\Adapter\AdapterInterface
+     * @return Gass\Adapter\AdapterInterface
      * @access public
      */
     public function setOptions(array $options);
@@ -73,7 +73,7 @@ interface AdapterInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return GASS\Adapter\AdapterInterface
+     * @return Gass\Adapter\AdapterInterface
      * @access public
      */
     public function setOption($name, $value);

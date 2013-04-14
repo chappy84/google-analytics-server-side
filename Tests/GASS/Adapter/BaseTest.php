@@ -32,13 +32,13 @@
  * @package     GoogleAnalyticsServerSide
  * @subpackage  Adapter
  */
-namespace GASSTests\GASS\Adapter;
+namespace GassTests\Gass\Adapter;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var GASS\BotInfo\Base
+     * @var Gass\BotInfo\Base
      * @access private
      */
     private $baseAdapter;
@@ -46,7 +46,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->baseAdapter = $this->getMockForAbstractClass('GASS\Adapter\Base');
+        $this->baseAdapter = $this->getMockForAbstractClass('Gass\Adapter\Base');
     }
 
     public function tearDown()
@@ -57,7 +57,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function testSetOptionsValid()
     {
         $options = array('testOption1' => 'testValue1');
-        $this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOptions($options));
+        $this->assertInstanceOf('Gass\Adapter\Base', $this->baseAdapter->setOptions($options));
         $this->assertEquals($options, $this->baseAdapter->getOptions());
     }
 
@@ -65,7 +65,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     {
         $optionName = 'testOption2';
         $optionValue = 'testValue2';
-        $this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOption($optionName, $optionValue));
+        $this->assertInstanceOf('Gass\Adapter\Base', $this->baseAdapter->setOption($optionName, $optionValue));
         $this->assertEquals($optionValue, $this->baseAdapter->getOption($optionName));
     }
 

@@ -36,7 +36,7 @@
 /**
  * @namespace
  */
-namespace GASS\Exception;
+namespace Gass\Exception;
 
 /**
  * Interface for all Http Adapters

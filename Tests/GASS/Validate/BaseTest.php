@@ -33,13 +33,13 @@
  * @subpackage  Http
  */
 
-namespace GASSTests\GASS\Validate;
+namespace GassTests\Gass\Validate;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var GASS\Validate\Base
+     * @var Gass\Validate\Base
      * @access private
      */
     private $baseValidator;
@@ -47,7 +47,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->baseValidator = $this->getMockForAbstractClass('GASS\Validate\Base');
+        $this->baseValidator = $this->getMockForAbstractClass('Gass\Validate\Base');
     }
 
     public function tearDown()
@@ -58,13 +58,13 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function testSetMessagesValidPopulatedArray()
     {
         $testMessages = array('Test Message 1', 'Test Message 2');
-        $this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages($testMessages));
+        $this->assertInstanceOf('Gass\Validate\Base', $this->baseValidator->setMessages($testMessages));
         $this->assertEquals($testMessages, $this->baseValidator->getMessages());
     }
 
     public function testSetMessagesValidEmptyArray()
     {
-        $this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages(array()));
+        $this->assertInstanceOf('Gass\Validate\Base', $this->baseValidator->setMessages(array()));
         $this->assertEquals(array(), $this->baseValidator->getMessages());
     }
 
@@ -76,7 +76,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testSetValue()
     {
-        $this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setValue(array()));
+        $this->assertInstanceOf('Gass\Validate\Base', $this->baseValidator->setValue(array()));
         $this->assertEquals(array(), $this->baseValidator->getValue());
         $testString = 'TestValue';
         $this->baseValidator->setValue($testString);
@@ -92,7 +92,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function testAddMessage()
     {
         $this->assertInstanceOf(
-            'GASS\Validate\Base',
+            'Gass\Validate\Base',
             $this->baseValidator->addMessage('"%value%" is a test value for test message 1', 'Test value')
                 ->setValue(2)
                 ->addMessage('Test message 2 had value "%value%"')

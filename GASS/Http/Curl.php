@@ -36,14 +36,14 @@
 /**
  * @namespace
  */
-namespace GASS\Http;
+namespace Gass\Http;
 
-use GASS\Exception;
+use Gass\Exception;
 
 /**
  * cURL adapter for Http
  *
- * @uses        GASS\Exception
+ * @uses        Gass\Exception
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -78,7 +78,7 @@ class Curl extends Base
      * Class Constructor
      *
      * @param array $options
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\RuntimeException
      * @access public
      */
     public function __construct(array $options = array())
@@ -111,7 +111,7 @@ class Curl extends Base
      * {@inheritdoc}
      *
      * @param string $url
-     * @return GASS\Http\Curl
+     * @return Gass\Http\Curl
      * @access public
      */
     public function setUrl($url)
@@ -122,7 +122,7 @@ class Curl extends Base
     /**
      * Closes the curl connection if one is present
      *
-     * @return GASS\Http\Curl
+     * @return Gass\Http\Curl
      * @access protected
      */
     protected function close()
@@ -139,7 +139,7 @@ class Curl extends Base
      *
      * @param string $url
      * @param array $options
-     * @return GASS\Http\Curl
+     * @return Gass\Http\Curl
      * @access public
      */
     public function request($url = null, array $options = array())

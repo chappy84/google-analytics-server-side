@@ -33,7 +33,7 @@
  * @subpackage  GoogleAnalyticsServerSideTest
  */
 
-namespace GASSTests;
+namespace GassTests\Gass;
 
 class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,13 +44,13 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     protected $dependecyFilesFolder;
 
     /**
-     * @var \GoogleAnalyticsServerSide
+     * @var \Gass\GoogleAnalyticsServerSide
      * @access protected
      */
     protected $gass;
 
     /**
-     * @var \GASS\Http\Test
+     * @var \Gass\Http\Test
      * @access protected
      */
     protected $httpAdapter;
@@ -58,11 +58,10 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->dependecyFilesFolder = __DIR__.DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR;
-        require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'GoogleAnalyticsServerSide.php';
-        $this->httpAdapter = new \GASS\Http\Test;
+        $this->dependecyFilesFolder = dirname(__DIR__).DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR;
+        $this->httpAdapter = new \Gass\Http\Test;
         $this->httpAdapter->addRequestQueueItem(
-            \GoogleAnalyticsServerSide::JS_URL,
+            \Gass\GoogleAnalyticsServerSide::JS_URL,
             'HTTP/1.0 200 OK'."\n".
             'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT'."\n".
             'X-Content-Type-Options: nosniff'."\n".
@@ -76,7 +75,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             'Server: GFE/2.0',
             file_get_contents($this->dependecyFilesFolder.'ga.js')
         )->addRequestQueueItem(
-            \GoogleAnalyticsServerSide::GIF_URL,
+            \Gass\GoogleAnalyticsServerSide::GIF_URL,
             'HTTP/1.0 200 OK'."\n".
             'Age:255669'."\n".
             'Cache-Control:private, no-cache, no-cache=Set-Cookie, proxy-revalidate'."\n".
@@ -99,8 +98,8 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
                 )
             )
         );
-        \GASS\Http\Http::getInstance(array('adapter' => $this->httpAdapter));
-        $this->gass = new \GoogleAnalyticsServerSide;
+        \Gass\Http\Http::getInstance(array('adapter' => $this->httpAdapter));
+        $this->gass = new \Gass\GoogleAnalyticsServerSide;
     }
 
     public function initialiseBotInfoBrowsCap()
@@ -108,7 +107,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $browsCapIniFileLocation = $this->dependecyFilesFolder.'php_browscap.ini';
         touch($browsCapIniFileLocation);
         touch($this->dependecyFilesFolder.'latestVersionDate.txt');
-        $botInfoAdapter = new \GASS\BotInfo\BrowsCap(
+        $botInfoAdapter = new \Gass\BotInfo\BrowsCap(
             array('browscap' => $browsCapIniFileLocation)
         );
         $this->gass->setBotInfo($botInfoAdapter);
@@ -135,15 +134,15 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testConstructExceptionWrongOptionsDataType()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'Argument $options must be an array.'
         );
-        $gass = new \GoogleAnalyticsServerSide(new \stdClass);
+        $gass = new \Gass\GoogleAnalyticsServerSide(new \stdClass);
     }
 
     public function testSetVersionValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersion('1.2.3'));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVersion('1.2.3'));
         $this->assertEquals('1.2.3', $this->gass->getVersion());
         $this->gass->setVersion('5.20.71');
         $this->assertEquals('5.20.71', $this->gass->getVersion());
@@ -152,7 +151,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetVersionExceptionDecimal()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'Invalid version number provided: 5.23'
         );
         $this->gass->setVersion('5.23');
@@ -160,28 +159,28 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetVersionExceptionInteger()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Invalid version number provided: 523');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Invalid version number provided: 523');
         $this->gass->setVersion('523');
     }
 
     public function testSetVersionExceptionString()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Invalid version number provided: abc');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Invalid version number provided: abc');
         $this->gass->setVersion('abc');
     }
 
     public function testSetVersionExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Version must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Version must be a string.');
         $this->gass->setVersion(array('5.2.3'));
     }
 
     public function testSetUserAgentValid()
     {
         $userAgent = 'Mozilla/5.0 (compatible; Konqueror/2.2.2)';
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setUserAgent($userAgent));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setUserAgent($userAgent));
         $this->assertEquals($userAgent, $this->gass->getUserAgent());
-        $this->assertEquals($userAgent, \GASS\Http\Http::getUserAgent());
+        $this->assertEquals($userAgent, \Gass\Http\Http::getUserAgent());
         $this->gass->setRemoteAddress('123.123.123.123');
         $this->initialiseBotInfoBrowsCap();
         $this->gass->setUserAgent($userAgent);
@@ -190,72 +189,72 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetUserAgentExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'User Agent must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'User Agent must be a string.');
         $this->gass->setUserAgent(array('Mozilla/5.0 (compatible; Konqueror/2.2.2)'));
     }
 
     public function testSetAcceptLanguageTwoCharPlusCountryValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en-GB,en;q=0.8'));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en-GB,en;q=0.8'));
         $this->assertEquals('en-gb', $this->gass->getAcceptLanguage());
-        $this->assertEquals('en-gb', \GASS\Http\Http::getAcceptLanguage());
+        $this->assertEquals('en-gb', \Gass\Http\Http::getAcceptLanguage());
     }
 
     public function testSetAcceptLanguageThreeCharPlusCountryValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil-PH,fil;q=0.8'));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil-PH,fil;q=0.8'));
         $this->assertEquals('fil-ph', $this->gass->getAcceptLanguage());
-        $this->assertEquals('fil-ph', \GASS\Http\Http::getAcceptLanguage());
+        $this->assertEquals('fil-ph', \Gass\Http\Http::getAcceptLanguage());
     }
 
     public function testSetAcceptLanguageTwoCharValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en,en-GB;q=0.8'));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en,en-GB;q=0.8'));
         $this->assertEquals('en', $this->gass->getAcceptLanguage());
-        $this->assertEquals('en', \GASS\Http\Http::getAcceptLanguage());
+        $this->assertEquals('en', \Gass\Http\Http::getAcceptLanguage());
     }
 
     public function testSetAcceptLanguageThreeCharValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil,fil-PH;q=0.8'));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil,fil-PH;q=0.8'));
         $this->assertEquals('fil', $this->gass->getAcceptLanguage());
-        $this->assertEquals('fil', \GASS\Http\Http::getAcceptLanguage());
+        $this->assertEquals('fil', \Gass\Http\Http::getAcceptLanguage());
     }
 
     public function testSetAcceptLanguageExceptionTooLong()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setAcceptLanguage('abcd,efg;q=0.8');
     }
 
     public function testSetAcceptLanguageExceptionTooLong2()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setAcceptLanguage('AbCDefg');
     }
 
     public function testSetAcceptLanguageExceptionInvalidCountry()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setAcceptLanguage('ab-cde');
     }
 
     public function testSetAcceptLanguageExceptionInvalidLanguage()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setAcceptLanguage('abcd-ef');
     }
 
     public function testSetAcceptLanguageExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Accept Language must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Accept Language must be a string.');
         $this->gass->setAcceptLanguage(array('en-gb'));
     }
 
     public function testSetServerNameValid()
     {
         $serverName = 'www.example.com';
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setServerName($serverName));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setServerName($serverName));
         $this->assertEquals($serverName, $this->gass->getServerName());
         $serverName = 'localhost';
         $this->gass->setServerName($serverName);
@@ -264,19 +263,19 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetServerNameExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Server Name must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Server Name must be a string.');
         $this->gass->setServerName(array('www.example.com'));
     }
 
     public function testSetRemoteAddressValid()
     {
         $remoteAddress = '192.168.0.1';
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setRemoteAddress($remoteAddress));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setRemoteAddress($remoteAddress));
         $this->assertEquals($remoteAddress, $this->gass->getRemoteAddress());
         $remoteAddress = '255.255.255.0';
         $this->gass->setRemoteAddress($remoteAddress);
         $this->assertEquals($remoteAddress, $this->gass->getRemoteAddress());
-        $this->assertEquals($remoteAddress, \GASS\Http\Http::getRemoteAddress());
+        $this->assertEquals($remoteAddress, \Gass\Http\Http::getRemoteAddress());
         $this->initialiseBotInfoBrowsCap();
         $this->gass->setRemoteAddress($remoteAddress);
         $this->assertEquals($remoteAddress, $this->gass->getBotInfo()->getRemoteAddress());
@@ -284,38 +283,38 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetRemoteAddressExceptionLetters()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setRemoteAddress('abc.def.ghi.jkl');
     }
 
     public function testSetRemoteAddressExceptionTooHighSegments()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setRemoteAddress('500.500.500.500');
     }
 
     public function testSetRemoteAddressExceptionMissingSegments()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setRemoteAddress('255.255');
     }
 
     public function testSetRemoteAddressExceptionInteger()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setRemoteAddress('192');
     }
 
     public function testSetRemoteAddressExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Remote Address must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Remote Address must be a string.');
         $this->gass->setRemoteAddress(array('255.255.255.0'));
     }
 
     public function testSetAccountValid()
     {
         $account = 'UA-1234-5';
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setAccount($account));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAccount($account));
         $this->assertEquals($account, $this->gass->getAccount());
         $account = 'MO-1234567-89';
         $this->gass->setAccount($account);
@@ -324,38 +323,38 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetAccountExceptionInvalidFirstSegment()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setAccount('AB-1234567-0');
     }
 
     public function testSetAccountExceptionMissingFirstHyphen()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setAccount('UA1234567-0');
     }
 
     public function testSetAccountExceptionMissingSecondHyphen()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setAccount('UA-12345670');
     }
 
     public function testSetAccountExceptionLowerCaseFirstSegment()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setAccount('mo-1234567-0');
     }
 
     public function testSetAccountExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Account must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Account must be a string.');
         $this->gass->setAccount(array('UA-1234-5'));
     }
 
     public function testSetDocumentRefererValid()
     {
         $documentReferer = 'http://www.example.com/random.html?a=b';
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setDocumentReferer($documentReferer));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setDocumentReferer($documentReferer));
         $this->assertEquals($documentReferer, $this->gass->getDocumentReferer());
         $documentReferer = 'http://localhost/random';
         $this->gass->setDocumentReferer($documentReferer);
@@ -364,65 +363,68 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetDocumentRefererExceptionMissingProtocol()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setDocumentReferer('www.example.com/random.html?a=b');
     }
 
     public function testSetDocumentRefererExceptionMissingHostname()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setDocumentReferer('http:///random.html?a=b');
     }
 
     public function testSetDocumentRefererExceptionOnlyProtocol()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setDocumentReferer('http://');
     }
 
     public function testSetDocumentRefererExceptionInvalidHostname()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setDocumentReferer('http://www.example_1.com/');
     }
 
     public function testSetDocumentRefererExceptionInvalidProtocol()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->gass->setDocumentReferer('a%b://www.example.com/');
     }
 
     public function testSetDocumentRefererExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Document Referer must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Document Referer must be a string.');
         $this->gass->setDocumentReferer(array('http://localhost/random'));
     }
 
     public function testSetDocumentPathValid()
     {
         $documentPath = '/abcdefg.html';
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setDocumentPath($documentPath));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setDocumentPath($documentPath));
         $this->assertEquals($documentPath, $this->gass->getDocumentPath());
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setDocumentPath('/abcdefg.html?a=b&c=d'));
+        $this->assertInstanceOf(
+            'Gass\GoogleAnalyticsServerSide',
+            $this->gass->setDocumentPath('/abcdefg.html?a=b&c=d')
+        );
         $this->assertEquals($documentPath, $this->gass->getDocumentPath());
     }
 
     public function testSetDocumentPathExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Document Path must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Document Path must be a string.');
         $this->gass->setDocumentPath(array('/abcdefg.html'));
     }
 
     public function testSetPageTitleValid()
     {
         $pageTitle = 'Abcdef Ghijk Lmnop';
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setPageTitle($pageTitle));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setPageTitle($pageTitle));
         $this->assertEquals($pageTitle, $this->gass->getPageTitle());
     }
 
     public function testSetPageTitleExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Page Title must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Page Title must be a string.');
         $this->gass->setPageTitle(array('Abcdef Ghijk Lmnop'));
     }
 
@@ -437,7 +439,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
                              'value'    => 'Custom Value 5',
                              'scope'    => 2);
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->setCustomVar($customVar1['name'], $customVar1['value'])
         );
         $this->gass->setCustomVar(
@@ -460,7 +462,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetCustomVarExceptionInvalidIndexTooHigh()
     {
         $this->setExpectedException(
-            'GASS\Exception\OutOfBoundsException',
+            'Gass\Exception\OutOfBoundsException',
             'The index must be an integer between 1 and 5.'
         );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 3, 6);
@@ -469,7 +471,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetCustomVarExceptionInvalidIndexTooLow()
     {
         $this->setExpectedException(
-            'GASS\Exception\OutOfBoundsException',
+            'Gass\Exception\OutOfBoundsException',
             'The index must be an integer between 1 and 5.'
         );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 3, 0);
@@ -478,7 +480,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetCustomVarExceptionInvalidScopeTooHigh()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'The Scope must be a value between 1 and 3'
         );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 4, 1);
@@ -487,7 +489,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetCustomVarExceptionInvalidScopeTooLow()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'The Scope must be a value between 1 and 3'
         );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 0, 1);
@@ -495,20 +497,20 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetCustomVarExceptionNameWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Custom Var Name must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Custom Var Name must be a string.');
         $this->gass->setCustomVar(array('Custom Var 1'), 'Custom Value 1');
     }
 
     public function testSetCustomVarExceptionValueWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Custom Var Value must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Custom Var Value must be a string.');
         $this->gass->setCustomVar('Custom Var 1', array('Custom Value 1'));
     }
 
     public function testSetCustomVarExceptionExceedsByteVarLimit()
     {
         $this->setExpectedException(
-            'GASS\Exception\DomainException',
+            'Gass\Exception\DomainException',
             'The name / value combination exceeds the 128 byte custom var limit.'
         );
         $this->gass->setCustomVar(
@@ -520,7 +522,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetCustomVarExceptionExceededVarCountLimit()
     {
         $this->setExpectedException(
-            'GASS\Exception\OutOfBoundsException',
+            'Gass\Exception\OutOfBoundsException',
             'You cannot add more than 5 custom variables.'
         );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1');
@@ -534,7 +536,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testGetVisitorCustomVarExceptionInvalidIndex()
     {
         $this->setExpectedException(
-            'GASS\Exception\OutOfBoundsException',
+            'Gass\Exception\OutOfBoundsException',
             'The index: "10" has not been set.'
         );
         $this->gass->getVisitorCustomVar(10);
@@ -546,7 +548,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setCustomVar('Custom Var 2', 'Custom Value 2');
         $this->gass->setCustomVar('Custom Var 3', 'Custom Value 3');
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->deleteCustomVar(2)
         );
         $this->assertArrayNotHasKey('index2', $this->gass->getCustomVariables());
@@ -554,7 +556,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteCustomVarExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Custom Var Index must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Custom Var Index must be a string.');
         $this->gass->deleteCustomVar(array(1));
     }
 
@@ -562,7 +564,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         $charset = 'UTF-8';
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->setCharset($charset)
         );
         $this->assertEquals($charset, $this->gass->getCharset());
@@ -572,7 +574,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetCharsetExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Charset must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Charset must be a string.');
         $this->gass->setCharset(array('UTF-8'));
     }
 
@@ -583,7 +585,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             'testb' => array('a', 'bcd')
         );
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->setSearchEngines($searchEngines)
         );
         $this->assertEquals($searchEngines, $this->gass->getSearchEngines());
@@ -591,13 +593,13 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSearchEnginesExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', '$searchEngines must be an array.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', '$searchEngines must be an array.');
         $this->gass->setSearchEngines(new \stdClass);
     }
 
     public function testSetSearchEnginesExceptionWrongQueryParamsDataType()
     {
-        $this->setExpectedException('GASS\Exception\DomainException', 'searchEngines entry testb invalid');
+        $this->setExpectedException('Gass\Exception\DomainException', 'searchEngines entry testb invalid');
         $this->gass->setSearchEngines(
             array(
                 'testa' => array('a'),
@@ -608,7 +610,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSearchEnginesExceptionWrongQueryParamsCount()
     {
-        $this->setExpectedException('GASS\Exception\DomainException', 'searchEngines entry testa invalid');
+        $this->setExpectedException('Gass\Exception\DomainException', 'searchEngines entry testa invalid');
         $this->gass->setSearchEngines(
             array(
                 'testa' => array(),
@@ -619,7 +621,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSearchEnginesExceptionWrongNameDataType()
     {
-        $this->setExpectedException('GASS\Exception\OutOfBoundsException', 'search engine name "1" is invalid');
+        $this->setExpectedException('Gass\Exception\OutOfBoundsException', 'search engine name "1" is invalid');
         $this->gass->setSearchEngines(
             array(
                 1 => array('a'),
@@ -630,7 +632,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSearchEnginesExceptionInvalidNameCharacters()
     {
-        $this->setExpectedException('GASS\Exception\OutOfBoundsException', 'search engine name "test#" is invalid');
+        $this->setExpectedException('Gass\Exception\OutOfBoundsException', 'search engine name "test#" is invalid');
         $this->gass->setSearchEngines(
             array(
                 'test#' => array('a'),
@@ -641,7 +643,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSearchEnginesExceptionWrongQueryParameterDataType()
     {
-        $this->setExpectedException('GASS\Exception\DomainException', 'search engine query parameter "1" is invalid');
+        $this->setExpectedException('Gass\Exception\DomainException', 'search engine query parameter "1" is invalid');
         $this->gass->setSearchEngines(
             array(
                 'testa' => array(1),
@@ -652,7 +654,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSearchEnginesExceptionInvalidQueryParameterCharacters()
     {
-        $this->setExpectedException('GASS\Exception\DomainException', 'search engine query parameter "a&" is invalid');
+        $this->setExpectedException('Gass\Exception\DomainException', 'search engine query parameter "a&" is invalid');
         $this->gass->setSearchEngines(
             array(
                 'testa' => array('a&'),
@@ -672,18 +674,18 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setRemoteAddress('123.123.123.123');
 
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->setBotInfo(true)
         );
         $currentBotInfo = $this->gass->getBotInfo();
-        $this->assertInstanceOf('GASS\BotInfo\BotInfo', $currentBotInfo);
-        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $currentBotInfo->getAdapter());
+        $this->assertInstanceOf('Gass\BotInfo\BotInfo', $currentBotInfo);
+        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $currentBotInfo->getAdapter());
 
-        $browserCap = new \GASS\BotInfo\BrowsCap(array('browscap' => '/tmp/php_browscap.ini'));
+        $browserCap = new \Gass\BotInfo\BrowsCap(array('browscap' => '/tmp/php_browscap.ini'));
         $this->gass->setBotInfo($browserCap);
         $currentBotInfo = $this->gass->getBotInfo();
-        $this->assertInstanceOf('GASS\BotInfo\BotInfo', $currentBotInfo);
-        $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $currentBotInfo->getAdapter());
+        $this->assertInstanceOf('Gass\BotInfo\BotInfo', $currentBotInfo);
+        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $currentBotInfo->getAdapter());
 
         $this->gass->setBotInfo(
             array(
@@ -692,9 +694,9 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             )
         );
         $currentBotInfo = $this->gass->getBotInfo();
-        $this->assertInstanceOf('GASS\BotInfo\BotInfo', $currentBotInfo);
+        $this->assertInstanceOf('Gass\BotInfo\BotInfo', $currentBotInfo);
         $this->assertInstanceOf(
-            'GASS\BotInfo\UserAgentStringInfo',
+            'Gass\BotInfo\UserAgentStringInfo',
             $currentBotInfo->getAdapter()
         );
 
@@ -705,8 +707,8 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetBotInfoExceptionWrongDataType()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
-            'botInfo must be an array, boolean, null or a class which implements GASS\BotInfo\Interface.'
+            'Gass\Exception\InvalidArgumentException',
+            'botInfo must be an array, boolean, null or a class which implements Gass\BotInfo\Interface.'
         );
         $this->gass->setBotInfo(new \stdClass);
     }
@@ -717,12 +719,12 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
         $http = array('adapter' => 'curl');
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->setHttp($http)
         );
         $this->assertEquals($http, $this->gass->getHttp());
 
-        $httpAdapter = new \GASS\Http\Stream;
+        $httpAdapter = new \Gass\Http\Stream;
         $this->gass->setHttp($httpAdapter);
         $this->assertEquals($httpAdapter, $this->gass->getHttp());
 
@@ -733,8 +735,8 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetHttpExceptionWrongDataType()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
-            'http must be an array, null or a class which implements GASS\Http\Interface.'
+            'Gass\Exception\InvalidArgumentException',
+            'http must be an array, null or a class which implements Gass\Http\Interface.'
         );
         $this->gass->setHttp(new \stdClass);
     }
@@ -742,7 +744,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetOptionsValid()
     {
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->setOptions(
                 array(
                     'AcceptLanguage' => 'en-gb',
@@ -755,7 +757,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetOptionsExceptionWrongDataType()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'setOptions must be called with an array as an argument'
         );
         $this->gass->setOptions(new \stdClass);
@@ -764,7 +766,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetOptionValid()
     {
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->setOption('remoteAddress', '123.123.123.123')
         );
         $this->gass->setOption('AcceptLanguage', 'en-gb');
@@ -772,7 +774,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetOptionExceptionMissingOption()
     {
-        $this->setExpectedException('GASS\Exception\OutOfRangeException', 'Test is not an available option.');
+        $this->setExpectedException('Gass\Exception\OutOfRangeException', 'Test is not an available option.');
         $this->gass->setOption('Test', 'Value');
     }
 
@@ -830,14 +832,14 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testGetEventStringExceptionCategoryWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Event Category must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Event Category must be a string.');
         $this->gass->getEventString(new \stdClass, 'Value');
     }
 
     public function testGetEventStringExceptionEmptyCategory()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'An event requires at least a category and action'
         );
         $this->gass->getEventString('', 'Value');
@@ -845,14 +847,14 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testGetEventStringExceptionActionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Event Action must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Event Action must be a string.');
         $this->gass->getEventString('Category', new \stdClass);
     }
 
     public function testGetEventStringExceptionEmptyAction()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'An event requires at least a category and action'
         );
         $this->gass->getEventString('Category', '');
@@ -860,13 +862,13 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testGetEventStringExceptionLabelWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Event Label must be a string.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Event Label must be a string.');
         $this->gass->getEventString('Category', 'Action', new \stdClass);
     }
 
     public function testGetEventStringExceptionValueWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Value must be an integer.');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Value must be an integer.');
         $this->gass->getEventString('Category', 'Action', 'Label', '1');
     }
 
@@ -916,7 +918,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setServerName('www.example.com');
         $this->gass->disableCookieHeaders();
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->setCookies()
         );
         $currentCookies = $this->gass->getCookies();
@@ -945,14 +947,14 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSessionCookieTimeoutValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setSessionCookieTimeout(86400000));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setSessionCookieTimeout(86400000));
         $this->assertAttributeEquals(86400, 'sessionCookieTimeout', $this->gass);
     }
 
     public function testSetSessionCookieTimeoutExceptionFloatArgument()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'Session Cookie Timeout must be an integer.'
         );
         $this->gass->setSessionCookieTimeout(86400.000);
@@ -961,7 +963,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetSessionCookieTimeoutExceptionStringArgument()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'Session Cookie Timeout must be an integer.'
         );
         $this->gass->setSessionCookieTimeout('86400000');
@@ -969,14 +971,14 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetVisitorCookieTimeoutValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVisitorCookieTimeout(86400000));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVisitorCookieTimeout(86400000));
         $this->assertAttributeEquals(86400, 'visitorCookieTimeout', $this->gass);
     }
 
     public function testSetVisitorCookieTimeoutExceptionFloatArgument()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'Visitor Cookie Timeout must be an integer.'
         );
         $this->gass->setVisitorCookieTimeout(86400.000);
@@ -985,7 +987,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetVisitorCookieTimeoutExceptionStringArgument()
     {
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'Visitor Cookie Timeout must be an integer.'
         );
         $this->gass->setVisitorCookieTimeout('86400000');
@@ -993,21 +995,21 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testDisableCookieHeadersValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->disableCookieHeaders());
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->disableCookieHeaders());
         $this->assertAttributeEquals(false, 'sendCookieHeaders', $this->gass);
     }
 
     public function testSetVersionFromJsValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersion('1.1.1'));
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersionFromJs());
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVersion('1.1.1'));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVersionFromJs());
         $this->assertEquals('5.4.1', $this->gass->getVersion());
     }
 
     public function testSetSearchEnginesFromJsValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setSearchEngines(array()));
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setSearchEnginesFromJs());
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setSearchEngines(array()));
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setSearchEnginesFromJs());
         $jsSearchEngines = $this->gass->getSearchEngines();
         $this->assertNotEmpty($jsSearchEngines);
         $this->assertArrayHasKey('google', $jsSearchEngines);
@@ -1021,7 +1023,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             ->gass->disableCookieHeaders()
             ->setAccount('MO-00000-0');
         $this->gass->setPageTitle('Example Page Title');
-        $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->trackPageview());
+        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->trackPageview());
         $this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
         $this->gass->trackPageview();
         $this->gass->trackPageview('http://www.test.co.uk/example/path?q=other');
@@ -1033,7 +1035,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         $url = 'www.test.co.uk/example/path?q=other';
         $this->setExpectedException(
-            'GASS\Exception\DomainException',
+            'Gass\Exception\DomainException',
             'Url is invalid: '.$url
         );
         $this->gass->trackPageview($url);
@@ -1044,7 +1046,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->initialiseBrowserDetails()
             ->gass->disableCookieHeaders();
         $this->setExpectedException(
-            'GASS\Exception\DomainException',
+            'Gass\Exception\DomainException',
             'The account number must be set before any tracking can take place.'
         );
         $this->gass->trackPageview();
@@ -1068,7 +1070,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $label = 'Test Label';
         $value = 1;
         $this->assertInstanceOf(
-            'GoogleAnalyticsServerSide',
+            'Gass\GoogleAnalyticsServerSide',
             $this->gass->trackEvent($category, $action, $label, $value)
         );
         $this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
@@ -1082,7 +1084,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->initialiseBrowserDetails()
             ->gass->disableCookieHeaders();
         $this->setExpectedException(
-            'GASS\Exception\DomainException',
+            'Gass\Exception\DomainException',
             'The account number must be set before any tracking can take place.'
         );
         $this->gass->trackEvent('Test Category', 'Test Action', 'Test Label', 1);
@@ -1093,7 +1095,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->initialiseBrowserDetails()
             ->gass->disableCookieHeaders();
         $this->setExpectedException(
-            'GASS\Exception\InvalidArgumentException',
+            'Gass\Exception\InvalidArgumentException',
             'NonInteraction must be a boolean.'
         );
         $this->gass->trackEvent('Test Category', 'Test Action', 'Test Label', 1, 1);

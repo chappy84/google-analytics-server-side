@@ -36,14 +36,14 @@
 /**
  * @namespace
  */
-namespace GASS\Http;
+namespace Gass\Http;
 
-use GASS\Adapter;
+use Gass\Adapter;
 
 /**
  * Interface for all Http Adapters
  *
- * @uses        GASS\Adapter
+ * @uses        Gass\Adapter
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -99,7 +99,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the current Accepted Language for the sent headers
      *
      * @param string $acceptLanguage
-     * @return GASS\Http\HttpInterface
+     * @return Gass\Http\HttpInterface
      * @access public
      */
     public function setAcceptLanguage($acceptLanguage);
@@ -108,7 +108,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the current Remote Address for the sent headers (X-Forwarded-For)
      *
      * @param string $remoteAddress
-     * @return GASS\Http\HttpInterface
+     * @return Gass\Http\HttpInterface
      * @access public
      */
     public function setRemoteAddress($remoteAddress);
@@ -117,7 +117,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the existing request response
      *
      * @param mixed $response
-     * @return GASS\Http\HttpInterface
+     * @return Gass\Http\HttpInterface
      * @access public
      */
     public function setResponse($response);
@@ -126,7 +126,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the Url to Request
      *
      * @param string $url
-     * @return GASS\Http\HttpInterface
+     * @return Gass\Http\HttpInterface
      * @access public
      */
     public function setUrl($url);
@@ -135,7 +135,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the current User-Agent for the sent headers
      *
      * @param string $userAgent
-     * @return GASS\Http\HttpInterface
+     * @return Gass\Http\HttpInterface
      * @access public
      */
     public function setUserAgent($userAgent);
@@ -145,7 +145,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      *
      * @param string $url
      * @param array $options
-     * @return GASS\Http\HttpInterface
+     * @return Gass\Http\HttpInterface
      * @access public
      */
     public function request($url = null, array $options = array());

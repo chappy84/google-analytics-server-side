@@ -36,18 +36,18 @@
 /**
  * @namespace
  */
-namespace GASS\Http;
+namespace Gass\Http;
 
-use GASS\Adapter;
-use GASS\Exception;
-use GASS\Validate;
+use Gass\Adapter;
+use Gass\Exception;
+use Gass\Validate;
 
 /**
  * Base class for all Http adapters
  *
- * @uses        GASS\Adapter
- * @uses        GASS\Exception
- * @uses        GASS\Validate
+ * @uses        Gass\Adapter
+ * @uses        Gass\Exception
+ * @uses        Gass\Validate
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -138,12 +138,12 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param string $acceptLanguage
-     * @return GASS\Http\Base
+     * @return Gass\Http\Base
      * @access public
      */
     public function setAcceptLanguage($acceptLanguage)
     {
-        $langValidator = new Validate\LanguageCode();
+        $langValidator = new Validate\LanguageCode;
         if (!$langValidator->isValid($acceptLanguage)) {
             throw new Exception\InvalidArgumentException(
                 'Accept Language validation errors: '.implode(', ', $langValidator->getMessages())
@@ -157,13 +157,13 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param string $remoteAddress
-     * @return GASS\Http\Base
+     * @return Gass\Http\Base
      * @access public
      */
     public function setRemoteAddress($remoteAddress)
     {
         if (!empty($remoteAddress)) {
-            $ipValidator = new Validate\IpAddress();
+            $ipValidator = new Validate\IpAddress;
             if (!$ipValidator->isValid($remoteAddress)) {
                 throw new Exception\InvalidArgumentException(
                     'Remote Address validation errors: '.implode(', ', $ipValidator->getMessages())
@@ -178,7 +178,7 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param mixed $response
-     * @return GASS\Http\Base
+     * @return Gass\Http\Base
      * @access public
      */
     public function setResponse($response)
@@ -191,7 +191,7 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param string $userAgent
-     * @return GASS\Http\Base
+     * @return Gass\Http\Base
      * @access public
      */
     public function setUserAgent($userAgent)
@@ -204,8 +204,8 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * Checks the return code and throws an exception if an issue with the response
      *
      * @param integer $code
-     * @throws GASS\Exception\InvalidArgumentException
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\InvalidArgumentException
+     * @throws Gass\Exception\RuntimeException
      * @access protected
      */
     protected function checkResponseCode($code)
@@ -352,7 +352,7 @@ abstract class Base extends Adapter\Base implements HttpInterface
      *
      * @param string $url
      * @param array $options
-     * @return GASS\Http\Base
+     * @return Gass\Http\Base
      * @access public
      */
     public function request($url = null, array $options = array())

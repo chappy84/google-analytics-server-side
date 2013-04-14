@@ -36,16 +36,16 @@
 /**
  * @namespace
  */
-namespace GASS\BotInfo;
+namespace Gass\BotInfo;
 
-use GASS\Exception;
-use GASS\Http;
+use Gass\Exception;
+use Gass\Http;
 
 /**
  * BrowsCap adapter which uses browscap ini file to positively identify allowed browsers
  *
- * @uses        GASS\Exception
- * @uses        GASS\Http
+ * @uses        Gass\Exception
+ * @uses        Gass\Http
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -127,7 +127,7 @@ class BrowsCap extends Base
     /**
      * Gets the latest version date from the web
      *
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\RuntimeException
      * @access private
      */
     private function setLatestVersionDate()
@@ -161,7 +161,7 @@ class BrowsCap extends Base
     /**
      * Checks whether the browscap file exists, is readable, and hasn't expired the cache lifetime
      *
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\RuntimeException
      * @access private
      */
     private function checkIniFile()
@@ -188,11 +188,10 @@ class BrowsCap extends Base
         $this->loadIniFile();
     }
 
-
     /**
      * Updates the browscap ini file to the latest version
      *
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\RuntimeException
      * @access private
      */
     private function updateIniFile()
@@ -208,7 +207,7 @@ class BrowsCap extends Base
         $currentHttpUserAgent = Http\Http::getInstance()->getUserAgent();
         if ($currentHttpUserAgent === null || '' == trim($currentHttpUserAgent)) {
             throw new Exception\RuntimeException(
-                __CLASS__.' cannot be initialised before a user-agent has been set in the GASS\Http adapter.'.
+                __CLASS__.' cannot be initialised before a user-agent has been set in the Gass\Http adapter.'.
                 ' The remote server rejects requests without a user-agent.'
             );
         }
@@ -227,7 +226,6 @@ class BrowsCap extends Base
         }
     }
 
-
     /**
      * Loads the browscap ini file from the specified location
      *
@@ -242,7 +240,6 @@ class BrowsCap extends Base
         }
         $this->browsers = $browsers;
     }
-
 
     /**
      * Returns all the details related to a browser
@@ -265,7 +262,6 @@ class BrowsCap extends Base
         }
         return false;
     }
-
 
     /**
      * Checks the parsed browscap ini file for the provided user-agent.

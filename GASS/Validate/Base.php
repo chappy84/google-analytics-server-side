@@ -36,14 +36,14 @@
 /**
  * @namespace
  */
-namespace GASS\Validate;
+namespace Gass\Validate;
 
-use GASS\Adapter;
+use Gass\Adapter;
 
 /**
  * Interface for all Http Adapters
  *
- * @uses        GASS\Adapter
+ * @uses        Gass\Adapter
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -94,7 +94,7 @@ abstract class Base extends Adapter\Base implements Validate
      * Set the validation messages
      *
      * @param array $messages
-     * @return \GASS\Validate\Base
+     * @return \Gass\Validate\Base
      * @access public
      */
     public function setMessages(array $messages)
@@ -107,7 +107,7 @@ abstract class Base extends Adapter\Base implements Validate
      * Sets the value being validated
      *
      * @param mixed $value
-     * @return \GASS\Validate\Base
+     * @return \Gass\Validate\Base
      * @access public
      */
     public function setValue($value)
@@ -120,7 +120,7 @@ abstract class Base extends Adapter\Base implements Validate
      * Adds a validation message;
      *
      * @param string $message
-     * @return GASS\Validate\Base
+     * @return Gass\Validate\Base
      * @access public
      */
     public function addMessage($message, $value = null)

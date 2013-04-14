@@ -33,20 +33,20 @@
  * @subpackage  Validate
  */
 
-namespace GASSTests\GASS\Validate;
+namespace GassTests\Gass\Validate;
 
 class LanguageCodeTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var GASS\Validate\LanguageCode
+     * @var Gass\Validate\LanguageCode
      * @access private
      */
     private $languageValidator;
 
     public function setUp()
     {
-        $this->languageValidator = new \GASS\Validate\LanguageCode();
+        $this->languageValidator = new \Gass\Validate\LanguageCode;
     }
 
     public function tearDown()

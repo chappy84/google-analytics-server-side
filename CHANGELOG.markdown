@@ -1,12 +1,15 @@
 Google Analytics Server Side Changelog
 ======================================
 
-Version 0.8.7 Beta
+Version 0.9.0 Beta
 ------------------
 
-- Bring the code-base inline with the PSR-2 standard using PHP_CodeSniffer
-- Update Test HTTP adapter to store the response for one or more HTTP requests
+- Rename namespace from GASS to Gass inline with PSR-2 standard
+- Move main GoogleAnalyticsServerSide class inside Gass namespace
+- Implement SplClassLoader rather than proprietary one
+- Bring the code-base fully inline with the PSR-2 standard using PHP_CodeSniffer
 - Add in PHPUnit configuration values to test where superglobal values are used
+- Update Test HTTP adapter to store the response for one or more HTTP requests
 
 Version 0.8.6 Beta
 ------------------
@@ -33,7 +36,7 @@ Version 0.8.4 Beta
 - Added in PHPUnit tests for a large majority of the code, remainder to come
 - Search Engine information used for organic campaign info changed format in 5.3.0, update to deal with that
 - Altered parameters to getEventString. Includes code to deal with Backwards Compatibility.
-- Default GASS\Http adapter is now GASS\Http\Curl, falls back to GASS\Http\Stream if php cURL extension is not available
+- Default Gass\Http adapter is now Gass\Http\Curl, falls back to Gass\Http\Stream if php cURL extension is not available
 
 Version 0.8.3 Beta
 ------------------
@@ -49,8 +52,8 @@ Version 0.8.2 Beta
 Version 0.8.1 Beta
 ------------------
 
-- Add a __callStatic magic method to GASS\Http so adapter methods can be called statically
-- Ensure $php_errormsg has a value in GASS\Http\Stream so can be used when http request fails
+- Add a __callStatic magic method to Gass\Http so adapter methods can be called statically
+- Ensure $php_errormsg has a value in Gass\Http\Stream so can be used when http request fails
 - Correct spelling mistakes (retreive -> retrieve)
 
 Version 0.8.0 Beta

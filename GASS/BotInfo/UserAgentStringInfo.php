@@ -36,16 +36,16 @@
 /**
  * @namespace
  */
-namespace GASS\BotInfo;
+namespace Gass\BotInfo;
 
-use GASS\Exception;
-use GASS\Http;
+use Gass\Exception;
+use Gass\Http;
 
 /**
  * BrowsCap adapter which uses browscap ini file to negatively identify search engine bots
  *
- * @uses        GASS\Exception
- * @uses        GASS\Http
+ * @uses        Gass\Exception
+ * @uses        Gass\Http
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -102,7 +102,7 @@ class UserAgentStringInfo extends Base
     /**
      * Sets the bots list
      *
-     * @return GASS\BotInfo\UserAgentStringInfo
+     * @return Gass\BotInfo\UserAgentStringInfo
      * @access public
      */
     public function set()
@@ -136,7 +136,7 @@ class UserAgentStringInfo extends Base
      * and then parses it into the class level variable bots
      *
      * @return array|null
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\RuntimeException
      * @access private
      */
     private function getFromCache()
@@ -161,7 +161,7 @@ class UserAgentStringInfo extends Base
      * Retrieves the bots csv from the default source
      *
      * @return string
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\RuntimeException
      * @access private
      */
     private function getFromWeb()
@@ -212,7 +212,7 @@ class UserAgentStringInfo extends Base
      * Saves the current list of bots to the cache directory for use next time the script is run
      *
      * @return GoogleAnalyticsServerSide
-     * @throws GASS\Exception\RuntimeException
+     * @throws Gass\Exception\RuntimeException
      * @access private
      */
     private function saveToCache()
@@ -243,7 +243,7 @@ class UserAgentStringInfo extends Base
      *
      * @param integer $cacheDate [optional]
      * @return GoogleAnalyticsServerSide
-     * @throws GASS\Exception\DomainException
+     * @throws Gass\Exception\DomainException
      * @access private
      */
     private function setCacheDate($cacheDate = null)
@@ -303,7 +303,7 @@ class UserAgentStringInfo extends Base
      * {@inheritdoc}
      *
      * @param array $options
-     * @return GASS\BotInfo\UserAgentStringInfo
+     * @return Gass\BotInfo\UserAgentStringInfo
      * @access public
      */
     public function setOptions(array $options)

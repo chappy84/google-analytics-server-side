@@ -36,10 +36,10 @@
 /**
  * @namespace
  */
-namespace GASS\Proxy;
+namespace Gass\Proxy;
 
 /**
- * Interface for GASS Proxy classes
+ * Interface for Gass Proxy classes
  *
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
@@ -55,7 +55,7 @@ interface ProxyInterface
      * Class Constructor
      *
      * @param array $options
-     * @param string|GASS\Adapter\AdapterInterface $adapter [optional] - can be provided in $options aswell
+     * @param string|Gass\Adapter\AdapterInterface $adapter [optional] - can be provided in $options aswell
      * @access public
      */
     public function __construct(array $options = array(), $adapter = null);
@@ -65,7 +65,7 @@ interface ProxyInterface
      *
      * @param string $name
      * @param array $arguments
-     * @throws GASS\Exception\DomainException
+     * @throws Gass\Exception\DomainException
      * @return mixed
      * @access public
      */
@@ -74,8 +74,8 @@ interface ProxyInterface
     /**
      * Set the adapter to use
      *
-     * @param string|GASS\Adapter\AdapterInterface $adapter
-     * @return GASS\ProxyInterface
+     * @param string|Gass\Adapter\AdapterInterface $adapter
+     * @return Gass\ProxyInterface
      * @access public
      */
     public function setAdapter($adapter);
@@ -83,7 +83,7 @@ interface ProxyInterface
     /**
      * Get the instance of the current adapter in use
      *
-     * @return GASS\Adapter\AdapterInterface
+     * @return Gass\Adapter\AdapterInterface
      * @access public
      */
     public function getAdapter();

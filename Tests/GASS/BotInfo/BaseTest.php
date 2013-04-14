@@ -32,13 +32,13 @@
  * @package     GoogleAnalyticsServerSide
  * @subpackage  BotInfo
  */
-namespace GASSTests\GASS\BotInfo;
+namespace GassTests\Gass\BotInfo;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var GASS\BotInfo\Base
+     * @var Gass\BotInfo\Base
      * @access private
      */
     private $baseBotInfo;
@@ -46,7 +46,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->baseBotInfo = $this->getMockForAbstractClass('GASS\BotInfo\Base');
+        $this->baseBotInfo = $this->getMockForAbstractClass('Gass\BotInfo\Base');
     }
 
     public function tearDown()
@@ -57,31 +57,31 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function testSetRemoteAddressValid()
     {
         $validRemoteAddress = '192.168.0.1';
-        $this->assertInstanceOf('GASS\BotInfo\Base', $this->baseBotInfo->setRemoteAddress($validRemoteAddress));
+        $this->assertInstanceOf('Gass\BotInfo\Base', $this->baseBotInfo->setRemoteAddress($validRemoteAddress));
         $this->assertEquals($validRemoteAddress, $this->baseBotInfo->getRemoteAddress());
     }
 
     public function testSetRemoteAddressExceptionLetters()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->baseBotInfo->setRemoteAddress('abc.def.ghi.jkl');
     }
 
     public function testSetRemoteAddressExceptionTooHighSegments()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->baseBotInfo->setRemoteAddress('500.500.500.500');
     }
 
     public function testSetRemoteAddressExceptionMissingSegments()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->baseBotInfo->setRemoteAddress('255.255');
     }
 
     public function testSetRemoteAddressExceptionInteger()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException');
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
         $this->baseBotInfo->setRemoteAddress('192');
     }
 
@@ -95,7 +95,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     {
         $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.11 '.
             '(KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11';
-        $this->assertInstanceOf('GASS\BotInfo\Base', $this->baseBotInfo->setUserAgent($userAgent));
+        $this->assertInstanceOf('Gass\BotInfo\Base', $this->baseBotInfo->setUserAgent($userAgent));
         $this->assertEquals($userAgent, $this->baseBotInfo->getUserAgent());
     }
 }

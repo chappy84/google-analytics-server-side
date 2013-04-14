@@ -36,7 +36,7 @@
 /**
  * @namespace
  */
-namespace GASS\Adapter;
+namespace Gass\Adapter;
 
 /**
  * Base class for use with adapters
@@ -74,7 +74,7 @@ abstract class Base implements AdapterInterface
      * {@inheritdoc}
      *
      * @param array $options
-     * @return GASS\Adapter\Base
+     * @return Gass\Adapter\Base
      * @access public
      */
     public function setOptions(array $options)
@@ -90,7 +90,7 @@ abstract class Base implements AdapterInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return GASS\Adapter\Base
+     * @return Gass\Adapter\Base
      * @access public
      */
     public function setOption($name, $value)

@@ -36,14 +36,14 @@
 /**
  * @namespace
  */
-namespace GASS\BotInfo;
+namespace Gass\BotInfo;
 
-use GASS\Adapter;
+use Gass\Adapter;
 
 /**
  * Interface all BotInfo adapters should conform to
  *
- * @uses        GASS\Adapter
+ * @uses        Gass\Adapter
  * @copyright   Copyright (c) 2011-2013 Tom Chapman (http://tom-chapman.co.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
@@ -72,7 +72,6 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      */
     public function getRemoteAddress();
 
-
     /**
      * Get the user agent used in the class
      *
@@ -81,12 +80,11 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      */
     public function getUserAgent();
 
-
     /**
      * Sets the remote user's ip address
      *
      * @param string $remoteAddress
-     * @return GASS\BotInfo\BotInfoInterface
+     * @return Gass\BotInfo\BotInfoInterface
      * @access public
      */
     public function setRemoteAddress($remoteAddress);
@@ -95,7 +93,7 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      * Set the current user agent
      *
      * @param string $userAgent
-     * @return GASS\BotInfo\BotInfoInterface
+     * @return Gass\BotInfo\BotInfoInterface
      * @access public
      */
     public function setUserAgent($userAgent);
