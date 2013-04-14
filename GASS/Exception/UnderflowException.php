@@ -49,4 +49,5 @@ namespace GASS\Exception;
  * @subpackage  Exception
  */
 class UnderflowException extends \UnderflowException implements ExceptionInterface
-{}
+{
+}

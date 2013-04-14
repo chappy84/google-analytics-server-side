@@ -39,21 +39,48 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 {
     private $iniFileLocation;
 
-
     public function setUp()
     {
         parent::setUp();
         \GASS\Http\Http::getInstance(array(), new \GASS\Http\Test);
-        $this->iniFileLocation = realpath(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR
-                                          .'dependency-files'.DIRECTORY_SEPARATOR.'php_browscap.ini');
+        $this->iniFileLocation = realpath(
+            dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR.'php_browscap.ini'
+        );
     }
-
 
     public function tearDown()
     {
         parent::tearDown();
     }
 
+    public function getBrowscapWithIni()
+    {
+        return new \GASS\BotInfo\BrowsCap(
+            array(
+                'browscap' => $this->iniFileLocation
+            )
+        );
+    }
+
+    public function setTestHttpForVersionDateFile()
+    {
+        $latestVersionDateFile = dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt';
+        $httpAdapter = new \GASS\Http\Test;
+        $httpAdapter->addRequestQueueItem(
+            \GASS\BotInfo\BrowsCap::VERSION_DATE_URL,
+            'HTTP/1.1 200 Ok'."\n".
+            'Connection:Keep-Alive'."\n".
+            'Content-Length:31'."\n".
+            'Content-Type:text/html'."\n".
+            'Date:Sun, 17 Feb 2013 00:06:15 GMT'."\n".
+            'Keep-Alive:timeout=5, max=100'."\n".
+            'Server:Apache/2.0.64 (Unix) mod_ssl/2.0.64 OpenSSL/0.9.8e-fips-rhel5 '.
+            'mod_auth_passthrough/2.1 mod_bwlimited/1.4 FrontPage/5.0.2.2635'."\n".
+            'X-Powered-By:PHP/5.3.19',
+            file_get_contents($latestVersionDateFile)
+        );
+        \GASS\Http\Http::getInstance(array(), $httpAdapter);
+    }
 
     public function testConstructValidNoArguments()
     {
@@ -61,44 +88,39 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
     }
 
-
     public function testConstructValidBrowscapInOptions()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                        'browscap' => $this->iniFileLocation
-                    ));
+        $browsCap = $this->getBrowscapWithIni();
         $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
         $this->assertEquals($this->iniFileLocation, $browsCap->getOption('browscap'));
     }
 
-
     public function testConstructValidUnknownOptions()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                        'tripe' => $this->iniFileLocation
-                    ));
+        $browsCap = new \GASS\BotInfo\BrowsCap(
+            array(
+                'tripe' => $this->iniFileLocation
+            )
+        );
         $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
         $this->assertEquals($this->iniFileLocation, $browsCap->getOption('tripe'));
     }
 
-
     public function testGetLatestVersionDate()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                        'browscap' => $this->iniFileLocation
-                    ));
+        $browsCap = $this->getBrowscapWithIni();
+        $this->setTestHttpForVersionDateFile();
         $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap);
         $this->assertEquals($this->iniFileLocation, $browsCap->getOption('browscap'));
-        $this->assertEquals(strtotime(file_get_contents(dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt')),
-                            $browsCap->getLatestVersionDate());
+        $this->assertEquals(
+            strtotime(file_get_contents(dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt')),
+            $browsCap->getLatestVersionDate()
+        );
     }
-
 
     public function testGetBrowserValid()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                        'browscap' => $this->iniFileLocation
-                    ));
+        $browsCap = $this->getBrowscapWithIni();
         $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
         $browserResult = $browsCap->getBrowser($firefoxUserAgent);
         $this->assertEquals($firefoxUserAgent, $browsCap->getUserAgent());
@@ -124,12 +146,9 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $crawlerResult->javascript);
     }
 
-
     public function testGetBrowserValidReturnArray()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                'browscap' => $this->iniFileLocation
-        ));
+        $browsCap = $this->getBrowscapWithIni();
         $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
         $browserResult = $browsCap->getBrowser($firefoxUserAgent, true);
         $this->assertTrue(is_array($browserResult));
@@ -139,9 +158,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBrowserNoArguments()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                'browscap' => $this->iniFileLocation
-        ));
+        $browsCap = $this->getBrowscapWithIni();
         $this->assertEquals(false, $browsCap->getBrowser());
         $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
         $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $browsCap->setUserAgent($firefoxUserAgent));
@@ -152,17 +169,13 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBrowserEmptyUserAgent()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                        'browscap' => $this->iniFileLocation
-                    ));
+        $browsCap = $this->getBrowscapWithIni();
         $this->assertEquals(false, $browsCap->getBrowser(''));
     }
 
     public function testGetIsBotValid()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                'browscap' => $this->iniFileLocation
-        ));
+        $browsCap = $this->getBrowscapWithIni();
         $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
         $this->assertFalse($browsCap->getIsBot($firefoxUserAgent));
         $this->assertEquals($firefoxUserAgent, $browsCap->getUserAgent());
@@ -175,11 +188,19 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function testGetIsBotSetRemoteAddress()
     {
-        $browsCap = new \GASS\BotInfo\BrowsCap(array(
-                'browscap' => $this->iniFileLocation
-        ));
+        $browsCap = $this->getBrowscapWithIni();
         $testIpAddress = '123.123.123.123';
         $browsCap->getIsBot('', $testIpAddress);
         $this->assertEquals($testIpAddress, $browsCap->getRemoteAddress());
+    }
+
+    public function testCheckIniFileEmptyBrowscapRuntimeException()
+    {
+        $this->setExpectedException(
+            'GASS\Exception\RuntimeException',
+            'The browscap option has not been specified, please set this and try again.'
+        );
+        $browscap = new \GASS\BotInfo\Browscap;
+        $browscap->getBrowser();
     }
 }

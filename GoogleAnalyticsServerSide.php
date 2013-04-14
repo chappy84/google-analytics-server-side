@@ -29,12 +29,12 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'core.php';
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @version     0.8.6 Beta
+ * @version     0.8.7 Beta
  * @category    GoogleAnalyticsServerSide
  * @package     GoogleAnalyticsServerSide
- * @example     $gass = new GoogleAnalyticsServerSide();
+ * @example     $gass = new GoogleAnalyticsServerSide;
  *              $gass->setAccount('UA-XXXXXXX-X')
- *                   ->trackPageView();
+ *                  ->trackPageView();
  */
 
 use GASS\BotInfo;
@@ -94,7 +94,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @var string
      * @access private
      */
-    private $version = '5.3.9';
+    private $version = '5.4.1';
 
 
     /**
@@ -242,11 +242,13 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @var array
      * @access private
      */
-    private $cookies = array(    '__utma'    => null,
-                                 '__utmb'    => null,
-                                 '__utmc'    => null,
-                                 '__utmv'    => null,
-                                 '__utmz'    => null);
+    private $cookies = array(
+        '__utma' => null,
+        '__utmb' => null,
+        '__utmc' => null,
+        '__utmv' => null,
+        '__utmz' => null
+    );
 
     /**
      * Whether or not setCookies has been called
@@ -264,50 +266,52 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @var array
      * @access private
      */
-    private $searchEngines = array(  'daum'              => array('q'),
-                                     'eniro'             => array('search_word'),
-                                     'naver'             => array('query'),
-                                     'pchome'            => array('q'),
-                                     'images.google'     => array('q'),
-                                     'google'            => array('q'),
-                                     'yahoo'             => array('p', 'q'),
-                                     'msn'               => array('q'),
-                                     'bing'              => array('q'),
-                                     'aol'               => array('query', 'q'),
-                                     'lycos'             => array('q', 'query'),
-                                     'ask'               => array('q'),
-                                     'netscape'          => array('query'),
-                                     'cnn'               => array('query'),
-                                     'about'             => array('terms'),
-                                     'mamma'             => array('q'),
-                                     'voila'             => array('rdata'),
-                                     'virgilio'          => array('qs'),
-                                     'live'              => array('q'),
-                                     'baidu'             => array('wd'),
-                                     'alice'             => array('qs'),
-                                     'yandex'            => array('text'),
-                                     'najdi'             => array('q'),
-                                     'seznam'            => array('q'),
-                                     'rakuten'           => array('qt'),
-                                     'biglobe'           => array('q'),
-                                     'goo.ne'            => array('MT'),
-                                     'wp'                => array('szukaj'),
-                                     'onet'              => array('qt'),
-                                     'yam'               => array('k'),
-                                     'kvasir'            => array('q'),
-                                     'ozu'               => array('q'),
-                                     'terra'             => array('query'),
-                                     'rambler'           => array('query'),
-                                     'conduit'           => array('q'),
-                                     'babylon'           => array('q'),
-                                     'search-results'    => array('q'),
-                                     'avg'               => array('q'),
-                                     'comcast'           => array('q'),
-                                     'incredimail'       => array('q'),
-                                     'startsiden'        => array('q'),
-                                     'go.mail.ru'        => array('q'),
-                                     'search.centrum.cz' => array('q'),
-                                     '360.cn'            => array('q'));
+    private $searchEngines = array(
+        'daum'              => array('q'),
+        'eniro'             => array('search_word'),
+        'naver'             => array('query'),
+        'pchome'            => array('q'),
+        'images.google'     => array('q'),
+        'google'            => array('q'),
+        'yahoo'             => array('p', 'q'),
+        'msn'               => array('q'),
+        'bing'              => array('q'),
+        'aol'               => array('query', 'q'),
+        'lycos'             => array('q', 'query'),
+        'ask'               => array('q'),
+        'netscape'          => array('query'),
+        'cnn'               => array('query'),
+        'about'             => array('terms'),
+        'mamma'             => array('q'),
+        'voila'             => array('rdata'),
+        'virgilio'          => array('qs'),
+        'live'              => array('q'),
+        'baidu'             => array('wd'),
+        'alice'             => array('qs'),
+        'yandex'            => array('text'),
+        'najdi'             => array('q'),
+        'seznam'            => array('q'),
+        'rakuten'           => array('qt'),
+        'biglobe'           => array('q'),
+        'goo.ne'            => array('MT'),
+        'wp'                => array('szukaj'),
+        'onet'              => array('qt'),
+        'yam'               => array('k'),
+        'kvasir'            => array('q'),
+        'ozu'               => array('q'),
+        'terra'             => array('query'),
+        'rambler'           => array('query'),
+        'conduit'           => array('q'),
+        'babylon'           => array('q'),
+        'search-results'    => array('q'),
+        'avg'               => array('q'),
+        'comcast'           => array('q'),
+        'incredimail'       => array('q'),
+        'startsiden'        => array('q'),
+        'go.mail.ru'        => array('q'),
+        'search.centrum.cz' => array('q'),
+        '360.cn'            => array('q')
+    );
 
     /**
      * Whether or not setSearchEngines has been called, used
@@ -708,7 +712,9 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $acceptLanguage = strtolower($acceptLanguage);
         $langValidator = new Validate\LanguageCode();
         if (!$langValidator->isValid($acceptLanguage)) {
-            throw new Exception\InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
+            throw new Exception\InvalidArgumentException(
+                'Accept Language validation errors: '.implode(', ', $langValidator->getMessages())
+            );
         }
         $this->acceptLanguage = $acceptLanguage;
         Http\Http::setAcceptLanguage($acceptLanguage);
@@ -739,7 +745,9 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $remoteAddress = $this->getAsString($remoteAddress, 'Remote Address');
         $ipValidator = new Validate\IpAddress();
         if (!$ipValidator->isValid($remoteAddress)) {
-            throw new Exception\InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
+            throw new Exception\InvalidArgumentException(
+                'Remote Address validation errors: '.implode(', ', $ipValidator->getMessages())
+            );
         }
         $this->remoteAddress = $remoteAddress;
         Http\Http::setRemoteAddress($this->remoteAddress);
@@ -759,8 +767,10 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     public function setAccount($account)
     {
         $account = $this->getAsString($account, 'Account');
-        if (1 !== preg_match('/^(MO|UA)-\d{4,}-\d+$/',$account)) {
-            throw new Exception\InvalidArgumentException('Google Analytics user account must be in the format: UA-XXXXXXX-X or MO-XXXXXXX-X');
+        if (1 !== preg_match('/^(MO|UA)-\d{4,}-\d+$/', $account)) {
+            throw new Exception\InvalidArgumentException(
+                'Google Analytics user account must be in the format: UA-XXXXXXX-X or MO-XXXXXXX-X'
+            );
         }
         $this->account = trim($account);
         return $this;
@@ -811,7 +821,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     {
         if (!in_array($doNotTrack, array(1, 0, null, '1', '0', 'null', 'unset'))) {
             throw new Exception\InvalidArgumentException('$doNotTrack must have a value of 1, 0, \'unset\' or null');
-        } else if (is_string($doNotTrack)) {
+        } elseif (is_string($doNotTrack)) {
             $doNotTrack = (is_numeric($doNotTrack)) ? (int) $doNotTrack : null;
         }
         $this->doNotTrack = $doNotTrack;
@@ -882,10 +892,12 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         if (128 < strlen($name.$value)) {
             throw new Exception\DomainException('The name / value combination exceeds the 128 byte custom var limit.');
         }
-        $this->customVariables['index'.$index] = array(  'index'    => (int) $index,
-                                                         'name'     => (string) $this->removeSpecialCustomVarChars($name),
-                                                         'value'    => (string) $this->removeSpecialCustomVarChars($value),
-                                                         'scope'    => (int) $scope);
+        $this->customVariables['index'.$index] = array(
+            'index' => (int) $index,
+            'name'  => (string) $this->removeSpecialCustomVarChars($name),
+            'value' => (string) $this->removeSpecialCustomVarChars($value),
+            'scope' => (int) $scope
+        );
         return $this;
     }
 
@@ -979,7 +991,9 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             foreach ($queryParams as $queryParameter) {
                 if (!is_string($queryParameter)
                         || 1 !== preg_match('/^[a-z0-9_\-]+$/i', $queryParameter)) {
-                    throw new Exception\DomainException('search engine query parameter "'.$queryParameter.'" is invalid');
+                    throw new Exception\DomainException(
+                        'search engine query parameter "'.$queryParameter.'" is invalid'
+                    );
                 }
             }
         }
@@ -1000,8 +1014,10 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     {
         if (!is_array($botInfo) && !is_bool($botInfo) && $botInfo !== null
                 && !$botInfo instanceof BotInfo\BotInfoInterface) {
-            throw new Exception\InvalidArgumentException('botInfo must be an array, boolean, null'
-                                                .' or a class which implements GASS\BotInfo\Interface.');
+            throw new Exception\InvalidArgumentException(
+                'botInfo must be an array, boolean, null'.
+                ' or a class which implements GASS\BotInfo\Interface.'
+            );
         } elseif ($botInfo !== null && $botInfo !== false) {
             if ($botInfo instanceof BotInfo\BotInfoInterface) {
                 $this->botInfo = new BotInfo\BotInfo(array(), $botInfo);
@@ -1029,8 +1045,10 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     {
         if ($http !== null && !is_array($http)
                 && !$http instanceof Http\HttpInterface) {
-            throw new Exception\InvalidArgumentException('http must be an array, null'
-                                                .' or a class which implements GASS\Http\Interface.');
+            throw new Exception\InvalidArgumentException(
+                'http must be an array, null'.
+                ' or a class which implements GASS\Http\Interface.'
+            );
         }
         if ($http !== null) {
             if ($http instanceof Http\HttpInterface) {
@@ -1123,7 +1141,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         if ($value !== null && !is_int($value)) {
             throw new Exception\InvalidArgumentException('Value must be an integer.');
         }
-        return '5('.$category.'*'.$action.(empty($label) ? '' : '*'.$label).')'.(($value !== null) ? '('.$value.')' : '');
+        return '5('.$category.'*'.$action.(empty($label) ? '' : '*'.$label).')'.
+            (($value !== null) ? '('.$value.')' : '');
     }
 
 
@@ -1144,7 +1163,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
                 $names[] = $value['name'];
                 $values[] = $value['value'];
                 if (in_array($value['scope'], array(1,2))) {
-                    $scopes[] = (($value['index'] > (count($scopes) + 1)) ? $value['index'].'!' : '' ) . $value['scope'];
+                    $scopes[] = (($value['index'] > (count($scopes) + 1)) ? $value['index'].'!' : '' ) .
+                        $value['scope'];
                 }
             }
             return '8('.implode($names, '*').')9('.implode($values, '*').')11('.implode($scopes, '*').')';
@@ -1226,7 +1246,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $this->setCookiesCalled = true;
         $cookies = (empty($cookies)) ? $this->getCookies() : $cookies;
 
-        // Check the cookies provided are valid for this class, getCookie will throw the exception if the name isn't valid
+        // Check the cookies provided are valid for this class,
+        // getCookie will throw the exception if the name isn't valid
         foreach ($cookies as $name => $value) {
             $this->getCookie($name);
         }
@@ -1235,7 +1256,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
          * Get the correct values out of the google analytics cookies
          */
         if (!empty($cookies['__utma'])) {
-            list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session) = explode('.', $cookies['__utma'], 6);
+            list($domainId, $visitorId, $firstVisit, $lastVisit, $currentVisit, $session)
+                = explode('.', $cookies['__utma'], 6);
         }
         if (!empty($cookies['__utmb'])) {
             list($domainId, $pageVisits, $session, $currentVisit) = explode('.', $cookies['__utmb'], 4);
@@ -1248,7 +1270,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             $this->setCustomVarsFromCookie($customVars);
         }
         if (!empty($cookies['__utmz'])) {
-            list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters) = explode('.', $cookies['__utmz'], 5);
+            list($domainId, $firstVisit, $session, $campaignNumber, $campaignParameters)
+                = explode('.', $cookies['__utmz'], 5);
         }
 
         /**
@@ -1258,7 +1281,7 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             $domainId = $this->getDomainHash();
         }
         if (!isset($visitorId) || !is_numeric($visitorId)) {
-            $visitorId = rand(0,999999999);
+            $visitorId = rand(0, 999999999);
         }
         if (!isset($firstVisit) || !is_numeric($firstVisit)) {
             $firstVisit = time();
@@ -1276,12 +1299,15 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
          * Works out where the traffic came from and sets the end part of the utmz cookie accordingly
          */
         $previousCampaignParameters = (!isset($campaignParameters) || false === strpos($campaignParameters, 'utmcsr='))
-                                        ? '' : $campaignParameters;
+            ? ''
+            : $campaignParameters;
         $referer = $this->getDocumentReferer();
         $serverName = $this->getServerName();
         if (!empty($referer) && !empty($serverName) && false === strpos($referer, $serverName)
                 && preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $referer)
-                && false !== ($refererParts = @parse_url($referer)) && isset($refererParts['host'], $refererParts['path'])) {
+                && false !== ($refererParts = @parse_url($referer))
+                && isset($refererParts['host'], $refererParts['path'])
+        ) {
             $refererSearchEngine = false;
             $searchEngines = $this->getSearchEngines();
             foreach ($searchEngines as $searchEngine => $queryParams) {
@@ -1295,18 +1321,21 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
                 }
             }
             if (false === $refererSearchEngine) {
-                $campaignParameters = 'utmcsr='.$refererParts['host'].'|utmccn=(referral)|utmcmd=referral|utmcct='.$refererParts['path'];
+                $campaignParameters = 'utmcsr='.$refererParts['host'].
+                    '|utmccn=(referral)|utmcmd=referral|utmcct='.$refererParts['path'];
             } else {
                 $queryParameters = $searchEngines[$searchEngine];
                 parse_str($refererParts['query'], $refererQueryParams);
                 $queryParamValue = '(not provided)';
                 foreach ($queryParameters as $queryParameter) {
-                    if (array_key_exists($queryParameter, $refererQueryParams) && !empty($refererQueryParams[$queryParameter])) {
+                    if (array_key_exists($queryParameter, $refererQueryParams)
+                            && !empty($refererQueryParams[$queryParameter])) {
                         $queryParamValue = $refererQueryParams[$queryParameter];
                         break;
                     }
                 }
-                $campaignParameters = 'utmcsr='.$searchEngine.'|utmccn=(organic)|utmcmd=organic|utmctr='.$queryParamValue;
+                $campaignParameters = 'utmcsr='.$searchEngine.
+                    '|utmccn=(organic)|utmcmd=organic|utmctr='.$queryParamValue;
             }
         }
         if (!isset($campaignParameters) || false === strpos($campaignParameters, 'utmcsr=')) {
@@ -1323,10 +1352,18 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         /**
          * Set the cookies to the required values
          */
-        $this->setCookie('__utma', $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session, $sendCookieHeaders);
+        $this->setCookie(
+            '__utma',
+            $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session,
+            $sendCookieHeaders
+        );
         $this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit, $sendCookieHeaders);
         $this->setCookie('__utmc', $domainId, $sendCookieHeaders);
-        $this->setCookie('__utmz', $domainId.'.'.$firstVisit.'.'.$session.'.'.$campaignNumber.'.'.$campaignParameters, $sendCookieHeaders);
+        $this->setCookie(
+            '__utmz',
+            $domainId.'.'.$firstVisit.'.'.$session.'.'.$campaignNumber.'.'.$campaignParameters,
+            $sendCookieHeaders
+        );
 
         $scope1Vars = $this->getCustomVarsByScope(1);
         if (!empty($scope1Vars)) {
@@ -1487,7 +1524,8 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @return GoogleAnalyticsServerSide
      * @access public
      */
-    public function setCookiesFromRequestHeaders() {
+    public function setCookiesFromRequestHeaders()
+    {
         foreach ($this->getCookies() as $name => $value) {
             if (!empty($_COOKIE[$name])) {
                 $this->setCookie($name, $_COOKIE[$name], false);
@@ -1528,7 +1566,11 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $currentJs = $this->getCurrentJsFile();
         if (!empty($currentJs)) {
             $regEx = '([a-z0-9:\s-_\.]+)';
-            $searchEngineString = preg_replace('/^[\s\S]+\=[\'"]'.$regEx.'[\'"]\.split\([\'"]\s+[\'"]\)[\s\S]+$/i', '$1', $currentJs);
+            $searchEngineString = preg_replace(
+                '/^[\s\S]+\=[\'"]'.$regEx.'[\'"]\.split\([\'"]\s+[\'"]\)[\s\S]+$/i',
+                '$1',
+                $currentJs
+            );
             if (preg_match('/^'.$regEx.'$/i', $searchEngineString)) {
                 $searchEngineArray = preg_split('#\s+#', $searchEngineString);
                 $searchEngines = array();
@@ -1635,15 +1677,17 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $this->setCookies();
 
         // Construct the gif hit url.
-        $queryParams = array(    'utmwv'    => $this->getVersion(),
-                                 'utmn'     => rand(0, 0x7fffffff),
-                                 'utmhn'    => $domainName,
-                                 'utmr'     => $documentReferer,
-                                 'utmac'    => $account,
-                                 'utmcc'    => $this->getCookiesString(),
-                                 'utmul'    => $this->getAcceptLanguage(),
-                                 'utmcs'    => $this->getCharset(),
-                                 'utmu'     => 'q~');
+        $queryParams = array(
+            'utmwv' => $this->getVersion(),
+            'utmn'  => rand(0, 0x7fffffff),
+            'utmhn' => $domainName,
+            'utmr'  => $documentReferer,
+            'utmac' => $account,
+            'utmcc' => $this->getCookiesString(),
+            'utmul' => $this->getAcceptLanguage(),
+            'utmcs' => $this->getCharset(),
+            'utmu'  => 'q~'
+        );
         if (0 === strpos($account, 'MO-')) {
             $queryParams['utmip'] = $this->getIPToReport();
         }

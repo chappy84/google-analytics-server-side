@@ -100,7 +100,9 @@ class BotInfo implements Proxy\ProxyInterface
             if (method_exists($this->adapter, $name)) {
                 return call_user_func_array(array($this->adapter, $name), $arguments);
             }
-            throw new Exception\BadMethodCallException('Method '.get_class($this->adapter).'::'.$name.' does not exist.');
+            throw new Exception\BadMethodCallException(
+                'Method '.get_class($this->adapter).'::'.$name.' does not exist.'
+            );
         }
         throw new Exception\DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
     }
@@ -124,7 +126,9 @@ class BotInfo implements Proxy\ProxyInterface
             $this->adapter = $adapter;
             return $this;
         }
-        throw new Exception\InvalidArgumentException('The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
+        throw new Exception\InvalidArgumentException(
+            'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.'
+        );
     }
 
 

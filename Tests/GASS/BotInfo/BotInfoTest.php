@@ -106,8 +106,10 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testSetAdapterExceptionAdapterWrongInstance()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.'
+        );
         $botInfo = new \GASS\BotInfo\BotInfo();
         $botInfo->setAdapter(new \stdClass());
     }
@@ -115,8 +117,10 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testSetAdapterExceptionAdapterWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.'
+        );
         $botInfo = new \GASS\BotInfo\BotInfo();
         $botInfo->setAdapter(1);
     }
@@ -124,8 +128,10 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testSetAdapterExceptionAdapterMissingString()
     {
-        $this->setExpectedException('RuntimeException',
-                                    'File could not be found for GASS\BotInfo\Test');
+        $this->setExpectedException(
+            'RuntimeException',
+            'File could not be found for GASS\BotInfo\Test'
+        );
         $botInfo = new \GASS\BotInfo\BotInfo();
         $botInfo->setAdapter('Test');
     }
@@ -148,8 +154,10 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $reflectionProperty = new \ReflectionProperty('GASS\BotInfo\BotInfo', 'adapter');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($botInfo, null);
-        $this->setExpectedException('GASS\Exception\DomainException',
-                                    'Adapter has not been set. Please set an adapter before calling setOption');
+        $this->setExpectedException(
+            'GASS\Exception\DomainException',
+            'Adapter has not been set. Please set an adapter before calling setOption'
+        );
         $botInfo->setOption('browscap', '/tmp/php_browscap.ini');
     }
 
@@ -157,8 +165,10 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
     public function testCallMagicMethodExceptionMissingMethod()
     {
         $botInfo = new \GASS\BotInfo\BotInfo();
-        $this->setExpectedException('GASS\Exception\BadMethodCallException',
-                                    'Method GASS\BotInfo\BrowsCap::testMethod does not exist.');
+        $this->setExpectedException(
+            'GASS\Exception\BadMethodCallException',
+            'Method GASS\BotInfo\BrowsCap::testMethod does not exist.'
+        );
         $botInfo->testMethod();
     }
 

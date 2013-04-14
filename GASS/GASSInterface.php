@@ -47,4 +47,5 @@ namespace GASS;
  * @package     GoogleAnalyticsServerSide
  */
 interface GASSInterface
-{}
+{
+}

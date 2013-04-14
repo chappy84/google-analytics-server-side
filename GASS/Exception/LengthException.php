@@ -49,4 +49,5 @@ namespace GASS\Exception;
  * @subpackage  Exception
  */
 class LengthException extends \LengthException implements ExceptionInterface
-{}
+{
+}

@@ -177,8 +177,10 @@ class UserAgentStringInfo extends Base
         $csvSource = Http\Http::getInstance()->request(self::CSV_URL)->getResponse();
         $botsCsv = trim($csvSource);
         if (empty($botsCsv)) {
-            throw new Exception\RuntimeException('Bots CSV retrieved from external source seems to be empty. '
-                                        .'Please either set botInfo to null or ensure the bots csv file can be retrieved.');
+            throw new Exception\RuntimeException(
+                'Bots CSV retrieved from external source seems to be empty. '.
+                'Please either set botInfo to null or ensure the bots csv file can be retrieved.'
+            );
         }
         return $botsCsv;
     }
@@ -229,11 +231,18 @@ class UserAgentStringInfo extends Base
                 && null !== ($csvPath = $this->getOption('cachePath')) && @is_writable($csvPath)) {
             $csvLines = array();
             foreach ($this->botIps as $ipAddress => $name) {
-                $csvLines[] = '"'.addslashes($name).'","'.addslashes($ipAddress).'","'.addslashes($this->bots[$name]).'"';
+                $csvLines[] = '"'.addslashes($name).'","'.addslashes($ipAddress).'","'.
+                    addslashes($this->bots[$name]).'"';
             }
             $csvString = implode("\n", $csvLines);
-            if (false === @file_put_contents($csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'), $csvString, LOCK_EX)) {
-                throw new Exception\RuntimeException('Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'));
+            if (false === @file_put_contents(
+                $csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'),
+                $csvString,
+                LOCK_EX
+            )) {
+                throw new Exception\RuntimeException(
+                    'Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename')
+                );
             }
         }
         return $this;
@@ -298,7 +307,8 @@ class UserAgentStringInfo extends Base
         }
         $userAgent = $this->getUserAgent();
         $remoteAddress = $this->getRemoteAddress();
-        return ((!empty($this->bots) && (in_array($userAgent, $this->bots) || array_key_exists($userAgent, $this->bots)))
+        return ((!empty($this->bots)
+                        && (in_array($userAgent, $this->bots) || array_key_exists($userAgent, $this->bots)))
                     || (!empty($this->botIps) && array_key_exists($remoteAddress, $this->botIps)));
     }
 

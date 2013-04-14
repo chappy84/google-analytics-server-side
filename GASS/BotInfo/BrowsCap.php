@@ -145,14 +145,20 @@ class BrowsCap extends Base
         if (!@file_exists($latestVersionDateFile)
                 || false === ($fileSaveTime = @filemtime($latestVersionDateFile))
                 || $fileSaveTime < time() - 86400) {
-            $latestDateString = trim(Http\Http::getInstance()
-                                              ->request(self::VERSION_DATE_URL)
-                                              ->getResponse());
+            $latestDateString = trim(
+                Http\Http::getInstance()
+                    ->request(self::VERSION_DATE_URL)
+                    ->getResponse()
+            );
             if (false === @file_put_contents($latestVersionDateFile, trim($latestDateString))) {
-                throw new Exception\RuntimeException('Cannot save latest version date to file: '.$latestVersionDateFile);
+                throw new Exception\RuntimeException(
+                    'Cannot save latest version date to file: '.$latestVersionDateFile
+                );
             }
         } elseif (false === ($latestDateString = @file_get_contents($latestVersionDateFile))) {
-            throw new Exception\RuntimeException('Couldn\'t read latest version date file: '.$latestVersionDateFile);
+            throw new Exception\RuntimeException(
+                'Couldn\'t read latest version date file: '.$latestVersionDateFile
+            );
         }
         if (false !== ($latestVersionDate = strtotime($latestDateString))) {
             $this->latestVersionDate = $latestVersionDate;
@@ -169,13 +175,18 @@ class BrowsCap extends Base
     private function checkIniFile()
     {
         if (null === ($browsCapLocation = $this->getOption('browscap'))) {
-            throw new Exception\RuntimeException('The browscap option has not been specified, please set this and try again.');
+            throw new Exception\RuntimeException(
+                'The browscap option has not been specified, please set this and try again.'
+            );
         }
         if (!@file_exists($browsCapLocation)) {
             $this->updateIniFile();
         }
         if (!@is_readable($browsCapLocation)) {
-            throw new Exception\RuntimeException('The browscap option points to a un-readable file, please ensure the permissions are correct and try again.');
+            throw new Exception\RuntimeException(
+                'The browscap option points to a un-readable file, '.
+                'please ensure the permissions are correct and try again.'
+            );
         }
         if (false === ($fileSaveTime = @filemtime($browsCapLocation))
                 || (null !== ($latestVersionDate = $this->getLatestVersionDate())
@@ -197,21 +208,30 @@ class BrowsCap extends Base
         $browsCapLocation = $this->getOption('browscap');
         $directory = dirname($browsCapLocation);
         if ((!@file_exists($directory) && !mkdir($directory, 0777, true)) || !@is_writable($directory)) {
-            throw new Exception\RuntimeException('The directory "'.$directory.'" is not writable, please ensure this file can be written to and try again.');
+            throw new Exception\RuntimeException(
+                'The directory "'.$directory.'" is not writable, '.
+                'please ensure this file can be written to and try again.'
+            );
         }
         $currentHttpUserAgent = Http\Http::getInstance()->getUserAgent();
         if ($currentHttpUserAgent === null || '' == trim($currentHttpUserAgent)) {
-            throw new Exception\RuntimeException(__CLASS__.' cannot be initialised before a user-agent has been set in the GASS\Http adapter.'
-                                                .' The remote server rejects requests without a user-agent.');
+            throw new Exception\RuntimeException(
+                __CLASS__.' cannot be initialised before a user-agent has been set in the GASS\Http adapter.'.
+                ' The remote server rejects requests without a user-agent.'
+            );
         }
         $browscapSource = Http\Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();
         $browscapContents = trim($browscapSource);
         if (empty($browscapContents)) {
-            throw new Exception\RuntimeException('browscap ini file retrieved from external source seems to be empty. '
-                                        .'Please either set botInfo to null or ensure the php_browscap.ini file can be retrieved.');
+            throw new Exception\RuntimeException(
+                'browscap ini file retrieved from external source seems to be empty. '.
+                'Please either set botInfo to null or ensure the php_browscap.ini file can be retrieved.'
+            );
         }
         if (false == @file_put_contents($browsCapLocation, $browscapContents)) {
-            throw new Exception\RuntimeException('Could not write to "'.$browsCapLocation.'", please check the permissions and try again.');
+            throw new Exception\RuntimeException(
+                'Could not write to "'.$browsCapLocation.'", please check the permissions and try again.'
+            );
         }
     }
 

@@ -1,6 +1,13 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.8.7 Beta
+------------------
+
+- Bring the code-base inline with the PSR-2 standard using PHP_CodeSniffer
+- Update Test HTTP adapter to store the response for one or more HTTP requests
+- Add in PHPUnit configuration values to test where superglobal values are used
+
 Version 0.8.6 Beta
 ------------------
 

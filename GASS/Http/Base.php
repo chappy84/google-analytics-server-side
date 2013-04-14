@@ -153,7 +153,9 @@ abstract class Base extends Adapter\Base implements HttpInterface
     {
         $langValidator = new Validate\LanguageCode();
         if (!$langValidator->isValid($acceptLanguage)) {
-            throw new Exception\InvalidArgumentException('Accept Language validation errors: '.implode(', ', $langValidator->getMessages()));
+            throw new Exception\InvalidArgumentException(
+                'Accept Language validation errors: '.implode(', ', $langValidator->getMessages())
+            );
         }
         $this->acceptLanguage = $acceptLanguage;
         return $this;
@@ -172,7 +174,9 @@ abstract class Base extends Adapter\Base implements HttpInterface
         if (!empty($remoteAddress)) {
             $ipValidator = new Validate\IpAddress();
             if (!$ipValidator->isValid($remoteAddress)) {
-                throw new Exception\InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
+                throw new Exception\InvalidArgumentException(
+                    'Remote Address validation errors: '.implode(', ', $ipValidator->getMessages())
+                );
             }
         }
         $this->remoteAddress = $remoteAddress;

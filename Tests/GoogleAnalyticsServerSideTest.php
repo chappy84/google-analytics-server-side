@@ -62,21 +62,46 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->dependecyFilesFolder = __DIR__.DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR;
-        require_once __DIR__.DIRECTORY_SEPARATOR.'..'
-                            .DIRECTORY_SEPARATOR.'GoogleAnalyticsServerSide.php';
-        $this->httpAdapter = new \GASS\Http\Test();
-        $this->httpAdapter->setResponseHeaders('HTTP/1.0 200 OK
-Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT
-X-Content-Type-Options: nosniff
-Date: Tue, 15 May 2012 16:58:20 GMT
-Expires: Wed, 16 May 2012 04:58:20 GMT
-Content-Type: text/javascript
-Vary: Accept-Encoding
-X-Content-Type-Options: nosniff
-Age: 8829
-Cache-Control: max-age=43200, public
-Server: GFE/2.0');
-        $this->httpAdapter->setResponse(file_get_contents($this->dependecyFilesFolder.'ga.js'));
+        require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'GoogleAnalyticsServerSide.php';
+        $this->httpAdapter = new \GASS\Http\Test;
+        $this->httpAdapter->addRequestQueueItem(
+            \GoogleAnalyticsServerSide::JS_URL,
+            'HTTP/1.0 200 OK'."\n".
+            'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT'."\n".
+            'X-Content-Type-Options: nosniff'."\n".
+            'Date: Tue, 15 May 2012 16:58:20 GMT'."\n".
+            'Expires: Wed, 16 May 2012 04:58:20 GMT'."\n".
+            'Content-Type: text/javascript'."\n".
+            'Vary: Accept-Encoding'."\n".
+            'X-Content-Type-Options: nosniff'."\n".
+            'Age: 8829'."\n".
+            'Cache-Control: max-age=43200, public'."\n".
+            'Server: GFE/2.0',
+            file_get_contents($this->dependecyFilesFolder.'ga.js')
+        )->addRequestQueueItem(
+            \GoogleAnalyticsServerSide::GIF_URL,
+            'HTTP/1.0 200 OK'."\n".
+            'Age:255669'."\n".
+            'Cache-Control:private, no-cache, no-cache=Set-Cookie, proxy-revalidate'."\n".
+            'Content-Length:35'."\n".
+            'Content-Type:image/gif'."\n".
+            'Date:Thu, 17 May 2012 21:28:01 GMT'."\n".
+            'Expires:Wed, 19 Apr 2000 11:43:00 GMT'."\n".
+            'Last-Modified:Wed, 21 Jan 2004 19:51:30 GMT'."\n".
+            'Pragma:no-cache'."\n".
+            'Server:GFE/2.0'."\n".
+            'X-Content-Type-Options:nosniff',
+            implode(
+                array(
+                    chr(0x47), chr(0x49), chr(0x46), chr(0x38), chr(0x39), chr(0x61),
+                    chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x80), chr(0xff),
+                    chr(0x00), chr(0xff), chr(0xff), chr(0xff), chr(0x00), chr(0x00),
+                    chr(0x00), chr(0x2c), chr(0x00), chr(0x00), chr(0x00), chr(0x00),
+                    chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x00), chr(0x02),
+                    chr(0x02), chr(0x44), chr(0x01), chr(0x00), chr(0x3b)
+                )
+            )
+        );
         \GASS\Http\Http::getInstance(array('adapter' => $this->httpAdapter));
         $this->gass = new \GoogleAnalyticsServerSide;
     }
@@ -88,35 +113,9 @@ Server: GFE/2.0');
         touch($browsCapIniFileLocation);
         touch($this->dependecyFilesFolder.'latestVersionDate.txt');
         $botInfoAdapter = new \GASS\BotInfo\BrowsCap(
-                                array('browscap' => $browsCapIniFileLocation)
-                            );
-        $this->gass->setBotInfo($botInfoAdapter);
-        return $this;
-    }
-
-
-    public function initialiseHttpTestAdapterResponseGif()
-    {
-        $httpAdapter = new \GASS\Http\Test;
-        $httpAdapter->setResponseHeaders('Age:255669
-Cache-Control:private, no-cache, no-cache=Set-Cookie, proxy-revalidate
-Content-Length:35
-Content-Type:image/gif
-Date:Thu, 17 May 2012 21:28:01 GMT
-Expires:Wed, 19 Apr 2000 11:43:00 GMT
-Last-Modified:Wed, 21 Jan 2004 19:51:30 GMT
-Pragma:no-cache
-Server:GFE/2.0
-X-Content-Type-Options:nosniff');
-        $httpAdapter->setResponse(
-            implode(array(chr(0x47), chr(0x49), chr(0x46), chr(0x38), chr(0x39), chr(0x61),
-                          chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x80), chr(0xff),
-                          chr(0x00), chr(0xff), chr(0xff), chr(0xff), chr(0x00), chr(0x00),
-                          chr(0x00), chr(0x2c), chr(0x00), chr(0x00), chr(0x00), chr(0x00),
-                          chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x00), chr(0x02),
-                          chr(0x02), chr(0x44), chr(0x01), chr(0x00), chr(0x3b)))
+            array('browscap' => $browsCapIniFileLocation)
         );
-        $this->gass->setHttp($httpAdapter);
+        $this->gass->setBotInfo($botInfoAdapter);
         return $this;
     }
 
@@ -124,11 +123,12 @@ X-Content-Type-Options:nosniff');
     public function initialiseBrowserDetails()
     {
         $this->gass->setServerName('www.example.com')
-                   ->setRemoteAddress('123.123.123.123')
-                   ->setDocumentPath('/path/to/page')
-                   ->setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) '
-                                  .'AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5')
-                   ->setAcceptLanguage('en');
+            ->setRemoteAddress('123.123.123.123')
+            ->setDocumentPath('/path/to/page')
+            ->setUserAgent(
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) '.
+                'AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5'
+            )->setAcceptLanguage('en');
         return $this;
     }
 
@@ -141,8 +141,10 @@ X-Content-Type-Options:nosniff');
 
     public function testConstructExceptionWrongOptionsDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'Argument $options must be an array.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'Argument $options must be an array.'
+        );
         $gass = new \GoogleAnalyticsServerSide(new \stdClass);
     }
 
@@ -158,7 +160,10 @@ X-Content-Type-Options:nosniff');
 
     public function testSetVersionExceptionDecimal()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Invalid version number provided: 5.23');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'Invalid version number provided: 5.23'
+        );
         $this->gass->setVersion('5.23');
     }
 
@@ -480,45 +485,64 @@ X-Content-Type-Options:nosniff');
                              'name'     => 'Custom Var 5',
                              'value'    => 'Custom Value 5',
                              'scope'    => 2);
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->setCustomVar($customVar1['name'], $customVar1['value']));
-        $this->gass->setCustomVar($customVar2['name'], $customVar2['value'], $customVar2['scope'], $customVar2['index']);
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->setCustomVar($customVar1['name'], $customVar1['value'])
+        );
+        $this->gass->setCustomVar(
+            $customVar2['name'],
+            $customVar2['value'],
+            $customVar2['scope'],
+            $customVar2['index']
+        );
         $customVars = $this->gass->getCustomVariables();
         $this->assertArrayHasKey('index1', $customVars);
         $this->assertEquals($customVar1, $customVars['index1']);
         $this->assertEquals($customVar1['value'], $this->gass->getVisitorCustomVar(1));
-        $this->assertEquals(array(implode('=',$customVar1)), $this->gass->getCustomVarsByScope(3));
+        $this->assertEquals(array(implode('=', $customVar1)), $this->gass->getCustomVarsByScope(3));
         $this->assertArrayHasKey('index5', $customVars);
         $this->assertEquals($customVar2, $customVars['index5']);
         $this->assertEquals($customVar2['value'], $this->gass->getVisitorCustomVar(5));
-        $this->assertEquals(array(implode('=',$customVar2)), $this->gass->getCustomVarsByScope(2));
+        $this->assertEquals(array(implode('=', $customVar2)), $this->gass->getCustomVarsByScope(2));
     }
 
 
     public function testSetCustomVarExceptionInvalidIndexTooHigh()
     {
-        $this->setExpectedException('GASS\Exception\OutOfBoundsException', 'The index must be an integer between 1 and 5.');
+        $this->setExpectedException(
+            'GASS\Exception\OutOfBoundsException',
+            'The index must be an integer between 1 and 5.'
+        );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 3, 6);
     }
 
 
     public function testSetCustomVarExceptionInvalidIndexTooLow()
     {
-        $this->setExpectedException('GASS\Exception\OutOfBoundsException', 'The index must be an integer between 1 and 5.');
+        $this->setExpectedException(
+            'GASS\Exception\OutOfBoundsException',
+            'The index must be an integer between 1 and 5.'
+        );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 3, 0);
     }
 
 
     public function testSetCustomVarExceptionInvalidScopeTooHigh()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'The Scope must be a value between 1 and 3');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'The Scope must be a value between 1 and 3'
+        );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 4, 1);
     }
 
 
     public function testSetCustomVarExceptionInvalidScopeTooLow()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'The Scope must be a value between 1 and 3');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'The Scope must be a value between 1 and 3'
+        );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1', 0, 1);
     }
 
@@ -539,15 +563,23 @@ X-Content-Type-Options:nosniff');
 
     public function testSetCustomVarExceptionExceedsByteVarLimit()
     {
-        $this->setExpectedException('GASS\Exception\DomainException', 'The name / value combination exceeds the 128 byte custom var limit.');
-        $this->gass->setCustomVar(   'abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz12',
-                                     'abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz123');
+        $this->setExpectedException(
+            'GASS\Exception\DomainException',
+            'The name / value combination exceeds the 128 byte custom var limit.'
+        );
+        $this->gass->setCustomVar(
+            'abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz12',
+            'abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz123'
+        );
     }
 
 
     public function testSetCustomVarExceptionExceededVarCountLimit()
     {
-        $this->setExpectedException('GASS\Exception\OutOfBoundsException', 'You cannot add more than 5 custom variables.');
+        $this->setExpectedException(
+            'GASS\Exception\OutOfBoundsException',
+            'You cannot add more than 5 custom variables.'
+        );
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1');
         $this->gass->setCustomVar('Custom Var 2', 'Custom Value 2');
         $this->gass->setCustomVar('Custom Var 3', 'Custom Value 3');
@@ -559,8 +591,10 @@ X-Content-Type-Options:nosniff');
 
     public function testGetVisitorCustomVarExceptionInvalidIndex()
     {
-        $this->setExpectedException('GASS\Exception\OutOfBoundsException',
-                                    'The index: "10" has not been set.');
+        $this->setExpectedException(
+            'GASS\Exception\OutOfBoundsException',
+            'The index: "10" has not been set.'
+        );
         $this->gass->getVisitorCustomVar(10);
     }
 
@@ -570,8 +604,10 @@ X-Content-Type-Options:nosniff');
         $this->gass->setCustomVar('Custom Var 1', 'Custom Value 1');
         $this->gass->setCustomVar('Custom Var 2', 'Custom Value 2');
         $this->gass->setCustomVar('Custom Var 3', 'Custom Value 3');
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->deleteCustomVar(2));
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->deleteCustomVar(2)
+        );
         $this->assertArrayNotHasKey('index2', $this->gass->getCustomVariables());
     }
 
@@ -586,8 +622,10 @@ X-Content-Type-Options:nosniff');
     public function testSetCharsetValid()
     {
         $charset = 'UTF-8';
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->setCharset($charset));
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->setCharset($charset)
+        );
         $this->assertEquals($charset, $this->gass->getCharset());
         $this->gass->setCharset(strtolower($charset));
         $this->assertEquals($charset, $this->gass->getCharset());
@@ -603,10 +641,14 @@ X-Content-Type-Options:nosniff');
 
     public function testSetSearchEnginesValid()
     {
-        $searchEngines = array(  'testa'    => array('a'),
-                                 'testb'    => array('a', 'bcd'));
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->setSearchEngines($searchEngines));
+        $searchEngines = array(
+            'testa' => array('a'),
+            'testb' => array('a', 'bcd')
+        );
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->setSearchEngines($searchEngines)
+        );
         $this->assertEquals($searchEngines, $this->gass->getSearchEngines());
     }
 
@@ -621,48 +663,72 @@ X-Content-Type-Options:nosniff');
     public function testSetSearchEnginesExceptionWrongQueryParamsDataType()
     {
         $this->setExpectedException('GASS\Exception\DomainException', 'searchEngines entry testb invalid');
-        $this->gass->setSearchEngines(array( 'testa'    => array('a'),
-                                             'testb'    => new \stdClass));
+        $this->gass->setSearchEngines(
+            array(
+                'testa' => array('a'),
+                'testb' => new \stdClass
+            )
+        );
     }
 
 
     public function testSetSearchEnginesExceptionWrongQueryParamsCount()
     {
         $this->setExpectedException('GASS\Exception\DomainException', 'searchEngines entry testa invalid');
-        $this->gass->setSearchEngines(array( 'testa'    => array(),
-                                             'testb'    => array('b')));
+        $this->gass->setSearchEngines(
+            array(
+                'testa' => array(),
+                'testb' => array('b')
+            )
+        );
     }
 
 
     public function testSetSearchEnginesExceptionWrongNameDataType()
     {
         $this->setExpectedException('GASS\Exception\OutOfBoundsException', 'search engine name "1" is invalid');
-        $this->gass->setSearchEngines(array( 1          => array('a'),
-                                             'testb'    => array('b')));
+        $this->gass->setSearchEngines(
+            array(
+                1 => array('a'),
+                'testb' => array('b')
+            )
+        );
     }
 
 
     public function testSetSearchEnginesExceptionInvalidNameCharacters()
     {
         $this->setExpectedException('GASS\Exception\OutOfBoundsException', 'search engine name "test#" is invalid');
-        $this->gass->setSearchEngines(array( 'test#'    => array('a'),
-                                             'testb'    => array('b')));
+        $this->gass->setSearchEngines(
+            array(
+                'test#' => array('a'),
+                'testb' => array('b')
+            )
+        );
     }
 
 
     public function testSetSearchEnginesExceptionWrongQueryParameterDataType()
     {
         $this->setExpectedException('GASS\Exception\DomainException', 'search engine query parameter "1" is invalid');
-        $this->gass->setSearchEngines(array( 'testa'    => array(1),
-                                             'testb'    => array('b')));
+        $this->gass->setSearchEngines(
+            array(
+                'testa' => array(1),
+                'testb' => array('b')
+            )
+        );
     }
 
 
     public function testSetSearchEnginesExceptionInvalidQueryParameterCharacters()
     {
         $this->setExpectedException('GASS\Exception\DomainException', 'search engine query parameter "a&" is invalid');
-        $this->gass->setSearchEngines(array( 'testa'    => array('a&'),
-                                             'testb'    => array('b')));
+        $this->gass->setSearchEngines(
+            array(
+                'testa' => array('a&'),
+                'testb' => array('b')
+            )
+        );
     }
 
 
@@ -677,24 +743,32 @@ X-Content-Type-Options:nosniff');
     {
         $this->gass->setRemoteAddress('123.123.123.123');
 
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->setBotInfo(true));
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->setBotInfo(true)
+        );
         $currentBotInfo = $this->gass->getBotInfo();
         $this->assertInstanceOf('GASS\BotInfo\BotInfo', $currentBotInfo);
         $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $currentBotInfo->getAdapter());
 
-        $browserCap = new \GASS\BotInfo\BrowsCap(array(    'browscap' => '/tmp/php_browscap.ini'));
+        $browserCap = new \GASS\BotInfo\BrowsCap(array('browscap' => '/tmp/php_browscap.ini'));
         $this->gass->setBotInfo($browserCap);
         $currentBotInfo = $this->gass->getBotInfo();
         $this->assertInstanceOf('GASS\BotInfo\BotInfo', $currentBotInfo);
         $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $currentBotInfo->getAdapter());
 
-        $this->gass->setBotInfo(array(   'adapter'      => 'UserAgentStringInfo',
-                                         'cachePath'    => '/tmp/'));
+        $this->gass->setBotInfo(
+            array(
+                'adapter' => 'UserAgentStringInfo',
+                'cachePath' => '/tmp/'
+            )
+        );
         $currentBotInfo = $this->gass->getBotInfo();
         $this->assertInstanceOf('GASS\BotInfo\BotInfo', $currentBotInfo);
-        $this->assertInstanceOf('GASS\BotInfo\UserAgentStringInfo',
-                                $currentBotInfo->getAdapter());
+        $this->assertInstanceOf(
+            'GASS\BotInfo\UserAgentStringInfo',
+            $currentBotInfo->getAdapter()
+        );
 
         $this->gass->setBotInfo(null);
         $this->assertNull($this->gass->getBotInfo());
@@ -703,9 +777,10 @@ X-Content-Type-Options:nosniff');
 
     public function testSetBotInfoExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'botInfo must be an array, boolean, null'
-                                    .' or a class which implements GASS\BotInfo\Interface.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'botInfo must be an array, boolean, null or a class which implements GASS\BotInfo\Interface.'
+        );
         $this->gass->setBotInfo(new \stdClass);
     }
 
@@ -715,8 +790,10 @@ X-Content-Type-Options:nosniff');
         $this->gass->setRemoteAddress('123.123.123.123');
 
         $http = array('adapter' => 'curl');
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->setHttp($http));
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->setHttp($http)
+        );
         $this->assertEquals($http, $this->gass->getHttp());
 
         $httpAdapter = new \GASS\Http\Stream;
@@ -730,32 +807,44 @@ X-Content-Type-Options:nosniff');
 
     public function testSetHttpExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'http must be an array, null'
-                                    .' or a class which implements GASS\Http\Interface.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'http must be an array, null or a class which implements GASS\Http\Interface.'
+        );
         $this->gass->setHttp(new \stdClass);
     }
 
 
     public function testSetOptionsValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->setOptions(array(   'AcceptLanguage'    => 'en-gb',
-                                                                 'remoteAddress'     => '123.123.123.123')));
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->setOptions(
+                array(
+                    'AcceptLanguage' => 'en-gb',
+                    'remoteAddress' => '123.123.123.123'
+                )
+            )
+        );
     }
 
 
     public function testSetOptionsExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'setOptions must be called with an array as an argument');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'setOptions must be called with an array as an argument'
+        );
         $this->gass->setOptions(new \stdClass);
     }
 
 
     public function testSetOptionValid()
     {
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->setOption('remoteAddress', '123.123.123.123'));
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->setOption('remoteAddress', '123.123.123.123')
+        );
         $this->gass->setOption('AcceptLanguage', 'en-gb');
     }
 
@@ -773,26 +862,50 @@ X-Content-Type-Options:nosniff');
         $action = 'Test Action';
         $label = 'Test Label';
         $value = 1;
-        $this->assertEquals('5('.$category.'*'.$action.')',
-                            $this->gass->getEventString($category, $action));
-        $this->assertEquals('5('.$category.'*'.$action.'*'.$label.')',
-                            $this->gass->getEventString($category, $action, $label));
-        $this->assertEquals('5('.$category.'*'.$action.'*'.$label.')('.$value.')',
-                            $this->gass->getEventString($category, $action, $label, $value));
+        $this->assertEquals(
+            '5('.$category.'*'.$action.')',
+            $this->gass->getEventString($category, $action)
+        );
+        $this->assertEquals(
+            '5('.$category.'*'.$action.'*'.$label.')',
+            $this->gass->getEventString($category, $action, $label)
+        );
+        $this->assertEquals(
+            '5('.$category.'*'.$action.'*'.$label.')('.$value.')',
+            $this->gass->getEventString($category, $action, $label, $value)
+        );
 
         // Testing BC
-        $this->assertEquals('5('.$category.'*'.$action.')',
-                            $this->gass->getEventString(array(  'category'   => $category,
-                                                                 'action'     => $action)));
-        $this->assertEquals('5('.$category.'*'.$action.'*'.$label.')',
-                            $this->gass->getEventString(array(  'category'   => $category,
-                                                                 'action'     => $action,
-                                                                 'label'      => $label)));
-        $this->assertEquals('5('.$category.'*'.$action.'*'.$label.')('.$value.')',
-                            $this->gass->getEventString(array(  'category'   => $category,
-                                                                 'action'     => $action,
-                                                                 'label'      => $label,
-                                                                 'value'      => $value)));
+        $this->assertEquals(
+            '5('.$category.'*'.$action.')',
+            $this->gass->getEventString(
+                array(
+                    'category' => $category,
+                    'action'   => $action
+                )
+            )
+        );
+        $this->assertEquals(
+            '5('.$category.'*'.$action.'*'.$label.')',
+            $this->gass->getEventString(
+                array(
+                    'category' => $category,
+                    'action'   => $action,
+                    'label'    => $label
+                )
+            )
+        );
+        $this->assertEquals(
+            '5('.$category.'*'.$action.'*'.$label.')('.$value.')',
+            $this->gass->getEventString(
+                array(
+                    'category' => $category,
+                    'action'     => $action,
+                    'label'      => $label,
+                    'value'      => $value
+                )
+            )
+        );
     }
 
 
@@ -805,7 +918,10 @@ X-Content-Type-Options:nosniff');
 
     public function testGetEventStringExceptionEmptyCategory()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'An event requires at least a category and action');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'An event requires at least a category and action'
+        );
         $this->gass->getEventString('', 'Value');
     }
 
@@ -819,7 +935,10 @@ X-Content-Type-Options:nosniff');
 
     public function testGetEventStringExceptionEmptyAction()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'An event requires at least a category and action');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'An event requires at least a category and action'
+        );
         $this->gass->getEventString('Category', '');
     }
 
@@ -850,17 +969,24 @@ X-Content-Type-Options:nosniff');
                              'value'    => 'Custom Value 5',
                              'scope'    => 2);
         $this->gass->setCustomVar($customVar1['name'], $customVar1['value']);
-        $this->gass->setCustomVar($customVar2['name'], $customVar2['value'], $customVar2['scope'], $customVar2['index']);
-        $this->assertEquals('8('.$customVar1['name'].'*'.$customVar2['name'].')'
-                            .'9('.$customVar1['value'].'*'.$customVar2['value'].')'
-                            .'11(5!'.$customVar2['scope'].')',
-                            $this->gass->getCustomVariableString());
+        $this->gass->setCustomVar(
+            $customVar2['name'],
+            $customVar2['value'],
+            $customVar2['scope'],
+            $customVar2['index']
+        );
+        $this->assertEquals(
+            '8('.$customVar1['name'].'*'.$customVar2['name'].')'.
+            '9('.$customVar1['value'].'*'.$customVar2['value'].')'.
+            '11(5!'.$customVar2['scope'].')',
+            $this->gass->getCustomVariableString()
+        );
     }
 
 
     public function testGetIPToReportValid()
     {
-        $this->assertEmpty($this->gass->getIPToReport());
+        $this->assertEquals('8.8.4.0', $this->gass->getIPToReport());
         $remoteAddress = '123.123.123.123';
         $this->assertEquals('123.123.123.0', $this->gass->getIPToReport($remoteAddress));
         $this->assertEquals($remoteAddress, $this->gass->getRemoteAddress());
@@ -879,8 +1005,10 @@ X-Content-Type-Options:nosniff');
     {
         $this->gass->setServerName('www.example.com');
         $this->gass->disableCookieHeaders();
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->setCookies());
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->setCookies()
+        );
         $currentCookies = $this->gass->getCookies();
         $this->assertArrayHasKey('__utma', $currentCookies);
         $this->assertNotEmpty($currentCookies['__utma']);
@@ -916,16 +1044,20 @@ X-Content-Type-Options:nosniff');
 
     public function testSetSessionCookieTimeoutExceptionFloatArgument()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'Session Cookie Timeout must be an integer.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'Session Cookie Timeout must be an integer.'
+        );
         $this->gass->setSessionCookieTimeout(86400.000);
     }
 
 
     public function testSetSessionCookieTimeoutExceptionStringArgument()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'Session Cookie Timeout must be an integer.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'Session Cookie Timeout must be an integer.'
+        );
         $this->gass->setSessionCookieTimeout('86400000');
     }
 
@@ -939,16 +1071,20 @@ X-Content-Type-Options:nosniff');
 
     public function testSetVisitorCookieTimeoutExceptionFloatArgument()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'Visitor Cookie Timeout must be an integer.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'Visitor Cookie Timeout must be an integer.'
+        );
         $this->gass->setVisitorCookieTimeout(86400.000);
     }
 
 
     public function testSetVisitorCookieTimeoutExceptionStringArgument()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'Visitor Cookie Timeout must be an integer.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'Visitor Cookie Timeout must be an integer.'
+        );
         $this->gass->setVisitorCookieTimeout('86400000');
     }
 
@@ -964,7 +1100,7 @@ X-Content-Type-Options:nosniff');
     {
         $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersion('1.1.1'));
         $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->setVersionFromJs());
-        $this->assertEquals('5.3.9', $this->gass->getVersion());
+        $this->assertEquals('5.4.1', $this->gass->getVersion());
     }
 
 
@@ -982,10 +1118,9 @@ X-Content-Type-Options:nosniff');
 
     public function testTrackPageviewValid()
     {
-        $this->initialiseHttpTestAdapterResponseGif()
-             ->initialiseBrowserDetails()
-             ->gass->disableCookieHeaders()
-             ->setAccount('MO-00000-0');
+        $this->initialiseBrowserDetails()
+            ->gass->disableCookieHeaders()
+            ->setAccount('MO-00000-0');
         $this->gass->setPageTitle('Example Page Title');
         $this->assertInstanceOf('GoogleAnalyticsServerSide', $this->gass->trackPageview());
         $this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
@@ -999,19 +1134,22 @@ X-Content-Type-Options:nosniff');
     public function testTrackPageviewExceptionInvalidUrl()
     {
         $url = 'www.test.co.uk/example/path?q=other';
-        $this->setExpectedException('GASS\Exception\DomainException',
-                                    'Url is invalid: '.$url);
+        $this->setExpectedException(
+            'GASS\Exception\DomainException',
+            'Url is invalid: '.$url
+        );
         $this->gass->trackPageview($url);
     }
 
 
     public function testTrackPageviewExceptionMissingAccount()
     {
-        $this->initialiseHttpTestAdapterResponseGif()
-             ->initialiseBrowserDetails()
-             ->gass->disableCookieHeaders();
-        $this->setExpectedException('GASS\Exception\DomainException',
-                                    'The account number must be set before any tracking can take place.');
+        $this->initialiseBrowserDetails()
+            ->gass->disableCookieHeaders();
+        $this->setExpectedException(
+            'GASS\Exception\DomainException',
+            'The account number must be set before any tracking can take place.'
+        );
         $this->gass->trackPageview();
     }
 
@@ -1026,16 +1164,17 @@ X-Content-Type-Options:nosniff');
      */
     public function testTrackEventValid()
     {
-        $this->initialiseHttpTestAdapterResponseGif()
-             ->initialiseBrowserDetails()
-             ->gass->disableCookieHeaders()
-             ->setAccount('MO-00000-0');
+        $this->initialiseBrowserDetails()
+            ->gass->disableCookieHeaders()
+            ->setAccount('MO-00000-0');
         $category = 'Test Category';
         $action = 'Test Action';
         $label = 'Test Label';
         $value = 1;
-        $this->assertInstanceOf('GoogleAnalyticsServerSide',
-                                $this->gass->trackEvent($category, $action, $label, $value));
+        $this->assertInstanceOf(
+            'GoogleAnalyticsServerSide',
+            $this->gass->trackEvent($category, $action, $label, $value)
+        );
         $this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
         $this->gass->trackEvent($category, $action, $label, $value);
         $this->initialiseBotInfoBrowsCap();
@@ -1045,22 +1184,24 @@ X-Content-Type-Options:nosniff');
 
     public function testTrackEventExceptionMissingAccount()
     {
-        $this->initialiseHttpTestAdapterResponseGif()
-             ->initialiseBrowserDetails()
-             ->gass->disableCookieHeaders();
-        $this->setExpectedException('GASS\Exception\DomainException',
-                                    'The account number must be set before any tracking can take place.');
+        $this->initialiseBrowserDetails()
+            ->gass->disableCookieHeaders();
+        $this->setExpectedException(
+            'GASS\Exception\DomainException',
+            'The account number must be set before any tracking can take place.'
+        );
         $this->gass->trackEvent('Test Category', 'Test Action', 'Test Label', 1);
     }
 
 
     public function testTrackEventExceptionWrongNonInteractionDataType()
     {
-        $this->initialiseHttpTestAdapterResponseGif()
-             ->initialiseBrowserDetails()
-             ->gass->disableCookieHeaders();
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException',
-                                    'NonInteraction must be a boolean.');
+        $this->initialiseBrowserDetails()
+            ->gass->disableCookieHeaders();
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'NonInteraction must be a boolean.'
+        );
         $this->gass->trackEvent('Test Category', 'Test Action', 'Test Label', 1, 1);
     }
 }

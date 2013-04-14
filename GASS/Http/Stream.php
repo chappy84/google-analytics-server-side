@@ -158,7 +158,6 @@ class Stream extends Base
      */
     public function request($url = null, array $options = array())
     {
-
         parent::request($url, $options);
 
         $currentHeaders = $this->getOption('header');
@@ -184,12 +183,14 @@ class Stream extends Base
 
         $context = stream_context_create(parent::getOption('context'));
 
-        if (false === ($response = @file_get_contents(   parent::getOption('url'),
-                                                         false,
-                                                         $context))) {
+        if (false === ($response = @file_get_contents(
+            parent::getOption('url'),
+            false,
+            $context
+        ))) {
             if (!isset($php_errormsg)) {
-                $php_errormsg = 'error message not available, this could be because the ini '
-                                .'setting "track_errors" is set to "Off" or XDebug is running';
+                $php_errormsg = 'error message not available, this could be because the ini '.
+                    'setting "track_errors" is set to "Off" or XDebug is running';
             }
             throw new Exception\RuntimeException('Source could not be retrieved. Error: '.$php_errormsg);
         }
@@ -231,7 +232,9 @@ class Stream extends Base
             $headers = explode("\n", $headers);
         }
         if (!is_array($headers)) {
-            throw new Exception\InvalidArgumentException('Headers must be provided in either string or numerically indexed array format.');
+            throw new Exception\InvalidArgumentException(
+                'Headers must be provided in either string or numerically indexed array format.'
+            );
         }
         $returnHeaders = array();
         foreach ($headers as $header) {

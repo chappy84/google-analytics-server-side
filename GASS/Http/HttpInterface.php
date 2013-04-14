@@ -51,8 +51,7 @@ use GASS\Adapter;
  * @package     GoogleAnalyticsServerSide
  * @subpackage  Http
  */
-interface HttpInterface
-    extends Adapter\AdapterInterface
+interface HttpInterface extends Adapter\AdapterInterface
 {
 
     /**

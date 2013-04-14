@@ -48,27 +48,31 @@ if (false === strpos($gassCurrentIncludePath, $gassCurrentDir)) {
  * @param string $name
  * @throws RuntimeException
  */
-spl_autoload_register(function ($name) {
-    if (0 === strpos($name, 'GASS\\')) {
-        $filePath = str_replace('\\', DIRECTORY_SEPARATOR, $name);
-        $includePaths = explode(PATH_SEPARATOR, get_include_path());
-        $fileFound = false;
-        $classFound = false;
-        foreach ($includePaths as $includePath) {
-            $proposedPath = $includePath . DIRECTORY_SEPARATOR . $filePath . '.php';
-            if (@is_readable($proposedPath)) {
-                $fileFound = true;
-                require_once $proposedPath;
-                if (class_exists($name) || interface_exists($name)) {
-                    $classFound = true;
-                    break;
+spl_autoload_register(
+    function ($name) {
+        if (0 === strpos($name, 'GASS\\')) {
+            $filePath = str_replace('\\', DIRECTORY_SEPARATOR, $name);
+            $includePaths = explode(PATH_SEPARATOR, get_include_path());
+            $fileFound = false;
+            $classFound = false;
+            foreach ($includePaths as $includePath) {
+                $proposedPath = $includePath . DIRECTORY_SEPARATOR . $filePath . '.php';
+                if (@is_readable($proposedPath)) {
+                    $fileFound = true;
+                    require_once $proposedPath;
+                    if (class_exists($name) || interface_exists($name)) {
+                        $classFound = true;
+                        break;
+                    }
                 }
             }
+            if (!$fileFound) {
+                throw new \RuntimeException('File could not be found for '.$name);
+            } elseif (!$classFound) {
+                throw new \RuntimeException('Class or Interface could not be found for '.$name);
+            }
         }
-        if (!$fileFound) {
-            throw new \RuntimeException('File could not be found for '.$name);
-        } elseif (!$classFound) {
-            throw new \RuntimeException('Class or Interface could not be found for '.$name);
-        }
-    }
-}, true, true);
+    },
+    true,
+    true
+);

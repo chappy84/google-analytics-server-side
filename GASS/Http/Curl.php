@@ -69,9 +69,11 @@ class Curl extends Base
      * @var array
      * @access protected
      */
-    protected $options = array(  CURLOPT_RETURNTRANSFER    => 1,
-                                 CURLOPT_CONNECTTIMEOUT    => 5,
-                                 CURLOPT_FOLLOWLOCATION    => true);
+    protected $options = array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_FOLLOWLOCATION => true
+    );
 
 
     /**
@@ -172,7 +174,9 @@ class Curl extends Base
 
         $extraCurlOptions = $this->getOptions();
         if (!empty($extraCurlOptions) && false === curl_setopt_array($this->curl, $extraCurlOptions)) {
-            throw new Exception\UnexpectedValueException('One of the extra curl options specified is invalid. Error: '.curl_error($this->curl));
+            throw new Exception\UnexpectedValueException(
+                'One of the extra curl options specified is invalid. Error: '.curl_error($this->curl)
+            );
         }
 
         if (false === ($response = curl_exec($this->curl))) {

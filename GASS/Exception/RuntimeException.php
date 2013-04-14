@@ -49,4 +49,5 @@ namespace GASS\Exception;
  * @subpackage  Exception
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
-{}
+{
+}

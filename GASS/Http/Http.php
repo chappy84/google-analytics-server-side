@@ -152,7 +152,9 @@ class Http
         if (method_exists($this->adapter, $name)) {
             return call_user_func_array(array($this->adapter, $name), $arguments);
         }
-        throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($this->adapter));
+        throw new Exception\BadMethodCallException(
+            __METHOD__.' is not an available method in '.get_class($this->adapter)
+        );
     }
 
 

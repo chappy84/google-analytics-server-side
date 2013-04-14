@@ -51,8 +51,7 @@ use GASS\Adapter;
  * @package     GoogleAnalyticsServerSide
  * @subpackage  BotInfo
  */
-interface BotInfoInterface
-    extends Adapter\AdapterInterface
+interface BotInfoInterface extends Adapter\AdapterInterface
 {
 
     /**

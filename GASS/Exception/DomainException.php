@@ -49,4 +49,5 @@ namespace GASS\Exception;
  * @subpackage  Exception
  */
 class DomainException extends \DomainException implements ExceptionInterface
-{}
+{
+}

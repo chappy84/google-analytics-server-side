@@ -49,4 +49,5 @@ namespace GASS\Exception;
  * @subpackage  Exception
  */
 class OutOfRangeException extends \OutOfRangeException implements ExceptionInterface
-{}
+{
+}

@@ -102,7 +102,8 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testSetUserAgent()
     {
-        $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11';
+        $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.11 '.
+            '(KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11';
         $this->assertInstanceOf('GASS\Http\Base', $this->baseHttp->setUserAgent($userAgent));
         $this->assertEquals($userAgent, $this->baseHttp->getUserAgent());
     }
@@ -166,7 +167,10 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testSetAcceptLanguageExceptionWrongDataType()
     {
-        $this->setExpectedException('GASS\Exception\InvalidArgumentException', 'Accept Language validation errors: The provided language code must be a string.');
+        $this->setExpectedException(
+            'GASS\Exception\InvalidArgumentException',
+            'Accept Language validation errors: The provided language code must be a string.'
+        );
         $this->baseHttp->setAcceptLanguage(array('en-gb'));
     }
 

@@ -60,8 +60,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testSetMessagesValidPopulatedArray()
     {
-        $testMessages = array(  'Test Message 1',
-                                'Test Message 2');
+        $testMessages = array('Test Message 1', 'Test Message 2');
         $this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages($testMessages));
         $this->assertEquals($testMessages, $this->baseValidator->getMessages());
     }
@@ -99,16 +98,15 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testAddMessage()
     {
-        $this->assertInstanceOf('GASS\Validate\Base',
-            $this->baseValidator->addMessage(    '"%value%" is a test value for test message 1',
-                                                 'Test value')
-                                ->setValue(2)
-                                ->addMessage('Test message 2 had value "%value%"')
+        $this->assertInstanceOf(
+            'GASS\Validate\Base',
+            $this->baseValidator->addMessage('"%value%" is a test value for test message 1', 'Test value')
+                ->setValue(2)
+                ->addMessage('Test message 2 had value "%value%"')
         );
         $this->assertEquals(
-                array(  '"Test value" is a test value for test message 1',
-                        'Test message 2 had value "2"'),
-                $this->baseValidator->getMessages()
+            array('"Test value" is a test value for test message 1', 'Test message 2 had value "2"'),
+            $this->baseValidator->getMessages()
         );
     }
 }

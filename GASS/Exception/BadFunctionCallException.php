@@ -48,5 +48,7 @@ namespace GASS\Exception;
  * @package     GoogleAnalyticsServerSide
  * @subpackage  Exception
  */
-class BadFunctionCallException extends \BadFunctionCallException implements ExceptionInterface
-{}
+class BadFunctionCallException extends \BadFunctionCallException implements
+    ExceptionInterface
+{
+}

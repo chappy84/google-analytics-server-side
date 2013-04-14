@@ -53,7 +53,6 @@ use GASS\Exception;
  */
 class Test extends Base implements HttpInterface
 {
-
     /**
      * Class options
      *
@@ -61,7 +60,6 @@ class Test extends Base implements HttpInterface
      * @access protected
      */
     protected $options = array();
-
 
     /**
      * The headers returned in response to the previous request
@@ -71,6 +69,13 @@ class Test extends Base implements HttpInterface
      */
     protected $responseHeaders = array();
 
+    /**
+     * Different http requests that may be requested from the Test Http Adapter
+     *
+     * @var array
+     * @access protected
+     */
+    protected $requestQueue = array();
 
     /**
      * {@inheritdoc}
@@ -90,7 +95,6 @@ class Test extends Base implements HttpInterface
         throw new Exception\DomainException('A Http Request has not been made yet.');
     }
 
-
     /**
      * Returns all options set
      *
@@ -101,7 +105,6 @@ class Test extends Base implements HttpInterface
     {
         return $this->options;
     }
-
 
     /**
      * Sets a specific option
@@ -117,7 +120,6 @@ class Test extends Base implements HttpInterface
         return $this;
     }
 
-
     /**
      * Returns a specific option
      *
@@ -132,7 +134,6 @@ class Test extends Base implements HttpInterface
                 : null;
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -145,7 +146,6 @@ class Test extends Base implements HttpInterface
         return parent::setOption('url', $url);
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -157,12 +157,42 @@ class Test extends Base implements HttpInterface
     public function request($url = null, array $options = array())
     {
         parent::request($url, $options);
+        $url = $this->getBaseUrl(
+            $this->getOption('url')
+        );
+        $this->responseHeaders = array();
+        if (!isset($this->requestQueue[$url])) {
+            throw new Exception\OutOfBoundsException(
+                'No Test Http request info for requested url: ' . $this->getOption('url')
+            );
+        }
+        $requestQueueItem = $this->requestQueue[$url];
+        $this->setResponseHeaders($requestQueueItem['responseHeaders']);
+        $this->setResponse($requestQueueItem['responseBody']);
         if (null !== ($statusCode = $this->getInfo('Http-Code'))) {
             $this->checkResponseCode($statusCode);
         }
         return $this;
     }
 
+    /**
+     * Adds a response for the specified request url
+     *
+     * @param string $url
+     * @param string|array $responseHeaders
+     * @param string $responseBody
+     * @return \GASS\Http\Test
+     * @access public
+     */
+    public function addRequestQueueItem($url, $responseHeaders, $responseBody)
+    {
+        $url = $this->getBaseUrl($url);
+        $this->requestQueue[$url] = array(
+            'responseHeaders' => $responseHeaders,
+            'responseBody' => $responseBody
+        );
+        return $this;
+    }
 
     /**
      * Sets the response headers to the class level variable
@@ -170,11 +200,10 @@ class Test extends Base implements HttpInterface
      * @param array $responseHeaders
      * @access private
      */
-    public function setResponseHeaders($responseHeaders)
+    private function setResponseHeaders($responseHeaders)
     {
         $this->responseHeaders = $this->parseHeaders($responseHeaders);
     }
-
 
     /**
      * Parses HTTP headers into an associative array whether in
@@ -191,7 +220,9 @@ class Test extends Base implements HttpInterface
             $headers = explode("\n", $headers);
         }
         if (!is_array($headers)) {
-            throw new Exception\InvalidArgumentException('Headers must be provided in either string or numerically indexed array format.');
+            throw new Exception\InvalidArgumentException(
+                'Headers must be provided in either string or numerically indexed array format.'
+            );
         }
         $returnHeaders = array();
         foreach ($headers as $header) {
@@ -203,5 +234,26 @@ class Test extends Base implements HttpInterface
             }
         }
         return $returnHeaders;
+    }
+
+    /**
+     * Returns the url without the query and fragment
+     *
+     * @param string $url
+     * @return string
+     * @access private
+     */
+    private function getBaseUrl($url)
+    {
+        $urlParts = parse_url($url);
+        $pre = $urlParts['scheme'].'://';
+        if (!empty($urlParts['user'])) {
+            $pre .= $urlParts['user'];
+            if (!empty($urlParts['pass'])) {
+                $pre .= ':' . $urlParts['pass'];
+            }
+            $pre .= '@';
+        }
+        return $pre . $urlParts['host'] . $urlParts['path'];
     }
 }

@@ -51,8 +51,7 @@ use GASS\Adapter;
  * @package     GoogleAnalyticsServerSide
  * @subpackage  Validate
  */
-interface Validate
-    extends Adapter\AdapterInterface
+interface Validate extends Adapter\AdapterInterface
 {
 
     /**

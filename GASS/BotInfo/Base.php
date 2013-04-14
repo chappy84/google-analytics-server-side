@@ -42,7 +42,6 @@ use GASS\Adapter;
 use GASS\Exception;
 use GASS\Validate;
 
-
 /**
  * Base class of all BotInfo adapters
  *
@@ -121,7 +120,10 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
     {
         $ipValidator = new Validate\IpAddress();
         if (!$ipValidator->isValid($remoteAddress)) {
-            throw new Exception\InvalidArgumentException('Remote Address validation errors: '.implode(', ', $ipValidator->getMessages()));
+            throw new Exception\InvalidArgumentException(
+                'Remote Address validation errors: '.
+                implode(', ', $ipValidator->getMessages())
+            );
         }
         $this->remoteAddress = $remoteAddress;
         return $this;

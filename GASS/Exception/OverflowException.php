@@ -49,4 +49,5 @@ namespace GASS\Exception;
  * @subpackage  Exception
  */
 class OverflowException extends \OverflowException implements ExceptionInterface
-{}
+{
+}

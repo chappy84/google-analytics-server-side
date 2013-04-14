@@ -49,4 +49,5 @@ namespace GASS\Exception;
  * @subpackage  Exception
  */
 class OutOfBoundsException extends \OutOfBoundsException implements ExceptionInterface
-{}
+{
+}
