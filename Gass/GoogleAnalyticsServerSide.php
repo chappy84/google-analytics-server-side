@@ -333,15 +333,9 @@ class GoogleAnalyticsServerSide implements GassInterface
      * @throws Gass\Exception\InvalidArgumentException
      * @access public
      */
-    public function __construct($options = array())
+    public function __construct(array $options = array())
     {
-        $bootstrapFile = __DIR__ . DIRECTORY_SEPARATOR . 'Bootstrap.php';
-        if (!in_array($bootstrapFile, get_included_files())) {
-            require_once $bootstrapFile;
-        }
-        if (!is_array($options)) {
-            throw new Exception\InvalidArgumentException('Argument $options must be an array.');
-        }
+        require_once __DIR__ . DIRECTORY_SEPARATOR . 'Bootstrap.php';
         if (!empty($_SERVER['SERVER_NAME'])) {
             $this->setServerName($_SERVER['SERVER_NAME']);
         }
@@ -914,12 +908,9 @@ class GoogleAnalyticsServerSide implements GassInterface
      * @return GoogleAnalyticsServerSide
      * @access public
      */
-    public function setSearchEngines($searchEngines)
+    public function setSearchEngines(array $searchEngines)
     {
         $this->setSearchEnginesCalled = true;
-        if (!is_array($searchEngines)) {
-            throw new Exception\InvalidArgumentException('$searchEngines must be an array.');
-        }
         foreach ($searchEngines as $searchEngine => $queryParams) {
             if (!is_array($queryParams) || 1 > count($queryParams)) {
                 throw new Exception\DomainException('searchEngines entry '.$searchEngine.' invalid');
@@ -957,7 +948,7 @@ class GoogleAnalyticsServerSide implements GassInterface
                 'botInfo must be an array, boolean, null'.
                 ' or a class which implements Gass\BotInfo\Interface.'
             );
-        } elseif ($botInfo !== null && $botInfo !== false) {
+        } elseif ($botInfo !== null) {
             if ($botInfo instanceof BotInfo\BotInfoInterface) {
                 $this->botInfo = new BotInfo\BotInfo(array(), $botInfo);
             } elseif (is_array($botInfo)) {
@@ -1007,11 +998,8 @@ class GoogleAnalyticsServerSide implements GassInterface
      * @return GoogleAnalyticsServerSide
      * @access public
      */
-    public function setOptions($options)
+    public function setOptions(array $options)
     {
-        if (!is_array($options)) {
-            throw new Exception\InvalidArgumentException(__FUNCTION__.' must be called with an array as an argument');
-        }
         foreach ($options as $name => $value) {
             $this->setOption($name, $value);
         }
