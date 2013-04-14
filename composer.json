@@ -1,8 +1,7 @@
 {
     "name" : "chappy84/google-analytics-server-side",
     "description" : "Google Analytics Server Side",
-    "authors" : [
-        {
+    "authors" : [{
             "name" : "Tom Chapman",
             "homepage" : "http://tom-chapman.co.uk",
             "role" : "Author, Maintainer"
@@ -20,8 +19,11 @@
     },
     "autoload" : {
         "psr-0" : {
-            "Gass\" : ""
-        }
+            "Gass\\" : ""
+        },
+        "files": [
+            "Gass\\Bootstrap.php"
+        ]
     },
     "support" : {
         "source" : "https://github.com/chappy84/google-analytics-server-side",

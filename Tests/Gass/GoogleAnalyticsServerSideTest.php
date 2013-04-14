@@ -134,8 +134,8 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testConstructExceptionWrongOptionsDataType()
     {
         $this->setExpectedException(
-            'Gass\Exception\InvalidArgumentException',
-            'Argument $options must be an array.'
+            'PHPUnit_Framework_Error',
+            'Argument 1 passed to Gass\GoogleAnalyticsServerSide::__construct() must be'
         );
         $gass = new \Gass\GoogleAnalyticsServerSide(new \stdClass);
     }
@@ -593,7 +593,10 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSearchEnginesExceptionWrongDataType()
     {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException', '$searchEngines must be an array.');
+        $this->setExpectedException(
+            'PHPUnit_Framework_Error',
+            'Argument 1 passed to Gass\GoogleAnalyticsServerSide::setSearchEngines() must be'
+        );
         $this->gass->setSearchEngines(new \stdClass);
     }
 
@@ -757,8 +760,8 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetOptionsExceptionWrongDataType()
     {
         $this->setExpectedException(
-            'Gass\Exception\InvalidArgumentException',
-            'setOptions must be called with an array as an argument'
+            'PHPUnit_Framework_Error',
+            'Argument 1 passed to Gass\GoogleAnalyticsServerSide::setOptions() must be'
         );
         $this->gass->setOptions(new \stdClass);
     }

@@ -1,12 +1,11 @@
 <?php
 
 $finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->notName('CHANGELOG.markdown')
-    ->notName('README.markdown')
-    ->notName('.php_cs')
+    ->notName('*.md')
     ->notName('composer.*')
     ->notName('phpunit.xml*')
-    ->notName('.gitignore')
+    ->notName('.git*')
+    ->notName('.php_cs')
     ->in(__DIR__);
 
 return Symfony\CS\Config\Config::create()
