@@ -77,14 +77,6 @@ class GoogleAnalyticsServerSide implements GassInterface
     const JS_URL = 'http://www.google-analytics.com/ga.js';
 
     /**
-     * Autoloader function or instance of SplClassLoader
-     *
-     * @var function|SplClassLoader
-     * @access public
-     */
-    private $autoloader;
-
-    /**
      * Current contents of the ga.js file
      *
      * @var string
