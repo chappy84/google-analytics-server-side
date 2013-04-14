@@ -60,7 +60,6 @@ interface ProxyInterface
      */
     public function __construct(array $options = array(), $adapter = null);
 
-
     /**
      * Call magic method
      *
@@ -72,7 +71,6 @@ interface ProxyInterface
      */
     public function __call($name, $arguments);
 
-
     /**
      * Set the adapter to use
      *
@@ -81,7 +79,6 @@ interface ProxyInterface
      * @access public
      */
     public function setAdapter($adapter);
-
 
     /**
      * Get the instance of the current adapter in use

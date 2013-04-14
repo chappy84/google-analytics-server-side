@@ -38,7 +38,6 @@
  */
 namespace GASS\Adapter;
 
-
 /**
  * An Interface for adapters in general
  *
@@ -60,7 +59,6 @@ interface AdapterInterface
      */
     public function __construct(array $options = array());
 
-
     /**
      * Set Options related to class
      *
@@ -69,7 +67,6 @@ interface AdapterInterface
      * @access public
      */
     public function setOptions(array $options);
-
 
     /**
      * Sets a specific option
@@ -81,7 +78,6 @@ interface AdapterInterface
      */
     public function setOption($name, $value);
 
-
     /**
      * Returns all options set
      *
@@ -89,7 +85,6 @@ interface AdapterInterface
      * @access public
      */
     public function getOptions();
-
 
     /**
      * Returns a specific option

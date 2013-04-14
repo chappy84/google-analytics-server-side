@@ -62,7 +62,6 @@ class Curl extends Base
      */
     protected $curl;
 
-
     /**
      * Class options
      *
@@ -74,7 +73,6 @@ class Curl extends Base
         CURLOPT_CONNECTTIMEOUT => 5,
         CURLOPT_FOLLOWLOCATION => true
     );
-
 
     /**
      * Class Constructor
@@ -90,7 +88,6 @@ class Curl extends Base
         }
         parent::__construct($options);
     }
-
 
     /**
      * {@inheritdoc}
@@ -110,7 +107,6 @@ class Curl extends Base
         throw new Exception\DomainException('A cURL request has not been made yet.');
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -122,7 +118,6 @@ class Curl extends Base
     {
         return $this->setOption(CURLOPT_URL, $url);
     }
-
 
     /**
      * Closes the curl connection if one is present
@@ -138,7 +133,6 @@ class Curl extends Base
         $this->curl = null;
         return $this;
     }
-
 
     /**
      * {@inheritdoc}
@@ -190,7 +184,6 @@ class Curl extends Base
 
         return $this;
     }
-
 
     /**
      * Class Destructor

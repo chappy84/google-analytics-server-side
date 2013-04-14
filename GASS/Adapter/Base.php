@@ -59,7 +59,6 @@ abstract class Base implements AdapterInterface
      */
     protected $options = array();
 
-
     /**
      * Class constructor
      *
@@ -70,7 +69,6 @@ abstract class Base implements AdapterInterface
     {
         $this->setOptions($options);
     }
-
 
     /**
      * {@inheritdoc}
@@ -87,7 +85,6 @@ abstract class Base implements AdapterInterface
         return $this;
     }
 
-
     /**
      * Sets a specific option
      *
@@ -102,7 +99,6 @@ abstract class Base implements AdapterInterface
         return $this;
     }
 
-
     /**
      * Returns all options set
      *
@@ -113,7 +109,6 @@ abstract class Base implements AdapterInterface
     {
         return $this->options;
     }
-
 
     /**
      * Returns a specific option

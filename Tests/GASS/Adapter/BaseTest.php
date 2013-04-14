@@ -43,19 +43,16 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      */
     private $baseAdapter;
 
-
     public function setUp()
     {
         parent::setUp();
         $this->baseAdapter = $this->getMockForAbstractClass('GASS\Adapter\Base');
     }
 
-
     public function tearDown()
     {
         parent::tearDown();
     }
-
 
     public function testSetOptionsValid()
     {
@@ -64,7 +61,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($options, $this->baseAdapter->getOptions());
     }
 
-
     public function testSetOptionValid()
     {
         $optionName = 'testOption2';
@@ -72,7 +68,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GASS\Adapter\Base', $this->baseAdapter->setOption($optionName, $optionValue));
         $this->assertEquals($optionValue, $this->baseAdapter->getOption($optionName));
     }
-
 
     public function testGetOptionNotSetOption()
     {

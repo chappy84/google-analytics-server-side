@@ -44,18 +44,15 @@ class IpAddressTest extends \PHPUnit_Framework_TestCase
      */
     private $ipValidator;
 
-
     public function setUp()
     {
         $this->ipValidator = new \GASS\Validate\IpAddress();
     }
 
-
     public function tearDown()
     {
         parent::tearDown();
     }
-
 
     public function testIsValidValidIPv4Address()
     {
@@ -73,7 +70,6 @@ class IpAddressTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->ipValidator->isValid('255.255.255.255'));
     }
 
-
     public function testIsValidInvalidAddresses()
     {
         $this->assertFalse($this->ipValidator->isValid('255.255.255.256'));
@@ -84,13 +80,11 @@ class IpAddressTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->ipValidator->isValid('1024.1024.1024.1024'));
     }
 
-
     public function testMessagesEmptyWhenValid()
     {
         $this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
         $this->assertEmpty($this->ipValidator->getMessages());
     }
-
 
     public function testMessagesWhenInvalid()
     {

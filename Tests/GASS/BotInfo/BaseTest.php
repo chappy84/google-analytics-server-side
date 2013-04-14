@@ -43,19 +43,16 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      */
     private $baseBotInfo;
 
-
     public function setUp()
     {
         parent::setUp();
         $this->baseBotInfo = $this->getMockForAbstractClass('GASS\BotInfo\Base');
     }
 
-
     public function tearDown()
     {
         parent::tearDown();
     }
-
 
     public function testSetRemoteAddressValid()
     {
@@ -64,13 +61,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($validRemoteAddress, $this->baseBotInfo->getRemoteAddress());
     }
 
-
     public function testSetRemoteAddressExceptionLetters()
     {
         $this->setExpectedException('GASS\Exception\InvalidArgumentException');
         $this->baseBotInfo->setRemoteAddress('abc.def.ghi.jkl');
     }
-
 
     public function testSetRemoteAddressExceptionTooHighSegments()
     {
@@ -78,13 +73,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseBotInfo->setRemoteAddress('500.500.500.500');
     }
 
-
     public function testSetRemoteAddressExceptionMissingSegments()
     {
         $this->setExpectedException('GASS\Exception\InvalidArgumentException');
         $this->baseBotInfo->setRemoteAddress('255.255');
     }
-
 
     public function testSetRemoteAddressExceptionInteger()
     {
@@ -92,13 +85,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseBotInfo->setRemoteAddress('192');
     }
 
-
     public function testSetRemoteAddressExceptionWrongDataType()
     {
         $this->setExpectedException('InvalidArgumentException');
         $this->baseBotInfo->setRemoteAddress(array('255.255.255.0'));
     }
-
 
     public function testSetUserAgent()
     {

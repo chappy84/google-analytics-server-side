@@ -44,18 +44,15 @@ class LanguageCodeTest extends \PHPUnit_Framework_TestCase
      */
     private $languageValidator;
 
-
     public function setUp()
     {
         $this->languageValidator = new \GASS\Validate\LanguageCode();
     }
 
-
     public function tearDown()
     {
         parent::tearDown();
     }
-
 
     public function testIsValidValidLanguageCodes()
     {
@@ -65,7 +62,6 @@ class LanguageCodeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->languageValidator->isValid('fil'));
     }
 
-
     public function testIsValidInvalidLanguageCodes()
     {
         $this->assertFalse($this->languageValidator->isValid('abcd'));
@@ -74,13 +70,11 @@ class LanguageCodeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->languageValidator->isValid('AbCDefg'));
     }
 
-
     public function testMessagesEmptyWhenValid()
     {
         $this->assertTrue($this->languageValidator->isValid('en-gb'));
         $this->assertEmpty($this->languageValidator->getMessages());
     }
-
 
     public function testMessagesWhenInvalid()
     {

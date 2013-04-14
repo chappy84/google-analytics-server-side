@@ -64,7 +64,6 @@ class Stream extends Base
                                 'context' => array('http' => array('method' => 'GET'))
                         );
 
-
     /**
      * The headers returned in response to the previous request
      *
@@ -72,7 +71,6 @@ class Stream extends Base
      * @access protected
      */
     protected $responseHeaders = array();
-
 
     /**
      * {@inheritdoc}
@@ -92,7 +90,6 @@ class Stream extends Base
         throw new Exception\DomainException('A Http Request has not been made yet.');
     }
 
-
     /**
      * Returns all options set
      *
@@ -103,7 +100,6 @@ class Stream extends Base
     {
         return $this->options['context']['http'];
     }
-
 
     /**
      * Sets a specific option
@@ -119,7 +115,6 @@ class Stream extends Base
         return $this;
     }
 
-
     /**
      * Returns a specific option
      *
@@ -134,7 +129,6 @@ class Stream extends Base
                 : null;
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -146,7 +140,6 @@ class Stream extends Base
     {
         return parent::setOption('url', $url);
     }
-
 
     /**
      * {@inheritdoc}
@@ -204,7 +197,6 @@ class Stream extends Base
         return $this;
     }
 
-
     /**
      * Sets the response headers to the class level variable
      *
@@ -215,7 +207,6 @@ class Stream extends Base
     {
         $this->responseHeaders = $this->parseHeaders($responseHeaders);
     }
-
 
     /**
      * Parses HTTP headers into an associative array whether in

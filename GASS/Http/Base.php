@@ -66,7 +66,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      */
     private $acceptLanguage;
 
-
     /**
      * The IP address sent in the X-Forwarded-For header
      *
@@ -74,7 +73,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * @access private
      */
     private $remoteAddress;
-
 
     /**
      * Response to the http request
@@ -84,7 +82,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      */
     private $response;
 
-
     /**
      * The User-Agent for the sent HTTP headers
      *
@@ -92,7 +89,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * @access private
      */
     private $userAgent;
-
 
     /**
      * {@inheritdoc}
@@ -105,7 +101,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
         return $this->acceptLanguage;
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -116,7 +111,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
     {
         return $this->remoteAddress;
     }
-
 
     /**
      * {@inheritdoc}
@@ -129,7 +123,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
         return $this->response;
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -140,7 +133,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
     {
         return $this->userAgent;
     }
-
 
     /**
      * {@inheritdoc}
@@ -160,7 +152,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
         $this->acceptLanguage = $acceptLanguage;
         return $this;
     }
-
 
     /**
      * {@inheritdoc}
@@ -183,7 +174,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
         return $this;
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -197,7 +187,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
         return $this;
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -210,7 +199,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
         $this->userAgent = $userAgent;
         return $this;
     }
-
 
     /**
      * Checks the return code and throws an exception if an issue with the response
@@ -358,7 +346,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
             throw new Exception\RuntimeException($message, $code);
         }
     }
-
 
     /**
      * Makes a request with either the existing options set or the ones provided

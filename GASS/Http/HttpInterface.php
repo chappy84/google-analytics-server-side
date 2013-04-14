@@ -62,7 +62,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      */
     public function getAcceptLanguage();
 
-
     /**
      * Returns information related to the previously made request
      *
@@ -72,7 +71,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      */
     public function getInfo($index = null);
 
-
     /**
      * Returns the current Remote Address for the sent headers (X-Forwarded-For)
      *
@@ -80,7 +78,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      * @access public
      */
     public function getRemoteAddress();
-
 
     /**
      * Returns the existing request response
@@ -90,7 +87,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      */
     public function getResponse();
 
-
     /**
      * Returns the current User-Agent for the sent headers
      *
@@ -98,7 +94,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      * @access public
      */
     public function getUserAgent();
-
 
     /**
      * Sets the current Accepted Language for the sent headers
@@ -109,7 +104,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      */
     public function setAcceptLanguage($acceptLanguage);
 
-
     /**
      * Sets the current Remote Address for the sent headers (X-Forwarded-For)
      *
@@ -118,7 +112,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      * @access public
      */
     public function setRemoteAddress($remoteAddress);
-
 
     /**
      * Sets the existing request response
@@ -129,7 +122,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      */
     public function setResponse($response);
 
-
     /**
      * Sets the Url to Request
      *
@@ -139,7 +131,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      */
     public function setUrl($url);
 
-
     /**
      * Sets the current User-Agent for the sent headers
      *
@@ -148,7 +139,6 @@ interface HttpInterface extends Adapter\AdapterInterface
      * @access public
      */
     public function setUserAgent($userAgent);
-
 
     /**
      * Makes a request with either the existing options set or the ones provided

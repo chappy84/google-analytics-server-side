@@ -129,7 +129,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
         return $this;
     }
 
-
     /**
      * {@inheritdoc}
      *

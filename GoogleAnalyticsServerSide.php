@@ -61,14 +61,12 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     const COOKIE_PATH = '/';
 
-
     /**
      * Location of the google analytics gif
      *
      * @var string
      */
     const GIF_URL = 'http://www.google-analytics.com/__utm.gif';
-
 
     /**
      * Location of the current JS file
@@ -78,7 +76,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     const JS_URL = 'http://www.google-analytics.com/ga.js';
 
-
     /**
      * Current contents of the ga.js file
      *
@@ -87,7 +84,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     private $currentJsFile;
 
-
     /**
      * Google Analytics Tracker Version
      *
@@ -95,7 +91,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @access private
      */
     private $version = '5.4.1';
-
 
     /**
      * Whether or not setVersion has been called, used
@@ -106,7 +101,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     private $setVersionCalled = false;
 
-
     /**
      * Browser User Agent
      *
@@ -114,7 +108,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @access private
      */
     private $userAgent;
-
 
     /**
      * Accept Language
@@ -124,7 +117,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      */
     private $acceptLanguage = 'en';
 
-
     /**
      * Server Name
      *
@@ -132,7 +124,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
      * @access private
      */
     private $serverName;
-
 
     /**
      * The User's IP Address
@@ -828,7 +819,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this;
     }
 
-
     /**
      * @param string $pageTitle
      * @return GoogleAnalyticsServerSide
@@ -839,7 +829,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $this->pageTitle = $this->getAsString($pageTitle, 'Page Title');
         return $this;
     }
-
 
     /**
      * @param boolean $ignoreDoNotTrack
@@ -854,7 +843,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $this->ignoreDoNotTrack = $ignoreDoNotTrack;
         return $this;
     }
-
 
     /**
      * Adds a custom variable to the passed data
@@ -901,7 +889,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this;
     }
 
-
     /**
      * Sets the custom vars from the cookie if not already set by developer
      *
@@ -926,7 +913,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         }
     }
 
-
     /**
      * Removes the special characters used when defining custom vars in the url
      *
@@ -938,7 +924,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
     {
         return str_replace(array('*', '(', ')', '^'), ' ', $value);
     }
-
 
     /**
      * Removes a previously set custom variable
@@ -953,7 +938,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this;
     }
 
-
     /**
      * @param string $charset
      * @return GoogleAnalyticsServerSide
@@ -964,7 +948,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         $this->charset = strtoupper($this->getAsString($charset, 'Charset'));
         return $this;
     }
-
 
     /**
      * @param array $searchEngines
@@ -1001,7 +984,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this;
     }
 
-
     /**
      * Sets confguration options for the BotInfo adapter to use, or the class adapter to use itself
      *
@@ -1034,7 +1016,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this;
     }
 
-
     /**
      * @param null|array|GASS\Http\Interface $http
      * @throws GASS\Exception\InvalidArgumentException
@@ -1064,7 +1045,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this;
     }
 
-
     /**
      * @param array $options
      * @return GoogleAnalyticsServerSide
@@ -1080,7 +1060,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         }
         return $this;
     }
-
 
     /**
      * Set a specific option related to the
@@ -1102,7 +1081,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         }
         return $this;
     }
-
 
     /**
      * Returns the last saved event as a string for the URL parameters
@@ -1145,7 +1123,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
             (($value !== null) ? '('.$value.')' : '');
     }
 
-
     /**
      * Returns the saved custom variables as a string for the URL parameters
      *
@@ -1172,7 +1149,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return null;
     }
 
-
     /**
      * The last octect of the IP address is removed to anonymize the user.
      *
@@ -1197,7 +1173,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         }
         return '';
     }
-
 
     /**
      * Generates a random hash for the domain provided, sourced from the ga.js and converted to php
@@ -1224,7 +1199,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         }
         return $a;
     }
-
 
     /**
      * Sets the google analytics cookies with the relevant values. For the relevant sections
@@ -1554,7 +1528,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this;
     }
 
-
     /**
      * Retrieves the current list of search engines and query parameters from the ga.js file
      *
@@ -1591,7 +1564,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this;
     }
 
-
     /**
      * Tracks a Page View in Google Analytics
      *
@@ -1620,7 +1592,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         return $this->track($queryParams);
     }
 
-
     /**
      * Tracks an Event in Google Analytics
      *
@@ -1645,7 +1616,6 @@ class GoogleAnalyticsServerSide implements \GASS\GASSInterface
         }
         return $this->track($queryParams);
     }
-
 
     /**
      * Track information.

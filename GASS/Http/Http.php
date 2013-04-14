@@ -62,7 +62,6 @@ class Http
      */
     private $adapter;
 
-
     /**
      * Singleton instance of GASS\Http
      *
@@ -71,7 +70,6 @@ class Http
      * @access protected
      */
     protected static $instance;
-
 
     /**
      * Class Constructor
@@ -96,7 +94,6 @@ class Http
         }
     }
 
-
     /**
      * @throws GASS\Exception\RuntimeException
      * @final
@@ -106,7 +103,6 @@ class Http
     {
         throw new Exception\RuntimeException('You cannot clone '.__CLASS__);
     }
-
 
     /**
      * Returns the current instance of GASS\Http
@@ -137,7 +133,6 @@ class Http
         return self::$instance;
     }
 
-
     /**
      * Call magic method
      *
@@ -156,7 +151,6 @@ class Http
             __METHOD__.' is not an available method in '.get_class($this->adapter)
         );
     }
-
 
     /**
      * Call Static magic method
@@ -178,7 +172,6 @@ class Http
         throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($adapter));
     }
 
-
     /**
      * Sets the current adapter to use
      *
@@ -199,7 +192,6 @@ class Http
         }
         throw new Exception\InvalidArgumentException('The GASS\Http adapter must implement GASS\Http\HttpInterface.');
     }
-
 
     /**
      * Returns the current adapter in use

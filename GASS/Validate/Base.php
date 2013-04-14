@@ -60,7 +60,6 @@ abstract class Base extends Adapter\Base implements Validate
      */
     private $messages = array();
 
-
     /**
      * The value currently being validated
      *
@@ -68,7 +67,6 @@ abstract class Base extends Adapter\Base implements Validate
      * @access private
      */
     private $value;
-
 
     /**
      * Get the validation messages
@@ -81,7 +79,6 @@ abstract class Base extends Adapter\Base implements Validate
         return $this->messages;
     }
 
-
     /**
      * Returns the value being validated
      *
@@ -92,7 +89,6 @@ abstract class Base extends Adapter\Base implements Validate
     {
         return $this->value;
     }
-
 
     /**
      * Set the validation messages
@@ -107,7 +103,6 @@ abstract class Base extends Adapter\Base implements Validate
         return $this;
     }
 
-
     /**
      * Sets the value being validated
      *
@@ -120,7 +115,6 @@ abstract class Base extends Adapter\Base implements Validate
         $this->value = $value;
         return $this;
     }
-
 
     /**
      * Adds a validation message;

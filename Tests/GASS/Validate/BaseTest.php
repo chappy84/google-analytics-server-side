@@ -44,19 +44,16 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      */
     private $baseValidator;
 
-
     public function setUp()
     {
         parent::setUp();
         $this->baseValidator = $this->getMockForAbstractClass('GASS\Validate\Base');
     }
 
-
     public function tearDown()
     {
         parent::tearDown();
     }
-
 
     public function testSetMessagesValidPopulatedArray()
     {
@@ -65,20 +62,17 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($testMessages, $this->baseValidator->getMessages());
     }
 
-
     public function testSetMessagesValidEmptyArray()
     {
         $this->assertInstanceOf('GASS\Validate\Base', $this->baseValidator->setMessages(array()));
         $this->assertEquals(array(), $this->baseValidator->getMessages());
     }
 
-
     public function testSetMessagesInvalidDataType()
     {
         $this->setExpectedException('PHPUnit_Framework_Error');
         $this->baseValidator->setMessages('');
     }
-
 
     public function testSetValue()
     {
@@ -94,7 +88,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseValidator->setValue($testInteger);
         $this->assertEquals($testInteger, $this->baseValidator->getValue());
     }
-
 
     public function testAddMessage()
     {

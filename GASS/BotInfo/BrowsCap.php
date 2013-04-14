@@ -63,14 +63,12 @@ class BrowsCap extends Base
      */
     const BROWSCAP_URL = 'http://tempdownloads.browserscap.com/stream.php?PHP_BrowsCapINI';
 
-
     /**
      * URL location specifying the latest update date of the file
      *
      * @var string
      */
     const VERSION_DATE_URL = 'http://tempdownloads.browserscap.com/versions/version-date.php';
-
 
     /**
      * The last time the browscap file was updated
@@ -80,7 +78,6 @@ class BrowsCap extends Base
      */
     private $latestVersionDate;
 
-
     /**
      * The parsed contents of the browscap ini file
      *
@@ -89,7 +86,6 @@ class BrowsCap extends Base
      */
     private $browsers = array();
 
-
     /**
      * Class options
      *
@@ -97,7 +93,6 @@ class BrowsCap extends Base
      * @access protected
      */
     protected $options = array(    'browscap'    => null);
-
 
     /**
      * {@inheritdoc}
@@ -115,7 +110,6 @@ class BrowsCap extends Base
         parent::__construct($options);
     }
 
-
     /**
      * Returns the last date the ini file was updated (on remote webiste)
      *
@@ -129,7 +123,6 @@ class BrowsCap extends Base
         }
         return $this->latestVersionDate;
     }
-
 
     /**
      * Gets the latest version date from the web
@@ -164,7 +157,6 @@ class BrowsCap extends Base
             $this->latestVersionDate = $latestVersionDate;
         }
     }
-
 
     /**
      * Checks whether the browscap file exists, is readable, and hasn't expired the cache lifetime
@@ -320,7 +312,6 @@ class BrowsCap extends Base
         return false;
     }
 
-
     /**
      * Converts a browscap browser pattern into a regular expression
      *
@@ -334,7 +325,6 @@ class BrowsCap extends Base
         $regEx = str_replace(array('\?', '\*'), array('.', '.*'), $regEx);
         return '?^'.strtolower($regEx).'$?i';
     }
-
 
     /**
      * {@inheritdoc}

@@ -64,7 +64,6 @@ class BotInfo implements Proxy\ProxyInterface
      */
     private $adapter;
 
-
     /**
      * Class Constructor
      *
@@ -83,7 +82,6 @@ class BotInfo implements Proxy\ProxyInterface
             $this->setOptions($options);
         }
     }
-
 
     /**
      * Call magic method
@@ -107,7 +105,6 @@ class BotInfo implements Proxy\ProxyInterface
         throw new Exception\DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
     }
 
-
     /**
      * Sets the current adapter to use
      *
@@ -130,7 +127,6 @@ class BotInfo implements Proxy\ProxyInterface
             'The GASS\BotInfo adapter must implement GASS\BotInfo\BotInfoInterface.'
         );
     }
-
 
     /**
      * @return the $adapter

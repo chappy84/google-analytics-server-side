@@ -63,7 +63,6 @@ interface Validate extends Adapter\AdapterInterface
      */
     public function isValid($value);
 
-
     /**
      * Returns any issues that occurred during validation
      *

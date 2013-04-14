@@ -43,19 +43,16 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      */
     private $baseHttp;
 
-
     public function setUp()
     {
         parent::setUp();
         $this->baseHttp = $this->getMockForAbstractClass('GASS\Http\Base');
     }
 
-
     public function tearDown()
     {
         parent::tearDown();
     }
-
 
     public function testSetRemoteAddressValid()
     {
@@ -64,13 +61,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($validRemoteAddress, $this->baseHttp->getRemoteAddress());
     }
 
-
     public function testSetRemoteAddressExceptionLetters()
     {
         $this->setExpectedException('GASS\Exception\InvalidArgumentException');
         $this->baseHttp->setRemoteAddress('abc.def.ghi.jkl');
     }
-
 
     public function testSetRemoteAddressExceptionTooHighSegments()
     {
@@ -78,13 +73,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseHttp->setRemoteAddress('500.500.500.500');
     }
 
-
     public function testSetRemoteAddressExceptionMissingSegments()
     {
         $this->setExpectedException('GASS\Exception\InvalidArgumentException');
         $this->baseHttp->setRemoteAddress('255.255');
     }
-
 
     public function testSetRemoteAddressExceptionInteger()
     {
@@ -92,13 +85,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseHttp->setRemoteAddress('192');
     }
 
-
     public function testSetRemoteAddressExceptionWrongDataType()
     {
         $this->setExpectedException('InvalidArgumentException');
         $this->baseHttp->setRemoteAddress(array('255.255.255.0'));
     }
-
 
     public function testSetUserAgent()
     {
@@ -108,13 +99,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userAgent, $this->baseHttp->getUserAgent());
     }
 
-
     public function testSetAcceptLanguageTwoCharPlusCountryValid()
     {
         $this->assertInstanceOf('GASS\Http\Base', $this->baseHttp->setAcceptLanguage('en-gb'));
         $this->assertEquals('en-gb', $this->baseHttp->getAcceptLanguage());
     }
-
 
     public function testSetAcceptLanguageThreeCharPlusCountryValid()
     {
@@ -122,13 +111,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fil-ph', $this->baseHttp->getAcceptLanguage());
     }
 
-
     public function testSetAcceptLanguageTwoCharValid()
     {
         $this->assertInstanceOf('GASS\Http\Base', $this->baseHttp->setAcceptLanguage('en'));
         $this->assertEquals('en', $this->baseHttp->getAcceptLanguage());
     }
-
 
     public function testSetAcceptLanguageThreeCharValid()
     {
@@ -136,13 +123,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fil', $this->baseHttp->getAcceptLanguage());
     }
 
-
     public function testSetAcceptLanguageExceptionTooLong()
     {
         $this->setExpectedException('GASS\Exception\InvalidArgumentException');
         $this->baseHttp->setAcceptLanguage('abcd');
     }
-
 
     public function testSetAcceptLanguageExceptionTooLong2()
     {
@@ -150,20 +135,17 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseHttp->setAcceptLanguage('AbCDefg');
     }
 
-
     public function testSetAcceptLanguageExceptionInvalidCountry()
     {
         $this->setExpectedException('GASS\Exception\InvalidArgumentException');
         $this->baseHttp->setAcceptLanguage('ab-cde');
     }
 
-
     public function testSetAcceptLanguageExceptionInvalidLanguage()
     {
         $this->setExpectedException('GASS\Exception\InvalidArgumentException');
         $this->baseHttp->setAcceptLanguage('abcd-ef');
     }
-
 
     public function testSetAcceptLanguageExceptionWrongDataType()
     {
@@ -174,14 +156,12 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseHttp->setAcceptLanguage(array('en-gb'));
     }
 
-
     public function testSetResponse()
     {
         $response = 'Test Response String';
         $this->assertInstanceOf('GASS\Http\Base', $this->baseHttp->setResponse($response));
         $this->assertEquals($response, $this->baseHttp->getResponse());
     }
-
 
     public function testCheckResponseCodeExceptionInvalidArgument()
     {
@@ -191,7 +171,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 'TestCode');
     }
 
-
     public function testCheckResponseCodeExceptionCode204()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'No Content');
@@ -199,7 +178,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 204);
     }
-
 
     public function testCheckResponseCodeExceptionCode205()
     {
@@ -209,7 +187,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 205);
     }
 
-
     public function testCheckResponseCodeExceptionCode206()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Partial Content');
@@ -217,7 +194,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 206);
     }
-
 
     public function testCheckResponseCodeExceptionCode207()
     {
@@ -227,7 +203,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 207);
     }
 
-
     public function testCheckResponseCodeExceptionCode400()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Bad Request');
@@ -235,7 +210,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 400);
     }
-
 
     public function testCheckResponseCodeExceptionCode401()
     {
@@ -245,7 +219,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 401);
     }
 
-
     public function testCheckResponseCodeExceptionCode402()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Payment Required');
@@ -253,7 +226,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 402);
     }
-
 
     public function testCheckResponseCodeExceptionCode403()
     {
@@ -263,7 +235,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 403);
     }
 
-
     public function testCheckResponseCodeExceptionCode404()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Not Found');
@@ -271,7 +242,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 404);
     }
-
 
     public function testCheckResponseCodeExceptionCode405()
     {
@@ -281,7 +251,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 405);
     }
 
-
     public function testCheckResponseCodeExceptionCode406()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Not Acceptable');
@@ -289,7 +258,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 406);
     }
-
 
     public function testCheckResponseCodeExceptionCode407()
     {
@@ -299,7 +267,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 407);
     }
 
-
     public function testCheckResponseCodeExceptionCode408()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Request Timeout');
@@ -307,7 +274,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 408);
     }
-
 
     public function testCheckResponseCodeExceptionCode409()
     {
@@ -317,7 +283,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 409);
     }
 
-
     public function testCheckResponseCodeExceptionCode410()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Gone');
@@ -325,7 +290,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 410);
     }
-
 
     public function testCheckResponseCodeExceptionCode411()
     {
@@ -335,7 +299,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 411);
     }
 
-
     public function testCheckResponseCodeExceptionCode412()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Precondition Failed');
@@ -343,7 +306,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 412);
     }
-
 
     public function testCheckResponseCodeExceptionCode413()
     {
@@ -353,7 +315,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 413);
     }
 
-
     public function testCheckResponseCodeExceptionCode414()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Request-URI Too Long');
@@ -361,7 +322,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 414);
     }
-
 
     public function testCheckResponseCodeExceptionCode415()
     {
@@ -371,7 +331,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 415);
     }
 
-
     public function testCheckResponseCodeExceptionCode416()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Request Range Not Satisfiable');
@@ -379,7 +338,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 416);
     }
-
 
     public function testCheckResponseCodeExceptionCode417()
     {
@@ -389,7 +347,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 417);
     }
 
-
     public function testCheckResponseCodeExceptionCode418()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'I\'m a Teapot');
@@ -397,7 +354,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 418);
     }
-
 
     public function testCheckResponseCodeExceptionCode422()
     {
@@ -407,7 +363,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 422);
     }
 
-
     public function testCheckResponseCodeExceptionCode423()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Locked (WebDAV)');
@@ -415,7 +370,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 423);
     }
-
 
     public function testCheckResponseCodeExceptionCode424()
     {
@@ -425,7 +379,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 424);
     }
 
-
     public function testCheckResponseCodeExceptionCode425()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Unordered Collection');
@@ -433,7 +386,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 425);
     }
-
 
     public function testCheckResponseCodeExceptionCode426()
     {
@@ -443,7 +395,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 426);
     }
 
-
     public function testCheckResponseCodeExceptionCode444()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'No Response');
@@ -451,7 +402,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 444);
     }
-
 
     public function testCheckResponseCodeExceptionCode449()
     {
@@ -461,7 +411,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 449);
     }
 
-
     public function testCheckResponseCodeExceptionCode450()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Blocked by Windows Parental Controls');
@@ -469,7 +418,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 450);
     }
-
 
     public function testCheckResponseCodeExceptionCode499()
     {
@@ -479,7 +427,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 499);
     }
 
-
     public function testCheckResponseCodeExceptionCode500()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Internal Server Error');
@@ -487,7 +434,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 500);
     }
-
 
     public function testCheckResponseCodeExceptionCode501()
     {
@@ -497,7 +443,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 501);
     }
 
-
     public function testCheckResponseCodeExceptionCode502()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Bad Gateway');
@@ -505,7 +450,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 502);
     }
-
 
     public function testCheckResponseCodeExceptionCode503()
     {
@@ -515,7 +459,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 503);
     }
 
-
     public function testCheckResponseCodeExceptionCode504()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Gateway Timeout');
@@ -523,7 +466,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 504);
     }
-
 
     public function testCheckResponseCodeExceptionCode505()
     {
@@ -533,7 +475,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 505);
     }
 
-
     public function testCheckResponseCodeExceptionCode506()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Variant Also Negotiates');
@@ -541,7 +482,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 506);
     }
-
 
     public function testCheckResponseCodeExceptionCode507()
     {
@@ -551,7 +491,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 507);
     }
 
-
     public function testCheckResponseCodeExceptionCode509()
     {
         $this->setExpectedException('GASS\Exception\RuntimeException', 'Bandwidth Limit Exceeded');
@@ -559,7 +498,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($this->baseHttp, 509);
     }
-
 
     public function testCheckResponseCodeExceptionCode510()
     {

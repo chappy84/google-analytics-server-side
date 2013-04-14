@@ -63,7 +63,6 @@ class UserAgentStringInfo extends Base
      */
     const CSV_URL = 'http://user-agent-string.info/rpc/get_data.php?botIP-All=csv';
 
-
     /**
      * List of bots in use that the class should ignore
      * array format: 'bot name' => 'bot user agent'
@@ -72,7 +71,6 @@ class UserAgentStringInfo extends Base
      * @access private
      */
     private $bots = array();
-
 
     /**
      * List of IPs in use by bots that the class should ignore
@@ -83,7 +81,6 @@ class UserAgentStringInfo extends Base
      */
     private $botIps = array();
 
-
     /**
      * Last date the cache was saved
      *
@@ -91,7 +88,6 @@ class UserAgentStringInfo extends Base
      * @access private
      */
     private $cacheDate;
-
 
     /**
      * Options to use with the class
@@ -102,7 +98,6 @@ class UserAgentStringInfo extends Base
     protected $options = array(  'cachePath'        => null,
                                  'cacheFilename'    => 'bots.csv',
                                  'cacheLifetime'    => 2592000);
-
 
     /**
      * Sets the bots list
@@ -125,7 +120,6 @@ class UserAgentStringInfo extends Base
         return $this;
     }
 
-
     /**
      * Returns the current bots
      *
@@ -136,7 +130,6 @@ class UserAgentStringInfo extends Base
     {
         return $this->bots;
     }
-
 
     /**
      * Retrieves the contents from the external csv source
@@ -164,7 +157,6 @@ class UserAgentStringInfo extends Base
         return null;
     }
 
-
     /**
      * Retrieves the bots csv from the default source
      *
@@ -184,7 +176,6 @@ class UserAgentStringInfo extends Base
         }
         return $botsCsv;
     }
-
 
     /**
      * Parses the contents of the csv from the default source and
@@ -217,7 +208,6 @@ class UserAgentStringInfo extends Base
         return $botInfo;
     }
 
-
     /**
      * Saves the current list of bots to the cache directory for use next time the script is run
      *
@@ -248,7 +238,6 @@ class UserAgentStringInfo extends Base
         return $this;
     }
 
-
     /**
      * Sets the last bot cache date from the last cache file created
      *
@@ -272,7 +261,6 @@ class UserAgentStringInfo extends Base
         return $this;
     }
 
-
     /**
      * Returns the current cache date
      *
@@ -283,7 +271,6 @@ class UserAgentStringInfo extends Base
     {
         return $this->cacheDate;
     }
-
 
     /**
      * {@inheritdoc}
@@ -312,7 +299,6 @@ class UserAgentStringInfo extends Base
                     || (!empty($this->botIps) && array_key_exists($remoteAddress, $this->botIps)));
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -327,7 +313,6 @@ class UserAgentStringInfo extends Base
         }
         return parent::setOptions($options);
     }
-
 
     /**
      * Class Destructor

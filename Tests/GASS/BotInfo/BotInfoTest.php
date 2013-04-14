@@ -42,12 +42,10 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
     }
 
-
     public function tearDown()
     {
         parent::tearDown();
     }
-
 
     public function testConstructValidNoArguments()
     {
@@ -56,7 +54,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GASS\BotInfo\BrowsCap', $botInfo->getAdapter());
     }
 
-
     public function testConstructValidAdapterInOptions()
     {
         $botInfo = new \GASS\BotInfo\BotInfo(array('adapter' => 'UserAgentStringInfo'));
@@ -64,14 +61,12 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GASS\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
     }
 
-
     public function testConstructValidAdapterParameter()
     {
         $botInfo = new \GASS\BotInfo\BotInfo(array(), 'UserAgentStringInfo');
         $this->assertInstanceOf('GASS\BotInfo\BotInfo', $botInfo);
         $this->assertInstanceOf('GASS\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
     }
-
 
     public function testConstructValidOptions()
     {
@@ -83,7 +78,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($browscapLocation, $botInfoAdapter->getOption('browscap'));
     }
 
-
     public function testSetAdapterValidString()
     {
         $botInfo = new \GASS\BotInfo\BotInfo();
@@ -93,7 +87,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GASS\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
     }
 
-
     public function testSetAdapterValidClass()
     {
         $botInfo = new \GASS\BotInfo\BotInfo();
@@ -102,7 +95,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $botInfo->setAdapter(new \GASS\BotInfo\UserAgentStringInfo());
         $this->assertInstanceOf('GASS\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
     }
-
 
     public function testSetAdapterExceptionAdapterWrongInstance()
     {
@@ -114,7 +106,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $botInfo->setAdapter(new \stdClass());
     }
 
-
     public function testSetAdapterExceptionAdapterWrongDataType()
     {
         $this->setExpectedException(
@@ -124,7 +115,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $botInfo = new \GASS\BotInfo\BotInfo();
         $botInfo->setAdapter(1);
     }
-
 
     public function testSetAdapterExceptionAdapterMissingString()
     {
@@ -136,7 +126,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $botInfo->setAdapter('Test');
     }
 
-
     public function testCallMagicMethodValid()
     {
         $browscapLocation = '/tmp/php_browscap.ini';
@@ -146,7 +135,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('browscap', $botInfoAdapter->getOptions());
         $this->assertEquals($browscapLocation, $botInfoAdapter->getOption('browscap'));
     }
-
 
     public function testCallMagicMethodExceptionNoAdapter()
     {
@@ -161,7 +149,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $botInfo->setOption('browscap', '/tmp/php_browscap.ini');
     }
 
-
     public function testCallMagicMethodExceptionMissingMethod()
     {
         $botInfo = new \GASS\BotInfo\BotInfo();
@@ -171,7 +158,6 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         );
         $botInfo->testMethod();
     }
-
 
     public function testAdapterBaseSetRemoteAddressExceptionInvalidAddress()
     {
