@@ -1,23 +1,24 @@
-Google Analytics Server Side
+[Google Analytics Server Side][1]
 ============================
 
-Google Analytics Server Side is an implementation of the [Google Analytics web tracking ECMAScript][1] in [PHP][2].  
+Google Analytics Server Side is an implementation of the [Google Analytics web tracking ECMAScript][2] in [PHP][3].  
 It provides server side Google Analytics tracking with a small easy to use PHP 5.3+ framework.  
-Implemented are the parts of the interface that would be available without [ECMAScript][5] in a 
+Implemented are the parts of the interface that would be available without [ECMAScript][6] in a 
 browser to detect certain features such as screen resolution / colour, flash / java plugin version etc.
 
 CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
 HOME: <http://github.com/chappy84/google-analytics-server-side>  
 BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>  
 
-Google Analytics was developed by [Google][3].  
-This PHP adaptation is maintained by [Tom Chapman][4].  
+Google Analytics was developed by [Google][4].  
+This PHP adaptation is maintained by [Tom Chapman][5].  
 
-[1]: https://developers.google.com/analytics/devguides/collection/gajs/
-[2]: http://www.php.net/
-[3]: http://www.google.com/analytics
-[4]: http://tom-chapman.co.uk/
-[5]: http://en.wikipedia.org/wiki/ECMAScript
+[1]: http://git.io/gass
+[2]: https://developers.google.com/analytics/devguides/collection/gajs/
+[3]: http://www.php.net/
+[4]: http://www.google.com/analytics
+[5]: http://tom-chapman.co.uk/
+[6]: http://en.wikipedia.org/wiki/ECMAScript
 
 Build Status
 ------------
@@ -28,12 +29,12 @@ Development: [![Build Status](https://secure.travis-ci.org/chappy84/google-analy
 Installation
 ------------
 
-The package is available to install using [composer][6] from the [packagist][7] repository since v0.8.6-beta.  
-Simply install using [chappy84/google-analytics-server-side][8] and it should be installed, checking the requirements.
+The package is available to install using [composer][7] from the [packagist][8] repository since v0.8.6-beta.  
+Simply install using [chappy84/google-analytics-server-side][9] and it should be installed, checking the requirements.
 
-[6]: http://getcomposer.org/
-[7]: https://packagist.org/
-[8]: https://packagist.org/packages/chappy84/google-analytics-server-side
+[7]: http://getcomposer.org/
+[8]: https://packagist.org/
+[9]: https://packagist.org/packages/chappy84/google-analytics-server-side
 
 Usage
 -----
@@ -72,7 +73,7 @@ $gass = new \Gass\GoogleAnalyticsServerSide(
 These options can also be set individually by the method setOption,
 or in one go with the method setOptions
 
-Most of the [current basic methods][9] available in ga.js tracking code have been 
+Most of the [current basic methods][10] available in ga.js tracking code have been 
 implemented.  
 The methods implemented are:
 
@@ -121,14 +122,14 @@ All methods but get methods allow chaining for ease of use.
 
 ### Event Tracking
 
-Event tracking is implemented using the [same functionality as in the ga.js tracking code][10]
+Event tracking is implemented using the [same functionality as in the ga.js tracking code][11]
 
 ```php
 $gass->trackEvent(
 	 string $category, 
      string $action, 
-    [string $label, 
-    [int    $value, 
+    [string $label = null, 
+    [int    $value = null, 
     [bool   $nonInteraction = false]]]
 );
 ```
@@ -137,8 +138,8 @@ N.B. trackEvent() does not require trackPageView() to be called first.
 However if you do not call trackPageView first or set nonInteraction to true then your 
 pages/visit metric may become less than 1.
 
-[9]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration
-[10]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEventTracking
+[10]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration
+[11]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEventTracking
 
 BotInfo
 -------
@@ -159,8 +160,8 @@ There are two adapters available in the GASS framework
 #### BrowsCap
 There is one optional option as part of the array configuration parameter. 
 
-- browscap: This is the same as the php ini setting [browscap][11], a file-system location 
-where the [php_browscap.ini file][12] is located / can be downloaded to.
+- browscap: This is the same as the php ini setting [browscap][12], a file-system location 
+where the [php_browscap.ini file][13] is located / can be downloaded to.
 
 e.g.
 
@@ -195,7 +196,7 @@ $browsCapAdapter = new \Gass\BotInfo\BrowsCap;
 $gass->setBotInfo($browsCapAdapter);
 ```
 
-When an update for the browscap ini file is available [on the server][12] the code will 
+When an update for the browscap ini file is available [on the server][13] the code will 
 automatically download the file into the location provided.
 
 N/B: You MUST either provide the browscap setting or have it set in php.ini, otherwise 
@@ -208,7 +209,7 @@ functionality will work without the need to restart the web-server.
 
 #### UserAgentStringInfo
 This was the previous default for Google Analytics Server Side which downloads a csv list 
-of search engine crawlers from [user-agent-string.info][13].  
+of search engine crawlers from [user-agent-string.info][14].  
 There are three options as part of the array configuration parameter:
 
 - cachePath: where to save the list of bots downloaded from user-agent-string.info (required)
@@ -217,9 +218,9 @@ There are three options as part of the array configuration parameter:
 
 This can be implemented in the same way as the BrowsCap adapter.
 
-[11]: http://www.php.net/manual/en/misc.configuration.php#ini.browscap
-[12]: http://tempdownloads.browserscap.com/ 
-[13]: http://user-agent-string.info/download
+[12]: http://www.php.net/manual/en/misc.configuration.php#ini.browscap
+[13]: http://tempdownloads.browserscap.com/ 
+[14]: http://user-agent-string.info/download
 
 Http
 ----
@@ -260,7 +261,7 @@ There are two Adapters available to Gass\Http, these are:
 
 #### Stream
 Stream creates a stream context and utilises this stream with file_get_contents. See 
-[php's example][14]. Any options provided to this class will go into the 'http' array for 
+[php's example][15]. Any options provided to this class will go into the 'http' array for 
 the stream context, thus you may pass any headers or proxy information etc. into this to 
 use in the connection when made.
 
@@ -268,11 +269,11 @@ use in the connection when made.
 This utilises the php extension cURL. cURL is recommended, however as it's not always 
 available the code falls back to stream to allow all servers make http requests in the 
 correct way.  
-Any options provided to this class must be passed using the [curl constants][15] as 
+Any options provided to this class must be passed using the [curl constants][16] as 
 identifiers (associative array keys or option names).
 
-[14]: http://www.php.net/file_get_contents#example-2118
-[15]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
+[15]: http://www.php.net/file_get_contents#example-2320
+[16]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
 
 End User Location
 -----------------
@@ -299,9 +300,9 @@ the first time.
 Yep, as European web developers we all hate one of the most idiotic and stupid pieces of 
 legislation ever introduced by bureaucrats that don't understand either the technology 
 itself or the ridiculously easy work arounds using such things as Javascript, Flash, 
-Silverlight, etc. See [@samyk][16]'s [evercookie][17] if you don't know.
+Silverlight, etc. See [@samyk][17]'s [evercookie][18] if you don't know.
 
-Anyway, in response to this, since Google themselves deal with the [Do Not Track][18] header 
+Anyway, in response to this, since Google themselves deal with the [Do Not Track][19] header 
 and to obey the user's preference this framework should silently deal with this 
 header in the same way, thus the user's preference is accepted by default.
 
@@ -318,30 +319,30 @@ To reverse this and no longer ignore the Do Not Track header you can make the fo
 $gass->setIgnoreDoNotTrack(false);
 ```
 
-[16]: https://github.com/samyk
-[17]: https://github.com/samyk/evercookie
-[18]: http://www.w3.org/TR/tracking-dnt/
+[17]: https://github.com/samyk
+[18]: https://github.com/samyk/evercookie
+[19]: http://www.w3.org/TR/tracking-dnt/
 
 PHP Version
 -----------
 
 The minimum supported version is PHP 5.3.3
 
-This framework uses [PHPUnit][19], via [TravisCI][20], to test the functionality of the 
+This framework uses [PHPUnit][20], via [TravisCI][21], to test the functionality of the 
 framework on the supported minor versions 5.3 and 5.4. This is done by default on the latest 
 bug fix point release of that minor point version to ensure it works. If you find any bugs 
 in previous point releases then please raise an issue via the link at the top of this readme.  
    
 #### PHP 5.2
 
-A [PHP 5.2 Branch][21] has been left which you can feel free to use, fork etc.. Any issues 
+A [PHP 5.2 Branch][22] has been left which you can feel free to use, fork etc.. Any issues 
 which arise in this branch will have a fix attempted as soon as time is available. Please 
 lodge any issues via the bugs link at the top of this readme, or via a pull request from 
 your fork if you've attempted a fix yourself.
 
-[19]: https://github.com/sebastianbergmann/phpunit
-[20]: https://travis-ci.org/
-[21]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+[20]: https://github.com/sebastianbergmann/phpunit
+[21]: https://travis-ci.org/
+[22]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 Quick Note on External Frameworks
 ---------------------------------
