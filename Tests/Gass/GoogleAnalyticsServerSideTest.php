@@ -430,14 +430,18 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetCustomVarValid()
     {
-        $customVar1 = array( 'index'    => 1,
-                             'name'        => 'Custom Var 1',
-                             'value'    => 'Custom Value 1',
-                             'scope'    => 3);
-        $customVar2 = array( 'index'    => 5,
-                             'name'     => 'Custom Var 5',
-                             'value'    => 'Custom Value 5',
-                             'scope'    => 2);
+        $customVar1 = array(
+            'index' => 1,
+            'name'  => 'Custom Var 1',
+            'value' => 'Custom Value 1',
+            'scope' => 3
+        );
+        $customVar2 = array(
+            'index' => 5,
+            'name'  => 'Custom Var 5',
+            'value' => 'Custom Value 5',
+            'scope' => 2
+        );
         $this->assertInstanceOf(
             'Gass\GoogleAnalyticsServerSide',
             $this->gass->setCustomVar($customVar1['name'], $customVar1['value'])
@@ -878,14 +882,18 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testGetCustomVariableStringValid()
     {
         $this->assertNull($this->gass->getCustomVariableString());
-        $customVar1 = array( 'index'    => 1,
-                             'name'     => 'Custom Var 1',
-                             'value'    => 'Custom Value 1',
-                             'scope'    => 3);
-        $customVar2 = array( 'index'    => 5,
-                             'name'     => 'Custom Var 5',
-                             'value'    => 'Custom Value 5',
-                             'scope'    => 2);
+        $customVar1 = array(
+            'index' => 1,
+            'name'  => 'Custom Var 1',
+            'value' => 'Custom Value 1',
+            'scope' => 3
+        );
+        $customVar2 = array(
+            'index' => 5,
+            'name'  => 'Custom Var 5',
+            'value' => 'Custom Value 5',
+            'scope' => 2
+        );
         $this->gass->setCustomVar($customVar1['name'], $customVar1['value']);
         $this->gass->setCustomVar(
             $customVar2['name'],

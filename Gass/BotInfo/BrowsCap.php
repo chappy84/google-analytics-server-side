@@ -92,7 +92,7 @@ class BrowsCap extends Base
      * @var array
      * @access protected
      */
-    protected $options = array(    'browscap'    => null);
+    protected $options = array('browscap' => null);
 
     /**
      * {@inheritdoc}

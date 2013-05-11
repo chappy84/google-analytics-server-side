@@ -125,7 +125,7 @@ All methods but get methods allow chaining for ease of use.
 Event tracking is implemented using the [same functionality as in the ga.js tracking code][11]
 
 ```php
-$gass->trackEvent(
+\Gass\GoogleAnalyticsServerSide::trackEvent(
 	 string $category, 
      string $action, 
     [string $label = null, 
@@ -181,7 +181,7 @@ $gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
 		'botInfo' => array(
 			'adapter' => 'BrowsCap',
-            'browscap'=> '/tmp/php_browscap.ini'
+            'browscap' => '/tmp/php_browscap.ini'
         ),
         'account' => 'UA-XXXXXXX-X'
     )
@@ -191,7 +191,7 @@ $gass = new \Gass\GoogleAnalyticsServerSide(
 or
 
 ```php
-$gass = new \Gass\GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'))
+$gass = new \Gass\GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'));
 $browsCapAdapter = new \Gass\BotInfo\BrowsCap;
 $gass->setBotInfo($browsCapAdapter);
 ```
@@ -239,8 +239,8 @@ e.g.
 $gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
 		'account' => 'UA-XXXXXXX-X',
-        'http'    => array(
-        	'adapter'     => 'Curl',
+        'http' => array(
+        	'adapter' => 'Curl',
             CURLOPT_PROXY => 'http://exampleproxy.local:8080'
         )
     )
@@ -272,7 +272,7 @@ correct way.
 Any options provided to this class must be passed using the [curl constants][16] as 
 identifiers (associative array keys or option names).
 
-[15]: http://www.php.net/file_get_contents#example-2320
+[15]: http://www.php.net/file_get_contents#example-2322
 [16]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
 
 End User Location

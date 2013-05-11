@@ -1545,8 +1545,10 @@ class GoogleAnalyticsServerSide implements GassInterface
         if (!is_bool($nonInteraction)) {
             throw new Exception\InvalidArgumentException('NonInteraction must be a boolean.');
         }
-        $queryParams = array(    'utmt'    => 'event',
-                                 'utme'    => $this->getEventString($category, $action, $label, $value));
+        $queryParams = array(
+            'utmt' => 'event',
+            'utme' => $this->getEventString($category, $action, $label, $value)
+        );
         if ($nonInteraction === true) {
             $queryParams['utmni'] = '1';
         }

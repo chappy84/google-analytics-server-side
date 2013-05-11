@@ -144,7 +144,6 @@ class Curl extends Base
      */
     public function request($url = null, array $options = array())
     {
-
         parent::request($url, $options);
 
         $this->close();

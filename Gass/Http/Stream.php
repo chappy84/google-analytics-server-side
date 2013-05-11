@@ -61,8 +61,8 @@ class Stream extends Base
      * @access protected
      */
     protected $options = array(
-                                'context' => array('http' => array('method' => 'GET'))
-                        );
+        'context' => array('http' => array('method' => 'GET'))
+    );
 
     /**
      * The headers returned in response to the previous request
