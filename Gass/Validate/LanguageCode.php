@@ -29,7 +29,7 @@
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  Validate
  */
 
@@ -45,7 +45,7 @@ namespace Gass\Validate;
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  Validate
  */
 class LanguageCode extends Base

@@ -30,7 +30,7 @@
  * @link        http://github.com/chappy84/google-analytics-server-side
  * @version     0.9.0 Beta
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @example     $gass = new \Gass\GoogleAnalyticsServerSide;
  *              $gass->setAccount('UA-XXXXXXX-X')
  *                  ->trackPageView();
@@ -50,7 +50,7 @@ use Gass\Validate;
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  */
 class GoogleAnalyticsServerSide implements GassInterface
 {

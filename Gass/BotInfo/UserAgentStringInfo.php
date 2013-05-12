@@ -29,7 +29,7 @@
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  BotInfo
  */
 
@@ -50,7 +50,7 @@ use Gass\Http;
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  BotInfo
  */
 class UserAgentStringInfo extends Base

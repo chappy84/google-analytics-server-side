@@ -29,7 +29,7 @@
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  BotInfo
  */
 
@@ -52,7 +52,7 @@ use Gass\Validate;
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  BotInfo
  */
 abstract class Base extends Adapter\Base implements BotInfoInterface

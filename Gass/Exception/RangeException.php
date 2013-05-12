@@ -29,7 +29,7 @@
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  Exception
  */
 
@@ -45,7 +45,7 @@ namespace Gass\Exception;
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  Exception
  */
 class RangeException extends \RangeException implements ExceptionInterface

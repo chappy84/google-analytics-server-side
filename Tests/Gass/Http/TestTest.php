@@ -29,6 +29,6 @@
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
  * @category    GoogleAnalyticsServerSide
- * @package     GoogleAnalyticsServerSide
+ * @package     Gass
  * @subpackage  Http
  */
