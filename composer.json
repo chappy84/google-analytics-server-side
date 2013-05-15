@@ -7,7 +7,7 @@
             "role" : "Author, Maintainer"
         }
     ],
-    "homepage" : "http://chappy84.github.com/google-analytics-server-side/",
+    "homepage" : "http://chappy84.github.io/google-analytics-server-side/",
     "license" : [
         "GPL-3.0+"
     ],
@@ -15,16 +15,17 @@
         "php" : ">=5.3.3"
     },
     "require-dev" : {
-        "phpunit/PHPUnit" : "3.7.*"
+        "phpunit/phpunit" : "3.7.*"
     },
     "autoload" : {
         "psr-0" : {
             "Gass\\" : ""
         },
         "files": [
-            "Gass\\Bootstrap.php"
+            "Gass/Bootstrap.php"
         ]
     },
+    "target-dir" : "Gass/",
     "support" : {
         "source" : "https://github.com/chappy84/google-analytics-server-side",
         "issues" : "https://github.com/chappy84/google-analytics-server-side/issues"
