@@ -90,7 +90,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      * @var string
      * @access private
      */
-    private $version = '5.4.1';
+    private $version = '5.4.6';
 
     /**
      * Whether or not setVersion has been called, used
