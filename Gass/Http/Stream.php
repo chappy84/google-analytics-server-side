@@ -231,7 +231,15 @@ class Stream extends Base
         foreach ($headers as $header) {
             $header = trim($header);
             if (1 === preg_match('/^([^:]+?)\s*?:([\s\S]+?)$/', $header, $matches)) {
-                $returnHeaders[$matches[1]] = trim($matches[2]);
+                $header_val = trim($matches[2]);
+                if (in_array(strtolower($matches[1]), array('set-cookie'))) {
+                    if (!isset($returnHeaders[$matches[1]])) {
+                        $returnHeaders[$matches[1]] = array();
+                    }
+                    $returnHeaders[$matches[1]][] = $header_val;
+                } else {
+                    $returnHeaders[$matches[1]] = $header_val;
+                }
             } elseif (1 === preg_match('/^HTTP\/\d+?\.\d+?\s+?(\d+)[\s\S]+?$/i', $header, $matches)) {
                 $returnHeaders['Http-Code'] = $matches[1];
             }
