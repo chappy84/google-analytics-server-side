@@ -39,7 +39,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @var Gass\BotInfo\Base
-     * @access private
      */
     private $baseBotInfo;
 

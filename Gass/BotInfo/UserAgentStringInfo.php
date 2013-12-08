@@ -68,7 +68,6 @@ class UserAgentStringInfo extends Base
      * array format: 'bot name' => 'bot user agent'
      *
      * @var array
-     * @access private
      */
     private $bots = array();
 
@@ -77,7 +76,6 @@ class UserAgentStringInfo extends Base
      * array_format: 'IP address' => 'bot name'
      *
      * @var array
-     * @access private
      */
     private $botIps = array();
 
@@ -85,7 +83,6 @@ class UserAgentStringInfo extends Base
      * Last date the cache was saved
      *
      * @var number|null
-     * @access private
      */
     private $cacheDate;
 
@@ -93,7 +90,6 @@ class UserAgentStringInfo extends Base
      * Options to use with the class
      *
      * @var array
-     * @access protected
      */
     protected $options = array(
         'cachePath'     => null,
@@ -105,7 +101,6 @@ class UserAgentStringInfo extends Base
      * Sets the bots list
      *
      * @return Gass\BotInfo\UserAgentStringInfo
-     * @access public
      */
     public function set()
     {
@@ -126,7 +121,6 @@ class UserAgentStringInfo extends Base
      * Returns the current bots
      *
      * @return array
-     * @access public
      */
     public function get()
     {
@@ -139,7 +133,6 @@ class UserAgentStringInfo extends Base
      *
      * @return array|null
      * @throws Gass\Exception\RuntimeException
-     * @access private
      */
     private function getFromCache()
     {
@@ -164,7 +157,6 @@ class UserAgentStringInfo extends Base
      *
      * @return string
      * @throws Gass\Exception\RuntimeException
-     * @access private
      */
     private function getFromWeb()
     {
@@ -185,7 +177,6 @@ class UserAgentStringInfo extends Base
      *
      * @param string $fileContexts
      * @return stdClass
-     * @access private
      */
     private function parseCsv($fileContexts)
     {
@@ -215,7 +206,6 @@ class UserAgentStringInfo extends Base
      *
      * @return GoogleAnalyticsServerSide
      * @throws Gass\Exception\RuntimeException
-     * @access private
      */
     private function saveToCache()
     {
@@ -246,7 +236,6 @@ class UserAgentStringInfo extends Base
      * @param integer $cacheDate [optional]
      * @return GoogleAnalyticsServerSide
      * @throws Gass\Exception\DomainException
-     * @access private
      */
     private function setCacheDate($cacheDate = null)
     {
@@ -267,7 +256,6 @@ class UserAgentStringInfo extends Base
      * Returns the current cache date
      *
      * @return number|null
-     * @access public
      */
     public function getCacheDate()
     {
@@ -280,7 +268,6 @@ class UserAgentStringInfo extends Base
      * @param string $userAgent [optional]
      * @param string $remoteAddress [optional]
      * @return boolean
-     * @access public
      */
     public function getIsBot($userAgent = null, $remoteAddress = null)
     {
@@ -306,7 +293,6 @@ class UserAgentStringInfo extends Base
      *
      * @param array $options
      * @return Gass\BotInfo\UserAgentStringInfo
-     * @access public
      */
     public function setOptions(array $options)
     {
@@ -318,8 +304,6 @@ class UserAgentStringInfo extends Base
 
     /**
      * Class Destructor
-     *
-     * @access public
      */
     public function __destruct()
     {

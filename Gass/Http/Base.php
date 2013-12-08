@@ -62,7 +62,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * The Accepted-Language for the sent HTTP headers
      *
      * @var string
-     * @access private
      */
     private $acceptLanguage;
 
@@ -70,7 +69,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * The IP address sent in the X-Forwarded-For header
      *
      * @var string
-     * @access private
      */
     private $remoteAddress;
 
@@ -78,7 +76,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * Response to the http request
      *
      * @var mixed
-     * @access private
      */
     private $response;
 
@@ -86,7 +83,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * The User-Agent for the sent HTTP headers
      *
      * @var string
-     * @access private
      */
     private $userAgent;
 
@@ -94,7 +90,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @return string
-     * @access public
      */
     public function getAcceptLanguage()
     {
@@ -105,7 +100,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @return string
-     * @access public
      */
     public function getRemoteAddress()
     {
@@ -116,7 +110,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @return mixed
-     * @access public
      */
     public function getResponse()
     {
@@ -127,7 +120,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @return string
-     * @access public
      */
     public function getUserAgent()
     {
@@ -139,7 +131,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      *
      * @param string $acceptLanguage
      * @return Gass\Http\Base
-     * @access public
      */
     public function setAcceptLanguage($acceptLanguage)
     {
@@ -158,7 +149,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      *
      * @param string $remoteAddress
      * @return Gass\Http\Base
-     * @access public
      */
     public function setRemoteAddress($remoteAddress)
     {
@@ -179,7 +169,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      *
      * @param mixed $response
      * @return Gass\Http\Base
-     * @access public
      */
     public function setResponse($response)
     {
@@ -192,7 +181,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      *
      * @param string $userAgent
      * @return Gass\Http\Base
-     * @access public
      */
     public function setUserAgent($userAgent)
     {
@@ -206,7 +194,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * @param integer $code
      * @throws Gass\Exception\InvalidArgumentException
      * @throws Gass\Exception\RuntimeException
-     * @access protected
      */
     protected function checkResponseCode($code)
     {
@@ -353,7 +340,6 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * @param string $url
      * @param array $options
      * @return Gass\Http\Base
-     * @access public
      */
     public function request($url = null, array $options = array())
     {

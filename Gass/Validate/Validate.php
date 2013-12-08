@@ -59,7 +59,6 @@ interface Validate extends Adapter\AdapterInterface
      *
      * @param mixed $value
      * @return boolean
-     * @access public
      */
     public function isValid($value);
 
@@ -67,7 +66,6 @@ interface Validate extends Adapter\AdapterInterface
      * Returns any issues that occurred during validation
      *
      * @return array
-     * @access public
      */
     public function getMessages();
 }

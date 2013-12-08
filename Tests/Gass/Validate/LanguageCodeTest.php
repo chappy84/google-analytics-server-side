@@ -40,7 +40,6 @@ class LanguageCodeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @var Gass\Validate\LanguageCode
-     * @access private
      */
     private $languageValidator;
 

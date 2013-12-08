@@ -58,7 +58,6 @@ class Http
      * The current adapter in use
      *
      * @var string
-     * @access private
      */
     private $adapter;
 
@@ -67,7 +66,6 @@ class Http
      *
      * @var Gass\Http
      * @static
-     * @access protected
      */
     protected static $instance;
 
@@ -76,7 +74,6 @@ class Http
      *
      * @param array $options
      * @param string|Gass\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
-     * @access protected
      */
     public function __construct(array $options = array(), $adapter = null)
     {
@@ -97,7 +94,6 @@ class Http
     /**
      * @throws Gass\Exception\RuntimeException
      * @final
-     * @access public
      */
     final public function __clone()
     {
@@ -113,7 +109,6 @@ class Http
      * @param string|Gass\Http\HttpInterface $adapter
      * @return Gass\Http
      * @static
-     * @access public
      */
     public static function getInstance(array $options = array(), $adapter = null)
     {
@@ -140,7 +135,6 @@ class Http
      * @param array $arguments
      * @throws Exception\BadMethodCallException
      * @return mixed
-     * @access public
      */
     public function __call($name, $arguments)
     {
@@ -160,7 +154,6 @@ class Http
      * @throws Exception\BadMethodCallException
      * @return mixed
      * @static
-     * @access public
      */
     public static function __callStatic($name, $arguments)
     {
@@ -178,7 +171,6 @@ class Http
      * @param string $adapter
      * @throws Gass\Exception\InvalidArgumentException
      * @return Gass\Http
-     * @access public
      */
     public function setAdapter($adapter)
     {
@@ -197,7 +189,6 @@ class Http
      * Returns the current adapter in use
      *
      * @return Gass\Http\HttpInterface
-     * @access public
      */
     public function getAdapter()
     {

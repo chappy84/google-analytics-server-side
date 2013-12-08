@@ -58,7 +58,6 @@ class Curl extends Base
      * Curl instance
      *
      * @var resource
-     * @access protected
      */
     protected $curl;
 
@@ -66,7 +65,6 @@ class Curl extends Base
      * Class options
      *
      * @var array
-     * @access protected
      */
     protected $options = array(
         CURLOPT_RETURNTRANSFER => 1,
@@ -79,7 +77,6 @@ class Curl extends Base
      *
      * @param array $options
      * @throws Gass\Exception\RuntimeException
-     * @access public
      */
     public function __construct(array $options = array())
     {
@@ -94,7 +91,6 @@ class Curl extends Base
      *
      * @param mixed $index [optional]
      * @return mixed
-     * @access public
      */
     public function getInfo($index = null)
     {
@@ -112,7 +108,6 @@ class Curl extends Base
      *
      * @param string $url
      * @return Gass\Http\Curl
-     * @access public
      */
     public function setUrl($url)
     {
@@ -123,7 +118,6 @@ class Curl extends Base
      * Closes the curl connection if one is present
      *
      * @return Gass\Http\Curl
-     * @access protected
      */
     protected function close()
     {
@@ -140,7 +134,6 @@ class Curl extends Base
      * @param string $url
      * @param array $options
      * @return Gass\Http\Curl
-     * @access public
      */
     public function request($url = null, array $options = array())
     {
@@ -186,8 +179,6 @@ class Curl extends Base
 
     /**
      * Class Destructor
-     *
-     * @access public
      */
     public function __destruct()
     {

@@ -55,7 +55,6 @@ interface AdapterInterface
      * Class level constructor
      *
      * @param array $cacheOptions
-     * @access public
      */
     public function __construct(array $options = array());
 
@@ -64,7 +63,6 @@ interface AdapterInterface
      *
      * @param array $options
      * @return Gass\Adapter\AdapterInterface
-     * @access public
      */
     public function setOptions(array $options);
 
@@ -74,7 +72,6 @@ interface AdapterInterface
      * @param string $name
      * @param mixed $value
      * @return Gass\Adapter\AdapterInterface
-     * @access public
      */
     public function setOption($name, $value);
 
@@ -82,7 +79,6 @@ interface AdapterInterface
      * Returns all options set
      *
      * @return array
-     * @access public
      */
     public function getOptions();
 
@@ -91,7 +87,6 @@ interface AdapterInterface
      *
      * @param string $name
      * @return mixed
-     * @access public
      */
     public function getOption($name);
 }

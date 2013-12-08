@@ -40,7 +40,6 @@ class IpAddressTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @var Gass\Validate\IpAddress
-     * @access private
      */
     private $ipValidator;
 

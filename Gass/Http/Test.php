@@ -57,7 +57,6 @@ class Test extends Base implements HttpInterface
      * Class options
      *
      * @var array
-     * @access protected
      */
     protected $options = array();
 
@@ -65,7 +64,6 @@ class Test extends Base implements HttpInterface
      * The headers returned in response to the previous request
      *
      * @var array
-     * @access protected
      */
     protected $responseHeaders = array();
 
@@ -73,7 +71,6 @@ class Test extends Base implements HttpInterface
      * Different http requests that may be requested from the Test Http Adapter
      *
      * @var array
-     * @access protected
      */
     protected $requestQueue = array();
 
@@ -82,7 +79,6 @@ class Test extends Base implements HttpInterface
      *
      * @param mixed $index [optional]
      * @return mixed
-     * @access public
      */
     public function getInfo($index = null)
     {
@@ -99,7 +95,6 @@ class Test extends Base implements HttpInterface
      * Returns all options set
      *
      * @return array
-     * @access public
      */
     public function getOptions()
     {
@@ -112,7 +107,6 @@ class Test extends Base implements HttpInterface
      * @param string $name
      * @param mixed $value
      * @return Gass\Adapter\Base
-     * @access public
      */
     public function setOption($name, $value)
     {
@@ -125,7 +119,6 @@ class Test extends Base implements HttpInterface
      *
      * @param string $name
      * @return mixed
-     * @access public
      */
     public function getOption($name)
     {
@@ -139,7 +132,6 @@ class Test extends Base implements HttpInterface
      *
      * @param string $url
      * @return Gass\Http\Stream
-     * @access public
      */
     public function setUrl($url)
     {
@@ -152,7 +144,6 @@ class Test extends Base implements HttpInterface
      * @param string $url
      * @param array $options
      * @return Gass\Http\Stream
-     * @access public
      */
     public function request($url = null, array $options = array())
     {
@@ -182,7 +173,6 @@ class Test extends Base implements HttpInterface
      * @param string|array $responseHeaders
      * @param string $responseBody
      * @return \Gass\Http\Test
-     * @access public
      */
     public function addRequestQueueItem($url, $responseHeaders, $responseBody)
     {
@@ -198,7 +188,6 @@ class Test extends Base implements HttpInterface
      * Sets the response headers to the class level variable
      *
      * @param array $responseHeaders
-     * @access private
      */
     private function setResponseHeaders($responseHeaders)
     {
@@ -212,7 +201,6 @@ class Test extends Base implements HttpInterface
      * @param string|array $headers
      * @throws Gass\Exception\InvalidArgumentException
      * @return array
-     * @access private
      */
     private function parseHeaders($headers)
     {
@@ -241,7 +229,6 @@ class Test extends Base implements HttpInterface
      *
      * @param string $url
      * @return string
-     * @access private
      */
     private function getBaseUrl($url)
     {

@@ -40,7 +40,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @var Gass\Validate\Base
-     * @access private
      */
     private $baseValidator;
 

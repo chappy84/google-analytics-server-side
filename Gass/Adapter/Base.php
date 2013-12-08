@@ -55,7 +55,6 @@ abstract class Base implements AdapterInterface
      * Adapter options passed in as part of construct or setOption/s
      *
      * @var array
-     * @access protected
      */
     protected $options = array();
 
@@ -63,7 +62,6 @@ abstract class Base implements AdapterInterface
      * Class constructor
      *
      * @param array $options
-     * @access public
      */
     public function __construct(array $options = array())
     {
@@ -75,7 +73,6 @@ abstract class Base implements AdapterInterface
      *
      * @param array $options
      * @return Gass\Adapter\Base
-     * @access public
      */
     public function setOptions(array $options)
     {
@@ -91,7 +88,6 @@ abstract class Base implements AdapterInterface
      * @param string $name
      * @param mixed $value
      * @return Gass\Adapter\Base
-     * @access public
      */
     public function setOption($name, $value)
     {
@@ -103,7 +99,6 @@ abstract class Base implements AdapterInterface
      * Returns all options set
      *
      * @return array
-     * @access public
      */
     public function getOptions()
     {
@@ -115,7 +110,6 @@ abstract class Base implements AdapterInterface
      *
      * @param string $name
      * @return mixed
-     * @access public
      */
     public function getOption($name)
     {

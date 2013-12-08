@@ -74,7 +74,6 @@ class BrowsCap extends Base
      * The last time the browscap file was updated
      *
      * @var integer
-     * @access private
      */
     private $latestVersionDate;
 
@@ -82,7 +81,6 @@ class BrowsCap extends Base
      * The parsed contents of the browscap ini file
      *
      * @var array
-     * @access private
      */
     private $browsers = array();
 
@@ -90,7 +88,6 @@ class BrowsCap extends Base
      * Class options
      *
      * @var array
-     * @access protected
      */
     protected $options = array('browscap' => null);
 
@@ -98,7 +95,6 @@ class BrowsCap extends Base
      * {@inheritdoc}
      *
      * @param array $options
-     * @access public
      */
     public function __construct(array $options = array())
     {
@@ -114,7 +110,6 @@ class BrowsCap extends Base
      * Returns the last date the ini file was updated (on remote webiste)
      *
      * @return integer
-     * @access public
      */
     public function getLatestVersionDate()
     {
@@ -128,7 +123,6 @@ class BrowsCap extends Base
      * Gets the latest version date from the web
      *
      * @throws Gass\Exception\RuntimeException
-     * @access private
      */
     private function setLatestVersionDate()
     {
@@ -162,7 +156,6 @@ class BrowsCap extends Base
      * Checks whether the browscap file exists, is readable, and hasn't expired the cache lifetime
      *
      * @throws Gass\Exception\RuntimeException
-     * @access private
      */
     private function checkIniFile()
     {
@@ -192,7 +185,6 @@ class BrowsCap extends Base
      * Updates the browscap ini file to the latest version
      *
      * @throws Gass\Exception\RuntimeException
-     * @access private
      */
     private function updateIniFile()
     {
@@ -228,8 +220,6 @@ class BrowsCap extends Base
 
     /**
      * Loads the browscap ini file from the specified location
-     *
-     * @access private
      */
     private function loadIniFile()
     {
@@ -246,7 +236,6 @@ class BrowsCap extends Base
      *
      * @param string $index
      * @return array|boolean
-     * @access private
      */
     private function getBrowserDetails($index)
     {
@@ -269,7 +258,6 @@ class BrowsCap extends Base
      *
      * @param string $userAgent
      * @return boolean|object|array
-     * @access public
      */
     public function getBrowser($userAgent = null, $returnArray = false)
     {
@@ -313,7 +301,6 @@ class BrowsCap extends Base
      *
      * @param string $browserPattern
      * @return string
-     * @access private
      */
     private function getBrowserRegex($browserPattern)
     {
@@ -328,7 +315,6 @@ class BrowsCap extends Base
      * @param string $userAgent [optional]
      * @param string $remoteAddress [optional]
      * @return boolean
-     * @access public
      */
     public function getIsBot($userAgent = null, $remoteAddress = null)
     {

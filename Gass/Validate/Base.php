@@ -53,10 +53,10 @@ use Gass\Adapter;
  */
 abstract class Base extends Adapter\Base implements Validate
 {
-
     /**
+     * Validation Messages
+     *
      * @var array
-     * @access private
      */
     private $messages = array();
 
@@ -64,7 +64,6 @@ abstract class Base extends Adapter\Base implements Validate
      * The value currently being validated
      *
      * @var mixed
-     * @access private
      */
     private $value;
 
@@ -72,7 +71,6 @@ abstract class Base extends Adapter\Base implements Validate
      * Get the validation messages
      *
      * @return array
-     * @access public
      */
     public function getMessages()
     {
@@ -83,7 +81,6 @@ abstract class Base extends Adapter\Base implements Validate
      * Returns the value being validated
      *
      * @return mixed
-     * @access public
      */
     public function getValue()
     {
@@ -95,7 +92,6 @@ abstract class Base extends Adapter\Base implements Validate
      *
      * @param array $messages
      * @return \Gass\Validate\Base
-     * @access public
      */
     public function setMessages(array $messages)
     {
@@ -108,7 +104,6 @@ abstract class Base extends Adapter\Base implements Validate
      *
      * @param mixed $value
      * @return \Gass\Validate\Base
-     * @access public
      */
     public function setValue($value)
     {
@@ -121,7 +116,6 @@ abstract class Base extends Adapter\Base implements Validate
      *
      * @param string $message
      * @return Gass\Validate\Base
-     * @access public
      */
     public function addMessage($message, $value = null)
     {

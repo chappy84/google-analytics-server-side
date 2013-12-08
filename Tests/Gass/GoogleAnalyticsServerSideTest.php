@@ -39,19 +39,16 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
-     * @access protected
      */
     protected $dependecyFilesFolder;
 
     /**
      * @var \Gass\GoogleAnalyticsServerSide
-     * @access protected
      */
     protected $gass;
 
     /**
      * @var \Gass\Http\Test
-     * @access protected
      */
     protected $httpAdapter;
 

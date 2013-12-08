@@ -60,7 +60,6 @@ class BotInfo implements Proxy\ProxyInterface
      * The current adapter in use
      *
      * @var Gass\BotInfo\BotInfoInterface
-     * @access private
      */
     private $adapter;
 
@@ -69,7 +68,6 @@ class BotInfo implements Proxy\ProxyInterface
      *
      * @param array $options
      * @param string $adapter [optional] - can be provided in $options aswell
-     * @access public
      */
     public function __construct(array $options = array(), $adapter = null)
     {
@@ -90,7 +88,6 @@ class BotInfo implements Proxy\ProxyInterface
      * @param array $arguments
      * @throws Gass\Exception\DomainException
      * @return mixed
-     * @access public
      */
     public function __call($name, $arguments)
     {
@@ -111,7 +108,6 @@ class BotInfo implements Proxy\ProxyInterface
      * @param string|Gass\BotInfo\BotInfoInterface $adapter
      * @throws Gass\Exception\InvalidArgumentException
      * @return Gass\BotInfo
-     * @access public
      */
     public function setAdapter($adapter)
     {
@@ -130,7 +126,6 @@ class BotInfo implements Proxy\ProxyInterface
 
     /**
      * @return the $adapter
-     * @access public
      */
     public function getAdapter()
     {

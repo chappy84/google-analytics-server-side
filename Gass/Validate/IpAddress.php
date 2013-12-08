@@ -56,7 +56,6 @@ class IpAddress extends Base
      *
      * @param mixed $value
      * @return boolean
-     * @access public
      */
     public function isValid($value)
     {

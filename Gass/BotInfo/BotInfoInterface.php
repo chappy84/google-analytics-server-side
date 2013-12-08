@@ -60,7 +60,6 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      * @param string $userAgent [optional]
      * @param string $remoteAddress [optional]
      * @return boolean
-     * @access public
      */
     public function getIsBot($userAgent = null, $remoteAddress = null);
 
@@ -68,7 +67,6 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      * Get the remote user's ip address
      *
      * @return string
-     * @access public
      */
     public function getRemoteAddress();
 
@@ -76,7 +74,6 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      * Get the user agent used in the class
      *
      * @return string
-     * @access public
      */
     public function getUserAgent();
 
@@ -85,7 +82,6 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      *
      * @param string $remoteAddress
      * @return Gass\BotInfo\BotInfoInterface
-     * @access public
      */
     public function setRemoteAddress($remoteAddress);
 
@@ -94,7 +90,6 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      *
      * @param string $userAgent
      * @return Gass\BotInfo\BotInfoInterface
-     * @access public
      */
     public function setUserAgent($userAgent);
 }

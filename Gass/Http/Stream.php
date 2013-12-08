@@ -58,7 +58,6 @@ class Stream extends Base
      * Class options
      *
      * @var array
-     * @access protected
      */
     protected $options = array(
         'context' => array('http' => array('method' => 'GET'))
@@ -68,7 +67,6 @@ class Stream extends Base
      * The headers returned in response to the previous request
      *
      * @var array
-     * @access protected
      */
     protected $responseHeaders = array();
 
@@ -77,7 +75,6 @@ class Stream extends Base
      *
      * @param mixed $index [optional]
      * @return mixed
-     * @access public
      */
     public function getInfo($index = null)
     {
@@ -94,7 +91,6 @@ class Stream extends Base
      * Returns all options set
      *
      * @return array
-     * @access public
      */
     public function getOptions()
     {
@@ -107,7 +103,6 @@ class Stream extends Base
      * @param string $name
      * @param mixed $value
      * @return Gass\Adapter\Base
-     * @access public
      */
     public function setOption($name, $value)
     {
@@ -120,7 +115,6 @@ class Stream extends Base
      *
      * @param string $name
      * @return mixed
-     * @access public
      */
     public function getOption($name)
     {
@@ -134,7 +128,6 @@ class Stream extends Base
      *
      * @param string $url
      * @return Gass\Http\Stream
-     * @access public
      */
     public function setUrl($url)
     {
@@ -147,7 +140,6 @@ class Stream extends Base
      * @param string $url
      * @param array $options
      * @return Gass\Http\Stream
-     * @access public
      */
     public function request($url = null, array $options = array())
     {
@@ -201,7 +193,6 @@ class Stream extends Base
      * Sets the response headers to the class level variable
      *
      * @param array $responseHeaders
-     * @access private
      */
     private function setResponseHeaders($responseHeaders)
     {
@@ -215,7 +206,6 @@ class Stream extends Base
      * @param string|array $headers
      * @throws Gass\Exception\InvalidArgumentException
      * @return array
-     * @access private
      */
     private function parseHeaders($headers)
     {

@@ -62,7 +62,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * The remote user's ip address
      *
      * @var string
-     * @access protected
      */
     protected $remoteAddress;
 
@@ -70,7 +69,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * The current user-agent
      *
      * @var string
-     * @access protected
      */
     protected $userAgent;
 
@@ -78,7 +76,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * Class options
      *
      * @var array
-     * @access protected
      */
     protected $options = array();
 
@@ -86,7 +83,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * {@inheritdoc}
      *
      * @return string
-     * @access public
      */
     public function getRemoteAddress()
     {
@@ -97,7 +93,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * {@inheritdoc}
      *
      * @return string
-     * @access public
      */
     public function getUserAgent()
     {
@@ -109,7 +104,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      *
      * @param string $remoteAddress
      * @return Gass\BotInfo\Base
-     * @access public
      */
     public function setRemoteAddress($remoteAddress)
     {
@@ -129,7 +123,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      *
      * @param string $userAgent
      * @return Gass\BotInfo\Base
-     * @access public
      */
     public function setUserAgent($userAgent)
     {
