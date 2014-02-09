@@ -1,6 +1,17 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.9.1 Beta
+------------------
+
+- Update BrowsCap URLs as current ones used will stop working on 30th March 2014
+- Add in PHP 5.5 Support
+- Update Composer support
+- Docblock Corrections
+- PSR-2 Corrections
+- Update default version of ga.js used
+- Deal with multiple Set-Cookie headers received 
+
 Version 0.9.0 Beta
 ------------------
 

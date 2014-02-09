@@ -61,14 +61,14 @@ class BrowsCap extends Base
      *
      * @var string
      */
-    const BROWSCAP_URL = 'http://tempdownloads.browserscap.com/stream.php?PHP_BrowsCapINI';
+    const BROWSCAP_URL = 'http://browscap.org/stream?q=PHP_BrowsCapINI';
 
     /**
      * URL location specifying the latest update date of the file
      *
      * @var string
      */
-    const VERSION_DATE_URL = 'http://tempdownloads.browserscap.com/versions/version-date.php';
+    const VERSION_DATE_URL = 'http://browscap.org/version';
 
     /**
      * The last time the browscap file was updated
