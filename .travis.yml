@@ -15,5 +15,7 @@ matrix:
 install:
     - composer install --dev --prefer-source
 
-before_script:
-    - cd Tests/
+script:
+    - vendor/bin/php-cs-fixer fix -v --dry-run .
+    - vendor/bin/phpcs --standard=PSR2 -p --extensions=php Gass/ Tests/
+    - vendor/bin/phpunit --configuration=Tests/phpunit.xml.dist Tests/

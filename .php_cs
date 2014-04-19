@@ -2,10 +2,12 @@
 
 $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->notName('*.md')
+    ->notName('*.js')
     ->notName('composer.*')
     ->notName('phpunit.xml*')
     ->notName('.git*')
     ->notName('.php_cs')
+    ->exclude('vendor')
     ->in(__DIR__);
 
 return Symfony\CS\Config\Config::create()

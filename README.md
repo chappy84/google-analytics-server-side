@@ -326,7 +326,7 @@ $gass->setIgnoreDoNotTrack(false);
 PHP Version
 -----------
 
-The minimum supported version is PHP 5.3.3
+The minimum supported version is PHP 5.3.23
 
 This framework uses [PHPUnit][20], via [TravisCI][21], to test the functionality of the 
 framework on the supported minor versions 5.3 and 5.4. This is done by default on the latest 

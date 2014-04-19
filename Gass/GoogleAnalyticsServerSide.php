@@ -38,11 +38,6 @@
 
 namespace Gass;
 
-use Gass\BotInfo;
-use Gass\Exception;
-use Gass\Http;
-use Gass\Validate;
-
 /**
  * Main Google Analytics server Side Class
  *
