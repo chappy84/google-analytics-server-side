@@ -35,3 +35,6 @@
 
 date_default_timezone_set('Europe/London');
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Gass' . DIRECTORY_SEPARATOR . 'Bootstrap.php';
+if (@file_exists(dirname(__DIR__). DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) {
+    require_once dirname(__DIR__). DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+}

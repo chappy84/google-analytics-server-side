@@ -42,7 +42,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        \Gass\Http\Http::getInstance(array(), new \Gass\Http\Test);
+        \Gass\Http\Http::getInstance(array(), $this->getMock('Gass\Http\HttpInterface'));
         $this->iniFileLocation = realpath(
             dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR.'php_browscap.ini'
         );
@@ -65,20 +65,14 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function setTestHttpForVersionDateFile()
     {
         $latestVersionDateFile = dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt';
-        $httpAdapter = new \Gass\Http\Test;
-        $httpAdapter->addRequestQueueItem(
-            \Gass\BotInfo\BrowsCap::VERSION_DATE_URL,
-            'HTTP/1.1 200 Ok'."\n".
-            'Connection:Keep-Alive'."\n".
-            'Content-Length:31'."\n".
-            'Content-Type:text/html'."\n".
-            'Date:Sun, 17 Feb 2013 00:06:15 GMT'."\n".
-            'Keep-Alive:timeout=5, max=100'."\n".
-            'Server:Apache/2.0.64 (Unix) mod_ssl/2.0.64 OpenSSL/0.9.8e-fips-rhel5 '.
-            'mod_auth_passthrough/2.1 mod_bwlimited/1.4 FrontPage/5.0.2.2635'."\n".
-            'X-Powered-By:PHP/5.3.19',
-            file_get_contents($latestVersionDateFile)
-        );
+        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
+        $httpAdapter->expects($this->any())
+            ->method('request')
+            ->with('\Gass\BotInfo\BrowsCap::VERSION_DATE_URL')
+            ->will($this->returnSelf());
+        $httpAdapter->expects($this->any())
+            ->method('getResponse')
+            ->will($this->returnValue(file_get_contents($latestVersionDateFile)));
         \Gass\Http\Http::getInstance(array(), $httpAdapter);
     }
 
