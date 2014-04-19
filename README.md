@@ -272,7 +272,7 @@ correct way.
 Any options provided to this class must be passed using the [curl constants][16] as 
 identifiers (associative array keys or option names).
 
-[15]: http://www.php.net/file_get_contents#example-2322
+[15]: http://www.php.net/manual/en/function.file-get-contents.php#refsect1-function.file-get-contents-examples
 [16]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
 
 End User Location
