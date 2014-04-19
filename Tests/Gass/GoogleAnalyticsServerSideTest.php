@@ -1011,7 +1011,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVersion('1.1.1'));
         $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVersionFromJs());
-        $this->assertEquals('5.4.7', $this->gass->getVersion());
+        $this->assertEquals('5.5.0', $this->gass->getVersion());
     }
 
     public function testSetSearchEnginesFromJsValid()
