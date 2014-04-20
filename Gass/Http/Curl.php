@@ -155,7 +155,7 @@ class Curl extends Base
             $extraHeaders[] = 'X-Forwarded-For: '.$remoteAddress;
         }
         if (!empty($extraHeaders)) {
-            $this->setOption(CURLOPT_HEADER, $extraHeaders);
+            $this->setOption(CURLOPT_HTTPHEADER, $extraHeaders);
         }
 
         $extraCurlOptions = $this->getOptions();
