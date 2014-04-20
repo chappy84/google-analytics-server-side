@@ -158,7 +158,7 @@ Gass\BotInfo Class.
 There are two adapters available in the GASS framework
 
 #### BrowsCap
-There is one optional option as part of the array configuration parameter. 
+There is one optional index as part of the array configuration parameter. 
 
 - browscap: This is the same as the php ini setting [browscap][12], a file-system location 
 where the [php_browscap.ini file][13] is located / can be downloaded to.
