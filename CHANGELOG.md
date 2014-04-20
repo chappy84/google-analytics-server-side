@@ -1,6 +1,16 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.9.2 Beta
+------------------
+
+- Added PHP CodeSniffer & PHP CS Fixer PSR-2 Check to Travis CI
+- Added provisional Travis CI testing for PHP 5.6 & HipHop
+- Install test suite via composer for Travis CI tests
+- Fix issue with Gass\Http\Curl library in relation to headers
+- Start transition to using PHPUnit Mock for class dependency testing
+- Add in vfsStream to composer for future unit testing of filesystem interaction 
+
 Version 0.9.1 Beta
 ------------------
 

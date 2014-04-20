@@ -28,7 +28,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
  * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @version     0.9.1 Beta
+ * @version     0.9.2 Beta
  * @category    GoogleAnalyticsServerSide
  * @package     Gass
  * @example     $gass = new \Gass\GoogleAnalyticsServerSide;
