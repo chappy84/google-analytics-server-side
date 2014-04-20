@@ -305,7 +305,6 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     public function __construct(array $options = array())
     {
-        require_once __DIR__ . DIRECTORY_SEPARATOR . 'Bootstrap.php';
         if (!empty($_SERVER['SERVER_NAME'])) {
             $this->setServerName($_SERVER['SERVER_NAME']);
         }

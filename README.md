@@ -29,8 +29,18 @@ Development: [![Build Status](https://secure.travis-ci.org/chappy84/google-analy
 Installation
 ------------
 
-The package is available to install using [composer][7] from the [packagist][8] repository since v0.8.6-beta.  
-Simply install using [chappy84/google-analytics-server-side][9] and it should be installed, checking the requirements.
+The package is available to install using [composer][7] from the [packagist][8] repository since 
+v0.8.6-beta. Simply add [chappy84/google-analytics-server-side][9] to the "require" section and 
+it'll be installed, checking the requirements. 
+
+Alternatively if you don't want to use composer, the framework, without tests, can be included by 
+using the following:
+
+```php
+require_once '<base_dir>' . DIRECTORY_SEPARATOR . 'Gass' . DIRECTORY_SEPARATOR . 'Bootstrap.php';
+```
+
+where `<base_dir>` is the base directory of Google Analytics Server Side on your filesystem.
 
 [7]: http://getcomposer.org/
 [8]: https://packagist.org/
@@ -323,26 +333,41 @@ $gass->setIgnoreDoNotTrack(false);
 [18]: https://github.com/samyk/evercookie
 [19]: http://www.w3.org/TR/tracking-dnt/
 
+Test Suite
+----------
+
+This framework uses [PHPUnit][22], along with [TravisCI][23], to test functionality on the 
+supported PHP minor versions 5.3, 5.4 and 5.5. This is done by default on the latest bug fix 
+point release of that minor point version to ensure it works.  
+
+Provisional [HHVM][24] & PHP 5.6 support is provided as-well however this is not guaranteed.
+
+The test suite requires [composer][7] for it's dependencies. Please see the instructions 
+[here][20] on how to install it. After which you can install all the required dependencies 
+using the `--dev` [cli argument][21]. 
+
+[20]: https://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
+[21]: https://getcomposer.org/doc/03-cli.md#install
+[22]: https://github.com/sebastianbergmann/phpunit
+[23]: https://travis-ci.org/
+[24]: http://hhvm.com/
+
 PHP Version
 -----------
 
 The minimum supported version is PHP 5.3.23
-
-This framework uses [PHPUnit][20], via [TravisCI][21], to test the functionality of the 
-framework on the supported minor versions 5.3 and 5.4. This is done by default on the latest 
-bug fix point release of that minor point version to ensure it works. If you find any bugs 
-in previous point releases then please raise an issue via the link at the top of this readme.  
    
-#### PHP 5.2
+#### Un-supported versions of PHP
 
-A [PHP 5.2 Branch][22] has been left which you can feel free to use, fork etc.. Any issues 
-which arise in this branch will have a fix attempted as soon as time is available. Please 
-lodge any issues via the bugs link at the top of this readme, or via a pull request from 
-your fork if you've attempted a fix yourself.
+I've left the following branches of versions which worked with the now un-supported versions of PHP:
 
-[20]: https://github.com/sebastianbergmann/phpunit
-[21]: https://travis-ci.org/
-[22]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+- [PHP 5.2 Branch][25] 
+
+Please feel free to use, fork etc. any of these branches. Any issues which arise in them won't 
+have fixes attempted I'm afraid. However if you've attempted a fix yourself, please lodge a 
+pull-request and It'll be considered. 
+
+[25]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 Quick Note on External Frameworks
 ---------------------------------

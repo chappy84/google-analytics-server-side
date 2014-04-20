@@ -21,12 +21,14 @@
         "squizlabs/php_codesniffer": "1.*"
     },
     "autoload" : {
-        "psr-0" : {
-            "Gass\\" : ""
-        },
-        "files": [
-            "Gass/Bootstrap.php"
-        ]
+        "psr-4" : {
+            "Gass\\" : "Gass/"
+        }
+    },
+    "autoload-dev" : {
+        "psr-4" : {
+            "GassTests\\" : "Tests/"
+        }
     },
     "support" : {
         "source" : "https://github.com/chappy84/google-analytics-server-side",
