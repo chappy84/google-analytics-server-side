@@ -23,8 +23,8 @@ This PHP adaptation is maintained by [Tom Chapman][5].
 Build Status
 ------------
 
-Master: [![Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=master)](http://travis-ci.org/chappy84/google-analytics-server-side)  
-Development: [![Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=development)](http://travis-ci.org/chappy84/google-analytics-server-side)
+Master: [![Master Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=master)](http://travis-ci.org/chappy84/google-analytics-server-side)  
+Development: [![Development Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=development)](http://travis-ci.org/chappy84/google-analytics-server-side)
 
 Installation
 ------------
@@ -335,6 +335,9 @@ $gass->setIgnoreDoNotTrack(false);
 
 Test Suite
 ----------
+
+Master: [![Master Code Coverage Status](https://coveralls.io/repos/chappy84/google-analytics-server-side/badge.png?branch=master)](https://coveralls.io/r/chappy84/google-analytics-server-side?branch=master)  
+Development: [![Development Code Coverage Status](https://coveralls.io/repos/chappy84/google-analytics-server-side/badge.png?branch=development)](https://coveralls.io/r/chappy84/google-analytics-server-side?branch=development)
 
 This framework uses [PHPUnit][22], along with [TravisCI][23], to test functionality on the 
 supported PHP minor versions 5.3, 5.4 and 5.5. This is done by default on the latest bug fix 

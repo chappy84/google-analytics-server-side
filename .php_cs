@@ -7,6 +7,7 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->notName('phpunit.xml*')
     ->notName('.git*')
     ->notName('.php_cs')
+    ->notName('*.yml')
     ->exclude('vendor')
     ->in(__DIR__);
 

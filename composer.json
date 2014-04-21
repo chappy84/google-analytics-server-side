@@ -18,7 +18,8 @@
         "phpunit/phpunit" : "4.0.*",
         "mikey179/vfsStream" : "1.2.*",
         "fabpot/php-cs-fixer": "*@dev",
-        "squizlabs/php_codesniffer": "1.*"
+        "squizlabs/php_codesniffer": "1.*",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload" : {
         "psr-4" : {

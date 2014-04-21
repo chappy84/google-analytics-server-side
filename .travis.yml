@@ -1,21 +1,24 @@
 language: php
 
 php:
-  - hhvm
-  - 5.6
   - 5.3
   - 5.4
   - 5.5
+  - 5.6
+  - hhvm
 
 matrix:
   allow_failures:
-    - php: hhvm
     - php: 5.6
+    - php: hhvm
 
 install:
-    - composer install --dev --prefer-source
+    - composer install --dev --prefer-source -n
 
 script:
     - vendor/bin/php-cs-fixer fix -v --dry-run .
     - vendor/bin/phpcs --standard=PSR2 -p --extensions=php Gass/ Tests/
-    - vendor/bin/phpunit --configuration=Tests/phpunit.xml.dist Tests/
+    - vendor/bin/phpunit -c Tests/phpunit.xml.dist --coverage-clover clover.xml
+
+after_script:
+    - php vendor/bin/coveralls -v
