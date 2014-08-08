@@ -14,19 +14,27 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
 return Symfony\CS\Config\Config::create()
     ->fixers(
         array(
-            'indentation',
+            'encoding',
             'linefeed',
+            'indentation',
             'trailing_spaces',
             'unused_use',
             'php_closing_tag',
+            'standardize_not_equal',
             'short_tag',
+            'ternary_spaces',
+            'spaces_cast',
+            'object_operator',
             'visibility',
-            'braces',
-            'eof_ending',
-            'extra_empty_lines',
+            'function_declaration',
             'include',
+            'extra_empty_lines',
+            'braces',
+            'lowercase_keywords',
+            'lowercase_constants',
+            'controls_spaces',
             'psr0',
-            'control_spaces',
-            'elseif'
+            'elseif',
+            'eof_ending'
         )
     )->finder($finder);
