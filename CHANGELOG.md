@@ -1,6 +1,14 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.9.3 Beta
+------------------
+
+- Update to PSR-4 autoloading
+- Add in extra CI checks for PHP Coding Standards Fixer
+- Add in Coveralls support
+- Add PHP 5.6 support
+
 Version 0.9.2 Beta
 ------------------
 
