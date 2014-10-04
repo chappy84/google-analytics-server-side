@@ -132,7 +132,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($googleBotUserAgent, $browsCap->getUserAgent());
         $this->assertInstanceOf('stdClass', $crawlerResult);
         $this->assertEquals('unknown', $crawlerResult->platform);
-        $this->assertEquals('Googlebot', $crawlerResult->browser);
+        $this->assertEquals('Google Bot', $crawlerResult->browser);
         $this->assertEquals('2.0', $crawlerResult->version);
         $this->assertEquals('2', $crawlerResult->majorver);
         $this->assertEquals('0', $crawlerResult->minorver);
