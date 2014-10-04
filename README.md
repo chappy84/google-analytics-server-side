@@ -17,7 +17,7 @@ This PHP adaptation is maintained by [Tom Chapman][5].
 [2]: https://developers.google.com/analytics/devguides/collection/gajs/
 [3]: http://www.php.net/
 [4]: http://www.google.com/analytics
-[5]: http://tom-chapman.co.uk/
+[5]: http://tom-chapman.uk/
 [6]: http://en.wikipedia.org/wiki/ECMAScript
 
 Build Status
