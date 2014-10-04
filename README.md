@@ -340,10 +340,10 @@ Master: [![Master Code Coverage Status](https://coveralls.io/repos/chappy84/goog
 Development: [![Development Code Coverage Status](https://coveralls.io/repos/chappy84/google-analytics-server-side/badge.png?branch=development)](https://coveralls.io/r/chappy84/google-analytics-server-side?branch=development)
 
 This framework uses [PHPUnit][22], along with [TravisCI][23], to test functionality on the 
-supported PHP minor versions 5.3, 5.4 and 5.5. This is done by default on the latest bug fix 
+supported PHP minor versions 5.3, 5.4, 5.5 and 5.6. This is done by default on the latest bug fix 
 point release of that minor point version to ensure it works.  
 
-Provisional [HHVM][24] & PHP 5.6 support is provided as-well however this is not guaranteed.
+Provisional [HHVM][24] support is provided as-well however this is not guaranteed.
 
 The test suite requires [composer][7] for it's dependencies. Please see the instructions 
 [here][20] on how to install it. After which you can install all the required dependencies 
