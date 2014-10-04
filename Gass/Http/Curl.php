@@ -53,7 +53,6 @@ use Gass\Exception;
  */
 class Curl extends Base
 {
-
     /**
      * Curl instance
      *

@@ -50,7 +50,6 @@ namespace Gass\Validate;
  */
 class LanguageCode extends Base
 {
-
     /**
      * {@inheritdoc}
      *

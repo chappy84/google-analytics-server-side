@@ -55,7 +55,6 @@ use Gass\Http;
  */
 class BrowsCap extends Base
 {
-
     /**
      * URL location of the current browscap.ini file
      *

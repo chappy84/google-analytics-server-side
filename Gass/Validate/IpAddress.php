@@ -50,7 +50,6 @@ namespace Gass\Validate;
  */
 class IpAddress extends Base
 {
-
     /**
      * Returns whether or not the value is valid
      *

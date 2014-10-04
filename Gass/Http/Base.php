@@ -57,7 +57,6 @@ use Gass\Validate;
  */
 abstract class Base extends Adapter\Base implements HttpInterface
 {
-
     /**
      * The Accepted-Language for the sent HTTP headers
      *

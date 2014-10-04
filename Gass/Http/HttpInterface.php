@@ -53,7 +53,6 @@ use Gass\Adapter;
  */
 interface HttpInterface extends Adapter\AdapterInterface
 {
-
     /**
      * Returns the current Accepted Language for the sent headers
      *

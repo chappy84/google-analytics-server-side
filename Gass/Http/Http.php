@@ -53,7 +53,6 @@ use Gass\Exception;
  */
 class Http
 {
-
     /**
      * The current adapter in use
      *

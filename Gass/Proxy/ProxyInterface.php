@@ -50,7 +50,6 @@ namespace Gass\Proxy;
  */
 interface ProxyInterface
 {
-
     /**
      * Class Constructor
      *

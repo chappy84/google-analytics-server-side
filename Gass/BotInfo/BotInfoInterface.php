@@ -53,7 +53,6 @@ use Gass\Adapter;
  */
 interface BotInfoInterface extends Adapter\AdapterInterface
 {
-
     /**
      * Returns whether or not the provided user-agent is a bot or not
      *

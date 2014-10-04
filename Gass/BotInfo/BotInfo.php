@@ -55,7 +55,6 @@ use Gass\Proxy;
  */
 class BotInfo implements Proxy\ProxyInterface
 {
-
     /**
      * The current adapter in use
      *

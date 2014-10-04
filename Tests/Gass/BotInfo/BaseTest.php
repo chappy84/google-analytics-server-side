@@ -36,7 +36,6 @@ namespace GassTests\Gass\BotInfo;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var Gass\BotInfo\Base
      */

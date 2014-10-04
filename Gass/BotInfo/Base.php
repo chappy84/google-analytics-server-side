@@ -57,7 +57,6 @@ use Gass\Validate;
  */
 abstract class Base extends Adapter\Base implements BotInfoInterface
 {
-
     /**
      * The remote user's ip address
      *

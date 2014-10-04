@@ -50,7 +50,6 @@ namespace Gass\Adapter;
  */
 abstract class Base implements AdapterInterface
 {
-
     /**
      * Adapter options passed in as part of construct or setOption/s
      *

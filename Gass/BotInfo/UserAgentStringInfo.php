@@ -55,7 +55,6 @@ use Gass\Http;
  */
 class UserAgentStringInfo extends Base
 {
-
     /**
      * Location of a list of all known bots to ignore from the
      *

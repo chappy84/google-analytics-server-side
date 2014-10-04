@@ -36,7 +36,6 @@ namespace GassTests\Gass\Http;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var Gass\Http\Base
      */

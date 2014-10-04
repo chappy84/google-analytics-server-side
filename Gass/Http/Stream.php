@@ -53,7 +53,6 @@ use Gass\Exception;
  */
 class Stream extends Base
 {
-
     /**
      * Class options
      *

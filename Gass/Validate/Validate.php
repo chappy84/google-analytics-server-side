@@ -53,7 +53,6 @@ use Gass\Adapter;
  */
 interface Validate extends Adapter\AdapterInterface
 {
-
     /**
      * Returns whether or not the value is valid
      *

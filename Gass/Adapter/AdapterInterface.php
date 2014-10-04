@@ -50,7 +50,6 @@ namespace Gass\Adapter;
  */
 interface AdapterInterface
 {
-
     /**
      * Class level constructor
      *

@@ -37,7 +37,6 @@ namespace GassTests\Gass\Validate;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var Gass\Validate\Base
      */
