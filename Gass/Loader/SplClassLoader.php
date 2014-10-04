@@ -140,9 +140,8 @@ class SplClassLoader
                 ) . DIRECTORY_SEPARATOR;
             }
             $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . $this->fileExtension;
-            $filePath = $this->includePath !== null ? $this->includePath . DIRECTORY_SEPARATOR : '';
 
-            require $filePath . $fileName;
+            require ($this->includePath !== null ? $this->includePath . DIRECTORY_SEPARATOR : '') . $fileName;
         }
     }
 }
