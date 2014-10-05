@@ -108,11 +108,11 @@ class UserAgentStringInfo extends Base
         }
         $botInfo = $this->parseCsv($bots);
         $this->bots = (is_array($botInfo->distinctBots))
-                        ? $botInfo->distinctBots
-                        : array();
+            ? $botInfo->distinctBots
+            : array();
         $this->botIps = (is_array($botInfo->distinctIPs))
-                        ? $botInfo->distinctIPs
-                        : array();
+            ? $botInfo->distinctIPs
+            : array();
         return $this;
     }
 
@@ -189,8 +189,8 @@ class UserAgentStringInfo extends Base
                 $csvLine = str_getcsv($line);
                 if (!isset($botInfo->distinctBots[$csvLine[0]])) {
                     $botInfo->distinctBots[$csvLine[0]] = (isset($csvLine[6]))
-                                                            ? $csvLine[6]
-                                                            : $csvLine[2];
+                        ? $csvLine[6]
+                        : $csvLine[2];
                 }
                 if (!isset($botInfo->distinctIPs[$csvLine[1]])) {
                     $botInfo->distinctIPs[$csvLine[1]] = $csvLine[0];
@@ -243,7 +243,8 @@ class UserAgentStringInfo extends Base
             $cacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
                                         && @is_readable($csvPathname.$fileRelPath)
                                         && false !== ($fileModifiedTime = @filemtime($csvPathname.$fileRelPath)))
-                                    ? $fileModifiedTime : null;
+                ? $fileModifiedTime
+                : null;
         } elseif (null !== $cacheDate && !is_numeric($cacheDate)) {
             throw new Exception\DomainException('cacheDate must be numeric or null.');
         }

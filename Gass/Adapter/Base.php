@@ -113,7 +113,7 @@ abstract class Base implements AdapterInterface
     public function getOption($name)
     {
         return (isset($this->options[$name]))
-                ? $this->options[$name]
-                : null;
+            ? $this->options[$name]
+            : null;
     }
 }

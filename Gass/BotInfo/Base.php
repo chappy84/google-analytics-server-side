@@ -72,13 +72,6 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
     protected $userAgent;
 
     /**
-     * Class options
-     *
-     * @var array
-     */
-    protected $options = array();
-
-    /**
      * {@inheritdoc}
      *
      * @return string
