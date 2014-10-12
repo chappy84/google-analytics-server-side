@@ -39,7 +39,7 @@
 namespace Gass\Validate;
 
 /**
- * Interface for all Http Adapters
+ * IP Address v4 Validator
  *
  * @copyright   Copyright (c) 2011-2014 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL

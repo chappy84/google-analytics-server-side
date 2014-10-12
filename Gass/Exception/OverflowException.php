@@ -39,7 +39,7 @@
 namespace Gass\Exception;
 
 /**
- * Interface for all Http Adapters
+ * Overflow Exception
  *
  * @copyright   Copyright (c) 2011-2014 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL

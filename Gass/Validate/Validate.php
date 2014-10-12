@@ -41,7 +41,7 @@ namespace Gass\Validate;
 use Gass\Adapter;
 
 /**
- * Interface for all Http Adapters
+ * Interface for all Validator Adapters
  *
  * @uses        Gass\Adapter
  * @copyright   Copyright (c) 2011-2014 Tom Chapman (http://tom-chapman.uk/)
