@@ -63,7 +63,7 @@ class IpAddress extends Base
             $this->addMessage('The provided IP address must be a string.');
             return false;
         }
-        if (!preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d{1,2})\.){3}(25[0-5]|2[0-4]\d|[01]?\d{1,2})$/', $value)) {
+        if (false === filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             $this->addMessage('"%value%" is an invalid IPv4 address');
             return false;
         }
