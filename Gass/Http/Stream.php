@@ -157,7 +157,7 @@ class Stream extends Base
         }
         $newHeaders = array();
         foreach ($headersArray as $key => $value) {
-            $newHeaders[] = $key.': '.$value;
+            $newHeaders[] = $key . ': ' . $value;
         }
         $headerString = implode("\r\n", $newHeaders);
 
@@ -173,10 +173,10 @@ class Stream extends Base
             $context
         ))) {
             if (!isset($php_errormsg)) {
-                $php_errormsg = 'error message not available, this could be because the ini '.
+                $php_errormsg = 'error message not available, this could be because the ini ' .
                     'setting "track_errors" is set to "Off" or XDebug is running';
             }
-            throw new Exception\RuntimeException('Source could not be retrieved. Error: '.$php_errormsg);
+            throw new Exception\RuntimeException('Source could not be retrieved. Error: ' . $php_errormsg);
         }
         $this->setResponseHeaders($http_response_header);
         if (null !== ($statusCode = $this->getInfo('Http-Code'))) {

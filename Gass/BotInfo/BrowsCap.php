@@ -127,7 +127,7 @@ class BrowsCap extends Base
     {
         $browsCapLocation = $this->getOption('browscap');
         $directory = dirname($browsCapLocation);
-        $latestVersionDateFile = $directory.DIRECTORY_SEPARATOR.'latestVersionDate.txt';
+        $latestVersionDateFile = $directory . DIRECTORY_SEPARATOR . 'latestVersionDate.txt';
         if (!@file_exists($latestVersionDateFile)
                 || false === ($fileSaveTime = @filemtime($latestVersionDateFile))
                 || $fileSaveTime < time() - 86400) {
@@ -138,12 +138,12 @@ class BrowsCap extends Base
             );
             if (false === @file_put_contents($latestVersionDateFile, trim($latestDateString))) {
                 throw new Exception\RuntimeException(
-                    'Cannot save latest version date to file: '.$latestVersionDateFile
+                    'Cannot save latest version date to file: ' . $latestVersionDateFile
                 );
             }
         } elseif (false === ($latestDateString = @file_get_contents($latestVersionDateFile))) {
             throw new Exception\RuntimeException(
-                'Couldn\'t read latest version date file: '.$latestVersionDateFile
+                'Couldn\'t read latest version date file: ' . $latestVersionDateFile
             );
         }
         if (false !== ($latestVersionDate = strtotime($latestDateString))) {
@@ -168,7 +168,7 @@ class BrowsCap extends Base
         }
         if (!@is_readable($browsCapLocation)) {
             throw new Exception\RuntimeException(
-                'The browscap option points to a un-readable file, '.
+                'The browscap option points to a un-readable file, ' .
                 'please ensure the permissions are correct and try again.'
             );
         }
@@ -191,14 +191,14 @@ class BrowsCap extends Base
         $directory = dirname($browsCapLocation);
         if ((!@file_exists($directory) && !mkdir($directory, 0777, true)) || !@is_writable($directory)) {
             throw new Exception\RuntimeException(
-                'The directory "'.$directory.'" is not writable, '.
+                'The directory "' . $directory . '" is not writable, ' .
                 'please ensure this file can be written to and try again.'
             );
         }
         $currentHttpUserAgent = Http\Http::getInstance()->getUserAgent();
         if ($currentHttpUserAgent === null || '' == trim($currentHttpUserAgent)) {
             throw new Exception\RuntimeException(
-                __CLASS__.' cannot be initialised before a user-agent has been set in the Gass\Http adapter.'.
+                __CLASS__ . ' cannot be initialised before a user-agent has been set in the Gass\Http adapter.' .
                 ' The remote server rejects requests without a user-agent.'
             );
         }
@@ -206,13 +206,13 @@ class BrowsCap extends Base
         $browscapContents = trim($browscapSource);
         if (empty($browscapContents)) {
             throw new Exception\RuntimeException(
-                'browscap ini file retrieved from external source seems to be empty. '.
+                'browscap ini file retrieved from external source seems to be empty. ' .
                 'Please either set botInfo to null or ensure the php_browscap.ini file can be retrieved.'
             );
         }
         if (false == @file_put_contents($browsCapLocation, $browscapContents)) {
             throw new Exception\RuntimeException(
-                'Could not write to "'.$browsCapLocation.'", please check the permissions and try again.'
+                'Could not write to "' . $browsCapLocation . '", please check the permissions and try again.'
             );
         }
     }
@@ -305,7 +305,7 @@ class BrowsCap extends Base
     {
         $regEx = preg_quote($browserPattern);
         $regEx = str_replace(array('\?', '\*'), array('.', '.*'), $regEx);
-        return '?^'.strtolower($regEx).'$?i';
+        return '?^' . strtolower($regEx) . '$?i';
     }
 
     /**

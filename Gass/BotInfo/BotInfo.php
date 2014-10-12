@@ -95,10 +95,10 @@ class BotInfo implements Proxy\ProxyInterface
                 return call_user_func_array(array($this->adapter, $name), $arguments);
             }
             throw new Exception\BadMethodCallException(
-                'Method '.get_class($this->adapter).'::'.$name.' does not exist.'
+                'Method ' . get_class($this->adapter) . '::' . $name . ' does not exist.'
             );
         }
-        throw new Exception\DomainException('Adapter has not been set. Please set an adapter before calling '.$name);
+        throw new Exception\DomainException('Adapter has not been set. Please set an adapter before calling ' . $name);
     }
 
     /**
@@ -111,7 +111,7 @@ class BotInfo implements Proxy\ProxyInterface
     public function setAdapter($adapter)
     {
         if (is_string($adapter)) {
-            $adapterName = 'Gass\BotInfo\\'.ucfirst($adapter);
+            $adapterName = 'Gass\BotInfo\\' . ucfirst($adapter);
             $adapter = new $adapterName();
         }
         if ($adapter instanceof BotInfoInterface) {

@@ -55,34 +55,34 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->dependecyFilesFolder = dirname(__DIR__).DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR;
+        $this->dependecyFilesFolder = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'dependency-files' . DIRECTORY_SEPARATOR;
         $this->httpAdapter = new \Gass\Http\Test;
         $this->httpAdapter->addRequestQueueItem(
             \Gass\GoogleAnalyticsServerSide::JS_URL,
-            'HTTP/1.0 200 OK'."\n".
-            'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT'."\n".
-            'X-Content-Type-Options: nosniff'."\n".
-            'Date: Tue, 15 May 2012 16:58:20 GMT'."\n".
-            'Expires: Wed, 16 May 2012 04:58:20 GMT'."\n".
-            'Content-Type: text/javascript'."\n".
-            'Vary: Accept-Encoding'."\n".
-            'X-Content-Type-Options: nosniff'."\n".
-            'Age: 8829'."\n".
-            'Cache-Control: max-age=43200, public'."\n".
+            'HTTP/1.0 200 OK' . "\n" .
+            'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT' . "\n" .
+            'X-Content-Type-Options: nosniff' . "\n" .
+            'Date: Tue, 15 May 2012 16:58:20 GMT' . "\n" .
+            'Expires: Wed, 16 May 2012 04:58:20 GMT' . "\n" .
+            'Content-Type: text/javascript' . "\n" .
+            'Vary: Accept-Encoding' . "\n" .
+            'X-Content-Type-Options: nosniff' . "\n" .
+            'Age: 8829' . "\n" .
+            'Cache-Control: max-age=43200, public' . "\n" .
             'Server: GFE/2.0',
-            file_get_contents($this->dependecyFilesFolder.'ga.js')
+            file_get_contents($this->dependecyFilesFolder . 'ga.js')
         )->addRequestQueueItem(
             \Gass\GoogleAnalyticsServerSide::GIF_URL,
-            'HTTP/1.0 200 OK'."\n".
-            'Age:255669'."\n".
-            'Cache-Control:private, no-cache, no-cache=Set-Cookie, proxy-revalidate'."\n".
-            'Content-Length:35'."\n".
-            'Content-Type:image/gif'."\n".
-            'Date:Thu, 17 May 2012 21:28:01 GMT'."\n".
-            'Expires:Wed, 19 Apr 2000 11:43:00 GMT'."\n".
-            'Last-Modified:Wed, 21 Jan 2004 19:51:30 GMT'."\n".
-            'Pragma:no-cache'."\n".
-            'Server:GFE/2.0'."\n".
+            'HTTP/1.0 200 OK' . "\n" .
+            'Age:255669' . "\n" .
+            'Cache-Control:private, no-cache, no-cache=Set-Cookie, proxy-revalidate' . "\n" .
+            'Content-Length:35' . "\n" .
+            'Content-Type:image/gif' . "\n" .
+            'Date:Thu, 17 May 2012 21:28:01 GMT' . "\n" .
+            'Expires:Wed, 19 Apr 2000 11:43:00 GMT' . "\n" .
+            'Last-Modified:Wed, 21 Jan 2004 19:51:30 GMT' . "\n" .
+            'Pragma:no-cache' . "\n" .
+            'Server:GFE/2.0' . "\n" .
             'X-Content-Type-Options:nosniff',
             implode(
                 array(
@@ -101,9 +101,9 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function initialiseBotInfoBrowsCap()
     {
-        $browsCapIniFileLocation = $this->dependecyFilesFolder.'php_browscap.ini';
+        $browsCapIniFileLocation = $this->dependecyFilesFolder . 'php_browscap.ini';
         touch($browsCapIniFileLocation);
-        touch($this->dependecyFilesFolder.'latestVersionDate.txt');
+        touch($this->dependecyFilesFolder . 'latestVersionDate.txt');
         $botInfoAdapter = new \Gass\BotInfo\BrowsCap(
             array('browscap' => $browsCapIniFileLocation)
         );
@@ -117,7 +117,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             ->setRemoteAddress('123.123.123.123')
             ->setDocumentPath('/path/to/page')
             ->setUserAgent(
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) '.
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) ' .
                 'AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5'
             )->setAcceptLanguage('en');
         return $this;
@@ -789,21 +789,21 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $label = 'Test Label';
         $value = 1;
         $this->assertEquals(
-            '5('.$category.'*'.$action.')',
+            '5(' . $category . '*' . $action . ')',
             $this->gass->getEventString($category, $action)
         );
         $this->assertEquals(
-            '5('.$category.'*'.$action.'*'.$label.')',
+            '5(' . $category . '*' . $action . '*' . $label . ')',
             $this->gass->getEventString($category, $action, $label)
         );
         $this->assertEquals(
-            '5('.$category.'*'.$action.'*'.$label.')('.$value.')',
+            '5(' . $category . '*' . $action . '*' . $label . ')(' . $value . ')',
             $this->gass->getEventString($category, $action, $label, $value)
         );
 
         // Testing BC
         $this->assertEquals(
-            '5('.$category.'*'.$action.')',
+            '5(' . $category . '*' . $action . ')',
             $this->gass->getEventString(
                 array(
                     'category' => $category,
@@ -812,7 +812,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             )
         );
         $this->assertEquals(
-            '5('.$category.'*'.$action.'*'.$label.')',
+            '5(' . $category . '*' . $action . '*' . $label . ')',
             $this->gass->getEventString(
                 array(
                     'category' => $category,
@@ -822,7 +822,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             )
         );
         $this->assertEquals(
-            '5('.$category.'*'.$action.'*'.$label.')('.$value.')',
+            '5(' . $category . '*' . $action . '*' . $label . ')(' . $value . ')',
             $this->gass->getEventString(
                 array(
                     'category' => $category,
@@ -899,9 +899,9 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             $customVar2['index']
         );
         $this->assertEquals(
-            '8('.$customVar1['name'].'*'.$customVar2['name'].')'.
-            '9('.$customVar1['value'].'*'.$customVar2['value'].')'.
-            '11(5!'.$customVar2['scope'].')',
+            '8(' . $customVar1['name'] . '*' . $customVar2['name'] . ')' .
+            '9(' . $customVar1['value'] . '*' . $customVar2['value'] . ')' .
+            '11(5!' . $customVar2['scope'] . ')',
             $this->gass->getCustomVariableString()
         );
     }
@@ -1044,7 +1044,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $url = 'www.test.co.uk/example/path?q=other';
         $this->setExpectedException(
             'Gass\Exception\DomainException',
-            'Url is invalid: '.$url
+            'Url is invalid: ' . $url
         );
         $this->gass->trackPageview($url);
     }

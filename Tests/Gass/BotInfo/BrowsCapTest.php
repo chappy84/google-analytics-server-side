@@ -44,7 +44,11 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         \Gass\Http\Http::getInstance(array(), $this->getMock('Gass\Http\HttpInterface'));
         $this->iniFileLocation = realpath(
-            dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'dependency-files'.DIRECTORY_SEPARATOR.'php_browscap.ini'
+            dirname(dirname(__DIR__)) .
+            DIRECTORY_SEPARATOR .
+            'dependency-files' .
+            DIRECTORY_SEPARATOR .
+            'php_browscap.ini'
         );
     }
 
@@ -64,7 +68,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function setTestHttpForVersionDateFile()
     {
-        $latestVersionDateFile = dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt';
+        $latestVersionDateFile = dirname($this->iniFileLocation) . DIRECTORY_SEPARATOR . 'latestVersionDate.txt';
         $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
         $httpAdapter->expects($this->any())
             ->method('request')
@@ -107,7 +111,11 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $browsCap);
         $this->assertEquals($this->iniFileLocation, $browsCap->getOption('browscap'));
         $this->assertEquals(
-            strtotime(file_get_contents(dirname($this->iniFileLocation).DIRECTORY_SEPARATOR.'latestVersionDate.txt')),
+            strtotime(
+                file_get_contents(
+                    dirname($this->iniFileLocation) . DIRECTORY_SEPARATOR . 'latestVersionDate.txt'
+                )
+            ),
             $browsCap->getLatestVersionDate()
         );
     }

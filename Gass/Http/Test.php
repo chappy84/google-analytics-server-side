@@ -233,7 +233,7 @@ class Test extends Base implements HttpInterface
     private function getBaseUrl($url)
     {
         $urlParts = parse_url($url);
-        $pre = $urlParts['scheme'].'://';
+        $pre = $urlParts['scheme'] . '://';
         if (!empty($urlParts['user'])) {
             $pre .= $urlParts['user'];
             if (!empty($urlParts['pass'])) {

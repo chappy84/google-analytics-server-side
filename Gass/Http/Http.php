@@ -96,7 +96,7 @@ class Http
      */
     final public function __clone()
     {
-        throw new Exception\RuntimeException('You cannot clone '.__CLASS__);
+        throw new Exception\RuntimeException('You cannot clone ' . __CLASS__);
     }
 
     /**
@@ -141,7 +141,7 @@ class Http
             return call_user_func_array(array($this->adapter, $name), $arguments);
         }
         throw new Exception\BadMethodCallException(
-            __METHOD__.' is not an available method in '.get_class($this->adapter)
+            __METHOD__ . ' is not an available method in ' . get_class($this->adapter)
         );
     }
 
@@ -161,7 +161,9 @@ class Http
         if (method_exists($adapter, $name)) {
             return call_user_func_array(array($adapter, $name), $arguments);
         }
-        throw new Exception\BadMethodCallException(__METHOD__.' is not an available method in '.get_class($adapter));
+        throw new Exception\BadMethodCallException(
+            __METHOD__ . ' is not an available method in ' . get_class($adapter)
+        );
     }
 
     /**
@@ -174,7 +176,7 @@ class Http
     public function setAdapter($adapter)
     {
         if (is_string($adapter)) {
-            $adapterName = 'Gass\Http\\'.ucfirst($adapter);
+            $adapterName = 'Gass\Http\\' . ucfirst($adapter);
             $adapter = new $adapterName();
         }
         if ($adapter instanceof HttpInterface) {

@@ -138,12 +138,12 @@ class UserAgentStringInfo extends Base
         if (null !== ($csvPathname = $this->getOption('cachePath'))) {
             $this->setCacheDate();
             if (null !== ($lastCacheDate = $this->getCacheDate())) {
-                $csvPath = $csvPathname.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename');
+                $csvPath = $csvPathname . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename');
                 if ($lastCacheDate > (time() - $this->getOption('cacheLifetime')) && @is_readable($csvPath)
                         && false !== ($botsCsv = @file_get_contents($csvPath))) {
                     return $botsCsv;
                 } elseif (false === @unlink($csvPath)) {
-                    throw new Exception\RuntimeException('Cannot delete "'.$csvPath.'". Please check permissions.');
+                    throw new Exception\RuntimeException('Cannot delete "' . $csvPath . '". Please check permissions.');
                 }
             }
         }
@@ -163,7 +163,7 @@ class UserAgentStringInfo extends Base
         $botsCsv = trim($csvSource);
         if (empty($botsCsv)) {
             throw new Exception\RuntimeException(
-                'Bots CSV retrieved from external source seems to be empty. '.
+                'Bots CSV retrieved from external source seems to be empty. ' .
                 'Please either set botInfo to null or ensure the bots csv file can be retrieved.'
             );
         }
@@ -212,17 +212,17 @@ class UserAgentStringInfo extends Base
                 && null !== ($csvPath = $this->getOption('cachePath')) && @is_writable($csvPath)) {
             $csvLines = array();
             foreach ($this->botIps as $ipAddress => $name) {
-                $csvLines[] = '"'.addslashes($name).'","'.addslashes($ipAddress).'","'.
-                    addslashes($this->bots[$name]).'"';
+                $csvLines[] = '"' . addslashes($name) . '","' . addslashes($ipAddress) . '","' .
+                    addslashes($this->bots[$name]) . '"';
             }
             $csvString = implode("\n", $csvLines);
             if (false === @file_put_contents(
-                $csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename'),
+                $csvPath . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename'),
                 $csvString,
                 LOCK_EX
             )) {
                 throw new Exception\RuntimeException(
-                    'Unable to write to file '.$csvPath.DIRECTORY_SEPARATOR.$this->getOption('cacheFilename')
+                    'Unable to write to file ' . $csvPath . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename')
                 );
             }
         }
@@ -239,10 +239,10 @@ class UserAgentStringInfo extends Base
     private function setCacheDate($cacheDate = null)
     {
         if (0 == func_num_args()) {
-            $fileRelPath = DIRECTORY_SEPARATOR.$this->getOption('cacheFilename');
+            $fileRelPath = DIRECTORY_SEPARATOR . $this->getOption('cacheFilename');
             $cacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
-                                        && @is_readable($csvPathname.$fileRelPath)
-                                        && false !== ($fileModifiedTime = @filemtime($csvPathname.$fileRelPath)))
+                    && @is_readable($csvPathname . $fileRelPath)
+                    && false !== ($fileModifiedTime = @filemtime($csvPathname . $fileRelPath)))
                 ? $fileModifiedTime
                 : null;
         } elseif (null !== $cacheDate && !is_numeric($cacheDate)) {
@@ -284,8 +284,8 @@ class UserAgentStringInfo extends Base
         $userAgent = $this->getUserAgent();
         $remoteAddress = $this->getRemoteAddress();
         return ((!empty($this->bots)
-                        && (in_array($userAgent, $this->bots) || array_key_exists($userAgent, $this->bots)))
-                    || (!empty($this->botIps) && array_key_exists($remoteAddress, $this->botIps)));
+                && (in_array($userAgent, $this->bots) || array_key_exists($userAgent, $this->bots)))
+            || (!empty($this->botIps) && array_key_exists($remoteAddress, $this->botIps)));
     }
 
     /**

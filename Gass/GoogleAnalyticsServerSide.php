@@ -440,10 +440,10 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     public function getVisitorCustomVar($index)
     {
-        if (isset($this->customVariables['index'.$index])) {
-            return $this->customVariables['index'.$index]['value'];
+        if (isset($this->customVariables['index' . $index])) {
+            return $this->customVariables['index' . $index]['value'];
         }
-        throw new Exception\OutOfBoundsException('The index: "'.$index.'" has not been set.');
+        throw new Exception\OutOfBoundsException('The index: "' . $index . '" has not been set.');
     }
 
     /**
@@ -516,14 +516,14 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     public function getOption($name)
     {
-        $methodName = 'get'.ucfirst($name);
+        $methodName = 'get' . ucfirst($name);
         if (method_exists($this, $methodName)) {
             $reflectionMethod = new \ReflectionMethod($this, $methodName);
             if ($reflectionMethod->isPublic()) {
                 return $this->$methodName();
             }
         }
-        throw new Exception\OutOfRangeException($name.' is not an available option.');
+        throw new Exception\OutOfRangeException($name . ' is not an available option.');
     }
 
     /**
@@ -541,7 +541,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         if (!is_string($var)) {
             if (!is_scalar($var) && !is_null($var)
                     && (!is_object($var) || !method_exists($var, '__toString'))) {
-                throw new Exception\InvalidArgumentException($description.' must be a string.');
+                throw new Exception\InvalidArgumentException($description . ' must be a string.');
             }
             $var = (string) $var;
         }
@@ -569,7 +569,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         $this->setVersionCalled = true;
         $version = $this->getAsString($version, 'Version');
         if (1 !== preg_match('/^(\d+\.){2}\d+$/', $version)) {
-            throw new Exception\InvalidArgumentException('Invalid version number provided: '.$version);
+            throw new Exception\InvalidArgumentException('Invalid version number provided: ' . $version);
         }
         $this->version = $version;
         return $this;
@@ -606,7 +606,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         $langValidator = new Validate\LanguageCode;
         if (!$langValidator->isValid($acceptLanguage)) {
             throw new Exception\InvalidArgumentException(
-                'Accept Language validation errors: '.implode(', ', $langValidator->getMessages())
+                'Accept Language validation errors: ' . implode(', ', $langValidator->getMessages())
             );
         }
         $this->acceptLanguage = $acceptLanguage;
@@ -635,7 +635,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         $ipValidator = new Validate\IpAddress;
         if (!$ipValidator->isValid($remoteAddress)) {
             throw new Exception\InvalidArgumentException(
-                'Remote Address validation errors: '.implode(', ', $ipValidator->getMessages())
+                'Remote Address validation errors: ' . implode(', ', $ipValidator->getMessages())
             );
         }
         $this->remoteAddress = $remoteAddress;
@@ -752,7 +752,7 @@ class GoogleAnalyticsServerSide implements GassInterface
             $index = 0;
             do {
                 $index++;
-            } while (isset($this->customVariables['index'.$index]) && $index < 6);
+            } while (isset($this->customVariables['index' . $index]) && $index < 6);
             if ($index > 5) {
                 throw new Exception\OutOfBoundsException('You cannot add more than 5 custom variables.');
             }
@@ -764,10 +764,10 @@ class GoogleAnalyticsServerSide implements GassInterface
         }
         $name = $this->getAsString($name, 'Custom Var Name');
         $value = $this->getAsString($value, 'Custom Var Value');
-        if (128 < strlen($name.$value)) {
+        if (128 < strlen($name . $value)) {
             throw new Exception\DomainException('The name / value combination exceeds the 128 byte custom var limit.');
         }
-        $this->customVariables['index'.$index] = array(
+        $this->customVariables['index' . $index] = array(
             'index' => (int) $index,
             'name'  => (string) $this->removeSpecialCustomVarChars($name),
             'value' => (string) $this->removeSpecialCustomVarChars($value),
@@ -792,7 +792,7 @@ class GoogleAnalyticsServerSide implements GassInterface
             $currentCustVars = $this->getCustomVariables();
             foreach ($customVars as $customVar) {
                 list($custVarIndex, $custVarName, $custVarValue, $custVarScope) = explode('=', $customVar, 4);
-                if (!isset($currentCustVars['index'.$custVarIndex])) {
+                if (!isset($currentCustVars['index' . $custVarIndex])) {
                     $this->setCustomVar($custVarName, $custVarValue, $custVarScope, $custVarIndex);
                 }
             }
@@ -818,7 +818,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     public function deleteCustomVar($index)
     {
-        unset($this->customVariables['index'.$this->getAsString($index, 'Custom Var Index')]);
+        unset($this->customVariables['index' . $this->getAsString($index, 'Custom Var Index')]);
         return $this;
     }
 
@@ -844,17 +844,17 @@ class GoogleAnalyticsServerSide implements GassInterface
         $this->setSearchEnginesCalled = true;
         foreach ($searchEngines as $searchEngine => $queryParams) {
             if (!is_array($queryParams) || 1 > count($queryParams)) {
-                throw new Exception\DomainException('searchEngines entry '.$searchEngine.' invalid');
+                throw new Exception\DomainException('searchEngines entry ' . $searchEngine . ' invalid');
             }
             if (!is_string($searchEngine)
                     || 1 !== preg_match('/^[a-z0-9\.-]+$/', $searchEngine)) {
-                throw new Exception\OutOfBoundsException('search engine name "'.$searchEngine.'" is invalid');
+                throw new Exception\OutOfBoundsException('search engine name "' . $searchEngine . '" is invalid');
             }
             foreach ($queryParams as $queryParameter) {
                 if (!is_string($queryParameter)
                         || 1 !== preg_match('/^[a-z0-9_\-]+$/i', $queryParameter)) {
                     throw new Exception\DomainException(
-                        'search engine query parameter "'.$queryParameter.'" is invalid'
+                        'search engine query parameter "' . $queryParameter . '" is invalid'
                     );
                 }
             }
@@ -875,7 +875,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         if (!is_array($botInfo) && !is_bool($botInfo) && $botInfo !== null
                 && !$botInfo instanceof BotInfo\BotInfoInterface) {
             throw new Exception\InvalidArgumentException(
-                'botInfo must be an array, boolean, null'.
+                'botInfo must be an array, boolean, null' .
                 ' or a class which implements Gass\BotInfo\Interface.'
             );
         } elseif ($botInfo !== null) {
@@ -904,7 +904,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         if ($http !== null && !is_array($http)
                 && !$http instanceof Http\HttpInterface) {
             throw new Exception\InvalidArgumentException(
-                'http must be an array, null'.
+                'http must be an array, null' .
                 ' or a class which implements Gass\Http\Interface.'
             );
         }
@@ -944,7 +944,7 @@ class GoogleAnalyticsServerSide implements GassInterface
     public function setOption($name, $value)
     {
         $this->getOption($this->getAsString($name, 'Option Name'));
-        $methodName = 'set'.ucfirst($name);
+        $methodName = 'set' . ucfirst($name);
         if (method_exists($this, $methodName)) {
             $reflectionMethod = new \ReflectionMethod($this, $methodName);
             if ($reflectionMethod->isPublic()) {
@@ -990,8 +990,8 @@ class GoogleAnalyticsServerSide implements GassInterface
         if ($value !== null && !is_int($value)) {
             throw new Exception\InvalidArgumentException('Value must be an integer.');
         }
-        return '5('.$category.'*'.$action.(empty($label) ? '' : '*'.$label).')'.
-            (($value !== null) ? '('.$value.')' : '');
+        return '5(' . $category . '*' . $action . (empty($label) ? '' : '*' . $label) . ')' .
+            (($value !== null) ? '(' . $value . ')' : '');
     }
 
     /**
@@ -1010,11 +1010,11 @@ class GoogleAnalyticsServerSide implements GassInterface
                 $names[] = $value['name'];
                 $values[] = $value['value'];
                 if (in_array($value['scope'], array(1,2))) {
-                    $scopes[] = (($value['index'] > (count($scopes) + 1)) ? $value['index'].'!' : '' ) .
+                    $scopes[] = (($value['index'] > (count($scopes) + 1)) ? $value['index'] . '!' : '' ) .
                         $value['scope'];
                 }
             }
-            return '8('.implode($names, '*').')9('.implode($values, '*').')11('.implode($scopes, '*').')';
+            return '8(' . implode($names, '*') . ')9(' . implode($values, '*') . ')11(' . implode($scopes, '*') . ')';
         }
         return null;
     }
@@ -1162,8 +1162,10 @@ class GoogleAnalyticsServerSide implements GassInterface
                 }
             }
             if (false === $refererSearchEngine) {
-                $campaignParameters = 'utmcsr='.$refererParts['host'].
-                    '|utmccn=(referral)|utmcmd=referral|utmcct='.$refererParts['path'];
+                $campaignParameters = 'utmcsr=' .
+                    $refererParts['host'] .
+                    '|utmccn=(referral)|utmcmd=referral|utmcct=' .
+                    $refererParts['path'];
             } else {
                 $queryParameters = $searchEngines[$searchEngine];
                 parse_str($refererParts['query'], $refererQueryParams);
@@ -1175,8 +1177,8 @@ class GoogleAnalyticsServerSide implements GassInterface
                         break;
                     }
                 }
-                $campaignParameters = 'utmcsr='.$searchEngine.
-                    '|utmccn=(organic)|utmcmd=organic|utmctr='.$queryParamValue;
+                $campaignParameters = 'utmcsr=' . $searchEngine .
+                    '|utmccn=(organic)|utmcmd=organic|utmctr=' . $queryParamValue;
             }
         }
         if (!isset($campaignParameters) || false === strpos($campaignParameters, 'utmcsr=')) {
@@ -1195,20 +1197,24 @@ class GoogleAnalyticsServerSide implements GassInterface
          */
         $this->setCookie(
             '__utma',
-            $domainId.'.'.$visitorId.'.'.$firstVisit.'.'.$lastVisit.'.'.$currentVisit.'.'.$session,
+            $domainId . '.' . $visitorId . '.' . $firstVisit . '.' . $lastVisit . '.' . $currentVisit . '.' . $session,
             $sendCookieHeaders
         );
-        $this->setCookie('__utmb', $domainId.'.'.$pageVisits.'.'.$session.'.'.$currentVisit, $sendCookieHeaders);
+        $this->setCookie(
+            '__utmb',
+            $domainId . '.' . $pageVisits . '.' . $session . '.' . $currentVisit,
+            $sendCookieHeaders
+        );
         $this->setCookie('__utmc', $domainId, $sendCookieHeaders);
         $this->setCookie(
             '__utmz',
-            $domainId.'.'.$firstVisit.'.'.$session.'.'.$campaignNumber.'.'.$campaignParameters,
+            $domainId . '.' . $firstVisit . '.' . $session . '.' . $campaignNumber . '.' . $campaignParameters,
             $sendCookieHeaders
         );
 
         $scope1Vars = $this->getCustomVarsByScope(1);
         if (!empty($scope1Vars)) {
-            $this->setCookie('__utmv', $domainId.'.|'.implode('^', $scope1Vars), $sendCookieHeaders);
+            $this->setCookie('__utmv', $domainId . '.|' . implode('^', $scope1Vars), $sendCookieHeaders);
         }
 
         if ($sendCookieHeaders) {
@@ -1240,7 +1246,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         foreach ($currentCookies as $name => $value) {
             $value = trim($value);
             if (!empty($value)) {
-                $cookieParts[] = $name.'='.$value.';';
+                $cookieParts[] = $name . '=' . $value . ';';
             }
         }
         return implode($cookieParts, ' ');
@@ -1279,11 +1285,11 @@ class GoogleAnalyticsServerSide implements GassInterface
                     $cookieLife = time() + $this->visitorCookieTimeout;
             }
             if ($setHeader) {
-                setcookie($name, $value, $cookieLife, self::COOKIE_PATH, '.'.$this->getServerName());
+                setcookie($name, $value, $cookieLife, self::COOKIE_PATH, '.' . $this->getServerName());
             }
             return $this;
         }
-        throw new Exception\OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
+        throw new Exception\OutOfBoundsException('Cookie by name: ' . $name . ' is not related to Google Analytics.');
     }
 
     /**
@@ -1340,7 +1346,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         if (array_key_exists($name, $this->cookies)) {
             return $this->cookies[$name];
         }
-        throw new Exception\OutOfBoundsException('Cookie by name: '.$name.' is not related to Google Analytics.');
+        throw new Exception\OutOfBoundsException('Cookie by name: ' . $name . ' is not related to Google Analytics.');
     }
 
     /**
@@ -1369,8 +1375,12 @@ class GoogleAnalyticsServerSide implements GassInterface
         $currentJs = $this->getCurrentJsFile();
         if (!empty($currentJs)) {
             $regEx = '((\d+\.){2}\d+)';
-            $version = preg_replace('/^[\s\S]+\=function\(\)\{return[\'"]'.$regEx.'[\'"][\s\S]+$/i', '$1', $currentJs);
-            if (preg_match('/^'.$regEx.'$/', $version)) {
+            $version = preg_replace(
+                '/^[\s\S]+\=function\(\)\{return[\'"]' . $regEx . '[\'"][\s\S]+$/i',
+                '$1',
+                $currentJs
+            );
+            if (preg_match('/^' . $regEx . '$/', $version)) {
                 $this->setVersion($version);
             }
         }
@@ -1388,11 +1398,11 @@ class GoogleAnalyticsServerSide implements GassInterface
         if (!empty($currentJs)) {
             $regEx = '([a-z0-9:\s-_\.]+)';
             $searchEngineString = preg_replace(
-                '/^[\s\S]+\=[\'"]'.$regEx.'[\'"]\.split\([\'"]\s+[\'"]\)[\s\S]+$/i',
+                '/^[\s\S]+\=[\'"]' . $regEx . '[\'"]\.split\([\'"]\s+[\'"]\)[\s\S]+$/i',
                 '$1',
                 $currentJs
             );
-            if (preg_match('/^'.$regEx.'$/i', $searchEngineString)) {
+            if (preg_match('/^' . $regEx . '$/i', $searchEngineString)) {
                 $searchEngineArray = preg_split('#\s+#', $searchEngineString);
                 $searchEngines = array();
                 foreach ($searchEngineArray as $searchEngine) {
@@ -1511,12 +1521,15 @@ class GoogleAnalyticsServerSide implements GassInterface
         $queryParams = array_merge($queryParams, $extraParams);
 
         if (null !== ($customVarString = $this->getCustomVariableString())) {
-            $queryParams['utme'] = ((isset($queryParams['utme']) && !empty($queryParams['utme']))
-                                    ? $queryParams['utme']
-                                    : '') . $customVarString;
+            $queryParams['utme'] = (
+                    (isset($queryParams['utme']) && !empty($queryParams['utme']))
+                        ? $queryParams['utme']
+                        : ''
+                ) .
+                $customVarString;
         }
 
-        $utmUrl = self::GIF_URL.'?'.http_build_query($queryParams, null, '&');
+        $utmUrl = self::GIF_URL . '?' . http_build_query($queryParams, null, '&');
 
         Http\Http::request($utmUrl);
         return $this;

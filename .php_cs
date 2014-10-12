@@ -35,6 +35,14 @@ return Symfony\CS\Config\Config::create()
             'controls_spaces',
             'psr0',
             'elseif',
-            'eof_ending'
+            'eof_ending',
+            'concat_with_spaces',
+            'whitespacy_lines',
+            'multiline_spaces_before_semicolon',
+            'remove_lines_between_uses',
+            'namespace_no_leading_whitespace',
+            'duplicate_semicolon',
+            'multiple_use',
+            'line_after_namespace'
         )
     )->finder($finder);

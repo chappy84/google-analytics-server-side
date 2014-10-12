@@ -148,10 +148,10 @@ class Curl extends Base
         $currentHeaders = $this->getOption(CURLOPT_HEADER);
         $extraHeaders = (is_array($currentHeaders)) ? $currentHeaders : array();
         if (null !== ($acceptedLanguage = $this->getAcceptLanguage())) {
-            $extraHeaders[] = 'Accepts-Language: '.$acceptedLanguage;
+            $extraHeaders[] = 'Accepts-Language: ' . $acceptedLanguage;
         }
         if (null !== ($remoteAddress = $this->getRemoteAddress())) {
-            $extraHeaders[] = 'X-Forwarded-For: '.$remoteAddress;
+            $extraHeaders[] = 'X-Forwarded-For: ' . $remoteAddress;
         }
         if (!empty($extraHeaders)) {
             $this->setOption(CURLOPT_HTTPHEADER, $extraHeaders);
@@ -160,12 +160,12 @@ class Curl extends Base
         $extraCurlOptions = $this->getOptions();
         if (!empty($extraCurlOptions) && false === curl_setopt_array($this->curl, $extraCurlOptions)) {
             throw new Exception\UnexpectedValueException(
-                'One of the extra curl options specified is invalid. Error: '.curl_error($this->curl)
+                'One of the extra curl options specified is invalid. Error: ' . curl_error($this->curl)
             );
         }
 
         if (false === ($response = curl_exec($this->curl))) {
-            throw new Exception\RuntimeException('Source could not be retrieved. Error: '.curl_error($this->curl));
+            throw new Exception\RuntimeException('Source could not be retrieved. Error: ' . curl_error($this->curl));
         }
 
         $statusCode = $this->getInfo(CURLINFO_HTTP_CODE);
