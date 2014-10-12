@@ -59,6 +59,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function getBrowscapWithIni()
     {
+        $this->setTestHttpForVersionDateFile();
         return new \Gass\BotInfo\BrowsCap(
             array(
                 'browscap' => $this->iniFileLocation
@@ -72,7 +73,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
         $httpAdapter->expects($this->any())
             ->method('request')
-            ->with('\Gass\BotInfo\BrowsCap::VERSION_DATE_URL')
+            ->with(\Gass\BotInfo\BrowsCap::VERSION_DATE_URL)
             ->will($this->returnSelf());
         $httpAdapter->expects($this->any())
             ->method('getResponse')
