@@ -297,6 +297,13 @@ class GoogleAnalyticsServerSide implements GassInterface
     private $ignoreDoNotTrack = false;
 
     /**
+     * URL Validator
+     *
+     * @var Gass\Validate\Url
+     */
+    private $urlValidator;
+
+    /**
      * Class Level Constructor
      * Sets all the variables it can from the request headers received from the Browser
      *
@@ -305,6 +312,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     public function __construct(array $options = array())
     {
+        $this->urlValidator = new Validate\Url;
         if (!empty($_SERVER['SERVER_NAME'])) {
             $this->setServerName($_SERVER['SERVER_NAME']);
         }
@@ -672,8 +680,7 @@ class GoogleAnalyticsServerSide implements GassInterface
     {
         $documentReferer = trim($this->getAsString($documentReferer, 'Document Referer'));
         if (!empty($documentReferer)
-                && (!preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $documentReferer)
-                        || false === @parse_url($documentReferer))) {
+                && !$this->urlValidator->isValid($documentReferer)) {
             throw new Exception\InvalidArgumentException('Document Referer must be a valid URL.');
         }
         $this->documentReferer = $documentReferer;
@@ -1145,7 +1152,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         $referer = $this->getDocumentReferer();
         $serverName = $this->getServerName();
         if (!empty($referer) && !empty($serverName) && false === strpos($referer, $serverName)
-                && preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $referer)
+                && $this->urlValidator->isValid($referer)
                 && false !== ($refererParts = @parse_url($referer))
                 && isset($refererParts['host'], $refererParts['path'])
         ) {
@@ -1433,10 +1440,10 @@ class GoogleAnalyticsServerSide implements GassInterface
         if ($url !== null) {
             $url = $this->getAsString($url, 'Page View URL');
             if (0 != strpos($url, '/')) {
-                if (!preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $url)
-                        || false === ($urlParts = @parse_url($url))) {
-                    throw new Exception\DomainException('Url is invalid: '.$url);
+                if (!$this->urlValidator->isValid($url)) {
+                    throw new Exception\DomainException('Url is invalid: ' . $url);
                 }
+                $urlParts = @parse_url($url);
                 $url = $urlParts['path'];
                 $this->setServerName($urlParts['host']);
             }
