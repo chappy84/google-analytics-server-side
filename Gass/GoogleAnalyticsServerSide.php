@@ -1017,7 +1017,7 @@ class GoogleAnalyticsServerSide implements GassInterface
                 $names[] = $value['name'];
                 $values[] = $value['value'];
                 if (in_array($value['scope'], array(1,2))) {
-                    $scopes[] = (($value['index'] > (count($scopes) + 1)) ? $value['index'] . '!' : '' ) .
+                    $scopes[] = (($value['index'] > (count($scopes) + 1)) ? $value['index'] . '!' : '') .
                         $value['scope'];
                 }
             }
@@ -1136,7 +1136,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         }
         if (!isset($session) || !is_numeric($session)) {
             $session = 1;
-        } elseif (!isset($cookies['__utmz'],$cookies['__utmb'])) {
+        } elseif (!isset($cookies['__utmz'], $cookies['__utmb'])) {
             $session++;
         }
         $pageVisits = (!isset($pageVisits) || !is_numeric($pageVisits)) ? 1 : ++$pageVisits;

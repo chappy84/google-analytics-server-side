@@ -12,7 +12,7 @@ matrix:
     - php: hhvm
 
 install:
-    - composer install --dev --prefer-source -n
+    - composer install --prefer-source -n
 
 script:
     - vendor/bin/php-cs-fixer fix -v --dry-run .

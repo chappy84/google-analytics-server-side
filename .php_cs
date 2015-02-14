@@ -45,4 +45,5 @@ return Symfony\CS\Config\Config::create()
             'multiple_use',
             'line_after_namespace'
         )
-    )->finder($finder);
+    )->setUsingCache(false)
+    ->finder($finder);
