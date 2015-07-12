@@ -51,7 +51,7 @@ use Gass\Adapter;
  * @package     Gass
  * @subpackage  Validate
  */
-abstract class Base extends Adapter\Base implements Validate
+abstract class Base extends Adapter\Base implements ValidateInterface
 {
     /**
      * Validation Messages

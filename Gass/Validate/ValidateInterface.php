@@ -51,7 +51,7 @@ use Gass\Adapter;
  * @package     Gass
  * @subpackage  Validate
  */
-interface Validate extends Adapter\AdapterInterface
+interface ValidateInterface extends Adapter\AdapterInterface
 {
     /**
      * Returns whether or not the value is valid
