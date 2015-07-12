@@ -605,10 +605,10 @@ class GoogleAnalyticsServerSide implements GassInterface
     {
         $acceptLanguage = $this->getAsString($acceptLanguage, 'Accept Language');
         if (false !== strpos($acceptLanguage, ';')) {
-            list($acceptLanguage, $other) = explode(';', $acceptLanguage, 2);
+            list($acceptLanguage) = explode(';', $acceptLanguage, 2);
         }
         if (false !== strpos($acceptLanguage, ',')) {
-            list($acceptLanguage, $other) = explode(',', $acceptLanguage, 2);
+            list($acceptLanguage) = explode(',', $acceptLanguage, 2);
         }
         $acceptLanguage = strtolower($acceptLanguage);
         $langValidator = new Validate\LanguageCode;

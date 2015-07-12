@@ -210,7 +210,7 @@ class BrowsCap extends Base
                 'Please either set botInfo to null or ensure the php_browscap.ini file can be retrieved.'
             );
         }
-        if (false == @file_put_contents($browsCapLocation, $browscapContents)) {
+        if (false === @file_put_contents($browsCapLocation, $browscapContents)) {
             throw new Exception\RuntimeException(
                 'Could not write to "' . $browsCapLocation . '", please check the permissions and try again.'
             );
