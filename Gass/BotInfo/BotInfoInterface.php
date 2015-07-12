@@ -60,7 +60,7 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      * @param string $remoteAddress [optional]
      * @return boolean
      */
-    public function getIsBot($userAgent = null, $remoteAddress = null);
+    public function isBot($userAgent = null, $remoteAddress = null);
 
     /**
      * Get the remote user's ip address

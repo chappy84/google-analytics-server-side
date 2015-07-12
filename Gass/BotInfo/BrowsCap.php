@@ -315,7 +315,7 @@ class BrowsCap extends Base
      * @param string $remoteAddress [optional]
      * @return boolean
      */
-    public function getIsBot($userAgent = null, $remoteAddress = null)
+    public function isBot($userAgent = null, $remoteAddress = null)
     {
         $noArgs = func_num_args();
         if ($noArgs >= 1) {

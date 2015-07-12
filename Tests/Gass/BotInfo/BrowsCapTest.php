@@ -180,12 +180,12 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     {
         $browsCap = $this->getBrowscapWithIni();
         $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
-        $this->assertFalse($browsCap->getIsBot($firefoxUserAgent));
+        $this->assertFalse($browsCap->isBot($firefoxUserAgent));
         $this->assertEquals($firefoxUserAgent, $browsCap->getUserAgent());
         $googleBotUserAgent = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
-        $this->assertTrue($browsCap->getIsBot($googleBotUserAgent));
+        $this->assertTrue($browsCap->isBot($googleBotUserAgent));
         $this->assertEquals($googleBotUserAgent, $browsCap->getUserAgent());
-        $this->assertTrue($browsCap->getIsBot(''));
+        $this->assertTrue($browsCap->isBot(''));
         $this->assertEquals('', $browsCap->getUserAgent());
     }
 
@@ -193,7 +193,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     {
         $browsCap = $this->getBrowscapWithIni();
         $testIpAddress = '123.123.123.123';
-        $browsCap->getIsBot('', $testIpAddress);
+        $browsCap->isBot('', $testIpAddress);
         $this->assertEquals($testIpAddress, $browsCap->getRemoteAddress());
     }
 

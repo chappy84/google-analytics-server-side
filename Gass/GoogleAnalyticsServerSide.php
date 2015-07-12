@@ -1495,7 +1495,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     private function track(array $extraParams = array())
     {
-        if ($this->botInfo !== null && $this->botInfo->getIsBot()) {
+        if ($this->botInfo !== null && $this->botInfo->isBot()) {
             return false;
         }
 

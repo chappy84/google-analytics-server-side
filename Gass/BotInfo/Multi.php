@@ -117,7 +117,7 @@ class Multi extends Adapter\Multi implements BotInfoInterface
      * @param string $remoteAddress [optional]
      * @return boolean
      */
-    public function getIsBot($userAgent = null, $remoteAddress = null)
+    public function isBot($userAgent = null, $remoteAddress = null)
     {
         foreach ($this->adapters as $adapter) {
             if (true === $adapter->{__METHOD__}($userAgent, $remoteAddress)) {
