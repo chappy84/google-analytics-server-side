@@ -52,6 +52,7 @@ use Gass\Http;
  * @category    GoogleAnalyticsServerSide
  * @package     Gass
  * @subpackage  BotInfo
+ * @deprecated  until udger.com implements csvs to replace user agent string info's csv, as that's now shut down
  */
 class UserAgentStringInfo extends Base
 {

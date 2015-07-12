@@ -218,6 +218,9 @@ itself, rather than using the built in get_browser function. This ensures the au
 functionality will work without the need to restart the web-server.
 
 #### UserAgentStringInfo
+
+***DEPRECATED*** - until udger.com implements csvs to replace user agent string info's csv, as user-agent-string.info has now shut down
+
 This was the previous default for Google Analytics Server Side which downloads a csv list 
 of search engine crawlers from [user-agent-string.info][14].  
 There are three options as part of the array configuration parameter:
