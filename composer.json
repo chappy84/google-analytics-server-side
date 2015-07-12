@@ -19,7 +19,7 @@
         "phpunit/phpunit-mock-objects": "2.3.0",
         "mikey179/vfsStream" : "1.*",
         "fabpot/php-cs-fixer": "*@dev",
-        "squizlabs/php_codesniffer": "1.*",
+        "squizlabs/php_codesniffer": "2.*",
         "satooshi/php-coveralls": "dev-master"
     },
     "autoload" : {
