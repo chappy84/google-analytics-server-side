@@ -101,7 +101,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function initialiseBotInfoBrowsCap()
     {
-        $browsCapIniFileLocation = $this->dependecyFilesFolder . 'php_browscap.ini';
+        $browsCapIniFileLocation = $this->dependecyFilesFolder . 'full_php_browscap.ini';
         touch($browsCapIniFileLocation);
         touch($this->dependecyFilesFolder . 'latestVersionDate.txt');
         $botInfoAdapter = new \Gass\BotInfo\BrowsCap(
@@ -685,7 +685,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Gass\BotInfo\BotInfo', $currentBotInfo);
         $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $currentBotInfo->getAdapter());
 
-        $browserCap = new \Gass\BotInfo\BrowsCap(array('browscap' => '/tmp/php_browscap.ini'));
+        $browserCap = new \Gass\BotInfo\BrowsCap(array('browscap' => '/tmp/full_php_browscap.ini'));
         $this->gass->setBotInfo($browserCap);
         $currentBotInfo = $this->gass->getBotInfo();
         $this->assertInstanceOf('Gass\BotInfo\BotInfo', $currentBotInfo);

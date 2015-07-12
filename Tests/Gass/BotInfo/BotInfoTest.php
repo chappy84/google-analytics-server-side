@@ -70,7 +70,7 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructValidOptions()
     {
-        $browscapLocation = '/tmp/php_browscap.ini';
+        $browscapLocation = '/tmp/full_php_browscap.ini';
         $botInfo = new \Gass\BotInfo\BotInfo(array('browscap' => $browscapLocation));
         $this->assertInstanceOf('Gass\BotInfo\BotInfo', $botInfo);
         $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $botInfoAdapter = $botInfo->getAdapter());
@@ -118,7 +118,7 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testCallMagicMethodValid()
     {
-        $browscapLocation = '/tmp/php_browscap.ini';
+        $browscapLocation = '/tmp/full_php_browscap.ini';
         $botInfo = new \Gass\BotInfo\BotInfo(array('browscap' => $browscapLocation));
         $this->assertInstanceOf('Gass\BotInfo\BotInfo', $botInfo);
         $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $botInfoAdapter = $botInfo->getAdapter());
@@ -136,7 +136,7 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
             'Gass\Exception\DomainException',
             'Adapter has not been set. Please set an adapter before calling setOption'
         );
-        $botInfo->setOption('browscap', '/tmp/php_browscap.ini');
+        $botInfo->setOption('browscap', '/tmp/full_php_browscap.ini');
     }
 
     public function testCallMagicMethodExceptionMissingMethod()

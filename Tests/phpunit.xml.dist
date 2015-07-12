@@ -3,6 +3,7 @@
          colors="true">
     <php>
         <ini name="date.timezone" value="Europe/London"/>
+        <ini name="memory_limit" value="1024M"/>
         <server name="SERVER_NAME" value="www.example.com"/>
         <server name="REMOTE_ADDR" value="8.8.4.4"/>
         <server name="REQUEST_URI" value="/"/>

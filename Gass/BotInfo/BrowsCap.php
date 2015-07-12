@@ -60,7 +60,7 @@ class BrowsCap extends Base
      *
      * @var string
      */
-    const BROWSCAP_URL = 'http://browscap.org/stream?q=PHP_BrowsCapINI';
+    const BROWSCAP_URL = 'http://browscap.org/stream?q=Full_PHP_BrowsCapINI';
 
     /**
      * URL location specifying the latest update date of the file
@@ -207,7 +207,7 @@ class BrowsCap extends Base
         if (empty($browscapContents)) {
             throw new Exception\RuntimeException(
                 'browscap ini file retrieved from external source seems to be empty. ' .
-                'Please either set botInfo to null or ensure the php_browscap.ini file can be retrieved.'
+                'Please either set botInfo to null or ensure the full_php_browscap.ini file can be retrieved.'
             );
         }
         if (false === @file_put_contents($browsCapLocation, $browscapContents)) {

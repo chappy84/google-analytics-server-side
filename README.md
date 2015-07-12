@@ -171,7 +171,7 @@ There are two adapters available in the GASS framework
 There is one optional index as part of the array configuration parameter. 
 
 - browscap: This is the same as the php ini setting [browscap][12], a file-system location 
-where the [php_browscap.ini file][13] is located / can be downloaded to.
+where the [full_php_browscap.ini file][13] is located / can be downloaded to.
 
 e.g.
 
@@ -191,7 +191,7 @@ $gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
 		'botInfo' => array(
 			'adapter' => 'BrowsCap',
-            'browscap' => '/tmp/php_browscap.ini'
+            'browscap' => '/tmp/full_php_browscap.ini'
         ),
         'account' => 'UA-XXXXXXX-X'
     )

@@ -48,7 +48,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
             DIRECTORY_SEPARATOR .
             'dependency-files' .
             DIRECTORY_SEPARATOR .
-            'php_browscap.ini'
+            'full_php_browscap.ini'
         );
     }
 
