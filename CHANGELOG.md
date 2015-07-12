@@ -1,6 +1,21 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.10.0 Beta
+------------------
+
+ - New Multi Adapter to allow multiple adapter checks per call
+ - BotInfo interface method altered from getIsBot to isBot
+ - New BotInfo Multi Apadter
+ - BrowsCap updated to use full file rather than standard file due to required attributes
+ - User Agent String Info marked as deprecated until udger.com implements csvs to replace user agent string info's csv, as user-agent-string.info has now shut down
+ - Rename Validator interface to ValidatorInterface
+ - New Url Validator
+ - Update PHP CodeSniffer to latest version for testing
+ - Increase PHPUnit memory limit for new larger BrowsCap file size
+ - Temporarily limit phpunit/phpunit-mock-objects to version 2.3.0 due to PHPUnit/HHVM issue (https://github.com/sebastianbergmann/phpunit-mock-objects/issues/223)
+ - PSR-2 & coding style updates
+
 Version 0.9.3 Beta
 ------------------
 
