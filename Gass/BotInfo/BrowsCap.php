@@ -125,8 +125,7 @@ class BrowsCap extends Base
      */
     private function setLatestVersionDate()
     {
-        $browsCapLocation = $this->getOption('browscap');
-        $directory = dirname($browsCapLocation);
+        $directory = dirname($this->getOption('browscap'));
         $latestVersionDateFile = $directory . DIRECTORY_SEPARATOR . 'latestVersionDate.txt';
         if (!@file_exists($latestVersionDateFile)
                 || false === ($fileSaveTime = @filemtime($latestVersionDateFile))
@@ -222,8 +221,7 @@ class BrowsCap extends Base
      */
     private function loadIniFile()
     {
-        $browscapLocation = $this->getOption('browscap');
-        $browsers = parse_ini_file($browscapLocation, true, INI_SCANNER_RAW);
+        $browsers = parse_ini_file($this->getOption('browscap'), true, INI_SCANNER_RAW);
         if (empty($browsers)) {
             throw new Exception\RuntimeException('Browscap ini file could not be parsed.');
         }
@@ -278,10 +276,11 @@ class BrowsCap extends Base
         }
         if (false !== ($browserDetails = $this->getBrowserDetails($browser))
                 && 'Default Browser' !== $browserDetails['Browser']) {
-            $returnBrowsDet = array();
             $browserRegex = $this->getBrowserRegex($browser);
-            $returnBrowsDet['browser_name_regex'] = substr($browserRegex, 0, strlen($browserRegex) - 1);
-            $returnBrowsDet['browser_name_pattern'] = $browser;
+            $returnBrowsDet = array(
+                'browser_name_regex' => substr($browserRegex, 0, strlen($browserRegex) - 1),
+                'browser_name_pattern' => $browser
+            );
             foreach ($browserDetails as $key => $value) {
                 if ($value == 'true') {
                     $value = '1';
@@ -303,9 +302,15 @@ class BrowsCap extends Base
      */
     private function getBrowserRegex($browserPattern)
     {
-        $regEx = preg_quote($browserPattern);
-        $regEx = str_replace(array('\?', '\*'), array('.', '.*'), $regEx);
-        return '?^' . strtolower($regEx) . '$?i';
+        return '?^' .
+            strtolower(
+                str_replace(
+                    array('\?', '\*'),
+                    array('.', '.*'),
+                    preg_quote($browserPattern)
+                )
+            ) .
+            '$?i';
     }
 
     /**
@@ -325,10 +330,12 @@ class BrowsCap extends Base
             $this->setRemoteAddress($remoteAddress);
         }
         $browserDetails = $this->getBrowser();
-        return (false === $browserDetails
-                    || (isset($browserDetails->crawler) && $browserDetails->crawler == 1)
-                    || (isset($browserDetails->isbanned) && $browserDetails->isbanned == 1)
-                    || !isset($browserDetails->javascript) || $browserDetails->javascript != 1
-                    || !isset($browserDetails->cookies) || $browserDetails->cookies != 1);
+        return (
+            false === $browserDetails
+            || (isset($browserDetails->crawler) && $browserDetails->crawler == 1)
+            || (isset($browserDetails->isbanned) && $browserDetails->isbanned == 1)
+            || !isset($browserDetails->javascript) || $browserDetails->javascript != 1
+            || !isset($browserDetails->cookies) || $browserDetails->cookies != 1
+        );
     }
 }
