@@ -1153,7 +1153,7 @@ class GoogleAnalyticsServerSide implements GassInterface
         $serverName = $this->getServerName();
         if (!empty($referer) && !empty($serverName) && false === strpos($referer, $serverName)
                 && $this->urlValidator->isValid($referer)
-                && false !== ($refererParts = @parse_url($referer))
+                && false !== ($refererParts = parse_url($referer))
                 && isset($refererParts['host'], $refererParts['path'])
         ) {
             $refererSearchEngine = false;
@@ -1443,7 +1443,7 @@ class GoogleAnalyticsServerSide implements GassInterface
                 if (!$this->urlValidator->isValid($url)) {
                     throw new Exception\DomainException('Url is invalid: ' . $url);
                 }
-                $urlParts = @parse_url($url);
+                $urlParts = parse_url($url);
                 $url = $urlParts['path'];
                 $this->setServerName($urlParts['host']);
             }
