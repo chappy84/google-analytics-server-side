@@ -82,7 +82,6 @@ abstract class Multi implements AdapterInterface
         if (empty($this->requiredClass)) {
             $this->requiredClass = self::DEFAULT_INTERFACE;
         }
-        $requiredInterface = self::DEFAULT_INTERFACE;
         if ($this->requiredClass != self::DEFAULT_INTERFACE
                 && !is_subclass_of($this->requiredClass, self::DEFAULT_INTERFACE)) {
             throw new Exception\DomainException($this->requiredClass . ' must implement ' . self::DEFAULT_INTERFACE);
