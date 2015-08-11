@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Http
- */
-
-/**
- * @namespace
  */
 namespace Gass\Http;
 
@@ -43,13 +35,9 @@ use Gass\Exception;
 /**
  * Proxy class for dealing with all Http requests regardless of adapter
  *
- * @uses        Gass\Exception
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Exception
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Http
+ * @package     Gass\Http
  */
 class Http
 {
@@ -91,6 +79,8 @@ class Http
     }
 
     /**
+     * Protect against class clone to ensure singleton anti-pattern
+     *
      * @throws Gass\Exception\RuntimeException
      * @final
      */

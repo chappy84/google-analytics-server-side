@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Validate
- */
-
-/**
- * @namespace
  */
 namespace Gass\Validate;
 
@@ -43,13 +35,9 @@ use Gass\Adapter;
 /**
  * Interface for all Validator Adapters
  *
- * @uses        Gass\Adapter
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Adapter
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Validate
+ * @package     Gass\Validate
  */
 interface ValidateInterface extends Adapter\AdapterInterface
 {

@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  BotInfo
- */
-
-/**
- * @namespace
  */
 namespace Gass\BotInfo;
 
@@ -44,14 +36,10 @@ use Gass\Adapter;
 /**
  * Class for combining multiple BotInfo adapters
  *
- * @uses        Gass\Adapter
- * @uses        Gass\Exception
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Adapter
+ * @see         Gass\Exception
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  BotInfo
+ * @package     Gass\BotInfo
  */
 class Multi extends Adapter\Multi implements BotInfoInterface
 {

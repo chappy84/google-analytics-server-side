@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Http
- */
-
-/**
- * @namespace
  */
 namespace Gass\Http;
 
@@ -45,15 +37,11 @@ use Gass\Validate;
 /**
  * Base class for all Http adapters
  *
- * @uses        Gass\Adapter
- * @uses        Gass\Exception
- * @uses        Gass\Validate
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Adapter
+ * @see         Gass\Exception
+ * @see         Gass\Validate
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Http
+ * @package     Gass\Http
  */
 abstract class Base extends Adapter\Base implements HttpInterface
 {

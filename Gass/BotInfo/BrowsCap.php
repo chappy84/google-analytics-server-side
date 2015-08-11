@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  BotInfo
- */
-
-/**
- * @namespace
  */
 namespace Gass\BotInfo;
 
@@ -44,14 +36,10 @@ use Gass\Http;
 /**
  * BrowsCap adapter which uses browscap ini file to positively identify allowed browsers
  *
- * @uses        Gass\Exception
- * @uses        Gass\Http
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Exception
+ * @see         Gass\Http
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  BotInfo
+ * @package     Gass\BotInfo
  */
 class BrowsCap extends Base
 {
@@ -254,6 +242,7 @@ class BrowsCap extends Base
      * Return value is compatible with php's get_browser return value.
      *
      * @param string $userAgent
+     * @param boolean $returnArray
      * @return boolean|object|array
      */
     public function getBrowser($userAgent = null, $returnArray = false)

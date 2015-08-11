@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Validate
- */
-
-/**
- * @namespace
  */
 namespace Gass\Validate;
 
@@ -43,13 +35,9 @@ use Gass\Adapter;
 /**
  * Base class of all Validators
  *
- * @uses        Gass\Adapter
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Adapter
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Validate
+ * @package     Gass\Validate
  */
 abstract class Base extends Adapter\Base implements ValidateInterface
 {
@@ -115,6 +103,7 @@ abstract class Base extends Adapter\Base implements ValidateInterface
      * Adds a validation message;
      *
      * @param string $message
+     * @param string|null $value [optional]
      * @return Gass\Validate\Base
      */
     public function addMessage($message, $value = null)

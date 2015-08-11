@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  BotInfo
- */
-
-/**
- * @namespace
  */
 namespace Gass\BotInfo;
 
@@ -43,13 +35,9 @@ use Gass\Adapter;
 /**
  * Interface all BotInfo adapters should conform to
  *
- * @uses        Gass\Adapter
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Adapter
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  BotInfo
+ * @package     Gass\BotInfo
  */
 interface BotInfoInterface extends Adapter\AdapterInterface
 {

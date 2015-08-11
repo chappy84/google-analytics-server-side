@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  BotInfo
- */
-
-/**
- * @namespace
  */
 namespace Gass\BotInfo;
 
@@ -44,14 +36,10 @@ use Gass\Http;
 /**
  * BrowsCap adapter which uses browscap ini file to negatively identify search engine bots
  *
- * @uses        Gass\Exception
- * @uses        Gass\Http
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Exception
+ * @see         Gass\Http
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  BotInfo
+ * @package     Gass\BotInfo
  * @deprecated  until udger.com implements csvs to replace user agent string info's csv, as that's now shut down
  */
 class UserAgentStringInfo extends Base

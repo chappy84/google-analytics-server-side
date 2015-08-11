@@ -26,15 +26,7 @@
  *
  * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
  * @license     http://www.gnu.org/copyleft/gpl.html  GPL
- * @author      Tom Chapman
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Adapter
- */
-
-/**
- * @namespace
  */
 namespace Gass\Adapter;
 
@@ -43,13 +35,9 @@ use Gass\Exception;
 /**
  * Class for combining multiple adapters
  *
- * @uses        Gass\Exception
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
- * @license     http://www.gnu.org/copyleft/gpl.html  GPL
+ * @see         Gass\Exception
  * @author      Tom Chapman
- * @category    GoogleAnalyticsServerSide
- * @package     Gass
- * @subpackage  Adapter
+ * @package     Gass\Adapter
  */
 abstract class Multi implements AdapterInterface
 {
