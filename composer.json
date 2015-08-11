@@ -20,7 +20,8 @@
         "mikey179/vfsStream" : "1.*",
         "fabpot/php-cs-fixer": "*@dev",
         "squizlabs/php_codesniffer": "2.*",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "phpdocumentor/phpdocumentor": "2.*"
     },
     "autoload" : {
         "psr-4" : {
