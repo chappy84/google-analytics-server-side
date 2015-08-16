@@ -9,7 +9,7 @@
     ],
     "homepage" : "http://chappy84.github.io/google-analytics-server-side/",
     "license" : [
-        "GPL-3.0+"
+        "BSD-3-Clause"
     ],
     "require" : {
         "php" : ">=5.3.23"

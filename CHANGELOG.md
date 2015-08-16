@@ -1,6 +1,11 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.11.0 Beta
+-------------------
+
+ - Change to BSD License
+
 Version 0.10.0 Beta
 ------------------
 
