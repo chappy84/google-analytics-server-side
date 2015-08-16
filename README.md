@@ -414,5 +414,5 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
 WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
-N/B: This code is nether written or endorsed by Google or any of it's employees.
+N/B: This code is nether written or endorsed by Google or any of it's employees.  
 "Google" and "Google Analytics" are trademarks of Google Inc. and it's respective subsidiaries.
