@@ -43,7 +43,7 @@ class Url extends Base
     {
         $value = $this->setValue($value)->getValue();
         if (!is_string($value)) {
-            $this->addMessage('The provided IP address must be a string.');
+            $this->addMessage('The provided URL must be a string.');
             return false;
         }
         if (false === filter_var($value, FILTER_VALIDATE_URL)) {
