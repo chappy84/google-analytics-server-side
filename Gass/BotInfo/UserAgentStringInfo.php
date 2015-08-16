@@ -123,10 +123,12 @@ class UserAgentStringInfo extends Base
             $this->setCacheDate();
             if (null !== ($lastCacheDate = $this->getCacheDate())) {
                 $csvPath = $csvPathname . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename');
-                if ($lastCacheDate > (time() - $this->getOption('cacheLifetime')) && @is_readable($csvPath)
-                        && false !== ($botsCsv = @file_get_contents($csvPath))) {
+                if ($lastCacheDate > (time() - $this->getOption('cacheLifetime'))
+                    && file_exists($csvPath) && is_readable($csvPath)
+                    && false !== ($botsCsv = file_get_contents($csvPath))
+                ) {
                     return $botsCsv;
-                } elseif (false === @unlink($csvPath)) {
+                } elseif (file_exists($csvPath) && false === unlink($csvPath)) {
                     throw new Exception\RuntimeException('Cannot delete "' . $csvPath . '". Please check permissions.');
                 }
             }
@@ -193,14 +195,16 @@ class UserAgentStringInfo extends Base
     private function saveToCache()
     {
         if (null === $this->getCacheDate()
-                && null !== ($csvPath = $this->getOption('cachePath')) && @is_writable($csvPath)) {
+            && null !== ($csvPath = $this->getOption('cachePath'))
+            && file_exists($csvPath) && is_writable($csvPath)
+        ) {
             $csvLines = array();
             foreach ($this->botIps as $ipAddress => $name) {
                 $csvLines[] = '"' . addslashes($name) . '","' . addslashes($ipAddress) . '","' .
                     addslashes($this->bots[$name]) . '"';
             }
             $csvString = implode("\n", $csvLines);
-            if (false === @file_put_contents(
+            if (false === file_put_contents(
                 $csvPath . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename'),
                 $csvString,
                 LOCK_EX
@@ -225,8 +229,9 @@ class UserAgentStringInfo extends Base
         if (0 == func_num_args()) {
             $fileRelPath = DIRECTORY_SEPARATOR . $this->getOption('cacheFilename');
             $cacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
-                    && @is_readable($csvPathname . $fileRelPath)
-                    && false !== ($fileModifiedTime = @filemtime($csvPathname . $fileRelPath)))
+                    && file_exists($csvPathname . $fileRelPath)
+                    && is_readable($csvPathname . $fileRelPath)
+                    && false !== ($fileModifiedTime = filemtime($csvPathname . $fileRelPath)))
                 ? $fileModifiedTime
                 : null;
         } elseif (null !== $cacheDate && !is_numeric($cacheDate)) {
