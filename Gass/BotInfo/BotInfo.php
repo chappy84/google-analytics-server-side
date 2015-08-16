@@ -68,7 +68,7 @@ class BotInfo implements Proxy\ProxyInterface
      *
      * @param string $name
      * @param array $arguments
-     * @throws Gass\Exception\DomainException
+     * @throws \Gass\Exception\DomainException
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -87,9 +87,9 @@ class BotInfo implements Proxy\ProxyInterface
     /**
      * Sets the current adapter to use
      *
-     * @param string|Gass\BotInfo\BotInfoInterface $adapter
-     * @throws Gass\Exception\InvalidArgumentException
-     * @return Gass\BotInfo
+     * @param string|\Gass\BotInfo\BotInfoInterface $adapter
+     * @throws \Gass\Exception\InvalidArgumentException
+     * @return \Gass\BotInfo
      */
     public function setAdapter($adapter)
     {

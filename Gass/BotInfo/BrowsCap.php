@@ -104,7 +104,7 @@ class BrowsCap extends Base
     /**
      * Gets the latest version date from the web
      *
-     * @throws Gass\Exception\RuntimeException
+     * @throws \Gass\Exception\RuntimeException
      */
     private function setLatestVersionDate()
     {
@@ -136,7 +136,7 @@ class BrowsCap extends Base
     /**
      * Checks whether the browscap file exists, is readable, and hasn't expired the cache lifetime
      *
-     * @throws Gass\Exception\RuntimeException
+     * @throws \Gass\Exception\RuntimeException
      */
     private function checkIniFile()
     {
@@ -165,7 +165,7 @@ class BrowsCap extends Base
     /**
      * Updates the browscap ini file to the latest version
      *
-     * @throws Gass\Exception\RuntimeException
+     * @throws \Gass\Exception\RuntimeException
      */
     private function updateIniFile()
     {

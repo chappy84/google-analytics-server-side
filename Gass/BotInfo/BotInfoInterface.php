@@ -63,7 +63,7 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      * Sets the remote user's ip address
      *
      * @param string $remoteAddress
-     * @return Gass\BotInfo\BotInfoInterface
+     * @return \Gass\BotInfo\BotInfoInterface
      */
     public function setRemoteAddress($remoteAddress);
 
@@ -71,7 +71,7 @@ interface BotInfoInterface extends Adapter\AdapterInterface
      * Set the current user agent
      *
      * @param string $userAgent
-     * @return Gass\BotInfo\BotInfoInterface
+     * @return \Gass\BotInfo\BotInfoInterface
      */
     public function setUserAgent($userAgent);
 }

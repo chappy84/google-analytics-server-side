@@ -83,7 +83,7 @@ class UserAgentStringInfo extends Base
     /**
      * Sets the bots list
      *
-     * @return Gass\BotInfo\UserAgentStringInfo
+     * @return \Gass\BotInfo\UserAgentStringInfo
      */
     public function set()
     {
@@ -115,7 +115,7 @@ class UserAgentStringInfo extends Base
      * and then parses it into the class level variable bots
      *
      * @return array|null
-     * @throws Gass\Exception\RuntimeException
+     * @throws \Gass\Exception\RuntimeException
      */
     private function getFromCache()
     {
@@ -139,7 +139,7 @@ class UserAgentStringInfo extends Base
      * Retrieves the bots csv from the default source
      *
      * @return string
-     * @throws Gass\Exception\RuntimeException
+     * @throws \Gass\Exception\RuntimeException
      */
     private function getFromWeb()
     {
@@ -188,7 +188,7 @@ class UserAgentStringInfo extends Base
      * Saves the current list of bots to the cache directory for use next time the script is run
      *
      * @return GoogleAnalyticsServerSide
-     * @throws Gass\Exception\RuntimeException
+     * @throws \Gass\Exception\RuntimeException
      */
     private function saveToCache()
     {
@@ -218,7 +218,7 @@ class UserAgentStringInfo extends Base
      *
      * @param integer $cacheDate [optional]
      * @return GoogleAnalyticsServerSide
-     * @throws Gass\Exception\DomainException
+     * @throws \Gass\Exception\DomainException
      */
     private function setCacheDate($cacheDate = null)
     {
@@ -276,7 +276,7 @@ class UserAgentStringInfo extends Base
      * {@inheritdoc}
      *
      * @param array $options
-     * @return Gass\BotInfo\UserAgentStringInfo
+     * @return \Gass\BotInfo\UserAgentStringInfo
      */
     public function setOptions(array $options)
     {

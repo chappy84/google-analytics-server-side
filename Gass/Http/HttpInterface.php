@@ -76,7 +76,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the current Accepted Language for the sent headers
      *
      * @param string $acceptLanguage
-     * @return Gass\Http\HttpInterface
+     * @return \Gass\Http\HttpInterface
      */
     public function setAcceptLanguage($acceptLanguage);
 
@@ -84,7 +84,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the current Remote Address for the sent headers (X-Forwarded-For)
      *
      * @param string $remoteAddress
-     * @return Gass\Http\HttpInterface
+     * @return \Gass\Http\HttpInterface
      */
     public function setRemoteAddress($remoteAddress);
 
@@ -92,7 +92,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the existing request response
      *
      * @param mixed $response
-     * @return Gass\Http\HttpInterface
+     * @return \Gass\Http\HttpInterface
      */
     public function setResponse($response);
 
@@ -100,7 +100,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the Url to Request
      *
      * @param string $url
-     * @return Gass\Http\HttpInterface
+     * @return \Gass\Http\HttpInterface
      */
     public function setUrl($url);
 
@@ -108,7 +108,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      * Sets the current User-Agent for the sent headers
      *
      * @param string $userAgent
-     * @return Gass\Http\HttpInterface
+     * @return \Gass\Http\HttpInterface
      */
     public function setUserAgent($userAgent);
 
@@ -117,7 +117,7 @@ interface HttpInterface extends Adapter\AdapterInterface
      *
      * @param string $url
      * @param array $options
-     * @return Gass\Http\HttpInterface
+     * @return \Gass\Http\HttpInterface
      */
     public function request($url = null, array $options = array());
 }

@@ -89,7 +89,7 @@ class Test extends Base implements HttpInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return Gass\Adapter\Base
+     * @return \Gass\Adapter\Base
      */
     public function setOption($name, $value)
     {
@@ -114,7 +114,7 @@ class Test extends Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param string $url
-     * @return Gass\Http\Stream
+     * @return \Gass\Http\Stream
      */
     public function setUrl($url)
     {
@@ -126,7 +126,7 @@ class Test extends Base implements HttpInterface
      *
      * @param string $url
      * @param array $options
-     * @return Gass\Http\Stream
+     * @return \Gass\Http\Stream
      */
     public function request($url = null, array $options = array())
     {
@@ -182,7 +182,7 @@ class Test extends Base implements HttpInterface
      * the $http_response_header or stream_context_create format
      *
      * @param string|array $headers
-     * @throws Gass\Exception\InvalidArgumentException
+     * @throws \Gass\Exception\InvalidArgumentException
      * @return array
      */
     private function parseHeaders($headers)

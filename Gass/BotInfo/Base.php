@@ -78,7 +78,7 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * {@inheritdoc}
      *
      * @param string $remoteAddress
-     * @return Gass\BotInfo\Base
+     * @return \Gass\BotInfo\Base
      */
     public function setRemoteAddress($remoteAddress)
     {
@@ -97,7 +97,7 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * {@inheritdoc}
      *
      * @param string $userAgent
-     * @return Gass\BotInfo\Base
+     * @return \Gass\BotInfo\Base
      */
     public function setUserAgent($userAgent)
     {

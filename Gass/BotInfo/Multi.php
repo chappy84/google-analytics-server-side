@@ -69,7 +69,7 @@ class Multi extends Adapter\Multi implements BotInfoInterface
      * {@inheritdoc}
      *
      * @param string $remoteAddress
-     * @return Gass\BotInfo\Multi
+     * @return \Gass\BotInfo\Multi
      */
     public function setRemoteAddress($remoteAddress)
     {
@@ -83,7 +83,7 @@ class Multi extends Adapter\Multi implements BotInfoInterface
      * {@inheritdoc}
      *
      * @param string $userAgent
-     * @return Gass\BotInfo\Multi
+     * @return \Gass\BotInfo\Multi
      */
     public function setUserAgent($userAgent)
     {

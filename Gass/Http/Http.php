@@ -55,7 +55,7 @@ class Http
      * Class Constructor
      *
      * @param array $options
-     * @param string|Gass\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
+     * @param string|\Gass\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
      */
     public function __construct(array $options = array(), $adapter = null)
     {
@@ -76,7 +76,7 @@ class Http
     /**
      * Protect against class clone to ensure singleton anti-pattern
      *
-     * @throws Gass\Exception\RuntimeException
+     * @throws \Gass\Exception\RuntimeException
      * @final
      */
     final public function __clone()
@@ -90,8 +90,8 @@ class Http
      *
      * @see Gass\Http::__construct
      * @param array $options
-     * @param string|Gass\Http\HttpInterface $adapter
-     * @return Gass\Http
+     * @param string|\Gass\Http\HttpInterface $adapter
+     * @return \Gass\Http
      * @static
      */
     public static function getInstance(array $options = array(), $adapter = null)
@@ -155,8 +155,8 @@ class Http
      * Sets the current adapter to use
      *
      * @param string $adapter
-     * @throws Gass\Exception\InvalidArgumentException
-     * @return Gass\Http
+     * @throws \Gass\Exception\InvalidArgumentException
+     * @return \Gass\Http
      */
     public function setAdapter($adapter)
     {
@@ -174,7 +174,7 @@ class Http
     /**
      * Returns the current adapter in use
      *
-     * @return Gass\Http\HttpInterface
+     * @return \Gass\Http\HttpInterface
      */
     public function getAdapter()
     {

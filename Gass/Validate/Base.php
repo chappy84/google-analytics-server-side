@@ -99,7 +99,7 @@ abstract class Base extends Adapter\Base implements ValidateInterface
      *
      * @param string $message
      * @param string|null $value [optional]
-     * @return Gass\Validate\Base
+     * @return \Gass\Validate\Base
      */
     public function addMessage($message, $value = null)
     {

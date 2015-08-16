@@ -84,7 +84,7 @@ class Stream extends Base
      *
      * @param string $name
      * @param mixed $value
-     * @return Gass\Adapter\Base
+     * @return \Gass\Adapter\Base
      */
     public function setOption($name, $value)
     {
@@ -109,7 +109,7 @@ class Stream extends Base
      * {@inheritdoc}
      *
      * @param string $url
-     * @return Gass\Http\Stream
+     * @return \Gass\Http\Stream
      */
     public function setUrl($url)
     {
@@ -121,7 +121,7 @@ class Stream extends Base
      *
      * @param string $url
      * @param array $options
-     * @return Gass\Http\Stream
+     * @return \Gass\Http\Stream
      */
     public function request($url = null, array $options = array())
     {
@@ -186,7 +186,7 @@ class Stream extends Base
      * the $http_response_header or stream_context_create format
      *
      * @param string|array $headers
-     * @throws Gass\Exception\InvalidArgumentException
+     * @throws \Gass\Exception\InvalidArgumentException
      * @return array
      */
     private function parseHeaders($headers)

@@ -58,7 +58,7 @@ class Curl extends Base
      * Class Constructor
      *
      * @param array $options
-     * @throws Gass\Exception\RuntimeException
+     * @throws \Gass\Exception\RuntimeException
      */
     public function __construct(array $options = array())
     {
@@ -89,7 +89,7 @@ class Curl extends Base
      * {@inheritdoc}
      *
      * @param string $url
-     * @return Gass\Http\Curl
+     * @return \Gass\Http\Curl
      */
     public function setUrl($url)
     {
@@ -99,7 +99,7 @@ class Curl extends Base
     /**
      * Closes the curl connection if one is present
      *
-     * @return Gass\Http\Curl
+     * @return \Gass\Http\Curl
      */
     protected function close()
     {
@@ -115,7 +115,7 @@ class Curl extends Base
      *
      * @param string $url
      * @param array $options
-     * @return Gass\Http\Curl
+     * @return \Gass\Http\Curl
      */
     public function request($url = null, array $options = array())
     {

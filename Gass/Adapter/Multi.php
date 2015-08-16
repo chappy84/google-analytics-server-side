@@ -86,8 +86,8 @@ abstract class Multi implements AdapterInterface
      * Returns the specified adapter
      *
      * @param string $name
-     * @return Gass\Adapter\AdapterInterface
-     * @throws Gass\Exception\DomainException
+     * @return \Gass\Adapter\AdapterInterface
+     * @throws \Gass\Exception\DomainException
      */
     public function getAdapter($name)
     {
@@ -101,7 +101,7 @@ abstract class Multi implements AdapterInterface
      * Set the current adapters
      *
      * @param array $adapters
-     * @return Gass\Adapter\Multi
+     * @return \Gass\Adapter\Multi
      */
     public function setAdapters(array $adapters)
     {
@@ -117,8 +117,8 @@ abstract class Multi implements AdapterInterface
      *
      * @param array $adapter
      * @param string $name
-     * @return Gass\Adapter\Multi
-     * @throws Gass\Exception\InvalidArgumentException
+     * @return \Gass\Adapter\Multi
+     * @throws \Gass\Exception\InvalidArgumentException
      */
     public function addAdapter($adapter, $name = null)
     {
@@ -139,7 +139,7 @@ abstract class Multi implements AdapterInterface
     /**
      * Reset the stored list of adapters
      *
-     * @return Gass\Adapter\Multi
+     * @return \Gass\Adapter\Multi
      */
     public function resetAdapters()
     {
@@ -150,7 +150,7 @@ abstract class Multi implements AdapterInterface
      * {@inheritdoc}
      *
      * @param array $options
-     * @throws Gass\Exception\BadMethodCallException
+     * @throws \Gass\Exception\BadMethodCallException
      */
     public function setOptions(array $options)
     {
@@ -162,7 +162,7 @@ abstract class Multi implements AdapterInterface
      *
      * @param string $name
      * @param mixed $value
-     * @throws Gass\Exception\BadMethodCallException
+     * @throws \Gass\Exception\BadMethodCallException
      */
     public function setOption($name, $value)
     {
@@ -172,7 +172,7 @@ abstract class Multi implements AdapterInterface
     /**
      * {@inheritdoc}
      *
-     * @throws Gass\Exception\BadMethodCallException
+     * @throws \Gass\Exception\BadMethodCallException
      */
     public function getOptions()
     {
@@ -183,7 +183,7 @@ abstract class Multi implements AdapterInterface
      * {@inheritdoc}
      *
      * @param string $name
-     * @throws Gass\Exception\BadMethodCallException
+     * @throws \Gass\Exception\BadMethodCallException
      */
     public function getOption($name)
     {

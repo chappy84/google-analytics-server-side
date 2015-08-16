@@ -37,7 +37,7 @@ interface ProxyInterface
      * Class Constructor
      *
      * @param array $options
-     * @param string|Gass\Adapter\AdapterInterface $adapter [optional] - can be provided in $options aswell
+     * @param string|\Gass\Adapter\AdapterInterface $adapter [optional] - can be provided in $options aswell
      */
     public function __construct(array $options = array(), $adapter = null);
 
@@ -46,7 +46,7 @@ interface ProxyInterface
      *
      * @param string $name
      * @param array $arguments
-     * @throws Gass\Exception\DomainException
+     * @throws \Gass\Exception\DomainException
      * @return mixed
      */
     public function __call($name, $arguments);
@@ -54,15 +54,15 @@ interface ProxyInterface
     /**
      * Set the adapter to use
      *
-     * @param string|Gass\Adapter\AdapterInterface $adapter
-     * @return Gass\ProxyInterface
+     * @param string|\Gass\Adapter\AdapterInterface $adapter
+     * @return \Gass\ProxyInterface
      */
     public function setAdapter($adapter);
 
     /**
      * Get the instance of the current adapter in use
      *
-     * @return Gass\Adapter\AdapterInterface
+     * @return \Gass\Adapter\AdapterInterface
      */
     public function getAdapter();
 }

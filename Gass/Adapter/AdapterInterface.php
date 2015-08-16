@@ -44,7 +44,7 @@ interface AdapterInterface
      * Set Options related to class
      *
      * @param array $options
-     * @return Gass\Adapter\AdapterInterface
+     * @return \Gass\Adapter\AdapterInterface
      */
     public function setOptions(array $options);
 
@@ -53,7 +53,7 @@ interface AdapterInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return Gass\Adapter\AdapterInterface
+     * @return \Gass\Adapter\AdapterInterface
      */
     public function setOption($name, $value);
 

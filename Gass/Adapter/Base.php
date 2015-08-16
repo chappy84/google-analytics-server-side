@@ -54,7 +54,7 @@ abstract class Base implements AdapterInterface
      * {@inheritdoc}
      *
      * @param array $options
-     * @return Gass\Adapter\Base
+     * @return \Gass\Adapter\Base
      */
     public function setOptions(array $options)
     {
@@ -69,7 +69,7 @@ abstract class Base implements AdapterInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return Gass\Adapter\Base
+     * @return \Gass\Adapter\Base
      */
     public function setOption($name, $value)
     {
