@@ -20,11 +20,12 @@ This PHP adaptation is maintained by [Tom Chapman][5].
 [5]: http://tom-chapman.uk/
 [6]: http://en.wikipedia.org/wiki/ECMAScript
 
-Build Status
-------------
-
-Master: [![Master Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=master)](http://travis-ci.org/chappy84/google-analytics-server-side)  
-Development: [![Development Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=development)](http://travis-ci.org/chappy84/google-analytics-server-side)
+[![Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=master)](http://travis-ci.org/chappy84/google-analytics-server-side)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/655a47b5-a324-487f-9b14-67da007b24d1/mini.png)](https://insight.sensiolabs.com/projects/655a47b5-a324-487f-9b14-67da007b24d1)
+[![Latest Stable Version](https://poser.pugx.org/chappy84/google-analytics-server-side/v/stable)](https://packagist.org/packages/chappy84/google-analytics-server-side)
+[![Total Downloads](https://poser.pugx.org/chappy84/google-analytics-server-side/downloads)](https://packagist.org/packages/chappy84/google-analytics-server-side)
+[![License](https://poser.pugx.org/chappy84/google-analytics-server-side/license)](https://packagist.org/packages/chappy84/google-analytics-server-side)
+[![Dependency Status](https://www.versioneye.com/user/projects/55a2bc5132393900170004a9/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55a2bc5132393900170004a9)
 
 Installation
 ------------
@@ -346,11 +347,11 @@ This framework uses [PHPUnit][22], along with [TravisCI][23], to test functional
 supported PHP minor versions 5.3, 5.4, 5.5 and 5.6. This is done by default on the latest bug fix 
 point release of that minor point version to ensure it works.  
 
-Provisional [HHVM][24] support is provided as-well however this is not guaranteed.
+Provisional PHP 7 & [HHVM][24] support are provided as-well however these are not guaranteed.
 
-The test suite requires [composer][7] for it's dependencies. Please see the instructions 
-[here][20] on how to install it. After which you can install all the required dependencies 
-using the `--dev` [cli argument][21]. 
+The test suite requires [composer][7] for it's development dependencies. Please see the instructions
+[here][20] on how to install it. After which you can [install][21] all the required dev dependencies
+using `composer install`.
 
 [20]: https://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
 [21]: https://getcomposer.org/doc/03-cli.md#install
@@ -389,7 +390,7 @@ LICENSE
 
 This software uses the BSD 3-Clause license:
 
-Copyright (c) 2015, Tom Chapman (http://tom-chapman.uk)
+Copyright (c) 2011-2015, Tom Chapman (http://tom-chapman.uk)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
