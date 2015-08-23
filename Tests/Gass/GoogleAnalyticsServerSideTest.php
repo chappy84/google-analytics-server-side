@@ -121,7 +121,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testConstructExceptionWrongOptionsDataType()
     {
         $this->setExpectedException(
-            'PHPUnit_Framework_Error',
+            (class_exists('TypeError')) ? 'TypeError' : 'PHPUnit_Framework_Error',
             'Argument 1 passed to Gass\GoogleAnalyticsServerSide::__construct() must be'
         );
         $gass = new \Gass\GoogleAnalyticsServerSide(new \stdClass);
@@ -585,7 +585,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetSearchEnginesExceptionWrongDataType()
     {
         $this->setExpectedException(
-            'PHPUnit_Framework_Error',
+            (class_exists('TypeError')) ? 'TypeError' : 'PHPUnit_Framework_Error',
             'Argument 1 passed to Gass\GoogleAnalyticsServerSide::setSearchEngines() must be'
         );
         $this->gass->setSearchEngines(new \stdClass);
@@ -751,7 +751,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetOptionsExceptionWrongDataType()
     {
         $this->setExpectedException(
-            'PHPUnit_Framework_Error',
+            (class_exists('TypeError')) ? 'TypeError' : 'PHPUnit_Framework_Error',
             'Argument 1 passed to Gass\GoogleAnalyticsServerSide::setOptions() must be'
         );
         $this->gass->setOptions(new \stdClass);
