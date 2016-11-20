@@ -19,20 +19,24 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Http;
 
-use Gass\Exception;
+use Gass\Exception\DomainException;
+use Gass\Exception\InvalidArgumentException;
+use Gass\Exception\RuntimeException;
 
 /**
  * Stream adapter for Http
  *
- * @see         Gass\Exception
+ * @see         Gass\Exception\DomainException
+ * @see         Gass\Exception\InvalidArgumentException
+ * @see         Gass\Exception\RuntimeException
  * @author      Tom Chapman
- * @package     Gass\Http
  */
 class Stream extends Base
 {
@@ -42,7 +46,7 @@ class Stream extends Base
      * @var array
      */
     protected $options = array(
-        'context' => array('http' => array('method' => 'GET'))
+        'context' => array('http' => array('method' => 'GET')),
     );
 
     /**
@@ -56,6 +60,7 @@ class Stream extends Base
      * {@inheritdoc}
      *
      * @param mixed $index [optional]
+     * @throws DomainException
      * @return mixed
      */
     public function getInfo($index = null)
@@ -66,7 +71,7 @@ class Stream extends Base
             }
             return $this->responseHeaders;
         }
-        throw new Exception\DomainException('A Http Request has not been made yet.');
+        throw new DomainException('A Http Request has not been made yet.');
     }
 
     /**
@@ -84,7 +89,7 @@ class Stream extends Base
      *
      * @param string $name
      * @param mixed $value
-     * @return \Gass\Adapter\Base
+     * @return $this
      */
     public function setOption($name, $value)
     {
@@ -101,15 +106,15 @@ class Stream extends Base
     public function getOption($name)
     {
         return (isset($this->options['context']['http'][$name]))
-                ? $this->options['context']['http'][$name]
-                : null;
+            ? $this->options['context']['http'][$name]
+            : null;
     }
 
     /**
      * {@inheritdoc}
      *
      * @param string $url
-     * @return \Gass\Http\Stream
+     * @return $this
      */
     public function setUrl($url)
     {
@@ -119,9 +124,10 @@ class Stream extends Base
     /**
      * {@inheritdoc}
      *
-     * @param string $url
-     * @param array $options
-     * @return \Gass\Http\Stream
+     * @param string $url [optional]
+     * @param array $options [optional]
+     * @throws RuntimeException
+     * @return $this
      */
     public function request($url = null, array $options = array())
     {
@@ -155,7 +161,7 @@ class Stream extends Base
                 $php_errormsg = 'error message not available, this could be because the ini ' .
                     'setting "track_errors" is set to "Off" or XDebug is running';
             }
-            throw new Exception\RuntimeException('Source could not be retrieved. Error: ' . $php_errormsg);
+            throw new RuntimeException('Source could not be retrieved. Error: ' . $php_errormsg);
         }
         $this->setResponseHeaders($http_response_header);
         if (null !== ($statusCode = $this->getInfo('Http-Code'))) {
@@ -182,7 +188,7 @@ class Stream extends Base
      * the $http_response_header or stream_context_create format
      *
      * @param string|array $headers
-     * @throws \Gass\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return array
      */
     private function parseHeaders($headers)
@@ -191,7 +197,7 @@ class Stream extends Base
             $headers = explode("\n", $headers);
         }
         if (!is_array($headers)) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Headers must be provided in either string or numerically indexed array format.'
             );
         }

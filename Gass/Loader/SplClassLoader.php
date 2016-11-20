@@ -16,20 +16,48 @@
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  * @author Fabien Potencier <fabien.potencier@symfony-project.org>
  */
+
 namespace Gass\Loader;
 
+/**
+ * SPL Class Cloader
+ */
 class SplClassLoader
 {
+    /**
+     * File Extension
+     *
+     * @var string
+     */
     private $fileExtension = '.php';
+
+    /**
+     * Namespace
+     *
+     * @var string
+     */
     private $namespace;
+
+    /**
+     * Include Path
+     *
+     * @var string
+     */
     private $includePath;
+
+    /**
+     * Namespace Separator
+     *
+     * @var string
+     */
     private $namespaceSeparator = '\\';
 
     /**
      * Creates a new <tt>SplClassLoader</tt> that loads classes of the
      * specified namespace.
      *
-     * @param string $ns The namespace to use.
+     * @param string $ns [optional] The namespace to use
+     * @param string $includePath [optional] The include path to use
      */
     public function __construct($ns = null, $includePath = null)
     {
@@ -40,7 +68,7 @@ class SplClassLoader
     /**
      * Sets the namespace separator used by classes in the namespace of this class loader.
      *
-     * @param string $sep The separator to use.
+     * @param string $sep The separator to use
      */
     public function setNamespaceSeparator($sep)
     {
@@ -50,7 +78,7 @@ class SplClassLoader
     /**
      * Gets the namespace seperator used by classes in the namespace of this class loader.
      *
-     * @return void
+     * @return string
      */
     public function getNamespaceSeparator()
     {
@@ -116,8 +144,7 @@ class SplClassLoader
     /**
      * Loads the given class or interface.
      *
-     * @param string $className The name of the class to load.
-     * @return void
+     * @param string $className The name of the class to load
      */
     public function loadClass($className)
     {

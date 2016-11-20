@@ -19,26 +19,30 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Http;
 
-use Gass\Adapter;
-use Gass\Exception;
-use Gass\Validate;
+use Gass\Adapter\Base as AdapterBase;
+use Gass\Exception\InvalidArgumentException;
+use Gass\Exception\RuntimeException;
+use Gass\Validate\IpAddress as ValidateIpAddress;
+use Gass\Validate\LanguageCode as ValidateLanguageCode;
 
 /**
  * Base class for all Http adapters
  *
- * @see         Gass\Adapter
- * @see         Gass\Exception
- * @see         Gass\Validate
+ * @see         Gass\Adapter\Base
+ * @see         Gass\Exception\InvalidArgumentException
+ * @see         Gass\Exception\RuntimeException
+ * @see         Gass\Validate\IpAddress
+ * @see         Gass\Validate\LanguageCode
  * @author      Tom Chapman
- * @package     Gass\Http
  */
-abstract class Base extends Adapter\Base implements HttpInterface
+abstract class Base extends AdapterBase implements HttpInterface
 {
     /**
      * The Accepted-Language for the sent HTTP headers
@@ -112,13 +116,14 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param string $acceptLanguage
-     * @return \Gass\Http\Base
+     * @throws InvalidArgumentException
+     * @return $this
      */
     public function setAcceptLanguage($acceptLanguage)
     {
-        $langValidator = new Validate\LanguageCode;
+        $langValidator = new ValidateLanguageCode;
         if (!$langValidator->isValid($acceptLanguage)) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Accept Language validation errors: ' . implode(', ', $langValidator->getMessages())
             );
         }
@@ -130,14 +135,15 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param string $remoteAddress
-     * @return \Gass\Http\Base
+     * @throws InvalidArgumentException
+     * @return $this
      */
     public function setRemoteAddress($remoteAddress)
     {
         if (!empty($remoteAddress)) {
-            $ipValidator = new Validate\IpAddress;
+            $ipValidator = new ValidateIpAddress;
             if (!$ipValidator->isValid($remoteAddress)) {
-                throw new Exception\InvalidArgumentException(
+                throw new InvalidArgumentException(
                     'Remote Address validation errors: ' . implode(', ', $ipValidator->getMessages())
                 );
             }
@@ -150,7 +156,7 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param mixed $response
-     * @return \Gass\Http\Base
+     * @return $this
      */
     public function setResponse($response)
     {
@@ -162,7 +168,7 @@ abstract class Base extends Adapter\Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param string $userAgent
-     * @return \Gass\Http\Base
+     * @return $this
      */
     public function setUserAgent($userAgent)
     {
@@ -173,14 +179,15 @@ abstract class Base extends Adapter\Base implements HttpInterface
     /**
      * Checks the return code and throws an exception if an issue with the response
      *
-     * @param integer $code
-     * @throws \Gass\Exception\InvalidArgumentException
-     * @throws \Gass\Exception\RuntimeException
+     * @param int $code
+     *
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     protected function checkResponseCode($code)
     {
         if (!is_numeric($code)) {
-            throw new Exception\InvalidArgumentException('HTTP Status Code must be numeric.');
+            throw new InvalidArgumentException('HTTP Status Code must be numeric.');
         }
         switch ($code) {
             case '204':
@@ -312,7 +319,7 @@ abstract class Base extends Adapter\Base implements HttpInterface
             default:
         }
         if (isset($message)) {
-            throw new Exception\RuntimeException($message, $code);
+            throw new RuntimeException($message, $code);
         }
     }
 
@@ -321,7 +328,7 @@ abstract class Base extends Adapter\Base implements HttpInterface
      *
      * @param string $url
      * @param array $options
-     * @return \Gass\Http\Base
+     * @return $this
      */
     public function request($url = null, array $options = array())
     {

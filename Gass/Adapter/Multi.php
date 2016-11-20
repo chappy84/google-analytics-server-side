@@ -19,20 +19,24 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Adapter;
 
-use Gass\Exception;
+use Gass\Exception\BadMethodCallException;
+use Gass\Exception\DomainException;
+use Gass\Exception\InvalidArgumentException;
 
 /**
  * Class for combining multiple adapters
  *
- * @see         Gass\Exception
+ * @see         Gass\Exception\BadMethodCallException
+ * @see         Gass\Exception\DomainException
+ * @see         Gass\Exception\InvalidArgumentException
  * @author      Tom Chapman
- * @package     Gass\Adapter
  */
 abstract class Multi implements AdapterInterface
 {
@@ -58,7 +62,8 @@ abstract class Multi implements AdapterInterface
     /**
      * Class level constructor
      *
-     * @param array $cacheOptions
+     * @param array $adapters [optional]
+     * @throws DomainException
      */
     public function __construct(array $adapters = array())
     {
@@ -66,8 +71,9 @@ abstract class Multi implements AdapterInterface
             $this->requiredClass = self::DEFAULT_INTERFACE;
         }
         if ($this->requiredClass != self::DEFAULT_INTERFACE
-                && !is_subclass_of($this->requiredClass, self::DEFAULT_INTERFACE)) {
-            throw new Exception\DomainException($this->requiredClass . ' must implement ' . self::DEFAULT_INTERFACE);
+            && !is_subclass_of($this->requiredClass, self::DEFAULT_INTERFACE)
+        ) {
+            throw new DomainException($this->requiredClass . ' must implement ' . self::DEFAULT_INTERFACE);
         }
         $this->setAdapters($adapters);
     }
@@ -86,22 +92,22 @@ abstract class Multi implements AdapterInterface
      * Returns the specified adapter
      *
      * @param string $name
-     * @return \Gass\Adapter\AdapterInterface
-     * @throws \Gass\Exception\DomainException
+     * @throws DomainException
+     * @return AdapterInterface
      */
     public function getAdapter($name)
     {
         if (isset($this->adapters[$name])) {
             return $this->adapters[$name];
         }
-        throw new Exception\DomainException($name . ' is not currently set as an adapter');
+        throw new DomainException($name . ' is not currently set as an adapter');
     }
 
     /**
      * Set the current adapters
      *
      * @param array $adapters
-     * @return \Gass\Adapter\Multi
+     * @return $this
      */
     public function setAdapters(array $adapters)
     {
@@ -117,19 +123,20 @@ abstract class Multi implements AdapterInterface
      *
      * @param array $adapter
      * @param string $name
-     * @return \Gass\Adapter\Multi
-     * @throws \Gass\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
+     * @return $this
      */
     public function addAdapter($adapter, $name = null)
     {
         if (!$adapter instanceof $this->requiredClass) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 get_class($adapter) . ' does not implement ' . $this->requiredClass
             );
         }
         if (!empty($name) && !is_string($name)) {
-            throw new Exception\InvalidArgumentException('$name must be a string');
-        } elseif (empty($name)) {
+            throw new InvalidArgumentException('$name must be a string');
+        }
+        if (empty($name)) {
             $name = get_class($adapter);
         }
         $this->adapters[$name] = $adapter;
@@ -139,7 +146,7 @@ abstract class Multi implements AdapterInterface
     /**
      * Reset the stored list of adapters
      *
-     * @return \Gass\Adapter\Multi
+     * @return $this
      */
     public function resetAdapters()
     {
@@ -150,11 +157,11 @@ abstract class Multi implements AdapterInterface
      * {@inheritdoc}
      *
      * @param array $options
-     * @throws \Gass\Exception\BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function setOptions(array $options)
     {
-        throw new Exception\BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
     }
 
     /**
@@ -162,31 +169,31 @@ abstract class Multi implements AdapterInterface
      *
      * @param string $name
      * @param mixed $value
-     * @throws \Gass\Exception\BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function setOption($name, $value)
     {
-        throw new Exception\BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @throws \Gass\Exception\BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function getOptions()
     {
-        throw new Exception\BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
     }
 
     /**
      * {@inheritdoc}
      *
      * @param string $name
-     * @throws \Gass\Exception\BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function getOption($name)
     {
-        throw new Exception\BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
     }
 }

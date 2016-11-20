@@ -19,20 +19,24 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Http;
 
-use Gass\Exception;
+use Gass\Exception\DomainException;
+use Gass\Exception\InvalidArgumentException;
+use Gass\Exception\OutOfBoundsException;
 
 /**
  * Stream adapter for Http
  *
- * @see         Gass\Exception
+ * @see         Gass\Exception\DomainException
+ * @see         Gass\Exception\InvalidArgumentException
+ * @see         Gass\Exception\OutOfBoundsException
  * @author      Tom Chapman
- * @package     Gass\Http
  */
 class Test extends Base implements HttpInterface
 {
@@ -61,6 +65,7 @@ class Test extends Base implements HttpInterface
      * {@inheritdoc}
      *
      * @param mixed $index [optional]
+     * @throws DomainException
      * @return mixed
      */
     public function getInfo($index = null)
@@ -71,7 +76,7 @@ class Test extends Base implements HttpInterface
             }
             return $this->responseHeaders;
         }
-        throw new Exception\DomainException('A Http Request has not been made yet.');
+        throw new DomainException('A Http Request has not been made yet.');
     }
 
     /**
@@ -89,7 +94,7 @@ class Test extends Base implements HttpInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return \Gass\Adapter\Base
+     * @return $this
      */
     public function setOption($name, $value)
     {
@@ -106,8 +111,8 @@ class Test extends Base implements HttpInterface
     public function getOption($name)
     {
         return (isset($this->options[$name]))
-                ? $this->options[$name]
-                : null;
+            ? $this->options[$name]
+            : null;
     }
 
     /**
@@ -126,7 +131,8 @@ class Test extends Base implements HttpInterface
      *
      * @param string $url
      * @param array $options
-     * @return \Gass\Http\Stream
+     * @throws OutOfBoundsException
+     * @return $this
      */
     public function request($url = null, array $options = array())
     {
@@ -136,7 +142,7 @@ class Test extends Base implements HttpInterface
         );
         $this->responseHeaders = array();
         if (!isset($this->requestQueue[$url])) {
-            throw new Exception\OutOfBoundsException(
+            throw new OutOfBoundsException(
                 'No Test Http request info for requested url: ' . $this->getOption('url')
             );
         }
@@ -155,14 +161,14 @@ class Test extends Base implements HttpInterface
      * @param string $url
      * @param string|array $responseHeaders
      * @param string $responseBody
-     * @return \Gass\Http\Test
+     * @return $this
      */
     public function addRequestQueueItem($url, $responseHeaders, $responseBody)
     {
         $url = $this->getBaseUrl($url);
         $this->requestQueue[$url] = array(
             'responseHeaders' => $responseHeaders,
-            'responseBody' => $responseBody
+            'responseBody' => $responseBody,
         );
         return $this;
     }
@@ -182,7 +188,7 @@ class Test extends Base implements HttpInterface
      * the $http_response_header or stream_context_create format
      *
      * @param string|array $headers
-     * @throws \Gass\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return array
      */
     private function parseHeaders($headers)
@@ -191,7 +197,7 @@ class Test extends Base implements HttpInterface
             $headers = explode("\n", $headers);
         }
         if (!is_array($headers)) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Headers must be provided in either string or numerically indexed array format.'
             );
         }

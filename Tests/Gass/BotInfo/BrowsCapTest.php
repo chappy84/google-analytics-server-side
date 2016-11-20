@@ -19,10 +19,11 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace GassTests\Gass\BotInfo;
 
 class BrowsCapTest extends \PHPUnit_Framework_TestCase
@@ -50,9 +51,10 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function getBrowscapWithIni()
     {
         $this->setTestHttpForVersionDateFile();
+
         return new \Gass\BotInfo\BrowsCap(
             array(
-                'browscap' => $this->iniFileLocation
+                'browscap' => $this->iniFileLocation,
             )
         );
     }
@@ -88,7 +90,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     {
         $browsCap = new \Gass\BotInfo\BrowsCap(
             array(
-                'tripe' => $this->iniFileLocation
+                'tripe' => $this->iniFileLocation,
             )
         );
         $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $browsCap);
@@ -144,7 +146,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $browsCap = $this->getBrowscapWithIni();
         $firefoxUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/17.0 Firefox/17.0';
         $browserResult = $browsCap->getBrowser($firefoxUserAgent, true);
-        $this->assertTrue(is_array($browserResult));
+        $this->assertInternalType('array', $browserResult);
         $this->assertNotEmpty($browserResult);
         $this->assertArrayHasKey('browser', $browserResult);
     }

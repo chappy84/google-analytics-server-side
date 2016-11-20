@@ -19,22 +19,22 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Http;
 
-use Gass\Adapter;
+use Gass\Adapter\AdapterInterface;
 
 /**
  * Interface for all Http Adapters
  *
- * @see         Gass\Adapter
+ * @see         Gass\Adapter\AdapterInterface
  * @author      Tom Chapman
- * @package     Gass\Http
  */
-interface HttpInterface extends Adapter\AdapterInterface
+interface HttpInterface extends AdapterInterface
 {
     /**
      * Returns the current Accepted Language for the sent headers

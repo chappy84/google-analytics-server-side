@@ -19,10 +19,11 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace GassTests\Gass;
 
 class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
@@ -81,7 +82,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
                     chr(0x00), chr(0xff), chr(0xff), chr(0xff), chr(0x00), chr(0x00),
                     chr(0x00), chr(0x2c), chr(0x00), chr(0x00), chr(0x00), chr(0x00),
                     chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x00), chr(0x02),
-                    chr(0x02), chr(0x44), chr(0x01), chr(0x00), chr(0x3b)
+                    chr(0x02), chr(0x44), chr(0x01), chr(0x00), chr(0x3b),
                 )
             )
         );
@@ -419,15 +420,15 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         $customVar1 = array(
             'index' => 1,
-            'name'  => 'Custom Var 1',
+            'name' => 'Custom Var 1',
             'value' => 'Custom Value 1',
-            'scope' => 3
+            'scope' => 3,
         );
         $customVar2 = array(
             'index' => 5,
-            'name'  => 'Custom Var 5',
+            'name' => 'Custom Var 5',
             'value' => 'Custom Value 5',
-            'scope' => 2
+            'scope' => 2,
         );
         $this->assertInstanceOf(
             'Gass\GoogleAnalyticsServerSide',
@@ -573,7 +574,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         $searchEngines = array(
             'testa' => array('a'),
-            'testb' => array('a', 'bcd')
+            'testb' => array('a', 'bcd'),
         );
         $this->assertInstanceOf(
             'Gass\GoogleAnalyticsServerSide',
@@ -597,7 +598,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setSearchEngines(
             array(
                 'testa' => array('a'),
-                'testb' => new \stdClass
+                'testb' => new \stdClass,
             )
         );
     }
@@ -608,7 +609,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setSearchEngines(
             array(
                 'testa' => array(),
-                'testb' => array('b')
+                'testb' => array('b'),
             )
         );
     }
@@ -619,7 +620,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setSearchEngines(
             array(
                 1 => array('a'),
-                'testb' => array('b')
+                'testb' => array('b'),
             )
         );
     }
@@ -630,7 +631,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setSearchEngines(
             array(
                 'test#' => array('a'),
-                'testb' => array('b')
+                'testb' => array('b'),
             )
         );
     }
@@ -641,7 +642,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setSearchEngines(
             array(
                 'testa' => array(1),
-                'testb' => array('b')
+                'testb' => array('b'),
             )
         );
     }
@@ -652,7 +653,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setSearchEngines(
             array(
                 'testa' => array('a&'),
-                'testb' => array('b')
+                'testb' => array('b'),
             )
         );
     }
@@ -684,7 +685,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setBotInfo(
             array(
                 'adapter' => 'UserAgentStringInfo',
-                'cachePath' => '/tmp/'
+                'cachePath' => '/tmp/',
             )
         );
         $currentBotInfo = $this->gass->getBotInfo();
@@ -702,7 +703,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(
             'Gass\Exception\InvalidArgumentException',
-            'botInfo must be an array, boolean, null or a class which implements Gass\BotInfo\Interface.'
+            'botInfo must be an array, boolean, null or a class which implements Gass\BotInfo\BotInfoInterface.'
         );
         $this->gass->setBotInfo(new \stdClass);
     }
@@ -742,7 +743,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             $this->gass->setOptions(
                 array(
                     'AcceptLanguage' => 'en-gb',
-                    'remoteAddress' => '123.123.123.123'
+                    'remoteAddress' => '123.123.123.123',
                 )
             )
         );
@@ -797,7 +798,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             $this->gass->getEventString(
                 array(
                     'category' => $category,
-                    'action'   => $action
+                    'action' => $action,
                 )
             )
         );
@@ -806,8 +807,8 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             $this->gass->getEventString(
                 array(
                     'category' => $category,
-                    'action'   => $action,
-                    'label'    => $label
+                    'action' => $action,
+                    'label' => $label,
                 )
             )
         );
@@ -816,9 +817,9 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             $this->gass->getEventString(
                 array(
                     'category' => $category,
-                    'action'     => $action,
-                    'label'      => $label,
-                    'value'      => $value
+                    'action' => $action,
+                    'label' => $label,
+                    'value' => $value,
                 )
             )
         );
@@ -871,15 +872,15 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->gass->getCustomVariableString());
         $customVar1 = array(
             'index' => 1,
-            'name'  => 'Custom Var 1',
+            'name' => 'Custom Var 1',
             'value' => 'Custom Value 1',
-            'scope' => 3
+            'scope' => 3,
         );
         $customVar2 = array(
             'index' => 5,
-            'name'  => 'Custom Var 5',
+            'name' => 'Custom Var 5',
             'value' => 'Custom Value 5',
-            'scope' => 2
+            'scope' => 2,
         );
         $this->gass->setCustomVar($customVar1['name'], $customVar1['value']);
         $this->gass->setCustomVar(

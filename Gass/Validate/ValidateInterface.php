@@ -19,28 +19,29 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Validate;
 
-use Gass\Adapter;
+use Gass\Adapter\AdapterInterface;
 
 /**
  * Interface for all Validator Adapters
  *
- * @see         Gass\Adapter
+ * @see         Gass\Adapter\AdapterInterface
  * @author      Tom Chapman
- * @package     Gass\Validate
  */
-interface ValidateInterface extends Adapter\AdapterInterface
+interface ValidateInterface extends AdapterInterface
 {
     /**
      * Returns whether or not the value is valid
      *
      * @param mixed $value
-     * @return boolean
+     *
+     * @return bool
      */
     public function isValid($value);
 

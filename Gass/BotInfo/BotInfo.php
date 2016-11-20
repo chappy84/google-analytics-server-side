@@ -19,24 +19,28 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\BotInfo;
 
-use Gass\Exception;
-use Gass\Proxy;
+use Gass\Exception\BadMethodCallException;
+use Gass\Exception\DomainException;
+use Gass\Exception\InvalidArgumentException;
+use Gass\Proxy\ProxyInterface;
 
 /**
  * Proxy class for dealing with all BotInfo requests regardless of adapter
  *
- * @see         Gass\Exception
- * @see         Gass\Proxy
+ * @see         Gass\Exception\BadMethodCallException
+ * @see         Gass\Exception\DomainException
+ * @see         Gass\Exception\InvalidArgumentException
+ * @see         Gass\Proxy\ProxyInterface
  * @author      Tom Chapman
- * @package     Gass\BotInfo
  */
-class BotInfo implements Proxy\ProxyInterface
+class BotInfo implements ProxyInterface
 {
     /**
      * The current adapter in use
@@ -68,7 +72,7 @@ class BotInfo implements Proxy\ProxyInterface
      *
      * @param string $name
      * @param array $arguments
-     * @throws \Gass\Exception\DomainException
+     * @throws DomainException
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -77,19 +81,19 @@ class BotInfo implements Proxy\ProxyInterface
             if (method_exists($this->adapter, $name)) {
                 return call_user_func_array(array($this->adapter, $name), $arguments);
             }
-            throw new Exception\BadMethodCallException(
+            throw new BadMethodCallException(
                 'Method ' . get_class($this->adapter) . '::' . $name . ' does not exist.'
             );
         }
-        throw new Exception\DomainException('Adapter has not been set. Please set an adapter before calling ' . $name);
+        throw new DomainException('Adapter has not been set. Please set an adapter before calling ' . $name);
     }
 
     /**
      * Sets the current adapter to use
      *
-     * @param string|\Gass\BotInfo\BotInfoInterface $adapter
-     * @throws \Gass\Exception\InvalidArgumentException
-     * @return \Gass\BotInfo
+     * @param string|BotInfoInterface $adapter
+     * @throws InvalidArgumentException
+     * @return $this
      */
     public function setAdapter($adapter)
     {
@@ -101,7 +105,7 @@ class BotInfo implements Proxy\ProxyInterface
             $this->adapter = $adapter;
             return $this;
         }
-        throw new Exception\InvalidArgumentException(
+        throw new InvalidArgumentException(
             'The Gass\BotInfo adapter must implement Gass\BotInfo\BotInfoInterface.'
         );
     }
@@ -109,7 +113,7 @@ class BotInfo implements Proxy\ProxyInterface
     /**
      * Returns the current Adapter
      *
-     * @return the $adapter
+     * @return BotInfoInterface
      */
     public function getAdapter()
     {

@@ -19,24 +19,24 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\BotInfo;
 
-use Gass\Exception;
-use Gass\Adapter;
+use Gass\Adapter\Multi as AdapterMulti;
+use Gass\Exception\BadMethodCallException;
 
 /**
  * Class for combining multiple BotInfo adapters
  *
- * @see         Gass\Adapter
- * @see         Gass\Exception
+ * @see         Gass\Adapter\Multi
+ * @see         Gass\Exception\BadMethodCallException
  * @author      Tom Chapman
- * @package     Gass\BotInfo
  */
-class Multi extends Adapter\Multi implements BotInfoInterface
+class Multi extends AdapterMulti implements BotInfoInterface
 {
     /**
      * {@inheritdoc}
@@ -48,28 +48,30 @@ class Multi extends Adapter\Multi implements BotInfoInterface
     /**
      * {@inheritdoc}
      *
+     * @throws BadMethodCallException
      * @return string
      */
     public function getRemoteAddress()
     {
-        throw new Exception\BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
     }
 
     /**
      * {@inheritdoc}
      *
+     * @throws BadMethodCallException
      * @return string
      */
     public function getUserAgent()
     {
-        throw new Exception\BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
     }
 
     /**
      * {@inheritdoc}
      *
      * @param string $remoteAddress
-     * @return \Gass\BotInfo\Multi
+     * @return $this
      */
     public function setRemoteAddress($remoteAddress)
     {
@@ -83,7 +85,7 @@ class Multi extends Adapter\Multi implements BotInfoInterface
      * {@inheritdoc}
      *
      * @param string $userAgent
-     * @return \Gass\BotInfo\Multi
+     * @return $this
      */
     public function setUserAgent($userAgent)
     {
@@ -98,7 +100,8 @@ class Multi extends Adapter\Multi implements BotInfoInterface
      *
      * @param string $userAgent [optional]
      * @param string $remoteAddress [optional]
-     * @return boolean
+     *
+     * @return bool
      */
     public function isBot($userAgent = null, $remoteAddress = null)
     {

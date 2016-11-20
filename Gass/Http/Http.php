@@ -19,20 +19,24 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Http;
 
-use Gass\Exception;
+use Gass\Exception\BadMethodCallException;
+use Gass\Exception\InvalidArgumentException;
+use Gass\Exception\RuntimeException;
 
 /**
  * Proxy class for dealing with all Http requests regardless of adapter
  *
- * @see         Gass\Exception
+ * @see         Gass\Exception\BadMethodCallException
+ * @see         Gass\Exception\InvalidArgumentException
+ * @see         Gass\Exception\RuntimeException
  * @author      Tom Chapman
- * @package     Gass\Http
  */
 class Http
 {
@@ -76,12 +80,12 @@ class Http
     /**
      * Protect against class clone to ensure singleton anti-pattern
      *
-     * @throws \Gass\Exception\RuntimeException
+     * @throws RuntimeException
      * @final
      */
     final public function __clone()
     {
-        throw new Exception\RuntimeException('You cannot clone ' . __CLASS__);
+        throw new RuntimeException('You cannot clone ' . __CLASS__);
     }
 
     /**
@@ -91,7 +95,7 @@ class Http
      * @see Gass\Http::__construct
      * @param array $options
      * @param string|\Gass\Http\HttpInterface $adapter
-     * @return \Gass\Http
+     * @return $this
      * @static
      */
     public static function getInstance(array $options = array(), $adapter = null)
@@ -125,7 +129,7 @@ class Http
         if (method_exists($this->adapter, $name)) {
             return call_user_func_array(array($this->adapter, $name), $arguments);
         }
-        throw new Exception\BadMethodCallException(
+        throw new BadMethodCallException(
             __METHOD__ . ' is not an available method in ' . get_class($this->adapter)
         );
     }
@@ -146,7 +150,7 @@ class Http
         if (method_exists($adapter, $name)) {
             return call_user_func_array(array($adapter, $name), $arguments);
         }
-        throw new Exception\BadMethodCallException(
+        throw new BadMethodCallException(
             __METHOD__ . ' is not an available method in ' . get_class($adapter)
         );
     }
@@ -155,8 +159,8 @@ class Http
      * Sets the current adapter to use
      *
      * @param string $adapter
-     * @throws \Gass\Exception\InvalidArgumentException
-     * @return \Gass\Http
+     * @throws InvalidArgumentException
+     * @return $this
      */
     public function setAdapter($adapter)
     {
@@ -168,7 +172,7 @@ class Http
             $this->adapter = $adapter;
             return $this;
         }
-        throw new Exception\InvalidArgumentException('The Gass\Http adapter must implement Gass\Http\HttpInterface.');
+        throw new InvalidArgumentException('The Gass\Http adapter must implement Gass\Http\HttpInterface.');
     }
 
     /**

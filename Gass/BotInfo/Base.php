@@ -19,26 +19,26 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\BotInfo;
 
-use Gass\Adapter;
-use Gass\Exception;
-use Gass\Validate;
+use Gass\Adapter\Base as AdapterBase;
+use Gass\Exception\InvalidArgumentException;
+use Gass\Validate\IpAddress as ValidateIpAddress;
 
 /**
  * Base class of all BotInfo adapters
  *
- * @see         Gass\Adapter
- * @see         Gass\Exception
- * @see         Gass\Validate
+ * @see         Gass\Adapter\Base
+ * @see         Gass\Exception\InvalidArgumentException
+ * @see         Gass\Validate\IpAddress
  * @author      Tom Chapman
- * @package     Gass\BotInfo
  */
-abstract class Base extends Adapter\Base implements BotInfoInterface
+abstract class Base extends AdapterBase implements BotInfoInterface
 {
     /**
      * The remote user's ip address
@@ -78,13 +78,14 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * {@inheritdoc}
      *
      * @param string $remoteAddress
-     * @return \Gass\BotInfo\Base
+     * @throws InvalidArgumentException
+     * @return $this
      */
     public function setRemoteAddress($remoteAddress)
     {
-        $ipValidator = new Validate\IpAddress;
+        $ipValidator = new ValidateIpAddress;
         if (!$ipValidator->isValid($remoteAddress)) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Remote Address validation errors: ' .
                 implode(', ', $ipValidator->getMessages())
             );
@@ -97,7 +98,7 @@ abstract class Base extends Adapter\Base implements BotInfoInterface
      * {@inheritdoc}
      *
      * @param string $userAgent
-     * @return \Gass\BotInfo\Base
+     * @return $this
      */
     public function setUserAgent($userAgent)
     {

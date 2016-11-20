@@ -19,29 +19,30 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\BotInfo;
 
-use Gass\Adapter;
+use Gass\Adapter\AdapterInterface;
 
 /**
  * Interface all BotInfo adapters should conform to
  *
- * @see         Gass\Adapter
+ * @see         Gass\Adapter\AdapterInterface
  * @author      Tom Chapman
- * @package     Gass\BotInfo
  */
-interface BotInfoInterface extends Adapter\AdapterInterface
+interface BotInfoInterface extends AdapterInterface
 {
     /**
      * Returns whether or not the provided user-agent is a bot or not
      *
      * @param string $userAgent [optional]
      * @param string $remoteAddress [optional]
-     * @return boolean
+     *
+     * @return bool
      */
     public function isBot($userAgent = null, $remoteAddress = null);
 

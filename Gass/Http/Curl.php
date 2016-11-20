@@ -19,20 +19,25 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Http;
 
-use Gass\Exception;
+use Gass\Exception\DomainException;
+use Gass\Exception\RuntimeException;
+use Gass\Exception\UnexpectedValueException;
 
 /**
  * cURL adapter for Http
  *
  * @see         Gass\Exception
+ * @see         Gass\Exception\DomainException
+ * @see         Gass\Exception\RuntimeException
+ * @see         Gass\Exception\UnexpectedValueException
  * @author      Tom Chapman
- * @package     Gass\Http
  */
 class Curl extends Base
 {
@@ -51,19 +56,19 @@ class Curl extends Base
     protected $options = array(
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_FOLLOWLOCATION => true
+        CURLOPT_FOLLOWLOCATION => true,
     );
 
     /**
      * Class Constructor
      *
      * @param array $options
-     * @throws \Gass\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function __construct(array $options = array())
     {
         if (!extension_loaded('curl')) {
-            throw new Exception\RuntimeException('cURL PHP extension is not loaded.');
+            throw new RuntimeException('cURL PHP extension is not loaded.');
         }
         parent::__construct($options);
     }
@@ -72,6 +77,7 @@ class Curl extends Base
      * {@inheritdoc}
      *
      * @param mixed $index [optional]
+     * @throws DomainException
      * @return mixed
      */
     public function getInfo($index = null)
@@ -82,7 +88,7 @@ class Curl extends Base
             }
             return curl_getinfo($this->curl, $index);
         }
-        throw new Exception\DomainException('A cURL request has not been made yet.');
+        throw new DomainException('A cURL request has not been made yet.');
     }
 
     /**
@@ -115,6 +121,8 @@ class Curl extends Base
      *
      * @param string $url
      * @param array $options
+     * @throws RuntimeException
+     * @throws UnexpectedValueException
      * @return \Gass\Http\Curl
      */
     public function request($url = null, array $options = array())
@@ -142,13 +150,13 @@ class Curl extends Base
 
         $extraCurlOptions = $this->getOptions();
         if (!empty($extraCurlOptions) && false === curl_setopt_array($this->curl, $extraCurlOptions)) {
-            throw new Exception\UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'One of the extra curl options specified is invalid. Error: ' . curl_error($this->curl)
             );
         }
 
         if (false === ($response = curl_exec($this->curl))) {
-            throw new Exception\RuntimeException('Source could not be retrieved. Error: ' . curl_error($this->curl));
+            throw new RuntimeException('Source could not be retrieved. Error: ' . curl_error($this->curl));
         }
 
         $statusCode = $this->getInfo(CURLINFO_HTTP_CODE);

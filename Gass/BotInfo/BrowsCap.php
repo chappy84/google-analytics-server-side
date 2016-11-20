@@ -19,22 +19,22 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\BotInfo;
 
-use Gass\Exception;
-use Gass\Http;
+use Gass\Exception\RuntimeException;
+use Gass\Http\Http;
 
 /**
  * BrowsCap adapter which uses browscap ini file to positively identify allowed browsers
  *
- * @see         Gass\Exception
- * @see         Gass\Http
+ * @see         Gass\Exception\RuntimeException
+ * @see         Gass\Http\Http
  * @author      Tom Chapman
- * @package     Gass\BotInfo
  */
 class BrowsCap extends Base
 {
@@ -55,7 +55,7 @@ class BrowsCap extends Base
     /**
      * The last time the browscap file was updated
      *
-     * @var integer
+     * @var int
      */
     private $latestVersionDate;
 
@@ -81,8 +81,9 @@ class BrowsCap extends Base
     public function __construct(array $options = array())
     {
         if (!isset($options['browscap'])
-                && false !== ($browsCapLocation = ini_get('browscap'))
-                && '' != trim($browsCapLocation)) {
+            && false !== ($browsCapLocation = ini_get('browscap'))
+            && '' != trim($browsCapLocation)
+        ) {
             $options['browscap'] = trim($browsCapLocation);
         }
         parent::__construct($options);
@@ -91,7 +92,7 @@ class BrowsCap extends Base
     /**
      * Returns the last date the ini file was updated (on remote webiste)
      *
-     * @return integer
+     * @return int
      */
     public function getLatestVersionDate()
     {
@@ -104,7 +105,7 @@ class BrowsCap extends Base
     /**
      * Gets the latest version date from the web
      *
-     * @throws \Gass\Exception\RuntimeException
+     * @throws RuntimeException
      */
     private function setLatestVersionDate()
     {
@@ -115,21 +116,21 @@ class BrowsCap extends Base
             || $fileSaveTime < time() - 86400
         ) {
             $latestDateString = trim(
-                Http\Http::getInstance()
+                Http::getInstance()
                     ->request(self::VERSION_DATE_URL)
                     ->getResponse()
             );
             if (!is_writable($latestVersionDateFile)
                 || false === file_put_contents($latestVersionDateFile, trim($latestDateString))
             ) {
-                throw new Exception\RuntimeException(
+                throw new RuntimeException(
                     'Cannot save latest version date to file: ' . $latestVersionDateFile
                 );
             }
         } elseif (!file_exists($latestVersionDateFile)
             || false === ($latestDateString = file_get_contents($latestVersionDateFile))
         ) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'Couldn\'t read latest version date file: ' . $latestVersionDateFile
             );
         }
@@ -141,12 +142,12 @@ class BrowsCap extends Base
     /**
      * Checks whether the browscap file exists, is readable, and hasn't expired the cache lifetime
      *
-     * @throws \Gass\Exception\RuntimeException
+     * @throws RuntimeException
      */
     private function checkIniFile()
     {
         if (null === ($browsCapLocation = $this->getOption('browscap'))) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'The browscap option has not been specified, please set this and try again.'
             );
         }
@@ -154,7 +155,7 @@ class BrowsCap extends Base
             $this->updateIniFile();
         }
         if (!is_readable($browsCapLocation)) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'The browscap option points to a un-readable file, ' .
                 'please ensure the permissions are correct and try again.'
             );
@@ -171,35 +172,35 @@ class BrowsCap extends Base
     /**
      * Updates the browscap ini file to the latest version
      *
-     * @throws \Gass\Exception\RuntimeException
+     * @throws RuntimeException
      */
     private function updateIniFile()
     {
         $browsCapLocation = $this->getOption('browscap');
         $directory = dirname($browsCapLocation);
         if ((!file_exists($directory) && !mkdir($directory, 0777, true)) || !is_writable($directory)) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'The directory "' . $directory . '" is not writable, ' .
                 'please ensure this file can be written to and try again.'
             );
         }
-        $currentHttpUserAgent = Http\Http::getInstance()->getUserAgent();
+        $currentHttpUserAgent = Http::getInstance()->getUserAgent();
         if ($currentHttpUserAgent === null || '' == trim($currentHttpUserAgent)) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 __CLASS__ . ' cannot be initialised before a user-agent has been set in the Gass\Http adapter.' .
                 ' The remote server rejects requests without a user-agent.'
             );
         }
-        $browscapSource = Http\Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();
+        $browscapSource = Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();
         $browscapContents = trim($browscapSource);
         if (empty($browscapContents)) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'browscap ini file retrieved from external source seems to be empty. ' .
                 'Please either set botInfo to null or ensure the full_php_browscap.ini file can be retrieved.'
             );
         }
         if (false === file_put_contents($browsCapLocation, $browscapContents)) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'Could not write to "' . $browsCapLocation . '", please check the permissions and try again.'
             );
         }
@@ -207,12 +208,14 @@ class BrowsCap extends Base
 
     /**
      * Loads the browscap ini file from the specified location
+     *
+     * @throws RuntimeException
      */
     private function loadIniFile()
     {
         $browsers = parse_ini_file($this->getOption('browscap'), true, INI_SCANNER_RAW);
         if (empty($browsers)) {
-            throw new Exception\RuntimeException('Browscap ini file could not be parsed.');
+            throw new RuntimeException('Browscap ini file could not be parsed.');
         }
         $this->browsers = $browsers;
     }
@@ -221,7 +224,8 @@ class BrowsCap extends Base
      * Returns all the details related to a browser
      *
      * @param string $index
-     * @return array|boolean
+     *
+     * @return array|bool
      */
     private function getBrowserDetails($index)
     {
@@ -243,8 +247,8 @@ class BrowsCap extends Base
      * Return value is compatible with php's get_browser return value.
      *
      * @param string $userAgent
-     * @param boolean $returnArray
-     * @return boolean|object|array
+     * @param bool $returnArray
+     * @return bool|object|array
      */
     public function getBrowser($userAgent = null, $returnArray = false)
     {
@@ -269,7 +273,7 @@ class BrowsCap extends Base
             $browserRegex = $this->getBrowserRegex($browser);
             $returnBrowsDet = array(
                 'browser_name_regex' => substr($browserRegex, 0, strlen($browserRegex) - 1),
-                'browser_name_pattern' => $browser
+                'browser_name_pattern' => $browser,
             );
             foreach ($browserDetails as $key => $value) {
                 if ($value == 'true') {
@@ -308,7 +312,8 @@ class BrowsCap extends Base
      *
      * @param string $userAgent [optional]
      * @param string $remoteAddress [optional]
-     * @return boolean
+     *
+     * @return bool
      */
     public function isBot($userAgent = null, $remoteAddress = null)
     {

@@ -19,24 +19,24 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Adapter;
 
 /**
  * An Interface for adapters in general
  *
  * @author      Tom Chapman
- * @package     Gass\Adapter
  */
 interface AdapterInterface
 {
     /**
      * Class level constructor
      *
-     * @param array $cacheOptions
+     * @param array $options [optional]
      */
     public function __construct(array $options = array());
 

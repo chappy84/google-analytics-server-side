@@ -19,22 +19,22 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2015 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
 namespace Gass\Validate;
 
-use Gass\Adapter;
+use Gass\Adapter\Base as AdapterBase;
 
 /**
  * Base class of all Validators
  *
- * @see         Gass\Adapter
+ * @see         Gass\Adapter\Base
  * @author      Tom Chapman
- * @package     Gass\Validate
  */
-abstract class Base extends Adapter\Base implements ValidateInterface
+abstract class Base extends AdapterBase implements ValidateInterface
 {
     /**
      * Validation Messages
@@ -95,10 +95,11 @@ abstract class Base extends Adapter\Base implements ValidateInterface
     }
 
     /**
-     * Adds a validation message;
+     * Adds a validation message
      *
      * @param string $message
      * @param string|null $value [optional]
+     *
      * @return \Gass\Validate\Base
      */
     public function addMessage($message, $value = null)
