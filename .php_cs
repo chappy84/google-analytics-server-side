@@ -1,49 +1,82 @@
 <?php
 
-$finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->notName('*.md')
-    ->notName('*.js')
-    ->notName('composer.*')
+$finder = Symfony\CS\Finder::create()
     ->notName('phpunit.xml*')
-    ->notName('.git*')
-    ->notName('.php_cs')
-    ->notName('*.yml')
-    ->exclude('vendor')
-    ->in(__DIR__);
+    ->notPath(__DIR__ . DIRECTORY_SEPARATOR . 'Tests' . DIRECTORY_SEPARATOR . 'dependency-files')
+    ->in(__DIR__ . DIRECTORY_SEPARATOR . 'Gass')
+    ->in(__DIR__ . DIRECTORY_SEPARATOR . 'Tests');
 
-return Symfony\CS\Config\Config::create()
+return Symfony\CS\Config::create()
+    ->level(\Symfony\CS\FixerInterface::PSR2_LEVEL)
     ->fixers(
         array(
-            'encoding',
-            'linefeed',
-            'indentation',
-            'trailing_spaces',
-            'unused_use',
-            'php_closing_tag',
-            'standardize_not_equal',
-            'short_tag',
-            'ternary_spaces',
-            'spaces_cast',
-            'object_operator',
-            'visibility',
-            'function_declaration',
-            'include',
-            'extra_empty_lines',
-            'braces',
-            'lowercase_keywords',
-            'lowercase_constants',
-            'controls_spaces',
-            'psr0',
-            'elseif',
-            'eof_ending',
+            'array_element_no_space_before_comma',
+            'array_element_white_space_after_comma',
+            'blankline_after_open_tag',
+            'combine_consecutive_unsets',
             'concat_with_spaces',
-            'whitespacy_lines',
-            'multiline_spaces_before_semicolon',
-            'remove_lines_between_uses',
-            'namespace_no_leading_whitespace',
+            'controls_spaces',
+            'double_arrow_multiline_whitespaces',
             'duplicate_semicolon',
-            'multiple_use',
-            'line_after_namespace'
+            'extra_empty_lines',
+            'function_typehint_space',
+            'hash_to_slash_comment',
+            'heredoc_to_nowdoc',
+            'include',
+            'join_function',
+            'list_commas',
+            'long_array_syntax',
+            'lowercase_cast',
+            'method_argument_default_value',
+            'multiline_array_trailing_comma',
+            'multiline_spaces_before_semicolon',
+            'namespace_no_leading_whitespace',
+            'native_function_casing',
+            'newline_after_open_tag',
+            'no_empty_comment',
+            'no_empty_lines_after_phpdocs',
+            'no_empty_phpdoc',
+            'no_empty_statement',
+            'no_useless_else',
+            'no_useless_return',
+            'object_operator',
+            'operators_spaces',
+            'ordered_use',
+            'php_unit_construct',
+            'php_unit_dedicate_assert',
+            'phpdoc_annotation_without_dot',
+            'phpdoc_indent',
+            'phpdoc_inline_tag',
+            'phpdoc_no_access',
+            'phpdoc_no_package',
+            'phpdoc_order',
+            'phpdoc_scalar',
+            'phpdoc_single_line_var_spacing',
+            'phpdoc_to_comment',
+            'phpdoc_trim',
+            'phpdoc_type_to_var',
+            'phpdoc_types',
+            'phpdoc_var_without_name',
+            'print_to_echo',
+            'remove_leading_slash_use',
+            'remove_lines_between_uses',
+            'self_accessor',
+            'short_bool_cast',
+            'short_echo_tag',
+            'short_scalar_cast',
+            'single_array_no_trailing_comma',
+            'single_blank_line_before_namespace',
+            'single_quote',
+            'spaces_before_semicolon',
+            'spaces_cast',
+            'standardize_not_equal',
+            'ternary_spaces',
+            'trim_array_spaces',
+            'unalign_double_arrow',
+            'unalign_equals',
+            'unary_operators_spaces',
+            'unused_use',
+            'whitespacy_lines',
         )
     )->setUsingCache(false)
     ->finder($finder);
