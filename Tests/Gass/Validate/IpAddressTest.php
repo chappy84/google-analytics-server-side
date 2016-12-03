@@ -35,12 +35,8 @@ class IpAddressTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->ipValidator = new \Gass\Validate\IpAddress;
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
     }
 
     public function testIsValidValidIPv4Address()

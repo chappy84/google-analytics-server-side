@@ -39,11 +39,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseAdapter = $this->getMockForAbstractClass('Gass\Adapter\Base');
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testSetOptionsValid()
     {
         $options = array('testOption1' => 'testValue1');

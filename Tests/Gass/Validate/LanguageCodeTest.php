@@ -35,12 +35,8 @@ class LanguageCodeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->languageValidator = new \Gass\Validate\LanguageCode;
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
     }
 
     public function testIsValidValidLanguageCodes()

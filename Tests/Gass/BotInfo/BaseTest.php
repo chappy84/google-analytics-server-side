@@ -39,11 +39,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseBotInfo = $this->getMockForAbstractClass('Gass\BotInfo\Base');
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testSetRemoteAddressValid()
     {
         $validRemoteAddress = '192.168.0.1';

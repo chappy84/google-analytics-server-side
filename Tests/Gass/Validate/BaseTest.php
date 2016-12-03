@@ -39,11 +39,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->baseValidator = $this->getMockForAbstractClass('Gass\Validate\Base');
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testSetMessagesValidPopulatedArray()
     {
         $testMessages = array('Test Message 1', 'Test Message 2');

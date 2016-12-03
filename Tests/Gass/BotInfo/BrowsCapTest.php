@@ -43,11 +43,6 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function getBrowscapWithIni()
     {
         $this->setTestHttpForVersionDateFile();

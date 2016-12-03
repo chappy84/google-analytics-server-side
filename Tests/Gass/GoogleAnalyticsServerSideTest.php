@@ -114,11 +114,6 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         return $this;
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testConstructExceptionWrongOptionsDataType()
     {
         $this->setExpectedException(
