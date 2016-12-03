@@ -6,11 +6,11 @@ It provides server side Google Analytics tracking with a small easy to use PHP 5
 Implemented are the parts of the interface that would be available without [ECMAScript][6] in a
 browser to detect certain features such as screen resolution / colour, flash / java plugin version etc.
 
-CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`
-HOME: <http://github.com/chappy84/google-analytics-server-side>
-BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>
+CODE: `git clone git://github.com/chappy84/google-analytics-server-side.git`  
+HOME: <http://github.com/chappy84/google-analytics-server-side>  
+BUGS: <http://github.com/chappy84/google-analytics-server-side/issues>  
 
-Google Analytics was developed by [Google][4].
+Google Analytics was developed by [Google][4].  
 This PHP adaptation is maintained by [Tom Chapman][5].
 
 [1]: http://git.io/gass
@@ -85,7 +85,7 @@ These options can also be set individually by the method setOption,
 or in one go with the method setOptions
 
 Most of the [current basic methods][10] available in ga.js tracking code have been
-implemented.
+implemented.  
 The methods implemented are:
 
 - deleteCustomVar
@@ -122,13 +122,13 @@ the tracking information:
 - setCookies
 
 On top of this there are also set methods to alter the default values for the the page
-title and document character set.
+title and document character set.  
 These are available via the following methods:
 
 - setPageTitle
 - setCharset
 
-Get methods are also provided for all of the above.
+Get methods are also provided for all of the above.  
 All methods but get methods allow chaining for ease of use.
 
 ### Event Tracking
@@ -145,7 +145,7 @@ Event tracking is implemented using the [same functionality as in the ga.js trac
 );
 ```
 
-N.B. trackEvent() does not require trackPageView() to be called first.
+N.B. trackEvent() does not require trackPageView() to be called first.  
 However if you do not call trackPageView first or set nonInteraction to true then your
 pages/visit metric may become less than 1.
 
@@ -155,7 +155,7 @@ pages/visit metric may become less than 1.
 BotInfo
 -------
 
-You must enable botInfo for it to ignore any search/trawler bots.
+You must enable botInfo for it to ignore any search/trawler bots.  
 To do this you need to pass one of true, and associative array or an instance of the
 adapter you want to use into the class.  The code will default to the BrowsCap adapter.
 Setting this to true will use the default. If you pass an associative array, this will be
@@ -223,7 +223,7 @@ functionality will work without the need to restart the web-server.
 ***DEPRECATED*** - until udger.com implements csvs to replace user agent string info's csv, as user-agent-string.info has now shut down
 
 This was the previous default for Google Analytics Server Side which downloads a csv list
-of search engine crawlers from [user-agent-string.info][14].
+of search engine crawlers from [user-agent-string.info][14].  
 There are three options as part of the array configuration parameter:
 
 - cachePath: where to save the list of bots downloaded from user-agent-string.info (required)
@@ -240,7 +240,7 @@ Http
 ----
 
 This is a singleton class which provides http functionality across all sections of the
-GASS framework.
+GASS framework.  
 This will default to using the Curl adapter if it's available otherwise it'll fall back
 to the Stream adapter. It requires no options. All options should be passed as a
 configuration option to GoogleAnalyticsServerSide either via the configuration parameter
@@ -282,7 +282,7 @@ use in the connection when made.
 #### Curl
 This utilises the php extension cURL. cURL is recommended, however as it's not always
 available the code falls back to stream to allow all servers make http requests in the
-correct way.
+correct way.  
 Any options provided to this class must be passed using the [curl constants][16] as
 identifiers (associative array keys or option names).
 
@@ -300,7 +300,7 @@ it does with the normal ECMAScript tracking.
 Cookies
 -------
 
-Cookies are automatically set when either trackPageView or trackEvent are called.
+Cookies are automatically set when either trackPageView or trackEvent are called.  
 They are however only sent as headers to the browser once, thus if you call either
 function more than once, or call both functions, then they will only be included in the
 headers when the first call is made.
