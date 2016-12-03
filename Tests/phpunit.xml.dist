@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="../vendor/autoload.php"
-         colors="true">
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="../vendor/autoload.php"
+         cacheTokens="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         forceCoversAnnotation="false"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         stopOnRisky="false"
+         verbose="false">
     <php>
         <ini name="date.timezone" value="Europe/London"/>
         <ini name="memory_limit" value="1024M"/>
@@ -21,4 +35,12 @@
             <directory>./</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../Gass/</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+    </logging>
 </phpunit>
