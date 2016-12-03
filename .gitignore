@@ -1,9 +1,3 @@
-.buildpath
-.DS_Store
-.project
-.settings
-/nbproject
-._*
+clover.xml
 composer.lock
 vendor
-clover.xml
