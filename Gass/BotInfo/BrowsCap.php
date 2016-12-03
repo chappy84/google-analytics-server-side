@@ -224,7 +224,6 @@ class BrowsCap extends Base
      * Returns all the details related to a browser
      *
      * @param string $index
-     *
      * @return array|bool
      */
     private function getBrowserDetails($index)
@@ -312,7 +311,6 @@ class BrowsCap extends Base
      *
      * @param string $userAgent [optional]
      * @param string $remoteAddress [optional]
-     *
      * @return bool
      */
     public function isBot($userAgent = null, $remoteAddress = null)

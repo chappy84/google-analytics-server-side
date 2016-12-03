@@ -138,7 +138,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2', $crawlerResult->majorver);
         $this->assertEquals('0', $crawlerResult->minorver);
         $this->assertEquals(false, $crawlerResult->cookies);
-        $this->assertEquals(false, $crawlerResult->javascript);
+        $this->assertEquals(true, $crawlerResult->javascript);
     }
 
     public function testGetBrowserValidReturnArray()
