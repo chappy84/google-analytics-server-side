@@ -26,6 +26,9 @@
 
 namespace GassTests\Gass\BotInfo;
 
+use Gass\BotInfo\BrowsCap;
+use Gass\Http\Http;
+
 class BrowsCapTest extends \PHPUnit_Framework_TestCase
 {
     private $iniFileLocation;
@@ -33,7 +36,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        \Gass\Http\Http::getInstance(array(), $this->getMock('Gass\Http\HttpInterface'));
+        Http::getInstance(array(), $this->getMock('Gass\Http\HttpInterface'));
         $this->iniFileLocation = realpath(
             dirname(dirname(__DIR__)) .
             DIRECTORY_SEPARATOR .
@@ -47,7 +50,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     {
         $this->setTestHttpForVersionDateFile();
 
-        return new \Gass\BotInfo\BrowsCap(
+        return new BrowsCap(
             array(
                 'browscap' => $this->iniFileLocation,
             )
@@ -60,17 +63,17 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
         $httpAdapter->expects($this->any())
             ->method('request')
-            ->with(\Gass\BotInfo\BrowsCap::VERSION_DATE_URL)
+            ->with(BrowsCap::VERSION_DATE_URL)
             ->will($this->returnSelf());
         $httpAdapter->expects($this->any())
             ->method('getResponse')
             ->will($this->returnValue(file_get_contents($latestVersionDateFile)));
-        \Gass\Http\Http::getInstance(array(), $httpAdapter);
+        Http::getInstance(array(), $httpAdapter);
     }
 
     public function testConstructValidNoArguments()
     {
-        $browsCap = new \Gass\BotInfo\BrowsCap;
+        $browsCap = new BrowsCap;
         $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $browsCap);
     }
 
@@ -83,7 +86,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructValidUnknownOptions()
     {
-        $browsCap = new \Gass\BotInfo\BrowsCap(
+        $browsCap = new BrowsCap(
             array(
                 'tripe' => $this->iniFileLocation,
             )
@@ -190,7 +193,7 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
             'Gass\Exception\RuntimeException',
             'The browscap option has not been specified, please set this and try again.'
         );
-        $browscap = new \Gass\BotInfo\Browscap;
+        $browscap = new Browscap;
         $browscap->getBrowser();
     }
 }

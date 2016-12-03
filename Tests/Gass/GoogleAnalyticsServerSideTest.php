@@ -26,6 +26,12 @@
 
 namespace GassTests\Gass;
 
+use Gass\BotInfo\BrowsCap;
+use Gass\GoogleAnalyticsServerSide;
+use Gass\Http\Http;
+use Gass\Http\Stream as HttpStream;
+use Gass\Http\Test as HttpTest;
+
 class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -34,12 +40,12 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     protected $dependecyFilesFolder;
 
     /**
-     * @var \Gass\GoogleAnalyticsServerSide
+     * @var GoogleAnalyticsServerSide
      */
     protected $gass;
 
     /**
-     * @var \Gass\Http\Test
+     * @var HttpTest
      */
     protected $httpAdapter;
 
@@ -47,9 +53,9 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->dependecyFilesFolder = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'dependency-files' . DIRECTORY_SEPARATOR;
-        $this->httpAdapter = new \Gass\Http\Test;
+        $this->httpAdapter = new HttpTest;
         $this->httpAdapter->addRequestQueueItem(
-            \Gass\GoogleAnalyticsServerSide::JS_URL,
+            GoogleAnalyticsServerSide::JS_URL,
             'HTTP/1.0 200 OK' . "\n" .
             'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT' . "\n" .
             'X-Content-Type-Options: nosniff' . "\n" .
@@ -63,7 +69,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             'Server: GFE/2.0',
             file_get_contents($this->dependecyFilesFolder . 'ga.js')
         )->addRequestQueueItem(
-            \Gass\GoogleAnalyticsServerSide::GIF_URL,
+            GoogleAnalyticsServerSide::GIF_URL,
             'HTTP/1.0 200 OK' . "\n" .
             'Age:255669' . "\n" .
             'Cache-Control:private, no-cache, no-cache=Set-Cookie, proxy-revalidate' . "\n" .
@@ -86,8 +92,8 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
                 )
             )
         );
-        \Gass\Http\Http::getInstance(array('adapter' => $this->httpAdapter));
-        $this->gass = new \Gass\GoogleAnalyticsServerSide;
+        Http::getInstance(array('adapter' => $this->httpAdapter));
+        $this->gass = new GoogleAnalyticsServerSide;
     }
 
     public function initialiseBotInfoBrowsCap()
@@ -95,7 +101,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $browsCapIniFileLocation = $this->dependecyFilesFolder . 'full_php_browscap.ini';
         touch($browsCapIniFileLocation);
         touch($this->dependecyFilesFolder . 'latestVersionDate.txt');
-        $botInfoAdapter = new \Gass\BotInfo\BrowsCap(
+        $botInfoAdapter = new BrowsCap(
             array('browscap' => $browsCapIniFileLocation)
         );
         $this->gass->setBotInfo($botInfoAdapter);
@@ -120,7 +126,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
             (class_exists('TypeError')) ? 'TypeError' : 'PHPUnit_Framework_Error',
             'Argument 1 passed to Gass\GoogleAnalyticsServerSide::__construct() must be'
         );
-        $gass = new \Gass\GoogleAnalyticsServerSide(new \stdClass);
+        $gass = new GoogleAnalyticsServerSide(new \stdClass);
     }
 
     public function testSetVersionValid()
@@ -163,7 +169,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $userAgent = 'Mozilla/5.0 (compatible; Konqueror/2.2.2)';
         $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setUserAgent($userAgent));
         $this->assertEquals($userAgent, $this->gass->getUserAgent());
-        $this->assertEquals($userAgent, \Gass\Http\Http::getUserAgent());
+        $this->assertEquals($userAgent, Http::getUserAgent());
         $this->gass->setRemoteAddress('123.123.123.123');
         $this->initialiseBotInfoBrowsCap();
         $this->gass->setUserAgent($userAgent);
@@ -180,28 +186,28 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en-GB,en;q=0.8'));
         $this->assertEquals('en-gb', $this->gass->getAcceptLanguage());
-        $this->assertEquals('en-gb', \Gass\Http\Http::getAcceptLanguage());
+        $this->assertEquals('en-gb', Http::getAcceptLanguage());
     }
 
     public function testSetAcceptLanguageThreeCharPlusCountryValid()
     {
         $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil-PH,fil;q=0.8'));
         $this->assertEquals('fil-ph', $this->gass->getAcceptLanguage());
-        $this->assertEquals('fil-ph', \Gass\Http\Http::getAcceptLanguage());
+        $this->assertEquals('fil-ph', Http::getAcceptLanguage());
     }
 
     public function testSetAcceptLanguageTwoCharValid()
     {
         $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en,en-GB;q=0.8'));
         $this->assertEquals('en', $this->gass->getAcceptLanguage());
-        $this->assertEquals('en', \Gass\Http\Http::getAcceptLanguage());
+        $this->assertEquals('en', Http::getAcceptLanguage());
     }
 
     public function testSetAcceptLanguageThreeCharValid()
     {
         $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil,fil-PH;q=0.8'));
         $this->assertEquals('fil', $this->gass->getAcceptLanguage());
-        $this->assertEquals('fil', \Gass\Http\Http::getAcceptLanguage());
+        $this->assertEquals('fil', Http::getAcceptLanguage());
     }
 
     public function testSetAcceptLanguageExceptionTooLong()
@@ -258,7 +264,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $remoteAddress = '255.255.255.0';
         $this->gass->setRemoteAddress($remoteAddress);
         $this->assertEquals($remoteAddress, $this->gass->getRemoteAddress());
-        $this->assertEquals($remoteAddress, \Gass\Http\Http::getRemoteAddress());
+        $this->assertEquals($remoteAddress, Http::getRemoteAddress());
         $this->initialiseBotInfoBrowsCap();
         $this->gass->setRemoteAddress($remoteAddress);
         $this->assertEquals($remoteAddress, $this->gass->getBotInfo()->getRemoteAddress());
@@ -671,7 +677,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Gass\BotInfo\BotInfo', $currentBotInfo);
         $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $currentBotInfo->getAdapter());
 
-        $browserCap = new \Gass\BotInfo\BrowsCap(array('browscap' => '/tmp/full_php_browscap.ini'));
+        $browserCap = new BrowsCap(array('browscap' => '/tmp/full_php_browscap.ini'));
         $this->gass->setBotInfo($browserCap);
         $currentBotInfo = $this->gass->getBotInfo();
         $this->assertInstanceOf('Gass\BotInfo\BotInfo', $currentBotInfo);
@@ -714,7 +720,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($http, $this->gass->getHttp());
 
-        $httpAdapter = new \Gass\Http\Stream;
+        $httpAdapter = new HttpStream;
         $this->gass->setHttp($httpAdapter);
         $this->assertEquals($httpAdapter, $this->gass->getHttp());
 

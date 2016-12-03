@@ -26,6 +26,8 @@
 
 namespace GassTests\Gass\Validate;
 
+use Gass\Validate\IpAddress;
+
 class IpAddressTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -36,7 +38,7 @@ class IpAddressTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->ipValidator = new \Gass\Validate\IpAddress;
+        $this->ipValidator = new IpAddress;
     }
 
     public function testIsValidValidIPv4Address()

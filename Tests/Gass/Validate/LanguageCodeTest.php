@@ -26,6 +26,8 @@
 
 namespace GassTests\Gass\Validate;
 
+use Gass\Validate\LanguageCode;
+
 class LanguageCodeTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -36,7 +38,7 @@ class LanguageCodeTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->languageValidator = new \Gass\Validate\LanguageCode;
+        $this->languageValidator = new LanguageCode;
     }
 
     public function testIsValidValidLanguageCodes()
