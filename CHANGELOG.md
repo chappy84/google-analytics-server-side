@@ -5,6 +5,9 @@ Version 0.11.0 Beta
 -------------------
 
  - Change to BSD License
+ - Stop using parent namespaces in use statements
+ - Ensure works with PHP 7+
+ - Various code style & Docblock updates
 
 Version 0.10.0 Beta
 ------------------
@@ -37,7 +40,7 @@ Version 0.9.2 Beta
 - Install test suite via composer for Travis CI tests
 - Fix issue with Gass\Http\Curl library in relation to headers
 - Start transition to using PHPUnit Mock for class dependency testing
-- Add in vfsStream to composer for future unit testing of filesystem interaction 
+- Add in vfsStream to composer for future unit testing of filesystem interaction
 
 Version 0.9.1 Beta
 ------------------
@@ -48,7 +51,7 @@ Version 0.9.1 Beta
 - Docblock Corrections
 - PSR-2 Corrections
 - Update default version of ga.js used
-- Deal with multiple Set-Cookie headers received 
+- Deal with multiple Set-Cookie headers received
 
 Version 0.9.0 Beta
 ------------------
@@ -73,7 +76,7 @@ don't throw Exceptions when trying to load files from this framework
 Version 0.8.5 Beta
 ------------------
 
-- Code to PSR-2 compliant  
+- Code to PSR-2 compliant
     ( using @fabpot's php coding standards fixer: https://github.com/fabpot/PHP-CS-Fixer )
 - Update URLs for the browscap project now Gary Keith has transfered ownership to a new project leader
 
@@ -81,7 +84,7 @@ Version 0.8.4 Beta
 ------------------
 
 - Extract re-used validation into re-usable validator classes
-- Convert readme to github flavoured markdown  
+- Convert readme to github flavoured markdown
 - Added in PHPUnit tests for a large majority of the code, remainder to come
 - Search Engine information used for organic campaign info changed format in 5.3.0, update to deal with that
 - Altered parameters to getEventString. Includes code to deal with Backwards Compatibility.
@@ -108,7 +111,7 @@ Version 0.8.1 Beta
 Version 0.8.0 Beta
 ------------------
 
-- Converted to PHP 5.3 with namespaces instead of PHP 5.2 virtual namespaces  
+- Converted to PHP 5.3 with namespaces instead of PHP 5.2 virtual namespaces
     ( using @ralphschindler's php-namespacer: https://github.com/ralphschindler/PHPTools )
 - Removed deprecated methods from main class
 - Removed get/setEvent, not in GA code and not needed, set is done directly in trackEvent
@@ -158,7 +161,7 @@ so we don't really want a lot of E_WARNING php errors for no reason.
 - Minor code speed improvements
 - Some extra verification on event / custom variable strings
 - Remove issue where cookie contains one of the invalid raw cookie characters
-- convert createPageView / createEvent / setCustomVariable to trackPageView / trackEvent / setCustomVar as they 
+- convert createPageView / createEvent / setCustomVariable to trackPageView / trackEvent / setCustomVar as they
 are in the Google Analytics ECMAScript, left alias functions for old method names
 - Add getVisitorCustomVar, deleteCustomVar, setSessionCookieTimeout & setVisitorCookieTimeout methods
 
@@ -166,7 +169,7 @@ Version 0.7.7 Beta
 ------------------
 
 - Ensure the BrowserCap latest version date isn't retrieved more than once a day form the server.
-Store the version date in a one day cache file in same dir as php_browscap.ini. 
+Store the version date in a one day cache file in same dir as php_browscap.ini.
 - Make createPageView compatible with Google's trackPageView.
 - 6: Fix issue with the event value being passed wrongly to Google.
   (https://github.com/chappy84/google-analytics-server-side/issues/6)
@@ -174,7 +177,7 @@ Store the version date in a one day cache file in same dir as php_browscap.ini.
 Version 0.7.6 Beta
 ------------------
 
-- BrowserCap ini file is now parsed and dealt with by the code rather than using php's built in get_browser. 
+- BrowserCap ini file is now parsed and dealt with by the code rather than using php's built in get_browser.
 - BrowserCap ini file now updated whenever update available on server.
 
 Version 0.7.5 Beta
