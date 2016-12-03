@@ -28,34 +28,72 @@ namespace GassTests\Gass\Adapter;
 
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Gass\BotInfo\Base
-     */
-    private $baseAdapter;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->baseAdapter = $this->getMockForAbstractClass('Gass\Adapter\Base');
-    }
-
     public function testSetOptionsValid()
     {
-        $options = array('testOption1' => 'testValue1');
-        $this->assertInstanceOf('Gass\Adapter\Base', $this->baseAdapter->setOptions($options));
-        $this->assertEquals($options, $this->baseAdapter->getOptions());
+        $baseAdapter = $this->getBaseAdapter();
+        $options = array('testOption1' => 'testValue1', 'testOption2' => 'testValue2');
+
+        $this->assertEquals($baseAdapter, $baseAdapter->setOptions($options));
+        $this->assertAttributeEquals($options, 'options', $baseAdapter);
     }
 
     public function testSetOptionValid()
     {
-        $optionName = 'testOption2';
-        $optionValue = 'testValue2';
-        $this->assertInstanceOf('Gass\Adapter\Base', $this->baseAdapter->setOption($optionName, $optionValue));
-        $this->assertEquals($optionValue, $this->baseAdapter->getOption($optionName));
+        $baseAdapter = $this->getBaseAdapter();
+        $optionName1 = 'testOption1';
+        $optionName2 = 'testOption2';
+        $optionValue1 = 'testValue1';
+        $optionValue2 = 'testValue2';
+        $fullOptions = array(
+            $optionName1 => $optionValue1,
+            $optionName2 => $optionValue2,
+        );
+
+        $this->assertEquals($baseAdapter, $baseAdapter->setOption($optionName1, $optionValue1));
+        $this->assertEquals($baseAdapter, $baseAdapter->setOption($optionName2, $optionValue2));
+        $this->assertAttributeEquals($fullOptions, 'options', $baseAdapter);
     }
 
-    public function testGetOptionNotSetOption()
+    /**
+     * @depends testSetOptionsValid
+     */
+    public function testGetOptionsValid()
     {
-        $this->assertNull($this->baseAdapter->getOption('notSetOption'));
+        $baseAdapter = $this->getBaseAdapter();
+        $options = array('testOption1' => 'testValue1', 'testOption2' => 'testValue2');
+
+        $this->assertEquals($baseAdapter, $baseAdapter->setOptions($options));
+        $this->assertEquals($options, $baseAdapter->getOptions());
+    }
+
+    /**
+     * @depends testSetOptionsValid
+     */
+    public function testGetOptionValid()
+    {
+        $baseAdapter = $this->getBaseAdapter();
+        $optionName1 = 'testOption1';
+        $optionName2 = 'testOption2';
+        $optionValue1 = 'testValue1';
+        $optionValue2 = 'testValue2';
+        $fullOptions = array(
+            $optionName1 => $optionValue1,
+            $optionName2 => $optionValue2,
+        );
+        $this->assertEquals($baseAdapter, $baseAdapter->setOptions($fullOptions));
+
+        $this->assertEquals($optionValue1, $baseAdapter->getOption($optionName1));
+        $this->assertEquals($optionValue2, $baseAdapter->getOption($optionName2));
+    }
+
+    public function testGetOptionMissing()
+    {
+        $baseAdapter = $this->getBaseAdapter();
+        $this->assertNull($baseAdapter->getOption('notSetOption'));
+    }
+
+    private function getBaseAdapter()
+    {
+        return $this->getMockForAbstractClass('Gass\Adapter\Base');
     }
 }
