@@ -117,7 +117,7 @@ class BrowsCap extends Base
         ) {
             $latestDateString = trim(
                 Http::getInstance()
-                    ->request(self::VERSION_DATE_URL)
+                    ->request(static::VERSION_DATE_URL)
                     ->getResponse()
             );
             if (!is_writable($latestVersionDateFile)
@@ -191,7 +191,7 @@ class BrowsCap extends Base
                 ' The remote server rejects requests without a user-agent.'
             );
         }
-        $browscapSource = Http::getInstance()->request(self::BROWSCAP_URL)->getResponse();
+        $browscapSource = Http::getInstance()->request(static::BROWSCAP_URL)->getResponse();
         $browscapContents = trim($browscapSource);
         if (empty($browscapContents)) {
             throw new RuntimeException(

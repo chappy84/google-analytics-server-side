@@ -148,7 +148,7 @@ class UserAgentStringInfo extends Base
      */
     private function getFromWeb()
     {
-        $csvSource = Http::getInstance()->request(self::CSV_URL)->getResponse();
+        $csvSource = Http::getInstance()->request(static::CSV_URL)->getResponse();
         $botsCsv = trim($csvSource);
         if (empty($botsCsv)) {
             throw new RuntimeException(

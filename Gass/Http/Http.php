@@ -101,19 +101,19 @@ class Http
     public static function getInstance(array $options = array(), $adapter = null)
     {
         $className = __CLASS__;
-        if (self::$instance === null || !self::$instance instanceof $className) {
-            self::$instance = new $className($options, $adapter);
+        if (static::$instance === null || !static::$instance instanceof $className) {
+            static::$instance = new $className($options, $adapter);
         } elseif (0 < func_num_args()) {
             if ($adapter === null && !empty($options['adapter'])) {
                 $adapter = $options['adapter'];
                 unset($options['adapter']);
             }
             if ($adapter !== null) {
-                self::$instance->setAdapter($adapter);
+                static::$instance->setAdapter($adapter);
             }
-            self::$instance->setOptions($options);
+            static::$instance->setOptions($options);
         }
-        return self::$instance;
+        return static::$instance;
     }
 
     /**
@@ -145,7 +145,7 @@ class Http
      */
     public static function __callStatic($name, $arguments)
     {
-        $instance = self::getInstance();
+        $instance = static::getInstance();
         $adapter = $instance->getAdapter();
         if (method_exists($adapter, $name)) {
             return call_user_func_array(array($adapter, $name), $arguments);

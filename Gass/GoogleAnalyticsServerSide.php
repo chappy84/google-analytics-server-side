@@ -601,7 +601,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     protected function setCurrentJsFile()
     {
-        $this->currentJsFile = trim(Http::request(self::JS_URL)->getResponse());
+        $this->currentJsFile = trim(Http::request(static::JS_URL)->getResponse());
         return $this;
     }
 
@@ -1377,7 +1377,7 @@ class GoogleAnalyticsServerSide implements GassInterface
                     $cookieLife = time() + $this->visitorCookieTimeout;
             }
             if ($setHeader) {
-                setcookie($name, $value, $cookieLife, self::COOKIE_PATH, '.' . $this->getServerName());
+                setcookie($name, $value, $cookieLife, static::COOKIE_PATH, '.' . $this->getServerName());
             }
             return $this;
         }
@@ -1626,7 +1626,7 @@ class GoogleAnalyticsServerSide implements GassInterface
                 $customVarString;
         }
 
-        $utmUrl = self::GIF_URL . '?' . http_build_query($queryParams, null, '&');
+        $utmUrl = static::GIF_URL . '?' . http_build_query($queryParams, null, '&');
 
         Http::request($utmUrl);
         return $this;

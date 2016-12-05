@@ -68,12 +68,12 @@ abstract class Multi implements AdapterInterface
     public function __construct(array $adapters = array())
     {
         if (empty($this->requiredClass)) {
-            $this->requiredClass = self::DEFAULT_INTERFACE;
+            $this->requiredClass = static::DEFAULT_INTERFACE;
         }
-        if ($this->requiredClass != self::DEFAULT_INTERFACE
-            && !is_subclass_of($this->requiredClass, self::DEFAULT_INTERFACE)
+        if ($this->requiredClass != static::DEFAULT_INTERFACE
+            && !is_subclass_of($this->requiredClass, static::DEFAULT_INTERFACE)
         ) {
-            throw new DomainException($this->requiredClass . ' must implement ' . self::DEFAULT_INTERFACE);
+            throw new DomainException($this->requiredClass . ' must implement ' . static::DEFAULT_INTERFACE);
         }
         $this->setAdapters($adapters);
     }
