@@ -67,6 +67,11 @@ abstract class Multi implements AdapterInterface
      */
     public function __construct(array $adapters = array())
     {
+        if (static::DEFAULT_INTERFACE != self::DEFAULT_INTERFACE
+            && !is_subclass_of(static::DEFAULT_INTERFACE, self::DEFAULT_INTERFACE)
+        ) {
+            throw new DomainException(static::DEFAULT_INTERFACE . ' must implement ' . self::DEFAULT_INTERFACE);
+        }
         if (empty($this->requiredClass)) {
             $this->requiredClass = static::DEFAULT_INTERFACE;
         }
@@ -161,7 +166,7 @@ abstract class Multi implements AdapterInterface
      */
     public function setOptions(array $options)
     {
-        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . get_class($this));
     }
 
     /**
@@ -173,7 +178,7 @@ abstract class Multi implements AdapterInterface
      */
     public function setOption($name, $value)
     {
-        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . get_class($this));
     }
 
     /**
@@ -183,7 +188,7 @@ abstract class Multi implements AdapterInterface
      */
     public function getOptions()
     {
-        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . get_class($this));
     }
 
     /**
@@ -194,6 +199,6 @@ abstract class Multi implements AdapterInterface
      */
     public function getOption($name)
     {
-        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . __CLASS__);
+        throw new BadMethodCallException(__METHOD__ . ' cannot be called on ' . get_class($this));
     }
 }
