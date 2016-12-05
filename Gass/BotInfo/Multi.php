@@ -75,8 +75,8 @@ class Multi extends AdapterMulti implements BotInfoInterface
      */
     public function setRemoteAddress($remoteAddress)
     {
-        foreach ($this->adapters as $adapter) {
-            $adapter->{__METHOD__}($remoteAddress);
+        foreach ($this->getAdapters() as $adapter) {
+            $adapter->{__FUNCTION__}($remoteAddress);
         }
         return $this;
     }
@@ -89,8 +89,8 @@ class Multi extends AdapterMulti implements BotInfoInterface
      */
     public function setUserAgent($userAgent)
     {
-        foreach ($this->adapters as $adapter) {
-            $adapter->{__METHOD__}($remoteAddress);
+        foreach ($this->getAdapters() as $adapter) {
+            $adapter->{__FUNCTION__}($userAgent);
         }
         return $this;
     }
@@ -105,8 +105,8 @@ class Multi extends AdapterMulti implements BotInfoInterface
      */
     public function isBot($userAgent = null, $remoteAddress = null)
     {
-        foreach ($this->adapters as $adapter) {
-            if (true === $adapter->{__METHOD__}($userAgent, $remoteAddress)) {
+        foreach ($this->getAdapters() as $adapter) {
+            if (true === $adapter->{__FUNCTION__}($userAgent, $remoteAddress)) {
                 return true;
             }
         }
