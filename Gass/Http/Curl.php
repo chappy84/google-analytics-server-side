@@ -64,6 +64,7 @@ class Curl extends Base
      *
      * @param array $options
      * @throws RuntimeException
+     * @codeCoverageIgnore
      */
     public function __construct(array $options = array())
     {
@@ -84,7 +85,7 @@ class Curl extends Base
     {
         if (is_resource($this->curl)) {
             if ($index === null) {
-                $index = 0;
+                return curl_getinfo($this->curl);
             }
             return curl_getinfo($this->curl, $index);
         }
@@ -113,6 +114,7 @@ class Curl extends Base
             curl_close($this->curl);
         }
         $this->curl = null;
+        $this->setResponse(null);
         return $this;
     }
 
@@ -136,7 +138,7 @@ class Curl extends Base
             $this->setOption(CURLOPT_USERAGENT, $userAgent);
         }
 
-        $currentHeaders = $this->getOption(CURLOPT_HEADER);
+        $currentHeaders = $this->getOption(CURLOPT_HTTPHEADER);
         $extraHeaders = (is_array($currentHeaders)) ? $currentHeaders : array();
         if (null !== ($acceptedLanguage = $this->getAcceptLanguage())) {
             $extraHeaders[] = 'Accepts-Language: ' . $acceptedLanguage;
@@ -149,7 +151,7 @@ class Curl extends Base
         }
 
         $extraCurlOptions = $this->getOptions();
-        if (!empty($extraCurlOptions) && false === curl_setopt_array($this->curl, $extraCurlOptions)) {
+        if (!empty($extraCurlOptions) && false === @curl_setopt_array($this->curl, $extraCurlOptions)) {
             throw new UnexpectedValueException(
                 'One of the extra curl options specified is invalid. Error: ' . curl_error($this->curl)
             );
@@ -159,8 +161,9 @@ class Curl extends Base
             throw new RuntimeException('Source could not be retrieved. Error: ' . curl_error($this->curl));
         }
 
-        $statusCode = $this->getInfo(CURLINFO_HTTP_CODE);
-        $this->checkResponseCode($statusCode);
+        $this->checkResponseCode(
+            $this->getInfo(CURLINFO_HTTP_CODE)
+        );
 
         $this->setResponse($response);
 
