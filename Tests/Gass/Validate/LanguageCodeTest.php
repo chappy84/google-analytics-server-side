@@ -70,4 +70,12 @@ class LanguageCodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($validationMessages));
         $this->assertEquals('"ab-cde" is an invalid language code.', $validationMessages[0]);
     }
+
+    public function testMessagesWhenInvalidDataType()
+    {
+        $this->assertFalse($this->languageValidator->isValid(new \stdClass));
+        $this->assertNotEmpty($validationMessages = $this->languageValidator->getMessages());
+        $this->assertEquals(1, count($validationMessages));
+        $this->assertEquals('The provided language code must be a string.', $validationMessages[0]);
+    }
 }

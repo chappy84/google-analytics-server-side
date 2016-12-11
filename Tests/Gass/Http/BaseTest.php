@@ -42,110 +42,123 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function testSetRemoteAddressValid()
     {
         $validRemoteAddress = '192.168.0.1';
-        $this->assertInstanceOf('Gass\Http\Base', $this->baseHttp->setRemoteAddress($validRemoteAddress));
+        $this->assertSame($this->baseHttp, $this->baseHttp->setRemoteAddress($validRemoteAddress));
         $this->assertEquals($validRemoteAddress, $this->baseHttp->getRemoteAddress());
     }
 
-    public function testSetRemoteAddressExceptionLetters()
+    /**
+     * @dataProvider dataProviderTestSetRemoteAddressExceptions
+     */
+    public function testSetRemoteAddressExceptions($remoteAddress)
     {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->baseHttp->setRemoteAddress('abc.def.ghi.jkl');
+        $this->setExpectedException(
+            'Gass\Exception\InvalidArgumentException',
+            'Remote Address validation errors: '
+        );
+        $this->baseHttp->setRemoteAddress($remoteAddress);
     }
 
-    public function testSetRemoteAddressExceptionTooHighSegments()
+    public function dataProviderTestSetRemoteAddressExceptions()
     {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->baseHttp->setRemoteAddress('500.500.500.500');
-    }
-
-    public function testSetRemoteAddressExceptionMissingSegments()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->baseHttp->setRemoteAddress('255.255');
-    }
-
-    public function testSetRemoteAddressExceptionInteger()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->baseHttp->setRemoteAddress('192');
-    }
-
-    public function testSetRemoteAddressExceptionWrongDataType()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-        $this->baseHttp->setRemoteAddress(array('255.255.255.0'));
+        return array(
+            array('abc.def.ghi.jkl'),
+            array('500.500.500.500'),
+            array('255.255'),
+            array('192'),
+            array(array('255.255.255.0')),
+        );
     }
 
     public function testSetUserAgent()
     {
         $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.11 ' .
             '(KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11';
-        $this->assertInstanceOf('Gass\Http\Base', $this->baseHttp->setUserAgent($userAgent));
+        $this->assertSame($this->baseHttp, $this->baseHttp->setUserAgent($userAgent));
         $this->assertEquals($userAgent, $this->baseHttp->getUserAgent());
     }
 
-    public function testSetAcceptLanguageTwoCharPlusCountryValid()
+    /**
+     * @dataProvider dataProviderTestSetAcceptLanguageValid
+     */
+    public function testSetAcceptLanguageValid($languageCode)
     {
-        $this->assertInstanceOf('Gass\Http\Base', $this->baseHttp->setAcceptLanguage('en-gb'));
-        $this->assertEquals('en-gb', $this->baseHttp->getAcceptLanguage());
+        $this->assertSame($this->baseHttp, $this->baseHttp->setAcceptLanguage($languageCode));
+        $this->assertEquals($languageCode, $this->baseHttp->getAcceptLanguage());
     }
 
-    public function testSetAcceptLanguageThreeCharPlusCountryValid()
+    public function dataProviderTestSetAcceptLanguageValid()
     {
-        $this->assertInstanceOf('Gass\Http\Base', $this->baseHttp->setAcceptLanguage('fil-ph'));
-        $this->assertEquals('fil-ph', $this->baseHttp->getAcceptLanguage());
+        return array(
+            array('en-gb'),
+            array('fil-ph'),
+            array('en'),
+            array('fil'),
+        );
     }
 
-    public function testSetAcceptLanguageTwoCharValid()
-    {
-        $this->assertInstanceOf('Gass\Http\Base', $this->baseHttp->setAcceptLanguage('en'));
-        $this->assertEquals('en', $this->baseHttp->getAcceptLanguage());
-    }
-
-    public function testSetAcceptLanguageThreeCharValid()
-    {
-        $this->assertInstanceOf('Gass\Http\Base', $this->baseHttp->setAcceptLanguage('fil'));
-        $this->assertEquals('fil', $this->baseHttp->getAcceptLanguage());
-    }
-
-    public function testSetAcceptLanguageExceptionTooLong()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->baseHttp->setAcceptLanguage('abcd');
-    }
-
-    public function testSetAcceptLanguageExceptionTooLong2()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->baseHttp->setAcceptLanguage('AbCDefg');
-    }
-
-    public function testSetAcceptLanguageExceptionInvalidCountry()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->baseHttp->setAcceptLanguage('ab-cde');
-    }
-
-    public function testSetAcceptLanguageExceptionInvalidLanguage()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->baseHttp->setAcceptLanguage('abcd-ef');
-    }
-
-    public function testSetAcceptLanguageExceptionWrongDataType()
+    /**
+     * @dataProvider dataProviderTestSetAcceptLanguageExceptionInvalidArgument
+     */
+    public function testSetAcceptLanguageExceptionInvalidArgument($acceptLanguage)
     {
         $this->setExpectedException(
             'Gass\Exception\InvalidArgumentException',
-            'Accept Language validation errors: The provided language code must be a string.'
+            'Accept Language validation errors: '
         );
-        $this->baseHttp->setAcceptLanguage(array('en-gb'));
+        $this->baseHttp->setAcceptLanguage($acceptLanguage);
+    }
+
+    public function dataProviderTestSetAcceptLanguageExceptionInvalidArgument()
+    {
+        return array(
+            array('abcd'),
+            array('AbCDefg'),
+            array('ab-cde'),
+            array('abcd-ef'),
+            array(array('en-gb')),
+        );
     }
 
     public function testSetResponse()
     {
         $response = 'Test Response String';
-        $this->assertInstanceOf('Gass\Http\Base', $this->baseHttp->setResponse($response));
+        $this->assertSame($this->baseHttp, $this->baseHttp->setResponse($response));
         $this->assertEquals($response, $this->baseHttp->getResponse());
+    }
+
+    public function testRequestNoArguments()
+    {
+        $this->assertSame($this->baseHttp, $this->baseHttp->request());
+    }
+
+    public function testRequestWithUrl()
+    {
+        $url = 'http://www.example.com/';
+        $this->baseHttp->expects($this->once())
+            ->method('setUrl')
+            ->with($this->equalTo($url))
+            ->willReturnSelf();
+        $this->assertSame($this->baseHttp, $this->baseHttp->request($url));
+    }
+
+    public function testRequestWithOptions()
+    {
+        $options = array(
+            'foo' => 'bar',
+            'baz' => 'qux',
+        );
+        $this->assertSame($this->baseHttp, $this->baseHttp->request(null, $options));
+        $this->assertAttributeEquals($options, 'options', $this->baseHttp);
+    }
+
+    /**
+     * No assertions as purpose of functions is to throw exceptions on specific codes
+     */
+    public function testCheckResponseNoExceptionValidCode()
+    {
+        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invoke($this->baseHttp, 200);
     }
 
     public function testCheckResponseCodeExceptionInvalidArgument()
@@ -156,339 +169,62 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod->invoke($this->baseHttp, 'TestCode');
     }
 
-    public function testCheckResponseCodeExceptionCode204()
+    /**
+     * @dataProvider dataProviderTestCheckResponseCodeExceptions
+     */
+    public function testCheckResponseCodeExceptions($code, $message)
     {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'No Content');
+        $this->setExpectedException('Gass\Exception\RuntimeException', $message);
         $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
         $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 204);
+        $reflectionMethod->invoke($this->baseHttp, $code);
     }
 
-    public function testCheckResponseCodeExceptionCode205()
+    public function dataProviderTestCheckResponseCodeExceptions()
     {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Reset Content');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 205);
-    }
-
-    public function testCheckResponseCodeExceptionCode206()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Partial Content');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 206);
-    }
-
-    public function testCheckResponseCodeExceptionCode207()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Multi-Status');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 207);
-    }
-
-    public function testCheckResponseCodeExceptionCode400()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Bad Request');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 400);
-    }
-
-    public function testCheckResponseCodeExceptionCode401()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Unauthorised Request');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 401);
-    }
-
-    public function testCheckResponseCodeExceptionCode402()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Payment Required');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 402);
-    }
-
-    public function testCheckResponseCodeExceptionCode403()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Forbidden');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 403);
-    }
-
-    public function testCheckResponseCodeExceptionCode404()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Not Found');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 404);
-    }
-
-    public function testCheckResponseCodeExceptionCode405()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Method Not Allowed');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 405);
-    }
-
-    public function testCheckResponseCodeExceptionCode406()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Not Acceptable');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 406);
-    }
-
-    public function testCheckResponseCodeExceptionCode407()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Proxy Authentication Required');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 407);
-    }
-
-    public function testCheckResponseCodeExceptionCode408()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Request Timeout');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 408);
-    }
-
-    public function testCheckResponseCodeExceptionCode409()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Conflict');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 409);
-    }
-
-    public function testCheckResponseCodeExceptionCode410()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Gone');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 410);
-    }
-
-    public function testCheckResponseCodeExceptionCode411()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Length Required');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 411);
-    }
-
-    public function testCheckResponseCodeExceptionCode412()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Precondition Failed');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 412);
-    }
-
-    public function testCheckResponseCodeExceptionCode413()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Request Entity Too Large');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 413);
-    }
-
-    public function testCheckResponseCodeExceptionCode414()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Request-URI Too Long');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 414);
-    }
-
-    public function testCheckResponseCodeExceptionCode415()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Unsupported Media Type');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 415);
-    }
-
-    public function testCheckResponseCodeExceptionCode416()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Request Range Not Satisfiable');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 416);
-    }
-
-    public function testCheckResponseCodeExceptionCode417()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Expectation Failed');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 417);
-    }
-
-    public function testCheckResponseCodeExceptionCode418()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'I\'m a Teapot');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 418);
-    }
-
-    public function testCheckResponseCodeExceptionCode422()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Unprocessable Entity (WebDAV)');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 422);
-    }
-
-    public function testCheckResponseCodeExceptionCode423()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Locked (WebDAV)');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 423);
-    }
-
-    public function testCheckResponseCodeExceptionCode424()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Failed Dependancy (WebDAV)');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 424);
-    }
-
-    public function testCheckResponseCodeExceptionCode425()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Unordered Collection');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 425);
-    }
-
-    public function testCheckResponseCodeExceptionCode426()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Upgrade Required');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 426);
-    }
-
-    public function testCheckResponseCodeExceptionCode444()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'No Response');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 444);
-    }
-
-    public function testCheckResponseCodeExceptionCode449()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Retry With');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 449);
-    }
-
-    public function testCheckResponseCodeExceptionCode450()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Blocked by Windows Parental Controls');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 450);
-    }
-
-    public function testCheckResponseCodeExceptionCode499()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Client Closed Request');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 499);
-    }
-
-    public function testCheckResponseCodeExceptionCode500()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Internal Server Error');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 500);
-    }
-
-    public function testCheckResponseCodeExceptionCode501()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Not Implemented');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 501);
-    }
-
-    public function testCheckResponseCodeExceptionCode502()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Bad Gateway');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 502);
-    }
-
-    public function testCheckResponseCodeExceptionCode503()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Service Unavailable');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 503);
-    }
-
-    public function testCheckResponseCodeExceptionCode504()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Gateway Timeout');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 504);
-    }
-
-    public function testCheckResponseCodeExceptionCode505()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'HTTP Version Not Supported');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 505);
-    }
-
-    public function testCheckResponseCodeExceptionCode506()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Variant Also Negotiates');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 506);
-    }
-
-    public function testCheckResponseCodeExceptionCode507()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Insufficient Storage (WebDAV)');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 507);
-    }
-
-    public function testCheckResponseCodeExceptionCode509()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Bandwidth Limit Exceeded');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 509);
-    }
-
-    public function testCheckResponseCodeExceptionCode510()
-    {
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Not Exceeded');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
-        $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 510);
+        return array(
+            array('204', 'No Content'),
+            array('205', 'Reset Content'),
+            array('206', 'Partial Content'),
+            array('207', 'Multi-Status'),
+            array('400', 'Bad Request'),
+            array('401', 'Unauthorised Request'),
+            array('402', 'Payment Required'),
+            array('403', 'Forbidden'),
+            array('404', 'Not Found'),
+            array('405', 'Method Not Allowed'),
+            array('406', 'Not Acceptable'),
+            array('407', 'Proxy Authentication Required'),
+            array('408', 'Request Timeout'),
+            array('409', 'Conflict'),
+            array('410', 'Gone'),
+            array('411', 'Length Required'),
+            array('412', 'Precondition Failed'),
+            array('413', 'Request Entity Too Large'),
+            array('414', 'Request-URI Too Long'),
+            array('415', 'Unsupported Media Type'),
+            array('416', 'Request Range Not Satisfiable'),
+            array('417', 'Expectation Failed'),
+            array('418', 'I\'m a Teapot'),
+            array('422', 'Unprocessable Entity (WebDAV)'),
+            array('423', 'Locked (WebDAV)'),
+            array('424', 'Failed Dependancy (WebDAV)'),
+            array('425', 'Unordered Collection'),
+            array('426', 'Upgrade Required'),
+            array('444', 'No Response'),
+            array('449', 'Retry With'),
+            array('450', 'Blocked by Windows Parental Controls'),
+            array('499', 'Client Closed Request'),
+            array('500', 'Internal Server Error'),
+            array('501', 'Not Implemented'),
+            array('502', 'Bad Gateway'),
+            array('503', 'Service Unavailable'),
+            array('504', 'Gateway Timeout'),
+            array('505', 'HTTP Version Not Supported'),
+            array('506', 'Variant Also Negotiates'),
+            array('507', 'Insufficient Storage (WebDAV)'),
+            array('509', 'Bandwidth Limit Exceeded'),
+            array('510', 'Not Exceeded'),
+        );
     }
 }

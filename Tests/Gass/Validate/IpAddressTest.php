@@ -73,11 +73,19 @@ class IpAddressTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->ipValidator->getMessages());
     }
 
-    public function testMessagesWhenInvalid()
+    public function testMessagesWhenInvalidIpv4()
     {
         $this->assertFalse($this->ipValidator->isValid('::1'));
         $this->assertNotEmpty($validationMessages = $this->ipValidator->getMessages());
         $this->assertEquals(1, count($validationMessages));
         $this->assertEquals('"::1" is an invalid IPv4 address', $validationMessages[0]);
+    }
+
+    public function testMessagesWhenInvalidDataType()
+    {
+        $this->assertFalse($this->ipValidator->isValid(new \stdClass));
+        $this->assertNotEmpty($validationMessages = $this->ipValidator->getMessages());
+        $this->assertEquals(1, count($validationMessages));
+        $this->assertEquals('The provided IP address must be a string.', $validationMessages[0]);
     }
 }
