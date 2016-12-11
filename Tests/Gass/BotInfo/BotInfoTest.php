@@ -28,116 +28,113 @@ namespace GassTests\Gass\BotInfo;
 
 use Gass\BotInfo\BotInfo;
 use Gass\BotInfo\BrowsCap;
-use Gass\BotInfo\UserAgentStringInfo;
+use Gass\BotInfo\TestAdapter;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class BotInfoTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConstructValidNoArguments()
+    public function setUp()
+    {
+        parent::setUp();
+        $ds = DIRECTORY_SEPARATOR;
+        require_once dirname(dirname(__DIR__)) . $ds . 'TestDoubles' . $ds . 'BotInfo' . $ds . 'BrowsCap.php';
+        require_once dirname(dirname(__DIR__)) . $ds . 'TestDoubles' . $ds . 'BotInfo' . $ds . 'TestAdapter.php';
+    }
+
+    public function testConstructNoArgs()
     {
         $botInfo = new BotInfo;
-        $this->assertInstanceOf('Gass\BotInfo\BotInfo', $botInfo);
-        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $botInfo->getAdapter());
+        $this->assertAttributeInstanceOf('Gass\BotInfo\BrowsCap', 'adapter', $botInfo);
     }
 
-    public function testConstructValidAdapterInOptions()
+    public function testConstructOptionsWithClassAdapter()
     {
-        $botInfo = new BotInfo(array('adapter' => 'UserAgentStringInfo'));
-        $this->assertInstanceOf('Gass\BotInfo\BotInfo', $botInfo);
-        $this->assertInstanceOf('Gass\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
-    }
-
-    public function testConstructValidAdapterParameter()
-    {
-        $botInfo = new BotInfo(array(), 'UserAgentStringInfo');
-        $this->assertInstanceOf('Gass\BotInfo\BotInfo', $botInfo);
-        $this->assertInstanceOf('Gass\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
-    }
-
-    public function testConstructValidOptions()
-    {
-        $browscapLocation = '/tmp/full_php_browscap.ini';
-        $botInfo = new BotInfo(array('browscap' => $browscapLocation));
-        $this->assertInstanceOf('Gass\BotInfo\BotInfo', $botInfo);
-        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $botInfoAdapter = $botInfo->getAdapter());
-        $this->assertArrayHasKey('browscap', $botInfoAdapter->getOptions());
-        $this->assertEquals($browscapLocation, $botInfoAdapter->getOption('browscap'));
-    }
-
-    public function testSetAdapterValidString()
-    {
-        $botInfo = new BotInfo;
-        $botInfo->setAdapter('BrowsCap');
-        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $botInfo->getAdapter());
-        $botInfo->setAdapter('userAgentStringInfo');
-        $this->assertInstanceOf('Gass\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
-    }
-
-    public function testSetAdapterValidClass()
-    {
-        $botInfo = new BotInfo;
-        $botInfo->setAdapter(new BrowsCap);
-        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $botInfo->getAdapter());
-        $botInfo->setAdapter(new UserAgentStringInfo);
-        $this->assertInstanceOf('Gass\BotInfo\UserAgentStringInfo', $botInfo->getAdapter());
-    }
-
-    public function testSetAdapterExceptionAdapterWrongInstance()
-    {
-        $this->setExpectedException(
-            'Gass\Exception\InvalidArgumentException',
-            'The Gass\BotInfo adapter must implement Gass\BotInfo\BotInfoInterface.'
+        $options = array(
+            'foo' => 'bar',
+            'baz' => 'qux',
         );
-        $botInfo = new BotInfo;
-        $botInfo->setAdapter(new \stdClass);
+        $adapter = $this->getMock('Gass\BotInfo\BotInfoInterface');
+        $adapter->expects($this->once())
+            ->method('setOptions')
+            ->with($this->equalTo($options))
+            ->willReturnSelf();
+        $options['adapter'] = $adapter;
+        $botInfo = new BotInfo($options);
+        $this->assertAttributeSame($adapter, 'adapter', $botInfo);
     }
 
-    public function testSetAdapterExceptionAdapterWrongDataType()
+    public function testConstructOptionsAndAdapterParams()
     {
-        $this->setExpectedException(
-            'Gass\Exception\InvalidArgumentException',
-            'The Gass\BotInfo adapter must implement Gass\BotInfo\BotInfoInterface.'
+        $options = array(
+            'foo' => 'bar',
+            'baz' => 'qux',
         );
-        $botInfo = new BotInfo;
-        $botInfo->setAdapter(1);
+        $adapter = $this->getMock('Gass\BotInfo\BotInfoInterface');
+        $adapter->expects($this->once())
+            ->method('setOptions')
+            ->with($this->equalTo($options))
+            ->willReturnSelf();
+        $botInfo = new BotInfo($options, $adapter);
+        $this->assertAttributeSame($adapter, 'adapter', $botInfo);
     }
 
     public function testCallMagicMethodValid()
     {
-        $browscapLocation = '/tmp/full_php_browscap.ini';
-        $botInfo = new BotInfo(array('browscap' => $browscapLocation));
-        $this->assertInstanceOf('Gass\BotInfo\BotInfo', $botInfo);
-        $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $botInfoAdapter = $botInfo->getAdapter());
-        $this->assertArrayHasKey('browscap', $botInfoAdapter->getOptions());
-        $this->assertEquals($browscapLocation, $botInfoAdapter->getOption('browscap'));
+        $testRetVal = 'testRetVal';
+        $argument1 = 'argument1';
+        $argument2 = 'argument2';
+        $adapter = $this->getMock('Gass\BotInfo\BotInfoInterface');
+        $adapter->expects($this->once())
+            ->method('isBot')
+            ->with($this->equalTo($argument1), $this->equalTo($argument2))
+            ->willReturn($testRetVal);
+        $botInfo = new BotInfo(array(), $adapter);
+        $this->assertEquals($testRetVal, $botInfo->isBot($argument1, $argument2));
     }
 
-    public function testCallMagicMethodExceptionNoAdapter()
+    public function testCallMagicMethodExceptionBadMethodCall()
     {
-        $botInfo = new BotInfo;
-        $reflectionProperty = new \ReflectionProperty('Gass\BotInfo\BotInfo', 'adapter');
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($botInfo, null);
-        $this->setExpectedException(
-            'Gass\Exception\DomainException',
-            'Adapter has not been set. Please set an adapter before calling setOption'
-        );
-        $botInfo->setOption('browscap', '/tmp/full_php_browscap.ini');
-    }
-
-    public function testCallMagicMethodExceptionMissingMethod()
-    {
-        $botInfo = new BotInfo;
+        $adapter = $this->getMock('Gass\BotInfo\BotInfoInterface');
+        $botInfo = new BotInfo(array(), $adapter);
         $this->setExpectedException(
             'Gass\Exception\BadMethodCallException',
-            'Method Gass\BotInfo\BrowsCap::testMethod does not exist.'
+            'Method ' . get_class($adapter) . '::fooBar does not exist.'
         );
-        $botInfo->testMethod();
+        $botInfo->fooBar();
     }
 
-    public function testAdapterBaseSetRemoteAddressExceptionInvalidAddress()
+    public function testSetAdapterValidWithString()
     {
-        $botInfo = new BotInfo;
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $botInfo->setRemoteAddress('test');
+        $botInfo = new BotInfo();
+        $this->assertSame($botInfo, $botInfo->setAdapter('TestAdapter'));
+        $this->assertAttributeInstanceOf('Gass\BotInfo\TestAdapter', 'adapter', $botInfo);
+    }
+
+    public function testSetAdapterValidWithClass()
+    {
+        $botInfo = new BotInfo();
+        $testAdapter = new \Gass\BotInfo\TestAdapter;
+        $this->assertSame($botInfo, $botInfo->setAdapter($testAdapter));
+        $this->assertAttributeSame($testAdapter, 'adapter', $botInfo);
+    }
+
+    public function testSetAdapterExceptionInvalidArgument()
+    {
+        $botInfo = new BotInfo();
+        $this->setExpectedException(
+            'Gass\Exception\InvalidArgumentException',
+            'The Gass\BotInfo adapter must implement Gass\BotInfo\BotInfoInterface.'
+        );
+        $botInfo->setAdapter(new \stdClass);
+    }
+
+    public function testGetAdapter()
+    {
+        $adapter = $this->getMock('Gass\BotInfo\BotInfoInterface');
+        $botInfo = new BotInfo(array(), $adapter);
+        $this->assertSame($adapter, $botInfo->getAdapter());
     }
 }

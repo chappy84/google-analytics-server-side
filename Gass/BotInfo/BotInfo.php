@@ -77,15 +77,12 @@ class BotInfo implements ProxyInterface
      */
     public function __call($name, $arguments)
     {
-        if ($this->adapter instanceof BotInfoInterface) {
-            if (method_exists($this->adapter, $name)) {
-                return call_user_func_array(array($this->adapter, $name), $arguments);
-            }
-            throw new BadMethodCallException(
-                'Method ' . get_class($this->adapter) . '::' . $name . ' does not exist.'
-            );
+        if (method_exists($this->adapter, $name)) {
+            return call_user_func_array(array($this->adapter, $name), $arguments);
         }
-        throw new DomainException('Adapter has not been set. Please set an adapter before calling ' . $name);
+        throw new BadMethodCallException(
+            'Method ' . get_class($this->adapter) . '::' . $name . ' does not exist.'
+        );
     }
 
     /**
