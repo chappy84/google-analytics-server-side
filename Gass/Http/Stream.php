@@ -145,8 +145,13 @@ class Stream extends Base
             $headersArray['X-Forwarded-For'] = $remoteAddress;
         }
         $newHeaders = array();
-        foreach ($headersArray as $key => $value) {
-            $newHeaders[] = $key . ': ' . $value;
+        foreach ($headersArray as $key => $header) {
+            if (!is_array($header)) {
+                $header = array($header);
+            }
+            foreach ($header as $value) {
+                $newHeaders[] = $key . ': ' . $value;
+            }
         }
         $headerString = implode("\r\n", $newHeaders);
 
@@ -156,7 +161,7 @@ class Stream extends Base
 
         $context = stream_context_create(parent::getOption('context'));
 
-        if (false === ($response = file_get_contents(parent::getOption('url'), false, $context))) {
+        if (false === ($response = @file_get_contents(parent::getOption('url'), false, $context))) {
             if (!isset($php_errormsg)) {
                 $php_errormsg = 'error message not available, this could be because the ini ' .
                     'setting "track_errors" is set to "Off" or XDebug is running';
@@ -205,14 +210,14 @@ class Stream extends Base
         foreach ($headers as $header) {
             $header = trim($header);
             if (1 === preg_match('/^([^:]+?)\s*?:([\s\S]+?)$/', $header, $matches)) {
-                $header_val = trim($matches[2]);
+                $headerVal = trim($matches[2]);
                 if (in_array(strtolower($matches[1]), array('set-cookie'))) {
                     if (!isset($returnHeaders[$matches[1]])) {
                         $returnHeaders[$matches[1]] = array();
                     }
-                    $returnHeaders[$matches[1]][] = $header_val;
+                    $returnHeaders[$matches[1]][] = $headerVal;
                 } else {
-                    $returnHeaders[$matches[1]] = $header_val;
+                    $returnHeaders[$matches[1]] = $headerVal;
                 }
             } elseif (1 === preg_match('/^HTTP\/\d+?\.\d+?\s+?(\d+)[\s\S]+?$/i', $header, $matches)) {
                 $returnHeaders['Http-Code'] = $matches[1];
