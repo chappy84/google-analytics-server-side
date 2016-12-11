@@ -61,7 +61,7 @@ class Http
      * @param array $options
      * @param string|\Gass\Http\HttpInterface $adapter [optional] - can be provided in $options aswell
      */
-    public function __construct(array $options = array(), $adapter = null)
+    private function __construct(array $options = array(), $adapter = null)
     {
         if (null === $adapter) {
             if (isset($options['adapter'])) {
@@ -130,7 +130,7 @@ class Http
             return call_user_func_array(array($this->adapter, $name), $arguments);
         }
         throw new BadMethodCallException(
-            __METHOD__ . ' is not an available method in ' . get_class($this->adapter)
+            'Method ' . get_class($this->adapter) . '::' . $name . ' does not exist.'
         );
     }
 
@@ -151,7 +151,7 @@ class Http
             return call_user_func_array(array($adapter, $name), $arguments);
         }
         throw new BadMethodCallException(
-            __METHOD__ . ' is not an available method in ' . get_class($adapter)
+            'Method ' . get_class($adapter) . '::' . $name . ' does not exist.'
         );
     }
 

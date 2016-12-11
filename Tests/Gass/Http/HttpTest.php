@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -23,3 +23,192 @@
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  */
+
+namespace GassTests\Gass\Http;
+
+use Gass\Http\Http;
+
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
+class HttpTest extends \PHPUnit_Framework_TestCase
+{
+    private $defaultAdapter;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $adapterToLoad = extension_loaded('curl') ? 'Curl' : 'Stream';
+        $this->defaultAdapter = 'Gass\Http\\' . $adapterToLoad;
+        $ds = DIRECTORY_SEPARATOR;
+        require_once dirname(dirname(__DIR__)) . $ds . 'TestDoubles' . $ds . 'Http' . $ds . $adapterToLoad . '.php';
+        require_once dirname(dirname(__DIR__)) . $ds . 'TestDoubles' . $ds . 'Http' . $ds . 'TestAdapter.php';
+    }
+
+    public function testGetInstanceNoArgs()
+    {
+        $this->assertAttributeInstanceOf($this->defaultAdapter, 'adapter', Http::getInstance());
+    }
+
+    public function testGetInstanceOptionsWithClassAdapter()
+    {
+        $options = array(
+            'foo' => 'bar',
+            'baz' => 'qux',
+        );
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $adapter->expects($this->once())
+            ->method('setOptions')
+            ->with($this->equalTo($options))
+            ->willReturnSelf();
+        $options['adapter'] = $adapter;
+        $this->assertAttributeSame($adapter, 'adapter', Http::getInstance($options));
+    }
+
+    public function testGetInstanceOptionsAndAdapterParams()
+    {
+        $options = array(
+            'foo' => 'bar',
+            'baz' => 'qux',
+        );
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $adapter->expects($this->once())
+            ->method('setOptions')
+            ->with($this->equalTo($options))
+            ->willReturnSelf();
+        $this->assertAttributeSame($adapter, 'adapter', Http::getInstance($options, $adapter));
+    }
+
+    public function testGetInstanceReturnsSameInstance()
+    {
+        $instance1 = Http::getInstance();
+        $this->assertSame($instance1, Http::getInstance());
+    }
+
+    public function testGetInstanceSubsequentCallsOptionsWithClassAdapter()
+    {
+        $instance = Http::getInstance();
+        $this->assertAttributeInstanceOf($this->defaultAdapter, 'adapter', $instance);
+
+        $options = array(
+            'foo' => 'bar',
+            'baz' => 'qux',
+        );
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $adapter->expects($this->once())
+            ->method('setOptions')
+            ->with($this->equalTo($options))
+            ->willReturnSelf();
+        $options['adapter'] = $adapter;
+        Http::getInstance($options);
+        $this->assertAttributeSame($adapter, 'adapter', $instance);
+    }
+
+    public function testGetInstanceSubsequentCallsOptionsAndAdapterParams()
+    {
+        $instance = Http::getInstance();
+        $this->assertAttributeInstanceOf($this->defaultAdapter, 'adapter', $instance);
+
+        $options = array(
+            'foo' => 'bar',
+            'baz' => 'qux',
+        );
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $adapter->expects($this->once())
+            ->method('setOptions')
+            ->with($this->equalTo($options))
+            ->willReturnSelf();
+        Http::getInstance($options, $adapter);
+        $this->assertAttributeSame($adapter, 'adapter', $instance);
+    }
+
+    public function testCloneInvalid()
+    {
+        $instance = Http::getInstance();
+        $this->setExpectedException('Gass\Exception\RuntimeException', 'You cannot clone Gass\Http\Http');
+        clone $instance;
+    }
+
+    public function testCallMagicMethodValid()
+    {
+        $testRetVal = 'testRetVal';
+        $argument1 = 'argument1';
+        $argument2 = array('argument2');
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $adapter->expects($this->once())
+            ->method('request')
+            ->with($this->equalTo($argument1), $this->equalTo($argument2))
+            ->willReturn($testRetVal);
+        $instance = Http::getInstance(array(), $adapter);
+        $this->assertEquals($testRetVal, $instance->request($argument1, $argument2));
+    }
+
+    public function testCallMagicMethodExceptionBadMethodCall()
+    {
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $instance = Http::getInstance(array(), $adapter);
+        $this->setExpectedException(
+            'Gass\Exception\BadMethodCallException',
+            'Method ' . get_class($adapter) . '::fooBar does not exist.'
+        );
+        $instance->fooBar();
+    }
+
+    public function testCallStaticMagicMethod()
+    {
+        $testRetVal = 'testRetVal';
+        $argument1 = 'argument1';
+        $argument2 = array('argument2');
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $adapter->expects($this->once())
+            ->method('request')
+            ->with($this->equalTo($argument1), $this->equalTo($argument2))
+            ->willReturn($testRetVal);
+        $instance = Http::getInstance(array(), $adapter);
+        $this->assertEquals($testRetVal, $instance::request($argument1, $argument2));
+    }
+
+    public function testCallStaticMagicMethodExceptionBadMethodCall()
+    {
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $instance = Http::getInstance(array(), $adapter);
+        $this->setExpectedException(
+            'Gass\Exception\BadMethodCallException',
+            'Method ' . get_class($adapter) . '::fooBar does not exist.'
+        );
+        $instance::fooBar();
+    }
+
+    public function testSetAdapterValidWithString()
+    {
+        $instance = Http::getInstance();
+        $this->assertSame($instance, $instance->setAdapter('TestAdapter'));
+        $this->assertAttributeInstanceOf('Gass\Http\TestAdapter', 'adapter', $instance);
+    }
+
+    public function testSetAdapterValidWithClass()
+    {
+        $instance = Http::getInstance();
+        $testAdapter = new \Gass\Http\TestAdapter;
+        $this->assertSame($instance, $instance->setAdapter($testAdapter));
+        $this->assertAttributeSame($testAdapter, 'adapter', $instance);
+    }
+
+    public function testSetAdapterExceptionInvalidArgument()
+    {
+        $instance = Http::getInstance();
+        $this->setExpectedException(
+            'Gass\Exception\InvalidArgumentException',
+            'The Gass\Http adapter must implement Gass\Http\HttpInterface.'
+        );
+        $instance->setAdapter(new \stdClass);
+    }
+
+    public function testGetAdapter()
+    {
+        $adapter = $this->getMock('Gass\Http\HttpInterface');
+        $instance = Http::getInstance(array(), $adapter);
+        $this->assertSame($adapter, $instance->getAdapter());
+    }
+}
