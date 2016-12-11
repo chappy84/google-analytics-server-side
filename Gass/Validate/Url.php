@@ -47,12 +47,9 @@ class Url extends Base
             $this->addMessage('The provided URL must be a string.');
             return false;
         }
-        if (false === filter_var($value, FILTER_VALIDATE_URL)) {
+        $validated = filter_var($value, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED);
+        if (false === $validated) {
             $this->addMessage('"%value%" is an invalid URL');
-            return false;
-        }
-        if (!preg_match('#^([a-z0-9]{3,})://([a-z0-9\.-]+)(/\S*)??$#', $value)) {
-            $this->addMessage('"%value%" does not have a protocol');
             return false;
         }
         return true;
