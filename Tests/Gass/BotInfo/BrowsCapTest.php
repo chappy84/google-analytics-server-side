@@ -64,10 +64,10 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
         $httpAdapter->expects($this->any())
             ->method('request')
             ->with(BrowsCap::VERSION_DATE_URL)
-            ->will($this->returnSelf());
+            ->willReturnSelf();
         $httpAdapter->expects($this->any())
             ->method('getResponse')
-            ->will($this->returnValue(file_get_contents($latestVersionDateFile)));
+            ->willReturn(file_get_contents($latestVersionDateFile));
         Http::getInstance(array(), $httpAdapter);
     }
 

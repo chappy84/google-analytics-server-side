@@ -63,12 +63,14 @@ class MultiTest extends \PHPUnit_Framework_TestCase
         $adapter1 = $this->getMock('Gass\BotInfo\BotInfoInterface');
         $adapter1->expects($this->once())
             ->method('setRemoteAddress')
-            ->with($this->equalTo($remoteAddress));
+            ->with($this->equalTo($remoteAddress))
+            ->willReturnSelf();
         $botInfoMulti->addAdapter($adapter1, 'bar');
         $adapter2 = $this->getMock('Gass\BotInfo\BotInfoInterface');
         $adapter2->expects($this->once())
             ->method('setRemoteAddress')
-            ->with($this->equalTo($remoteAddress));
+            ->with($this->equalTo($remoteAddress))
+            ->willReturnSelf();
         $botInfoMulti->addAdapter($adapter2, 'baz');
         $this->assertSame($botInfoMulti, $botInfoMulti->setRemoteAddress($remoteAddress));
     }
@@ -86,12 +88,14 @@ class MultiTest extends \PHPUnit_Framework_TestCase
         $adapter1 = $this->getMock('Gass\BotInfo\BotInfoInterface');
         $adapter1->expects($this->once())
             ->method('setUserAgent')
-            ->with($this->equalTo($userAgent));
+            ->with($this->equalTo($userAgent))
+            ->willReturnSelf();
         $botInfoMulti->addAdapter($adapter1, 'bar');
         $adapter2 = $this->getMock('Gass\BotInfo\BotInfoInterface');
         $adapter2->expects($this->once())
             ->method('setUserAgent')
-            ->with($this->equalTo($userAgent));
+            ->with($this->equalTo($userAgent))
+            ->willReturnSelf();
         $botInfoMulti->addAdapter($adapter2, 'baz');
         $this->assertSame($botInfoMulti, $botInfoMulti->setUserAgent($userAgent));
     }
