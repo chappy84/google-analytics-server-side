@@ -30,7 +30,6 @@ use Gass\BotInfo\BrowsCap;
 use Gass\GoogleAnalyticsServerSide;
 use Gass\Http\Http;
 use Gass\Http\Stream as HttpStream;
-use Gass\Http\Test as HttpTest;
 
 class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,7 +44,12 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     protected $gass;
 
     /**
-     * @var HttpTest
+     * @var \Gass\BotInfo\BotInfoInterface
+     */
+    protected $botInfoAdapter;
+
+    /**
+     * @var \Gass\Http\HttpInterface
      */
     protected $httpAdapter;
 
@@ -53,62 +57,80 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->dependecyFilesFolder = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'dependency-files' . DIRECTORY_SEPARATOR;
-        $this->httpAdapter = new HttpTest;
-        $this->httpAdapter->addRequestQueueItem(
-            GoogleAnalyticsServerSide::JS_URL,
-            'HTTP/1.0 200 OK' . "\n" .
-            'Last-Modified: Thu, 26 Apr 2012 04:29:17 GMT' . "\n" .
-            'X-Content-Type-Options: nosniff' . "\n" .
-            'Date: Tue, 15 May 2012 16:58:20 GMT' . "\n" .
-            'Expires: Wed, 16 May 2012 04:58:20 GMT' . "\n" .
-            'Content-Type: text/javascript' . "\n" .
-            'Vary: Accept-Encoding' . "\n" .
-            'X-Content-Type-Options: nosniff' . "\n" .
-            'Age: 8829' . "\n" .
-            'Cache-Control: max-age=43200, public' . "\n" .
-            'Server: GFE/2.0',
-            file_get_contents($this->dependecyFilesFolder . 'ga.js')
-        )->addRequestQueueItem(
-            GoogleAnalyticsServerSide::GIF_URL,
-            'HTTP/1.0 200 OK' . "\n" .
-            'Age:255669' . "\n" .
-            'Cache-Control:private, no-cache, no-cache=Set-Cookie, proxy-revalidate' . "\n" .
-            'Content-Length:35' . "\n" .
-            'Content-Type:image/gif' . "\n" .
-            'Date:Thu, 17 May 2012 21:28:01 GMT' . "\n" .
-            'Expires:Wed, 19 Apr 2000 11:43:00 GMT' . "\n" .
-            'Last-Modified:Wed, 21 Jan 2004 19:51:30 GMT' . "\n" .
-            'Pragma:no-cache' . "\n" .
-            'Server:GFE/2.0' . "\n" .
-            'X-Content-Type-Options:nosniff',
-            implode(
-                array(
-                    chr(0x47), chr(0x49), chr(0x46), chr(0x38), chr(0x39), chr(0x61),
-                    chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x80), chr(0xff),
-                    chr(0x00), chr(0xff), chr(0xff), chr(0xff), chr(0x00), chr(0x00),
-                    chr(0x00), chr(0x2c), chr(0x00), chr(0x00), chr(0x00), chr(0x00),
-                    chr(0x01), chr(0x00), chr(0x01), chr(0x00), chr(0x00), chr(0x02),
-                    chr(0x02), chr(0x44), chr(0x01), chr(0x00), chr(0x3b),
-                )
-            )
-        );
-        Http::getInstance(array('adapter' => $this->httpAdapter));
+
+        $this->initialiseHttpAdapter();
+
         $this->gass = new GoogleAnalyticsServerSide;
+
+        $this->initialiseBotInfoAdapter();
     }
 
-    public function initialiseBotInfoBrowsCap()
+    public function tearDown()
     {
-        $browsCapIniFileLocation = $this->dependecyFilesFolder . 'full_php_browscap.ini';
-        touch($browsCapIniFileLocation);
-        touch($this->dependecyFilesFolder . 'latestVersionDate.txt');
-        $botInfoAdapter = new BrowsCap(
-            array('browscap' => $browsCapIniFileLocation)
-        );
-        $this->gass->setBotInfo($botInfoAdapter);
+        $this->gass = null;
+        $this->botInfoAdapter = null;
+        $this->httpAdapter = null;
+    }
+
+    private function initialiseBotInfoAdapter()
+    {
+        $this->botInfoAdapter = $this->getMock('Gass\BotInfo\BotInfoInterface');
+        $this->botInfoAdapter->expects($this->any())
+            ->method('setUserAgent')
+            ->with($this->isType('string'))
+            ->willReturnSelf();
+        $this->botInfoAdapter->expects($this->any())
+            ->method('setRemoteAddress')
+            ->with($this->isType('string'))
+            ->willReturnSelf();
+
+        $this->gass->setBotInfo($this->botInfoAdapter);
         return $this;
     }
 
-    public function initialiseBrowserDetails()
+    private function initialiseHttpAdapter()
+    {
+        $this->httpAdapter = $this->getMock('Gass\Http\HttpInterface');
+        Http::getInstance(array('adapter' => $this->httpAdapter));
+        return $this;
+    }
+
+    private function expectGifUrlCall()
+    {
+        $this->httpAdapter->expects($this->once())
+            ->method('request')
+            ->with($this->stringStartsWith(GoogleAnalyticsServerSide::GIF_URL))
+            ->willReturnSelf();
+        return $this;
+    }
+
+    private function expectJsUrlCall()
+    {
+        $this->httpAdapter->expects($this->once())
+            ->method('request')
+            ->with($this->equalTo(GoogleAnalyticsServerSide::JS_URL))
+            ->willReturnSelf();
+        $this->httpAdapter->expects($this->once())
+            ->method('getResponse')
+            ->willReturn(file_get_contents($this->dependecyFilesFolder . 'ga.js'));
+        return $this;
+    }
+
+    private function expectJsAndGifUrlCall()
+    {
+        $this->httpAdapter->expects($this->atLeast(2))
+            ->method('request')
+            ->withConsecutive(
+                array($this->equalTo(GoogleAnalyticsServerSide::JS_URL)),
+                array($this->stringStartsWith(GoogleAnalyticsServerSide::GIF_URL))
+            )->willReturnSelf();
+        $this->httpAdapter->expects($this->once())
+            ->method('getResponse')
+            ->willReturn(file_get_contents($this->dependecyFilesFolder . 'ga.js'));
+        return $this;
+    }
+
+    private function initialiseBrowserDetails()
     {
         $this->gass->setServerName('www.example.com')
             ->setRemoteAddress('123.123.123.123')
@@ -131,7 +153,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetVersionValid()
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVersion('1.2.3'));
+        $this->assertSame($this->gass, $this->gass->setVersion('1.2.3'));
         $this->assertEquals('1.2.3', $this->gass->getVersion());
         $this->gass->setVersion('5.20.71');
         $this->assertEquals('5.20.71', $this->gass->getVersion());
@@ -166,14 +188,18 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetUserAgentValid()
     {
-        $userAgent = 'Mozilla/5.0 (compatible; Konqueror/2.2.2)';
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setUserAgent($userAgent));
-        $this->assertEquals($userAgent, $this->gass->getUserAgent());
-        $this->assertEquals($userAgent, Http::getUserAgent());
-        $this->gass->setRemoteAddress('123.123.123.123');
-        $this->initialiseBotInfoBrowsCap();
-        $this->gass->setUserAgent($userAgent);
-        $this->assertEquals($userAgent, $this->gass->getBotInfo()->getUserAgent());
+        $userAgent = 'testString';
+        $this->httpAdapter->expects($this->once())
+            ->method('setUserAgent')
+            ->with($this->equalTo($userAgent))
+            ->willReturnSelf();
+        $this->botInfoAdapter->expects($this->once())
+            ->method('setUserAgent')
+            ->with($this->equalTo($userAgent))
+            ->willReturnSelf();
+
+        $this->assertSame($this->gass, $this->gass->setUserAgent($userAgent));
+        $this->assertAttributeEquals($userAgent, 'userAgent', $this->gass);
     }
 
     public function testSetUserAgentExceptionWrongDataType()
@@ -182,68 +208,53 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setUserAgent(array('Mozilla/5.0 (compatible; Konqueror/2.2.2)'));
     }
 
-    public function testSetAcceptLanguageTwoCharPlusCountryValid()
+    /**
+     * @dataProvider dataProviderTestSetAcceptLanguageValid
+     */
+    public function testSetAcceptLanguageValid($fullString, $deducedCode)
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en-GB,en;q=0.8'));
-        $this->assertEquals('en-gb', $this->gass->getAcceptLanguage());
-        $this->assertEquals('en-gb', Http::getAcceptLanguage());
+        $this->httpAdapter->expects($this->once())
+            ->method('setAcceptLanguage')
+            ->with($this->equalTo($deducedCode))
+            ->willReturnSelf();
+        $this->assertSame($this->gass, $this->gass->setAcceptLanguage($fullString));
+        $this->assertAttributeEquals($deducedCode, 'acceptLanguage', $this->gass);
     }
 
-    public function testSetAcceptLanguageThreeCharPlusCountryValid()
+    public function dataProviderTestSetAcceptLanguageValid()
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil-PH,fil;q=0.8'));
-        $this->assertEquals('fil-ph', $this->gass->getAcceptLanguage());
-        $this->assertEquals('fil-ph', Http::getAcceptLanguage());
+        return array(
+            array('en-GB,en;q=0.8', 'en-gb'),
+            array('fil-PH,fil;q=0.8', 'fil-ph'),
+            array('en,en-GB;q=0.8', 'en'),
+            array('fil,fil-PH;q=0.8', 'fil'),
+        );
     }
 
-    public function testSetAcceptLanguageTwoCharValid()
+    /**
+     * @dataProvider dataProviderTestSetAcceptLanguageException
+     */
+    public function testSetAcceptLanguageException($acceptLanguage, $exceptionMessage)
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('en,en-GB;q=0.8'));
-        $this->assertEquals('en', $this->gass->getAcceptLanguage());
-        $this->assertEquals('en', Http::getAcceptLanguage());
+        $this->setExpectedException('Gass\Exception\InvalidArgumentException', $exceptionMessage);
+        $this->gass->setAcceptLanguage($acceptLanguage);
     }
 
-    public function testSetAcceptLanguageThreeCharValid()
+    public function dataProviderTestSetAcceptLanguageException()
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAcceptLanguage('fil,fil-PH;q=0.8'));
-        $this->assertEquals('fil', $this->gass->getAcceptLanguage());
-        $this->assertEquals('fil', Http::getAcceptLanguage());
-    }
-
-    public function testSetAcceptLanguageExceptionTooLong()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->gass->setAcceptLanguage('abcd,efg;q=0.8');
-    }
-
-    public function testSetAcceptLanguageExceptionTooLong2()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->gass->setAcceptLanguage('AbCDefg');
-    }
-
-    public function testSetAcceptLanguageExceptionInvalidCountry()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->gass->setAcceptLanguage('ab-cde');
-    }
-
-    public function testSetAcceptLanguageExceptionInvalidLanguage()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->gass->setAcceptLanguage('abcd-ef');
-    }
-
-    public function testSetAcceptLanguageExceptionWrongDataType()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Accept Language must be a string.');
-        $this->gass->setAcceptLanguage(array('en-gb'));
+        return array(
+            array('abcd,efg;q=0.8', 'Accept Language validation errors: '),
+            array('AbCDefg', 'Accept Language validation errors: '),
+            array('ab-cde', 'Accept Language validation errors: '),
+            array('abcd-ef', 'Accept Language validation errors: '),
+            array(array('en-gb'), 'Accept Language must be a string.'),
+        );
     }
 
     public function testSetServerNameValid()
     {
         $serverName = 'www.example.com';
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setServerName($serverName));
+        $this->assertSame($this->gass, $this->gass->setServerName($serverName));
         $this->assertEquals($serverName, $this->gass->getServerName());
         $serverName = 'localhost';
         $this->gass->setServerName($serverName);
@@ -256,54 +267,58 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setServerName(array('www.example.com'));
     }
 
-    public function testSetRemoteAddressValid()
+    /**
+     * @dataProvider dataProviderTestSetRemoteAddressValid
+     */
+    public function testSetRemoteAddressValid($remoteAddress)
     {
-        $remoteAddress = '192.168.0.1';
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setRemoteAddress($remoteAddress));
-        $this->assertEquals($remoteAddress, $this->gass->getRemoteAddress());
-        $remoteAddress = '255.255.255.0';
+        $this->httpAdapter->expects($this->once())
+            ->method('setRemoteAddress')
+            ->with($this->equalTo($remoteAddress))
+            ->willReturnSelf();
+        $this->botInfoAdapter->expects($this->once())
+            ->method('setRemoteAddress')
+            ->with($this->equalTo($remoteAddress))
+            ->willReturnSelf();
+        $this->assertSame($this->gass, $this->gass->setRemoteAddress($remoteAddress));
+        $this->assertAttributeEquals($remoteAddress, 'remoteAddress', $this->gass);
+    }
+
+    public function dataProviderTestSetRemoteAddressValid()
+    {
+        return array(
+            array('192.168.0.1'),
+            array('255.255.255.0'),
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderTestSetRemoteAddressException
+     */
+    public function testSetRemoteAddressException($remoteAddress, $exceptionMessage)
+    {
+        $this->setExpectedException(
+            'Gass\Exception\InvalidArgumentException',
+            $exceptionMessage
+        );
         $this->gass->setRemoteAddress($remoteAddress);
-        $this->assertEquals($remoteAddress, $this->gass->getRemoteAddress());
-        $this->assertEquals($remoteAddress, Http::getRemoteAddress());
-        $this->initialiseBotInfoBrowsCap();
-        $this->gass->setRemoteAddress($remoteAddress);
-        $this->assertEquals($remoteAddress, $this->gass->getBotInfo()->getRemoteAddress());
     }
 
-    public function testSetRemoteAddressExceptionLetters()
+    public function dataProviderTestSetRemoteAddressException()
     {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->gass->setRemoteAddress('abc.def.ghi.jkl');
-    }
-
-    public function testSetRemoteAddressExceptionTooHighSegments()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->gass->setRemoteAddress('500.500.500.500');
-    }
-
-    public function testSetRemoteAddressExceptionMissingSegments()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->gass->setRemoteAddress('255.255');
-    }
-
-    public function testSetRemoteAddressExceptionInteger()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $this->gass->setRemoteAddress('192');
-    }
-
-    public function testSetRemoteAddressExceptionWrongDataType()
-    {
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Remote Address must be a string.');
-        $this->gass->setRemoteAddress(array('255.255.255.0'));
+        return array(
+            array('abc.def.ghi.jkl', 'Remote Address validation errors: '),
+            array('500.500.500.500', 'Remote Address validation errors: '),
+            array('255.255', 'Remote Address validation errors: '),
+            array('192', 'Remote Address validation errors: '),
+            array(array('255.255.255.0'), 'Remote Address must be a string.'),
+        );
     }
 
     public function testSetAccountValid()
     {
         $account = 'UA-1234-5';
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setAccount($account));
+        $this->assertSame($this->gass, $this->gass->setAccount($account));
         $this->assertEquals($account, $this->gass->getAccount());
         $account = 'MO-1234567-89';
         $this->gass->setAccount($account);
@@ -343,7 +358,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetDocumentRefererValid()
     {
         $documentReferer = 'http://www.example.com/random.html?a=b';
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setDocumentReferer($documentReferer));
+        $this->assertSame($this->gass, $this->gass->setDocumentReferer($documentReferer));
         $this->assertEquals($documentReferer, $this->gass->getDocumentReferer());
         $documentReferer = 'http://localhost/random';
         $this->gass->setDocumentReferer($documentReferer);
@@ -389,7 +404,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetDocumentPathValid()
     {
         $documentPath = '/abcdefg.html';
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setDocumentPath($documentPath));
+        $this->assertSame($this->gass, $this->gass->setDocumentPath($documentPath));
         $this->assertEquals($documentPath, $this->gass->getDocumentPath());
         $this->assertInstanceOf(
             'Gass\GoogleAnalyticsServerSide',
@@ -407,7 +422,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testSetPageTitleValid()
     {
         $pageTitle = 'Abcdef Ghijk Lmnop';
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setPageTitle($pageTitle));
+        $this->assertSame($this->gass, $this->gass->setPageTitle($pageTitle));
         $this->assertEquals($pageTitle, $this->gass->getPageTitle());
     }
 
@@ -947,7 +962,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSessionCookieTimeoutValid()
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setSessionCookieTimeout(86400000));
+        $this->assertSame($this->gass, $this->gass->setSessionCookieTimeout(86400000));
         $this->assertAttributeEquals(86400, 'sessionCookieTimeout', $this->gass);
     }
 
@@ -971,7 +986,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testSetVisitorCookieTimeoutValid()
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVisitorCookieTimeout(86400000));
+        $this->assertSame($this->gass, $this->gass->setVisitorCookieTimeout(86400000));
         $this->assertAttributeEquals(86400, 'visitorCookieTimeout', $this->gass);
     }
 
@@ -995,21 +1010,23 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
     public function testDisableCookieHeadersValid()
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->disableCookieHeaders());
+        $this->assertSame($this->gass, $this->gass->disableCookieHeaders());
         $this->assertAttributeEquals(false, 'sendCookieHeaders', $this->gass);
     }
 
     public function testSetVersionFromJsValid()
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVersion('1.1.1'));
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setVersionFromJs());
-        $this->assertEquals('5.6.7', $this->gass->getVersion());
+        $this->expectJsUrlCall();
+        $this->assertSame($this->gass, $this->gass->setVersion('1.1.1'));
+        $this->assertSame($this->gass, $this->gass->setVersionFromJs());
+        $this->assertAttributeEquals('5.6.7', 'version', $this->gass);
     }
 
     public function testSetSearchEnginesFromJsValid()
     {
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setSearchEngines(array()));
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->setSearchEnginesFromJs());
+        $this->expectJsUrlCall();
+        $this->assertSame($this->gass, $this->gass->setSearchEngines(array()));
+        $this->assertSame($this->gass, $this->gass->setSearchEnginesFromJs());
         $jsSearchEngines = $this->gass->getSearchEngines();
         $this->assertNotEmpty($jsSearchEngines);
         $this->assertArrayHasKey('google', $jsSearchEngines);
@@ -1020,14 +1037,16 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testTrackPageviewValid()
     {
         $this->initialiseBrowserDetails()
+            ->expectJsAndGifUrlCall()
             ->gass->disableCookieHeaders()
             ->setAccount('MO-00000-0');
         $this->gass->setPageTitle('Example Page Title');
-        $this->assertInstanceOf('Gass\GoogleAnalyticsServerSide', $this->gass->trackPageview());
+        $this->expectJsAndGifUrlCall();
+        $this->assertSame($this->gass, $this->gass->trackPageview());
         $this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
         $this->gass->trackPageview();
         $this->gass->trackPageview('http://www.test.co.uk/example/path?q=other');
-        $this->initialiseBotInfoBrowsCap();
+        $this->initialiseBotInfoAdapter();
         $this->gass->trackPageview();
     }
 
@@ -1063,6 +1082,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function testTrackEventValid()
     {
         $this->initialiseBrowserDetails()
+            ->expectJsAndGifUrlCall()
             ->gass->disableCookieHeaders()
             ->setAccount('MO-00000-0');
         $category = 'Test Category';
@@ -1075,7 +1095,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         );
         $this->gass->setCustomVar('Custom Var 5', 'Custom Value 5', 2, 5);
         $this->gass->trackEvent($category, $action, $label, $value);
-        $this->initialiseBotInfoBrowsCap();
+        $this->initialiseBotInfoAdapter();
         $this->gass->trackEvent($category, $action, $label, $value, true);
     }
 
