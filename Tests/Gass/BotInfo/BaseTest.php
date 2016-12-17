@@ -26,53 +26,76 @@
 
 namespace GassTests\Gass\BotInfo;
 
+use Mockery as m;
+
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testSetRemoteAddressValid()
     {
-        $validRemoteAddress = '192.168.0.1';
+        $validRemoteAddress = 'testString';
         $botInfo = $this->getBotInfoBase();
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator->shouldReceive('isValid')
+            ->once()
+            ->with($validRemoteAddress)
+            ->andReturn(true);
         $this->assertEquals($botInfo, $botInfo->setRemoteAddress($validRemoteAddress));
         $this->assertAttributeEquals($validRemoteAddress, 'remoteAddress', $botInfo);
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      * @depends testSetRemoteAddressValid
      */
     public function testGetRemoteAddressValid()
     {
-        $validRemoteAddress = '192.168.0.1';
+        $validRemoteAddress = 'testString';
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator->shouldReceive('isValid')
+            ->once()
+            ->with($validRemoteAddress)
+            ->andReturn(true);
         $botInfo = $this->getBotInfoBase();
         $this->assertEquals($botInfo, $botInfo->setRemoteAddress($validRemoteAddress));
         $this->assertEquals($validRemoteAddress, $botInfo->getRemoteAddress());
     }
 
     /**
-     * @dataProvider dataProviderTestSetRemoteAddressException
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
-    public function testSetRemoteAddressExceptionLetters($remoteAddress)
+    public function testSetRemoteAddressExceptionInvalidArgument()
     {
-        $botInfo = $this->getBotInfoBase();
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException');
-        $botInfo->setRemoteAddress($remoteAddress);
-    }
+        $remoteAddress = 'testString';
+        $testValidationMessages = array('Test Message 1', 'Test Message 2');
 
-    public function dataProviderTestSetRemoteAddressException()
-    {
-        return array(
-            array('abc.def.ghi.jkl'),
-            array('500.500.500.500'),
-            array('255.255'),
-            array('192'),
-            array(array('255.255.255.0')),
+        $botInfo = $this->getBotInfoBase();
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator->shouldReceive('isValid')
+            ->once()
+            ->with($remoteAddress)
+            ->andReturn(false);
+        $ipValidator->shouldReceive('getMessages')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($testValidationMessages);
+
+        $this->setExpectedException(
+            'Gass\Exception\InvalidArgumentException',
+            'Remote Address validation errors: ' . implode(', ', $testValidationMessages)
         );
+        $botInfo->setRemoteAddress($remoteAddress);
     }
 
     public function testSetUserAgent()
     {
         $botInfo = $this->getBotInfoBase();
-        $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.11 ' .
-            '(KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11';
+        $userAgent = 'TestUserAgent';
         $this->assertEquals($botInfo, $botInfo->setUserAgent($userAgent));
         $this->assertAttributeEquals($userAgent, 'userAgent', $botInfo);
     }
@@ -83,14 +106,13 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function testGetUserAgent()
     {
         $botInfo = $this->getBotInfoBase();
-        $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.11 ' .
-            '(KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11';
+        $userAgent = 'TestUserAgent';
         $this->assertEquals($botInfo, $botInfo->setUserAgent($userAgent));
         $this->assertEquals($userAgent, $botInfo->getUserAgent());
     }
 
     private function getBotInfoBase()
     {
-        return $this->getMockForAbstractClass('Gass\BotInfo\Base');
+        return m::mock('Gass\BotInfo\Base[]');
     }
 }

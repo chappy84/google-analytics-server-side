@@ -26,129 +26,198 @@
 
 namespace GassTests\Gass\Http;
 
+use Mockery as m;
+
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Gass\Http\Base
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
-    private $baseHttp;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->baseHttp = $this->getMockForAbstractClass('Gass\Http\Base');
-    }
-
     public function testSetRemoteAddressValid()
     {
-        $validRemoteAddress = '192.168.0.1';
-        $this->assertSame($this->baseHttp, $this->baseHttp->setRemoteAddress($validRemoteAddress));
-        $this->assertEquals($validRemoteAddress, $this->baseHttp->getRemoteAddress());
+        $baseHttp = $this->getBaseHttp();
+        $validRemoteAddress = 'testString';
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator->shouldReceive('isValid')
+            ->with($validRemoteAddress)
+            ->once()
+            ->andReturn(true);
+        $this->assertSame($baseHttp, $baseHttp->setRemoteAddress($validRemoteAddress));
+        $this->assertAttributeEquals($validRemoteAddress, 'remoteAddress', $baseHttp);
     }
 
     /**
-     * @dataProvider dataProviderTestSetRemoteAddressExceptions
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
-    public function testSetRemoteAddressExceptions($remoteAddress)
+    public function testSetRemoteAddressExceptionInvalidArgument()
     {
+        $baseHttp = $this->getBaseHttp();
+        $validRemoteAddress = 'testString';
+        $testValidationMessages = array('Test Message 1', 'Test Message 2');
+
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator->shouldReceive('isValid')
+            ->with($validRemoteAddress)
+            ->once()
+            ->andReturn(false);
+        $ipValidator->shouldReceive('getMessages')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($testValidationMessages);
+
         $this->setExpectedException(
             'Gass\Exception\InvalidArgumentException',
-            'Remote Address validation errors: '
+            'Remote Address validation errors: ' . implode(', ', $testValidationMessages)
         );
-        $this->baseHttp->setRemoteAddress($remoteAddress);
+        $baseHttp->setRemoteAddress($validRemoteAddress);
     }
 
-    public function dataProviderTestSetRemoteAddressExceptions()
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     * @depends testSetRemoteAddressValid
+     */
+    public function testGetRemoteAddress()
     {
-        return array(
-            array('abc.def.ghi.jkl'),
-            array('500.500.500.500'),
-            array('255.255'),
-            array('192'),
-            array(array('255.255.255.0')),
-        );
+        $baseHttp = $this->getBaseHttp();
+        $validRemoteAddress = 'testString';
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator->shouldReceive('isValid')
+            ->with($validRemoteAddress)
+            ->once()
+            ->andReturn(true);
+        $this->assertSame($baseHttp, $baseHttp->setRemoteAddress($validRemoteAddress));
+        $this->assertEquals($validRemoteAddress, $baseHttp->getRemoteAddress());
     }
 
     public function testSetUserAgent()
     {
-        $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.11 ' .
-            '(KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11';
-        $this->assertSame($this->baseHttp, $this->baseHttp->setUserAgent($userAgent));
-        $this->assertEquals($userAgent, $this->baseHttp->getUserAgent());
+        $baseHttp = $this->getBaseHttp();
+        $userAgent = 'TestUserAgent';
+        $this->assertSame($baseHttp, $baseHttp->setUserAgent($userAgent));
+        $this->assertAttributeEquals($userAgent, 'userAgent', $baseHttp);
     }
 
     /**
-     * @dataProvider dataProviderTestSetAcceptLanguageValid
+     * @depends testSetUserAgent
      */
-    public function testSetAcceptLanguageValid($languageCode)
+    public function testGetUserAgent()
     {
-        $this->assertSame($this->baseHttp, $this->baseHttp->setAcceptLanguage($languageCode));
-        $this->assertEquals($languageCode, $this->baseHttp->getAcceptLanguage());
-    }
-
-    public function dataProviderTestSetAcceptLanguageValid()
-    {
-        return array(
-            array('en-gb'),
-            array('fil-ph'),
-            array('en'),
-            array('fil'),
-        );
+        $baseHttp = $this->getBaseHttp();
+        $userAgent = 'TestUserAgent';
+        $this->assertSame($baseHttp, $baseHttp->setUserAgent($userAgent));
+        $this->assertEquals($userAgent, $baseHttp->getUserAgent());
     }
 
     /**
-     * @dataProvider dataProviderTestSetAcceptLanguageExceptionInvalidArgument
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
-    public function testSetAcceptLanguageExceptionInvalidArgument($acceptLanguage)
+    public function testSetAcceptLanguageValid()
     {
+        $baseHttp = $this->getBaseHttp();
+        $languageCode = 'testString';
+        $ipValidator = m::mock('overload:Gass\Validate\LanguageCode');
+        $ipValidator->shouldReceive('isValid')
+            ->with($languageCode)
+            ->once()
+            ->andReturn(true);
+        $this->assertSame($baseHttp, $baseHttp->setAcceptLanguage($languageCode));
+        $this->assertAttributeEquals($languageCode, 'acceptLanguage', $baseHttp);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testSetAcceptLanguageExceptionInvalidArgument()
+    {
+        $baseHttp = $this->getBaseHttp();
+        $languageCode = 'testString';
+        $testValidationMessages = array('Test Message 1', 'Test Message 2');
+
+        $ipValidator = m::mock('overload:Gass\Validate\LanguageCode');
+        $ipValidator->shouldReceive('isValid')
+            ->with($languageCode)
+            ->once()
+            ->andReturn(false);
+        $ipValidator->shouldReceive('getMessages')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($testValidationMessages);
+
         $this->setExpectedException(
             'Gass\Exception\InvalidArgumentException',
-            'Accept Language validation errors: '
+            'Accept Language validation errors: ' . implode(', ', $testValidationMessages)
         );
-        $this->baseHttp->setAcceptLanguage($acceptLanguage);
+        $baseHttp->setAcceptLanguage($languageCode);
     }
 
-    public function dataProviderTestSetAcceptLanguageExceptionInvalidArgument()
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     * @depends testSetAcceptLanguageValid
+     */
+    public function testGetAcceptLanguageValid()
     {
-        return array(
-            array('abcd'),
-            array('AbCDefg'),
-            array('ab-cde'),
-            array('abcd-ef'),
-            array(array('en-gb')),
-        );
+        $baseHttp = $this->getBaseHttp();
+        $languageCode = 'testString';
+        $ipValidator = m::mock('overload:Gass\Validate\LanguageCode');
+        $ipValidator->shouldReceive('isValid')
+            ->with($languageCode)
+            ->once()
+            ->andReturn(true);
+        $this->assertSame($baseHttp, $baseHttp->setAcceptLanguage($languageCode));
+        $this->assertEquals($languageCode, $baseHttp->getAcceptLanguage());
     }
 
     public function testSetResponse()
     {
+        $baseHttp = $this->getBaseHttp();
         $response = 'Test Response String';
-        $this->assertSame($this->baseHttp, $this->baseHttp->setResponse($response));
-        $this->assertEquals($response, $this->baseHttp->getResponse());
+        $this->assertSame($baseHttp, $baseHttp->setResponse($response));
+        $this->assertAttributeEquals($response, 'response', $baseHttp);
+    }
+
+    /**
+     * @depends testSetResponse
+     */
+    public function testGetResponse()
+    {
+        $baseHttp = $this->getBaseHttp();
+        $response = 'Test Response String';
+        $this->assertSame($baseHttp, $baseHttp->setResponse($response));
+        $this->assertEquals($response, $baseHttp->getResponse());
     }
 
     public function testRequestNoArguments()
     {
-        $this->assertSame($this->baseHttp, $this->baseHttp->request());
+        $baseHttp = $this->getBaseHttp();
+        $this->assertSame($baseHttp, $baseHttp->request());
     }
 
     public function testRequestWithUrl()
     {
+        $baseHttp = $this->getBaseHttp();
         $url = 'http://www.example.com/';
-        $this->baseHttp->expects($this->once())
-            ->method('setUrl')
-            ->with($this->equalTo($url))
-            ->willReturnSelf();
-        $this->assertSame($this->baseHttp, $this->baseHttp->request($url));
+        $baseHttp->shouldReceive('setUrl')
+            ->once()
+            ->with($url)
+            ->andReturnSelf();
+        $this->assertSame($baseHttp, $baseHttp->request($url));
     }
 
     public function testRequestWithOptions()
     {
+        $baseHttp = $this->getBaseHttp();
         $options = array(
             'foo' => 'bar',
             'baz' => 'qux',
         );
-        $this->assertSame($this->baseHttp, $this->baseHttp->request(null, $options));
-        $this->assertAttributeEquals($options, 'options', $this->baseHttp);
+        $this->assertSame($baseHttp, $baseHttp->request(null, $options));
+        $this->assertAttributeEquals($options, 'options', $baseHttp);
     }
 
     /**
@@ -156,17 +225,19 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckResponseNoExceptionValidCode()
     {
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
+        $baseHttp = $this->getBaseHttp();
+        $reflectionMethod = new \ReflectionMethod($baseHttp, 'checkResponseCode');
         $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 200);
+        $reflectionMethod->invoke($baseHttp, 200);
     }
 
     public function testCheckResponseCodeExceptionInvalidArgument()
     {
+        $baseHttp = $this->getBaseHttp();
         $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'HTTP Status Code must be numeric.');
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
+        $reflectionMethod = new \ReflectionMethod($baseHttp, 'checkResponseCode');
         $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, 'TestCode');
+        $reflectionMethod->invoke($baseHttp, 'TestCode');
     }
 
     /**
@@ -174,10 +245,11 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckResponseCodeExceptions($code, $message)
     {
+        $baseHttp = $this->getBaseHttp();
         $this->setExpectedException('Gass\Exception\RuntimeException', $message);
-        $reflectionMethod = new \ReflectionMethod($this->baseHttp, 'checkResponseCode');
+        $reflectionMethod = new \ReflectionMethod($baseHttp, 'checkResponseCode');
         $reflectionMethod->setAccessible(true);
-        $reflectionMethod->invoke($this->baseHttp, $code);
+        $reflectionMethod->invoke($baseHttp, $code);
     }
 
     public function dataProviderTestCheckResponseCodeExceptions()
@@ -226,5 +298,10 @@ class BaseTest extends \PHPUnit_Framework_TestCase
             array('509', 'Bandwidth Limit Exceeded'),
             array('510', 'Not Exceeded'),
         );
+    }
+
+    private function getBaseHttp()
+    {
+        return m::mock('Gass\Http\Base[]');
     }
 }
