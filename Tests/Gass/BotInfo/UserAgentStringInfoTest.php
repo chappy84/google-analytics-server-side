@@ -27,10 +27,14 @@
 namespace GassTests\Gass\BotInfo;
 
 use Gass\BotInfo\UserAgentStringInfo;
-use Gass\Http\Http;
+use Mockery as m;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -93,15 +97,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo;
         $this->assertSame($uasi, $uasi->set());
@@ -114,15 +124,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testSetWithoutCacheSettingsEmptyWebResponse()
     {
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn('');
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('');
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo;
         $this->setExpectedException(
@@ -138,15 +154,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo(
             array(
@@ -169,15 +191,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo(
             array(
@@ -213,7 +241,11 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        Http::getInstance(array(), $this->getMock('Gass\Http\HttpInterface'));
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(m::mock('Gass\Http\HttpInterface'));
 
         $cacheLifetimesToTest = array(
             time() - vfsStreamWrapper::getRoot()->getChild('botIP.csv')->filemtime() + 1,
@@ -253,15 +285,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo(
             array(
@@ -299,15 +337,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $nonReadableCsv = clone $csvFile;
         $nonReadableCsv->rename('nonReadable.csv');
@@ -338,7 +382,11 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
 
-        Http::getInstance(array(), $this->getMock('Gass\Http\HttpInterface'));
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(m::mock('Gass\Http\HttpInterface'));
 
         $filemtime = $csvFile->filemtime();
         $filectime = $csvFile->filectime();
@@ -379,7 +427,11 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        Http::getInstance(array(), $this->getMock('Gass\Http\HttpInterface'));
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(m::mock('Gass\Http\HttpInterface'));
 
         $uasi = new UserAgentStringInfo(
             array(
@@ -399,15 +451,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $csvFile = $fsRoot->getChild('botIP.csv');
         $cacheFilename = 'nonExistent.csv';
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo(
             array(
@@ -460,18 +518,32 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        $remoteAddress = '0.0.0.0';
+
+        $ipValidatorMock = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidatorMock->shouldReceive('isValid')
+            ->once()
+            ->with($remoteAddress)
+            ->andReturn(true);
 
         $uasi = new UserAgentStringInfo;
-        $uasi->setRemoteAddress('0.0.0.0')
+        $uasi->setRemoteAddress($remoteAddress)
             ->setUserAgent('FooBarBazQux');
         $this->assertFalse($uasi->isBot());
         $this->assertAttributeNotEmpty('bots', $uasi);
@@ -489,15 +561,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $csvLine = fgetcsv($fh);
         $botName = $csvLine[0];
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo;
         $uasi->setUserAgent($botName);
@@ -512,15 +590,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $csvLine = fgetcsv($fh);
         $botUserAgent = $csvLine[6];
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo;
         $uasi->setUserAgent($botUserAgent);
@@ -535,15 +619,27 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $csvLine = fgetcsv($fh);
         $botIpAddress = $csvLine[1];
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        $ipValidatorMock = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidatorMock->shouldReceive('isValid')
+            ->once()
+            ->with($botIpAddress)
+            ->andReturn(true);
 
         $uasi = new UserAgentStringInfo;
         $uasi->setRemoteAddress($botIpAddress);
@@ -558,15 +654,21 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $csvLine = fgetcsv($fh);
         $botUserAgent = $csvLine[6];
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
 
         $uasi = new UserAgentStringInfo;
         $this->assertTrue($uasi->isBot($botUserAgent));
@@ -581,15 +683,27 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $csvLine = fgetcsv($fh);
         $botIpAddress = $csvLine[1];
 
-        $httpAdapter = $this->getMock('Gass\Http\HttpInterface');
-        $httpAdapter->expects($this->once())
-            ->method('request')
-            ->with($this->equalTo(UserAgentStringInfo::CSV_URL))
-            ->willReturnSelf();
-        $httpAdapter->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($csvFile->getContent());
-        Http::getInstance(array(), $httpAdapter);
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(UserAgentStringInfo::CSV_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($csvFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        $ipValidatorMock = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidatorMock->shouldReceive('isValid')
+            ->once()
+            ->with($botIpAddress)
+            ->andReturn(true);
 
         $uasi = new UserAgentStringInfo;
         $this->assertTrue($uasi->isBot(null, $botIpAddress));
