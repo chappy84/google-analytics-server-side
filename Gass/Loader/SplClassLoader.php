@@ -21,6 +21,8 @@ namespace Gass\Loader;
 
 /**
  * SPL Class Cloader
+ *
+ * @codeCoverageIgnore Is an external dependency, intended to replace the composer requirement.
  */
 class SplClassLoader
 {
