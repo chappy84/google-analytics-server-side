@@ -27,6 +27,8 @@
 /**
  * Implement SplClassLoader for classes in the Gass namespace
  */
+// @codeCoverageIgnoreStart
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Loader' . DIRECTORY_SEPARATOR . 'SplClassLoader.php';
 $gassSplClassLoader = new \Gass\Loader\SplClassLoader('Gass', dirname(__DIR__));
 $gassSplClassLoader->register();
+// @codeCoverageIgnoreEnd
