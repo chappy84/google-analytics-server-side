@@ -80,7 +80,7 @@ class UserAgentStringInfo extends Base
     protected $options = array(
         'cachePath' => null,
         'cacheFilename' => 'bots.csv',
-        'cacheLifetime' => 2592000,
+        'cacheLifetime' => 2592000, // 30 days
     );
 
     /**
@@ -176,12 +176,17 @@ class UserAgentStringInfo extends Base
             $line = trim($line);
             if (!empty($line)) {
                 $csvLine = str_getcsv($line);
-                if (!isset($botInfo->distinctBots[$csvLine[0]])) {
+                if (!isset($botInfo->distinctBots[$csvLine[0]])
+                    && isset($csvLine[0])
+                    && (isset($csvLine[6]) || isset($csvLine[2]))
+                ) {
                     $botInfo->distinctBots[$csvLine[0]] = (isset($csvLine[6]))
                         ? $csvLine[6]
                         : $csvLine[2];
                 }
-                if (!isset($botInfo->distinctIPs[$csvLine[1]])) {
+                if (!isset($botInfo->distinctIPs[$csvLine[1]])
+                    && isset($csvLine[1], $csvLine[0])
+                ) {
                     $botInfo->distinctIPs[$csvLine[1]] = $csvLine[0];
                 }
             }
@@ -203,11 +208,12 @@ class UserAgentStringInfo extends Base
         ) {
             $csvLines = array();
             foreach ($this->botIps as $ipAddress => $name) {
-                $csvLines[] = '"' . addslashes($name) . '","' . addslashes($ipAddress) . '","' .
+                $csvLines[] = '"' . addslashes($name) . '","' .
+                    addslashes($ipAddress) . '","' .
                     addslashes($this->bots[$name]) . '"';
             }
             $csvString = implode("\n", $csvLines);
-            if (false === file_put_contents(
+            if (false === @file_put_contents(
                 $csvPath . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename'),
                 $csvString,
                 LOCK_EX
@@ -279,7 +285,8 @@ class UserAgentStringInfo extends Base
         $remoteAddress = $this->getRemoteAddress();
         return ((!empty($this->bots)
                 && (in_array($userAgent, $this->bots) || array_key_exists($userAgent, $this->bots)))
-            || (!empty($this->botIps) && array_key_exists($remoteAddress, $this->botIps)));
+            || (!empty($this->botIps) && array_key_exists($remoteAddress, $this->botIps))
+        );
     }
 
     /**
