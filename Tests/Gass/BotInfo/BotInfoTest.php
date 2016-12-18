@@ -131,6 +131,9 @@ class BotInfoTest extends \PHPUnit_Framework_TestCase
         $botInfo->setAdapter(new \stdClass);
     }
 
+    /**
+     * @depends testConstructOptionsAndAdapterParams
+     */
     public function testGetAdapter()
     {
         $adapter = $this->getMock('Gass\BotInfo\BotInfoInterface');

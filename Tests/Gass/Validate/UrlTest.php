@@ -73,8 +73,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     {
         $urlValidator = new Url;
         $this->assertFalse($urlValidator->isValid($url));
-        $this->assertAttributeCount(1, 'messages', $urlValidator);
-        $this->assertAttributeContains($message, 'messages', $urlValidator);
+        $this->assertAttributeEquals(array($message), 'messages', $urlValidator);
     }
 
     public function dataProviderTestIsValidInValidUrls()

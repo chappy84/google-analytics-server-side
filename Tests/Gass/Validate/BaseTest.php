@@ -29,63 +29,160 @@ namespace GassTests\Gass\Validate;
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Gass\Validate\Base
+     * @dataProvider dataProviderTestSetMessagesValid
      */
-    private $baseValidator;
-
-    public function setUp()
+    public function testSetMessagesValid($testMessages)
     {
-        parent::setUp();
-        $this->baseValidator = $this->getMockForAbstractClass('Gass\Validate\Base');
+        $baseValidator = $this->getBaseValidator();
+        $this->assertSame($baseValidator, $baseValidator->setMessages($testMessages));
+        $this->assertAttributeEquals($testMessages, 'messages', $baseValidator);
     }
 
-    public function testSetMessagesValidPopulatedArray()
+    public function dataProviderTestSetMessagesValid()
     {
-        $testMessages = array('Test Message 1', 'Test Message 2');
-        $this->assertInstanceOf('Gass\Validate\Base', $this->baseValidator->setMessages($testMessages));
-        $this->assertEquals($testMessages, $this->baseValidator->getMessages());
-    }
-
-    public function testSetMessagesValidEmptyArray()
-    {
-        $this->assertInstanceOf('Gass\Validate\Base', $this->baseValidator->setMessages(array()));
-        $this->assertEquals(array(), $this->baseValidator->getMessages());
+        return array(
+            array(array('Test Message 1', 'Test Message 2')),
+            array(array()),
+        );
     }
 
     public function testSetMessagesInvalidDataType()
     {
+        $baseValidator = $this->getBaseValidator();
         $this->setExpectedException(
             (class_exists('TypeError')) ? 'TypeError' : 'PHPUnit_Framework_Error'
         );
-        $this->baseValidator->setMessages('');
+        $baseValidator->setMessages('');
     }
 
-    public function testSetValue()
+    /**
+     * @depends testSetMessagesValid
+     */
+    public function testGetMessages()
     {
-        $this->assertInstanceOf('Gass\Validate\Base', $this->baseValidator->setValue(array()));
-        $this->assertEquals(array(), $this->baseValidator->getValue());
-        $testString = 'TestValue';
-        $this->baseValidator->setValue($testString);
-        $this->assertEquals($testString, $this->baseValidator->getValue());
-        $testClass = new \stdClass;
-        $this->baseValidator->setValue($testClass);
-        $this->assertEquals($testClass, $this->baseValidator->getValue());
-        $testInteger = 1;
-        $this->baseValidator->setValue($testInteger);
-        $this->assertEquals($testInteger, $this->baseValidator->getValue());
+        $testMessages = array('Test Message 1', 'Test Message 2');
+        $baseValidator = $this->getBaseValidator();
+        $this->assertSame($baseValidator, $baseValidator->setMessages($testMessages));
+        $this->assertEquals($testMessages, $baseValidator->getMessages());
     }
 
-    public function testAddMessage()
+    /**
+     * @dataProvider dataProviderTestSetValue
+     */
+    public function testSetValue($testValue)
     {
-        $this->assertInstanceOf(
-            'Gass\Validate\Base',
-            $this->baseValidator->addMessage('"%value%" is a test value for test message 1', 'Test value')
-                ->setValue(2)
-                ->addMessage('Test message 2 had value "%value%"')
+        $baseValidator = $this->getBaseValidator();
+        $this->assertSame($baseValidator, $baseValidator->setValue($testValue));
+        $this->assertAttributeEquals($testValue, 'value', $baseValidator);
+    }
+
+    public function dataProviderTestSetValue()
+    {
+        return array(
+            array(new \stdClass),
+            array('baz'),
+            array(1234567890),
+            array(1.234567890),
+            array(array()),
+            array(true),
+            array(null),
         );
-        $this->assertEquals(
-            array('"Test value" is a test value for test message 1', 'Test message 2 had value "2"'),
-            $this->baseValidator->getMessages()
+    }
+
+    /**
+     * @depends testSetValue
+     */
+    public function testGetValue()
+    {
+        $testValue = 'foo';
+        $baseValidator = $this->getBaseValidator();
+        $this->assertSame($baseValidator, $baseValidator->setValue($testValue));
+        $this->assertEquals($testValue, $baseValidator->getValue());
+    }
+
+    public function testAddMessageOneArgumentWithValue()
+    {
+        $message = '"%value%" is a test value for a test message';
+        $value = 'foo';
+
+        $baseValidator = $this->getBaseValidator();
+        $baseValidator->setValue($value);
+
+        $this->assertSame($baseValidator, $baseValidator->addMessage($message));
+        $this->assertAttributeEquals(
+            array(str_replace('%value%', (string) $value, $message)),
+            'messages',
+            $baseValidator
         );
+    }
+
+    public function testAddMessageOneArgumentNoValue()
+    {
+        $message = '"%value%" is a test value for a test message';
+
+        $baseValidator = $this->getBaseValidator();
+
+        $this->assertSame($baseValidator, $baseValidator->addMessage($message));
+        $this->assertAttributeEquals(array(str_replace('%value%', '', $message)), 'messages', $baseValidator);
+    }
+
+    public function testAddMessageOneArgumentWithValueNoPlaceHolder()
+    {
+        $message = 'This is a test value for a test message';
+
+        $baseValidator = $this->getBaseValidator();
+        $baseValidator->setValue('foo');
+
+        $this->assertSame($baseValidator, $baseValidator->addMessage($message));
+        $this->assertAttributeEquals(array($message), 'messages', $baseValidator);
+    }
+
+    public function testAddMessageTwoArgumentWithoutValue()
+    {
+        $message = '"%value%" is a test value for a test message';
+        $value = 'foo';
+
+        $baseValidator = $this->getBaseValidator();
+
+        $this->assertSame($baseValidator, $baseValidator->addMessage($message, $value));
+        $this->assertAttributeEmpty('value', $baseValidator);
+        $this->assertAttributeEquals(
+            array(str_replace('%value%', (string) $value, $message)),
+            'messages',
+            $baseValidator
+        );
+    }
+
+    public function testAddMultipleMessages()
+    {
+        $message1 = '"%value%" is a test value for test message 1';
+        $value1 = 'foo';
+        $message2 = 'Test message 2 had value "%value%"';
+        $value2 = 2;
+        $message3 = 'This is a test for value "%value%" for test message 3';
+        $message4 = 'This is a test value for test message 4';
+
+        $baseValidator = $this->getBaseValidator();
+
+        $this->assertSame($baseValidator, $baseValidator->addMessage($message1, $value1));
+        $baseValidator->setValue($value2);
+        $this->assertSame($baseValidator, $baseValidator->addMessage($message2));
+        $this->assertSame($baseValidator, $baseValidator->addMessage($message3));
+        $this->assertSame($baseValidator, $baseValidator->addMessage($message4));
+        $this->assertAttributeEquals(
+            array(
+                str_replace('%value%', (string) $value1, $message1),
+                str_replace('%value%', (string) $value2, $message2),
+                str_replace('%value%', (string) $value2, $message3),
+                $message4,
+            ),
+            'messages',
+            $baseValidator
+        );
+    }
+
+    private function getBaseValidator()
+    {
+        return $this->getMockForAbstractClass('Gass\Validate\Base');
     }
 }

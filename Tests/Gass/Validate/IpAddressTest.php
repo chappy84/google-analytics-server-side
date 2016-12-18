@@ -31,61 +31,53 @@ use Gass\Validate\IpAddress;
 class IpAddressTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Gass\Validate\IpAddress
+     * @dataProvider dataProviderTestIsValidValidipv4Addreses
      */
-    private $ipValidator;
-
-    public function setUp()
+    public function testIsValidValidipv4Addreses($value)
     {
-        parent::setUp();
-        $this->ipValidator = new IpAddress;
+        $ipValidator = new IpAddress;
+        $this->assertTrue($ipValidator->isValid($value));
+        $this->assertAttributeEmpty('messages', $ipValidator);
     }
 
-    public function testIsValidValidIPv4Address()
+    public function dataProviderTestIsValidValidipv4Addreses()
     {
-        $this->assertTrue($this->ipValidator->isValid('0.0.0.0'));
-        $this->assertTrue($this->ipValidator->isValid('1.1.1.1'));
-        $this->assertTrue($this->ipValidator->isValid('10.0.0.1'));
-        $this->assertTrue($this->ipValidator->isValid('10.255.255.255'));
-        $this->assertTrue($this->ipValidator->isValid('99.99.99.99'));
-        $this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
-        $this->assertTrue($this->ipValidator->isValid('172.16.0.1'));
-        $this->assertTrue($this->ipValidator->isValid('172.31.255.255'));
-        $this->assertTrue($this->ipValidator->isValid('192.168.0.1'));
-        $this->assertTrue($this->ipValidator->isValid('192.168.255.255'));
-        $this->assertTrue($this->ipValidator->isValid('199.199.199.199'));
-        $this->assertTrue($this->ipValidator->isValid('255.255.255.255'));
+        return array(
+            array('0.0.0.0'),
+            array('1.1.1.1'),
+            array('10.0.0.1'),
+            array('10.255.255.255'),
+            array('99.99.99.99'),
+            array('127.0.0.1'),
+            array('172.16.0.1'),
+            array('172.31.255.255'),
+            array('192.168.0.1'),
+            array('192.168.255.255'),
+            array('199.199.199.199'),
+            array('255.255.255.255'),
+        );
     }
 
-    public function testIsValidInvalidAddresses()
+    /**
+     * @dataProvider dataProviderTestIsValidInvalidIpv4Addresses
+     */
+    public function testIsValidInvalidIpv4Addresses($value, $message)
     {
-        $this->assertFalse($this->ipValidator->isValid('255.255.255.256'));
-        // Lets test if Numb3rs is wrong or not: http://www.youtube.com/watch?v=5ceaqtWhdnI
-        $this->assertFalse($this->ipValidator->isValid('275.3.6.128'));
-        $this->assertFalse($this->ipValidator->isValid('999.999.999.999'));
-        $this->assertFalse($this->ipValidator->isValid('::1'));
-        $this->assertFalse($this->ipValidator->isValid('1024.1024.1024.1024'));
+        $ipValidator = new IpAddress;
+        $this->assertFalse($ipValidator->isValid($value));
+        $this->assertAttributeEquals(array($message), 'messages', $ipValidator);
     }
 
-    public function testMessagesEmptyWhenValid()
+    public function dataProviderTestIsValidInvalidIpv4Addresses()
     {
-        $this->assertTrue($this->ipValidator->isValid('127.0.0.1'));
-        $this->assertEmpty($this->ipValidator->getMessages());
-    }
-
-    public function testMessagesWhenInvalidIpv4()
-    {
-        $this->assertFalse($this->ipValidator->isValid('::1'));
-        $this->assertNotEmpty($validationMessages = $this->ipValidator->getMessages());
-        $this->assertEquals(1, count($validationMessages));
-        $this->assertEquals('"::1" is an invalid IPv4 address', $validationMessages[0]);
-    }
-
-    public function testMessagesWhenInvalidDataType()
-    {
-        $this->assertFalse($this->ipValidator->isValid(new \stdClass));
-        $this->assertNotEmpty($validationMessages = $this->ipValidator->getMessages());
-        $this->assertEquals(1, count($validationMessages));
-        $this->assertEquals('The provided IP address must be a string.', $validationMessages[0]);
+        return array(
+            array('255.255.255.256', '"255.255.255.256" is an invalid IPv4 address'),
+            // Lets test if Numb3rs is wrong or not: http://www.youtube.com/watch?v=5ceaqtWhdnI
+            array('275.3.6.128', '"275.3.6.128" is an invalid IPv4 address'),
+            array('999.999.999.999', '"999.999.999.999" is an invalid IPv4 address'),
+            array('::1', '"::1" is an invalid IPv4 address'),
+            array('1024.1024.1024.1024', '"1024.1024.1024.1024" is an invalid IPv4 address'),
+            array(new \stdClass, 'The provided IP address must be a string.'),
+        );
     }
 }

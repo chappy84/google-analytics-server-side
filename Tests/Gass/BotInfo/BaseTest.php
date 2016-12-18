@@ -43,7 +43,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->with($validRemoteAddress)
             ->andReturn(true);
-        $this->assertEquals($botInfo, $botInfo->setRemoteAddress($validRemoteAddress));
+        $this->assertSame($botInfo, $botInfo->setRemoteAddress($validRemoteAddress));
         $this->assertAttributeEquals($validRemoteAddress, 'remoteAddress', $botInfo);
     }
 
@@ -61,7 +61,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
             ->with($validRemoteAddress)
             ->andReturn(true);
         $botInfo = $this->getBotInfoBase();
-        $this->assertEquals($botInfo, $botInfo->setRemoteAddress($validRemoteAddress));
+        $this->assertSame($botInfo, $botInfo->setRemoteAddress($validRemoteAddress));
         $this->assertEquals($validRemoteAddress, $botInfo->getRemoteAddress());
     }
 
@@ -96,7 +96,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     {
         $botInfo = $this->getBotInfoBase();
         $userAgent = 'TestUserAgent';
-        $this->assertEquals($botInfo, $botInfo->setUserAgent($userAgent));
+        $this->assertSame($botInfo, $botInfo->setUserAgent($userAgent));
         $this->assertAttributeEquals($userAgent, 'userAgent', $botInfo);
     }
 
@@ -107,7 +107,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     {
         $botInfo = $this->getBotInfoBase();
         $userAgent = 'TestUserAgent';
-        $this->assertEquals($botInfo, $botInfo->setUserAgent($userAgent));
+        $this->assertSame($botInfo, $botInfo->setUserAgent($userAgent));
         $this->assertEquals($userAgent, $botInfo->getUserAgent());
     }
 

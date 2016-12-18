@@ -31,51 +31,43 @@ use Gass\Validate\LanguageCode;
 class LanguageCodeTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Gass\Validate\LanguageCode
+     * @dataProvider dataProviderTestIsValidValidLanguageCodes
      */
-    private $languageValidator;
-
-    public function setUp()
+    public function testIsValidValidLanguageCodes($value)
     {
-        parent::setUp();
-        $this->languageValidator = new LanguageCode;
+        $languageValidator = new LanguageCode;
+        $this->assertTrue($languageValidator->isValid($value));
+        $this->assertAttributeEmpty('messages', $languageValidator);
     }
 
-    public function testIsValidValidLanguageCodes()
+    public function dataProviderTestIsValidValidLanguageCodes()
     {
-        $this->assertTrue($this->languageValidator->isValid('en-gb'));
-        $this->assertTrue($this->languageValidator->isValid('fil-ph'));
-        $this->assertTrue($this->languageValidator->isValid('en'));
-        $this->assertTrue($this->languageValidator->isValid('fil'));
+        return array(
+            array('en-gb'),
+            array('fil-ph'),
+            array('en'),
+            array('fil'),
+        );
     }
 
-    public function testIsValidInvalidLanguageCodes()
+    /**
+     * @dataProvider dataProviderTestIsValidInvalidValue
+     */
+    public function testIsValidInvalidValue($value, $message)
     {
-        $this->assertFalse($this->languageValidator->isValid('abcd'));
-        $this->assertFalse($this->languageValidator->isValid('abcd-ef'));
-        $this->assertFalse($this->languageValidator->isValid('ab-cde'));
-        $this->assertFalse($this->languageValidator->isValid('AbCDefg'));
+        $languageValidator = new LanguageCode;
+        $this->assertFalse($languageValidator->isValid($value));
+        $this->assertAttributeEquals(array($message), 'messages', $languageValidator);
     }
 
-    public function testMessagesEmptyWhenValid()
+    public function dataProviderTestIsValidInvalidValue()
     {
-        $this->assertTrue($this->languageValidator->isValid('en-gb'));
-        $this->assertEmpty($this->languageValidator->getMessages());
-    }
-
-    public function testMessagesWhenInvalid()
-    {
-        $this->assertFalse($this->languageValidator->isValid('ab-cde'));
-        $this->assertNotEmpty($validationMessages = $this->languageValidator->getMessages());
-        $this->assertEquals(1, count($validationMessages));
-        $this->assertEquals('"ab-cde" is an invalid language code.', $validationMessages[0]);
-    }
-
-    public function testMessagesWhenInvalidDataType()
-    {
-        $this->assertFalse($this->languageValidator->isValid(new \stdClass));
-        $this->assertNotEmpty($validationMessages = $this->languageValidator->getMessages());
-        $this->assertEquals(1, count($validationMessages));
-        $this->assertEquals('The provided language code must be a string.', $validationMessages[0]);
+        return array(
+            array('abcd', '"abcd" is an invalid language code.'),
+            array('abcd-ef', '"abcd-ef" is an invalid language code.'),
+            array('ab-cde', '"ab-cde" is an invalid language code.'),
+            array('AbCDefg', '"AbCDefg" is an invalid language code.'),
+            array(new \stdClass, 'The provided language code must be a string.'),
+        );
     }
 }
