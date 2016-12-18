@@ -1,6 +1,13 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.12.0 Beta
+-------------------
+
+ - Remove Test HTTP Adapter. This was added for unit testing purposes but has been replaced by mocking
+ - Increase unit test coverage
+ - Fix various bugs / issues, including bugs in the Multi BotInfo adapter
+
 Version 0.11.0 Beta
 -------------------
 

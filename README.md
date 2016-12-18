@@ -21,6 +21,7 @@ This PHP adaptation is maintained by [Tom Chapman][5].
 [6]: http://en.wikipedia.org/wiki/ECMAScript
 
 [![Build Status](https://secure.travis-ci.org/chappy84/google-analytics-server-side.png?branch=master)](http://travis-ci.org/chappy84/google-analytics-server-side)
+[![Master Code Coverage Status](https://coveralls.io/repos/chappy84/google-analytics-server-side/badge.png?branch=master)](https://coveralls.io/r/chappy84/google-analytics-server-side)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/655a47b5-a324-487f-9b14-67da007b24d1/mini.png)](https://insight.sensiolabs.com/projects/655a47b5-a324-487f-9b14-67da007b24d1)
 [![Latest Stable Version](https://poser.pugx.org/chappy84/google-analytics-server-side/v/stable)](https://packagist.org/packages/chappy84/google-analytics-server-side)
 [![Total Downloads](https://poser.pugx.org/chappy84/google-analytics-server-side/downloads)](https://packagist.org/packages/chappy84/google-analytics-server-side)
@@ -30,9 +31,9 @@ This PHP adaptation is maintained by [Tom Chapman][5].
 Installation
 ------------
 
-The package is available to install using [composer][7] from the [packagist][8] repository since 
-v0.8.6-beta. Simply add [chappy84/google-analytics-server-side][9] to the "require" section and 
-it'll be installed, checking the requirements. 
+The package is available to install using [composer][7] from the [packagist][8] repository since
+v0.8.6-beta. Simply require [chappy84/google-analytics-server-side][9] and it'll be installed,
+checking the requirements.
 
 Alternatively if you don't want to use composer, the framework, without tests, can be included by 
 using the following:
@@ -220,10 +221,9 @@ functionality will work without the need to restart the web-server.
 
 #### UserAgentStringInfo
 
-***DEPRECATED*** - until udger.com implements csvs to replace user agent string info's csv, as user-agent-string.info has now shut down
+***DEPRECATED*** - until udger.com (or a comparable service) implements csvs (or another data source) to replace user agent string info's csv, as user-agent-string.info has now shut down
 
-This was the previous default for Google Analytics Server Side which downloads a csv list 
-of search engine crawlers from [user-agent-string.info][14].  
+This downloaded a csv list of search engine crawlers from [user-agent-string.info][14].  
 There are three options as part of the array configuration parameter:
 
 - cachePath: where to save the list of bots downloaded from user-agent-string.info (required)
@@ -337,11 +337,8 @@ $gass->setIgnoreDoNotTrack(false);
 [18]: https://github.com/samyk/evercookie
 [19]: http://www.w3.org/TR/tracking-dnt/
 
-Test Suite
-----------
-
-Master: [![Master Code Coverage Status](https://coveralls.io/repos/chappy84/google-analytics-server-side/badge.png?branch=master)](https://coveralls.io/r/chappy84/google-analytics-server-side?branch=master)  
-Development: [![Development Code Coverage Status](https://coveralls.io/repos/chappy84/google-analytics-server-side/badge.png?branch=development)](https://coveralls.io/r/chappy84/google-analytics-server-side?branch=development)
+Test Suite & CI
+---------------
 
 This framework uses [PHPUnit][22], along with [TravisCI][23], to test functionality on the
 supported PHP minor versions 5.3, 5.4, 5.5, 5.6, 7.0 and 7.1. This is done by default on the latest bug fix
@@ -349,9 +346,9 @@ point release of that minor point version to ensure it works.
 
 Provisional PHP nightly & [HHVM][24] support are provided as-well however these are not guaranteed.
 
-The test suite requires [composer][7] for it's development dependencies. Please see the instructions
-[here][20] on how to install it. After which you can [install][21] all the required dev dependencies
-using `composer install`.
+If you're submitting a pull request, please ensure you've run the twst suite with PHPUnit, installed via 
+[composer][7]. Please see the instructions [here][20] on how to install it. After which you can [install][21] 
+phpunit, and the  other required dev dependencies using `composer install`.
 
 [20]: https://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
 [21]: https://getcomposer.org/doc/03-cli.md#install
