@@ -56,7 +56,12 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->dependecyFilesFolder = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'dependency-files' . DIRECTORY_SEPARATOR;
+        $ds = DIRECTORY_SEPARATOR;
+
+        $this->dependecyFilesFolder = dirname(__DIR__) . $ds . 'dependency-files' . $ds;
+
+        require_once dirname(__DIR__) . $ds . 'TestDoubles' . $ds . 'BotInfo' . $ds . 'BrowsCap.php';
+        require_once dirname(__DIR__) . $ds . 'TestDoubles' . $ds . 'BotInfo' . $ds . 'TestAdapter.php';
 
         $this->initialiseHttpAdapter();
 
@@ -684,10 +689,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
     {
         $this->gass->setRemoteAddress('123.123.123.123');
 
-        $this->assertInstanceOf(
-            'Gass\GoogleAnalyticsServerSide',
-            $this->gass->setBotInfo(true)
-        );
+        $this->assertSame($this->gass, $this->gass->setBotInfo(true));
         $currentBotInfo = $this->gass->getBotInfo();
         $this->assertInstanceOf('Gass\BotInfo\BotInfo', $currentBotInfo);
         $this->assertInstanceOf('Gass\BotInfo\BrowsCap', $currentBotInfo->getAdapter());

@@ -966,8 +966,8 @@ class GoogleAnalyticsServerSide implements GassInterface
             } else {
                 $this->botInfo = new BotInfo;
             }
-            $this->botInfo->setUserAgent($this->getUserAgent())
-                ->setRemoteAddress($this->getRemoteAddress());
+            $this->botInfo->setUserAgent($this->getUserAgent());
+            $this->botInfo->setRemoteAddress($this->getRemoteAddress());
         } else {
             $this->botInfo = null;
         }
