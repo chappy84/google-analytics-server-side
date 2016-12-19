@@ -37,9 +37,6 @@ use org\bovigo\vfs\vfsStreamWrapper;
  */
 class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Take virtual copy of the filesystem so that these tests will run a little bit quicker
-     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -47,8 +44,7 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set the current vfs root as a clone of the original one so that any
-     * changes we make to the fs in the code doesn't affect future tests
+     * Take virtual copy of the filesystem so that these tests will run a little bit quicker
      */
     public function setup()
     {
