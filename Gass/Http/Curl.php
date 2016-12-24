@@ -97,7 +97,7 @@ class Curl extends Base
      * {@inheritdoc}
      *
      * @param string $url
-     * @return \Gass\Http\Curl
+     * @return $this
      */
     public function setUrl($url)
     {
@@ -107,7 +107,7 @@ class Curl extends Base
     /**
      * Closes the curl connection if one is present
      *
-     * @return \Gass\Http\Curl
+     * @return $this
      */
     protected function close()
     {
@@ -126,7 +126,7 @@ class Curl extends Base
      * @param array $options
      * @throws RuntimeException
      * @throws UnexpectedValueException
-     * @return \Gass\Http\Curl
+     * @return $this
      */
     public function request($url = null, array $options = array())
     {

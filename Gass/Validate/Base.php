@@ -74,7 +74,7 @@ abstract class Base extends AdapterBase implements ValidateInterface
      * Set the validation messages
      *
      * @param array $messages
-     * @return \Gass\Validate\Base
+     * @return $this
      */
     public function setMessages(array $messages)
     {
@@ -86,7 +86,7 @@ abstract class Base extends AdapterBase implements ValidateInterface
      * Sets the value being validated
      *
      * @param mixed $value
-     * @return \Gass\Validate\Base
+     * @return $this
      */
     public function setValue($value)
     {
@@ -100,7 +100,7 @@ abstract class Base extends AdapterBase implements ValidateInterface
      * @param string $message
      * @param string|null $value [optional]
      *
-     * @return \Gass\Validate\Base
+     * @return $this
      */
     public function addMessage($message, $value = null)
     {
