@@ -168,9 +168,9 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
         $uasi = new UserAgentStringInfo(
             array(
-                'cachePath' => $fsRoot->url(),
-                'cacheFilename' => $csvFile->getName(),
-                'cacheLifetime' => 1,
+                UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
+                UserAgentStringInfo::OPT_CACHE_FILENAME => $csvFile->getName(),
+                UserAgentStringInfo::OPT_CACHE_LIFETIME => 1,
             )
         );
         $this->assertSame($uasi, $uasi->set());
@@ -205,9 +205,9 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
         $uasi = new UserAgentStringInfo(
             array(
-                'cachePath' => $fsRoot->url(),
-                'cacheFilename' => $csvFile->getName(),
-                'cacheLifetime' => time() - $fsRoot->getChild('temp/' . $csvFile->getName())->filemtime(),
+                UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
+                UserAgentStringInfo::OPT_CACHE_FILENAME => $csvFile->getName(),
+                UserAgentStringInfo::OPT_CACHE_LIFETIME => time() - $csvFile->filemtime(),
             )
         );
         $this->assertSame($uasi, $uasi->set());
@@ -250,9 +250,9 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         foreach ($cacheLifetimesToTest as $cacheLifetime) {
             $uasi = new UserAgentStringInfo(
                 array(
-                    'cachePath' => $fsRoot->url(),
-                    'cacheFilename' => $csvFile->getName(),
-                    'cacheLifetime' => $cacheLifetime,
+                    UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
+                    UserAgentStringInfo::OPT_CACHE_FILENAME => $csvFile->getName(),
+                    UserAgentStringInfo::OPT_CACHE_LIFETIME => $cacheLifetime,
                 )
             );
             $this->assertSame($uasi, $uasi->set());
@@ -299,8 +299,8 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
         $uasi = new UserAgentStringInfo(
             array(
-                'cachePath' => $fsRoot->url(),
-                'cacheFilename' => 'definitelyNonExistent.csv',
+                UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
+                UserAgentStringInfo::OPT_CACHE_FILENAME => 'definitelyNonExistent.csv',
             )
         );
         $this->assertSame($uasi, $uasi->set());
@@ -356,8 +356,8 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
         $uasi = new UserAgentStringInfo(
             array(
-                'cachePath' => $fsRoot->url(),
-                'cacheFilename' => $nonReadableCsv->getName(),
+                UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
+                UserAgentStringInfo::OPT_CACHE_FILENAME => $nonReadableCsv->getName(),
             )
         );
         $this->assertSame($uasi, $uasi->set());
@@ -394,9 +394,9 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
         $uasi = new UserAgentStringInfo(
             array(
-                'cachePath' => $fsRoot->url(),
-                'cacheFilename' => $csvFile->getName(),
-                'cacheLifetime' => 0,
+                UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
+                UserAgentStringInfo::OPT_CACHE_FILENAME => $csvFile->getName(),
+                UserAgentStringInfo::OPT_CACHE_LIFETIME => 0,
             )
         );
         $this->setExpectedException(
@@ -431,9 +431,9 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
         $uasi = new UserAgentStringInfo(
             array(
-                'cachePath' => $fsRoot->url(),
-                'cacheFilename' => $csvFile->getName(),
-                'cacheLifetime' => 315360000,
+                UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
+                UserAgentStringInfo::OPT_CACHE_FILENAME => $csvFile->getName(),
+                UserAgentStringInfo::OPT_CACHE_LIFETIME => 315360000,
             )
         );
         $this->assertSame($uasi, $uasi->set());
@@ -465,8 +465,8 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
         $uasi = new UserAgentStringInfo(
             array(
-                'cachePath' => $fsRoot->url(),
-                'cacheFilename' => $cacheFilename,
+                UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
+                UserAgentStringInfo::OPT_CACHE_FILENAME => $cacheFilename,
             )
         );
         $this->assertNull($fsRoot->getChild('temp/' . $cacheFilename));

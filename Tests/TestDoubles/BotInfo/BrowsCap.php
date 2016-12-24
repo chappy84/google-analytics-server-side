@@ -37,4 +37,9 @@ use GassTests\TestDoubles\BotInfo\BaseEmpty;
  */
 class BrowsCap extends BaseEmpty
 {
+    const OPT_BROWSCAP = 'foo';
+
+    const OPT_SAVE_PATH = 'bar';
+
+    const OPT_LATEST_VERSION_DATE_FILE = 'baz';
 }

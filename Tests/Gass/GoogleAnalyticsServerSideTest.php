@@ -27,6 +27,7 @@
 namespace GassTests\Gass;
 
 use Gass\BotInfo\BrowsCap;
+use Gass\BotInfo\UserAgentStringInfo;
 use Gass\GoogleAnalyticsServerSide;
 use Gass\Http\Http;
 use Gass\Http\Stream as HttpStream;
@@ -60,7 +61,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
 
         $this->dependecyFilesFolder = dirname(__DIR__) . $ds . 'dependency-files' . $ds;
 
-        require_once dirname(__DIR__) . $ds . 'TestDoubles' . $ds . 'BotInfo' . $ds . 'BrowsCap.php';
+        // require_once dirname(__DIR__) . $ds . 'TestDoubles' . $ds . 'BotInfo' . $ds . 'BrowsCap.php';
         require_once dirname(__DIR__) . $ds . 'TestDoubles' . $ds . 'BotInfo' . $ds . 'TestAdapter.php';
 
         $this->initialiseHttpAdapter();
@@ -703,7 +704,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
         $this->gass->setBotInfo(
             array(
                 'adapter' => 'UserAgentStringInfo',
-                'cachePath' => '/tmp/',
+                UserAgentStringInfo::OPT_CACHE_PATH => '/tmp/',
             )
         );
         $currentBotInfo = $this->gass->getBotInfo();

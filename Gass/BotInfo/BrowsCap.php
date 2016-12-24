@@ -53,6 +53,34 @@ class BrowsCap extends Base
     const VERSION_DATE_URL = 'http://browscap.org/version';
 
     /**
+     * Browscap option index
+     *
+     * @var string
+     */
+    const OPT_BROWSCAP = 'browscap';
+
+    /**
+     * Ini file option index
+     *
+     * @var string
+     */
+    const OPT_INI_FILE = 'iniFilename';
+
+    /**
+     * Save path option index
+     *
+     * @var string
+     */
+    const OPT_SAVE_PATH = 'savePath';
+
+    /**
+     * Latest version date file option index
+     *
+     * @var string
+     */
+    const OPT_LATEST_VERSION_DATE_FILE = 'latestVersionDateFile';
+
+    /**
      * The last time the browscap file was updated
      *
      * @var int
@@ -71,7 +99,11 @@ class BrowsCap extends Base
      *
      * @var array
      */
-    protected $options = array('browscap' => null);
+    protected $options = array(
+        'iniFilename' => null,
+        'savePath' => null,
+        'latestVersionDateFile' => 'latestVersionDate.txt',
+    );
 
     /**
      * {@inheritdoc}
@@ -80,13 +112,48 @@ class BrowsCap extends Base
      */
     public function __construct(array $options = array())
     {
-        if (!isset($options['browscap'])
-            && false !== ($browsCapLocation = ini_get('browscap'))
+        if (!isset($options[static::OPT_BROWSCAP])
+            && false !== ($browsCapLocation = ini_get(static::OPT_BROWSCAP))
             && '' != trim($browsCapLocation)
         ) {
-            $options['browscap'] = trim($browsCapLocation);
+            $options[static::OPT_BROWSCAP] = trim($browsCapLocation);
         }
         parent::__construct($options);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function setOption($name, $value)
+    {
+        if (static::OPT_BROWSCAP === $name) {
+            $currentFileName = $this->getOption(static::OPT_INI_FILE);
+            $currentDirectory = $this->getOption(static::OPT_SAVE_PATH);
+            if (empty($currentDirectory) && empty($currentFileName)) {
+                parent::setOption(static::OPT_INI_FILE, basename($value));
+                parent::setOption(static::OPT_SAVE_PATH, dirname($value));
+            }
+            return $this;
+        }
+        return parent::setOption($name, $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getOption($name)
+    {
+        if (static::OPT_BROWSCAP === $name) {
+            return $this->getFilePath(static::OPT_INI_FILE);
+        }
+        return parent::getOption($name);
     }
 
     /**
@@ -109,8 +176,9 @@ class BrowsCap extends Base
      */
     private function setLatestVersionDate()
     {
-        $directory = dirname($this->getOption('browscap'));
-        $latestVersionDateFile = $directory . DIRECTORY_SEPARATOR . 'latestVersionDate.txt';
+        $latestVersionDateFile = $this->getOption(static::OPT_SAVE_PATH) .
+            DIRECTORY_SEPARATOR .
+            $this->getOption(static::OPT_LATEST_VERSION_DATE_FILE);
         if (!file_exists($latestVersionDateFile)
             || false === ($fileSaveTime = filemtime($latestVersionDateFile))
             || $fileSaveTime < time() - 86400
@@ -146,7 +214,7 @@ class BrowsCap extends Base
      */
     private function checkIniFile()
     {
-        if (null === ($browsCapLocation = $this->getOption('browscap'))) {
+        if (null === ($browsCapLocation = $this->getFilePath(static::OPT_INI_FILE))) {
             throw new RuntimeException(
                 'The browscap option has not been specified, please set this and try again.'
             );
@@ -176,7 +244,7 @@ class BrowsCap extends Base
      */
     private function updateIniFile()
     {
-        $browsCapLocation = $this->getOption('browscap');
+        $browsCapLocation = $this->getFilePath(static::OPT_INI_FILE);
         $directory = dirname($browsCapLocation);
         if ((!file_exists($directory) && !mkdir($directory, 0777, true)) || !is_writable($directory)) {
             throw new RuntimeException(
@@ -213,7 +281,7 @@ class BrowsCap extends Base
      */
     private function loadIniFile()
     {
-        $browsers = parse_ini_file($this->getOption('browscap'), true, INI_SCANNER_RAW);
+        $browsers = parse_ini_file($this->getFilePath(static::OPT_INI_FILE), true, INI_SCANNER_RAW);
         if (empty($browsers)) {
             throw new RuntimeException('Browscap ini file could not be parsed.');
         }
@@ -268,7 +336,8 @@ class BrowsCap extends Base
             }
         }
         if (false !== ($browserDetails = $this->getBrowserDetails($browser))
-                && 'Default Browser' !== $browserDetails['Browser']) {
+            && 'Default Browser' !== $browserDetails['Browser']
+        ) {
             $browserRegex = $this->getBrowserRegex($browser);
             $returnBrowsDet = array(
                 'browser_name_regex' => substr($browserRegex, 0, strlen($browserRegex) - 1),
@@ -330,5 +399,21 @@ class BrowsCap extends Base
             || !isset($browserDetails->javascript) || $browserDetails->javascript != 1
             || !isset($browserDetails->cookies) || $browserDetails->cookies != 1
         );
+    }
+
+    /**
+     * Returns the specified option with static::OPT_SAVE_PATH prepended
+     *
+     * @param string $optionName
+     * @return string|null
+     */
+    private function getFilePath($optionName)
+    {
+        $path = $this->getOption(static::OPT_SAVE_PATH);
+        $filename = $this->getOption($optionName);
+        if (!empty($path) && !empty($filename)) {
+            return rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+        }
+        return null;
     }
 }

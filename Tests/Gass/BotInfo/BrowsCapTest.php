@@ -98,11 +98,15 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructValidNoArguments()
     {
-        $existingIniSetting = trim(ini_get('browscap'));
+        $existingIniSetting = trim(ini_get(BrowsCap::OPT_BROWSCAP));
         $browsCap = new BrowsCap;
 
         $this->assertAttributeEquals(
-            array('browscap' => !empty($existingIniSetting) ? $existingIniSetting : null),
+            array(
+                BrowsCap::OPT_INI_FILE => !empty($existingIniSetting) ? basename($existingIniSetting) : null,
+                BrowsCap::OPT_SAVE_PATH => !empty($existingIniSetting) ? dirname($existingIniSetting) : null,
+                BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
+            ),
             'options',
             $browsCap
         );
@@ -111,8 +115,14 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function testConstructValidBrowscapInOptions()
     {
         $browsCap = $this->getBrowscapWithIni();
+        $iniFile = vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini');
+
         $this->assertAttributeEquals(
-            array('browscap' => vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini')->url()),
+            array(
+                BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+                BrowsCap::OPT_SAVE_PATH => dirname($iniFile->url()),
+                BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
+            ),
             'options',
             $browsCap
         );
@@ -121,8 +131,14 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     public function testGetLatestVersionDate()
     {
         $browsCap = $this->getBrowscapWithIni();
+        $iniFile = vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini');
+
         $this->assertAttributeEquals(
-            array('browscap' => vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini')->url()),
+            array(
+                BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+                BrowsCap::OPT_SAVE_PATH => dirname($iniFile->url()),
+                BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
+            ),
             'options',
             $browsCap
         );
@@ -231,9 +247,13 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
     private function getBrowscapWithIni()
     {
         $this->setTestHttpForVersionDateFile();
+        $iniFile = vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini');
 
         return new BrowsCap(
-            array('browscap' => vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini')->url())
+            array(
+                BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+                BrowsCap::OPT_SAVE_PATH => dirname($iniFile->url()),
+            )
         );
     }
 }

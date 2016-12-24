@@ -50,6 +50,27 @@ class UserAgentStringInfo extends Base
     const CSV_URL = 'http://user-agent-string.info/rpc/get_data.php?botIP-All=csv';
 
     /**
+     * Cache path option index
+     *
+     * @var string
+     */
+    const OPT_CACHE_PATH = 'cachePath';
+
+    /**
+     * Cache filename option index
+     *
+     * @var string
+     */
+    const OPT_CACHE_FILENAME = 'cacheFilename';
+
+    /**
+     * Cache lifetime option index
+     *
+     * @var string
+     */
+    const OPT_CACHE_LIFETIME = 'cacheLifetime';
+
+    /**
      * List of bots in use that the class should ignore
      * array format: 'bot name' => 'bot user agent'
      *
@@ -122,11 +143,11 @@ class UserAgentStringInfo extends Base
      */
     private function getFromCache()
     {
-        if (null !== ($csvPathname = $this->getOption('cachePath'))) {
+        if (null !== ($csvPathname = $this->getOption(static::OPT_CACHE_PATH))) {
             $this->setCacheDate();
             if (null !== ($lastCacheDate = $this->getCacheDate())) {
-                $csvPath = $csvPathname . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename');
-                if ($lastCacheDate > (time() - $this->getOption('cacheLifetime'))
+                $csvPath = $csvPathname . DIRECTORY_SEPARATOR . $this->getOption(static::OPT_CACHE_FILENAME);
+                if ($lastCacheDate > (time() - $this->getOption(static::OPT_CACHE_LIFETIME))
                     && file_exists($csvPath) && is_readable($csvPath)
                     && false !== ($botsCsv = file_get_contents($csvPath))
                 ) {
@@ -203,7 +224,7 @@ class UserAgentStringInfo extends Base
     private function saveToCache()
     {
         if (null === $this->getCacheDate()
-            && null !== ($csvPath = $this->getOption('cachePath'))
+            && null !== ($csvPath = $this->getOption(static::OPT_CACHE_PATH))
             && file_exists($csvPath) && is_writable($csvPath)
         ) {
             $csvLines = array();
@@ -214,12 +235,15 @@ class UserAgentStringInfo extends Base
             }
             $csvString = implode("\n", $csvLines);
             if (false === @file_put_contents(
-                $csvPath . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename'),
+                $csvPath . DIRECTORY_SEPARATOR . $this->getOption(static::OPT_CACHE_FILENAME),
                 $csvString,
                 LOCK_EX
             )) {
                 throw new RuntimeException(
-                    'Unable to write to file ' . $csvPath . DIRECTORY_SEPARATOR . $this->getOption('cacheFilename')
+                    'Unable to write to file ' .
+                        $csvPath .
+                        DIRECTORY_SEPARATOR .
+                        $this->getOption(static::OPT_CACHE_FILENAME)
                 );
             }
         }
@@ -236,8 +260,8 @@ class UserAgentStringInfo extends Base
     private function setCacheDate($cacheDate = null)
     {
         if (0 == func_num_args()) {
-            $fileRelPath = DIRECTORY_SEPARATOR . $this->getOption('cacheFilename');
-            $cacheDate = (null !== ($csvPathname = $this->getOption('cachePath'))
+            $fileRelPath = DIRECTORY_SEPARATOR . $this->getOption(static::OPT_CACHE_FILENAME);
+            $cacheDate = (null !== ($csvPathname = $this->getOption(static::OPT_CACHE_PATH))
                 && file_exists($csvPathname . $fileRelPath)
                 && is_readable($csvPathname . $fileRelPath)
                 && false !== ($fileModifiedTime = filemtime($csvPathname . $fileRelPath))

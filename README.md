@@ -170,18 +170,22 @@ Gass\BotInfo Class.
 There are two adapters available in the GASS framework
 
 #### BrowsCap
-There is one optional index as part of the array configuration parameter. 
+There are four options as part of the array configuration parameter:
 
-- browscap: This is the same as the php ini setting [browscap][12], a file-system location 
-where the [full_php_browscap.ini file][13] is located / can be downloaded to.
+- `\Gass\BotInfo\BrowsCap::OPT_SAVE_PATH`: The Path where the ini file and latest version file are stored.
+- `\Gass\BotInfo\BrowsCap::OPT_INI_FILE`: The name of the ini file to store the browscap ini data in.
+- `\Gass\BotInfo\BrowsCap::OPT_LATEST_VERSION_DATE_FILE`: The name of the text file to store the latest version timestamp in.
+- `\Gass\BotInfo\BrowsCap::OPT_BROWSCAP`: This is the same as the php ini setting [browscap][12], a file-system location where the [full_php_browscap.ini file][13] is located / can be downloaded to. 
+
+N/B: `OPT_BROWSCAP` will be ignored if you have set either `OPT_SAVE_PATH` or `OPT_INI_FILE`. `OPT_SAVE_PATH` or `OPT_INI_FILE` will also override any value derived from `OPT_BROWSCAP`. This is as `OPT_BROWSCAP` is intended as a fallback for the browscap ini setting, and backwards compatibility with previous versions of this framework.  
 
 e.g.
 
 ```php
 $gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
-		'botInfo' => true,
-        'account' => 'UA-XXXXXXX-X'
+        'botInfo' => true,
+        'account' => 'UA-XXXXXXX-X',
     )
 );
 ```
@@ -192,8 +196,9 @@ or
 $gass = new \Gass\GoogleAnalyticsServerSide(
 	array(
 		'botInfo' => array(
-			'adapter' => 'BrowsCap',
-            'browscap' => '/tmp/full_php_browscap.ini'
+            'adapter' => 'BrowsCap',
+            \Gass\BotInfo\BrowsCap::OPT_SAVE_PATH => '/tmp/',
+            \Gass\BotInfo\BrowsCap::OPT_INI_FILE => 'full_php_browscap.ini',
         ),
         'account' => 'UA-XXXXXXX-X'
     )
@@ -211,8 +216,8 @@ $gass->setBotInfo($browsCapAdapter);
 When an update for the browscap ini file is available [on the server][13] the code will 
 automatically download the file into the location provided.
 
-N/B: You MUST either provide the browscap setting or have it set in php.ini, otherwise 
-this adapter will not work.
+N/B: You MUST either provide location info for the browscap ini file or have the browscap ini setting 
+set in php.ini, otherwise this adapter will not work.
 
 N/B2: Due to an issue with the browscap ini file only being loaded when PHP starts up 
 (which is with the web-server apache, PHP-FPM etc.) the code deals with the ini file 
@@ -226,9 +231,9 @@ functionality will work without the need to restart the web-server.
 This downloaded a csv list of search engine crawlers from [user-agent-string.info][14].  
 There are three options as part of the array configuration parameter:
 
-- cachePath: where to save the list of bots downloaded from user-agent-string.info (required)
-- cacheFilename: the filename to save the list of bots to (optional, defaults to bots.csv)
-- cacheLifetime: number of secods before the cache expires (optional, defaults to 2592000 (30 days))
+- `\Gass\BotInfo\UserAgentStringInfo::OPT_CACHE_PATH`: where to save the list of bots downloaded from user-agent-string.info (required)
+- `\Gass\BotInfo\UserAgentStringInfo::OPT_CACHE_FILENAME`: the filename to save the list of bots to (optional, defaults to bots.csv)
+- `\Gass\BotInfo\UserAgentStringInfo::OPT_CACHE_LIFETIME`: number of secods before the cache expires (optional, defaults to 2592000 (30 days))
 
 This can be implemented in the same way as the BrowsCap adapter.
 
