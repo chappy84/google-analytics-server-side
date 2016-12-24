@@ -279,20 +279,21 @@ $gass->setHttp($httpAdapter);
 There are two Adapters available to Gass\Http, these are:
 
 #### Stream
-Stream creates a stream context and utilises this stream with file_get_contents. See 
-[php's example][15]. Any options provided to this class will go into the 'http' array for 
-the stream context, thus you may pass any headers or proxy information etc. into this to 
-use in the connection when made.
+Stream creates a stream context and utilises this stream with `file_get_contents`. See 
+[php's example][15]. Any [available options][16] provided to this class will go into the 
+'http' array for the stream context, thus you may pass any headers or proxy information etc. 
+into this to use in the connection when made.
 
 #### Curl
 This utilises the php extension cURL. cURL is recommended, however as it's not always 
 available the code falls back to stream to allow all servers make http requests in the 
 correct way.  
-Any options provided to this class must be passed using the [curl constants][16] as 
+Any options provided to this class must be passed using the [curl constants][17] as 
 identifiers (associative array keys or option names).
 
 [15]: http://www.php.net/manual/en/function.file-get-contents.php#refsect1-function.file-get-contents-examples
-[16]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
+[16]: https://secure.php.net/manual/en/context.http.php
+[17]: http://www.php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters
 
 End User Location
 -----------------
@@ -319,9 +320,9 @@ the first time.
 Yep, as European web developers we all hate one of the most idiotic and stupid pieces of 
 legislation ever introduced by bureaucrats that don't understand either the technology 
 itself or the ridiculously easy work arounds using such things as Javascript, Flash, 
-Silverlight, etc. See [@samyk][17]'s [evercookie][18] if you don't know.
+Silverlight, etc. See [@samyk][18]'s [evercookie][19] if you don't know.
 
-Anyway, in response to this, since Google themselves deal with the [Do Not Track][19] header 
+Anyway, in response to this, since Google themselves deal with the [Do Not Track][20] header 
 and to obey the user's preference this framework should silently deal with this 
 header in the same way, thus the user's preference is accepted by default.
 
@@ -338,28 +339,28 @@ To reverse this and no longer ignore the Do Not Track header you can make the fo
 $gass->setIgnoreDoNotTrack(false);
 ```
 
-[17]: https://github.com/samyk
-[18]: https://github.com/samyk/evercookie
-[19]: http://www.w3.org/TR/tracking-dnt/
+[18]: https://github.com/samyk
+[19]: https://github.com/samyk/evercookie
+[20]: http://www.w3.org/TR/tracking-dnt/
 
 Test Suite & CI
 ---------------
 
-This framework uses [PHPUnit][22], along with [TravisCI][23], to test functionality on the
+This framework uses [PHPUnit][23], along with [TravisCI][24], to test functionality on the
 supported PHP minor versions 5.3, 5.4, 5.5, 5.6, 7.0 and 7.1. This is done by default on the latest bug fix
 point release of that minor point version to ensure it works.
 
-Provisional PHP nightly & [HHVM][24] support are provided as-well however these are not guaranteed.
+Provisional PHP nightly & [HHVM][25] support are provided as-well however these are not guaranteed.
 
 If you're submitting a pull request, please ensure you've run the twst suite with PHPUnit, installed via 
-[composer][7]. Please see the instructions [here][20] on how to install it. After which you can [install][21] 
+[composer][7]. Please see the instructions [here][21] on how to install it. After which you can [install][22] 
 phpunit, and the  other required dev dependencies using `composer install`.
 
-[20]: https://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
-[21]: https://getcomposer.org/doc/03-cli.md#install
-[22]: https://github.com/sebastianbergmann/phpunit
-[23]: https://travis-ci.org/
-[24]: http://hhvm.com/
+[21]: https://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
+[22]: https://getcomposer.org/doc/03-cli.md#install
+[23]: https://github.com/sebastianbergmann/phpunit
+[24]: https://travis-ci.org/
+[25]: http://hhvm.com/
 
 PHP Version
 -----------
@@ -370,13 +371,13 @@ The minimum supported version is PHP 5.3.23
 
 I've left the following branches of versions which worked with the now un-supported versions of PHP:
 
-- [PHP 5.2 Branch][25] 
+- [PHP 5.2 Branch][26] 
 
 Please feel free to use, fork etc. any of these branches. Any issues which arise in them won't 
 have fixes attempted I'm afraid. However if you've attempted a fix yourself, please lodge a 
 pull-request and It'll be considered. 
 
-[25]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+[26]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 LICENSE
 -------

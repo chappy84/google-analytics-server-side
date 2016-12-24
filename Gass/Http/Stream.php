@@ -43,6 +43,7 @@ class Stream extends Base
     /**
      * Class options
      *
+     * @see https://secure.php.net/manual/en/context.http.php
      * @var array
      */
     protected $options = array(
@@ -87,6 +88,7 @@ class Stream extends Base
     /**
      * Sets a specific option
      *
+     * @see https://secure.php.net/manual/en/context.http.php
      * @param string $name
      * @param mixed $value
      * @return $this
@@ -100,6 +102,7 @@ class Stream extends Base
     /**
      * Returns a specific option
      *
+     * @see https://secure.php.net/manual/en/context.http.php
      * @param string $name
      * @return mixed
      */

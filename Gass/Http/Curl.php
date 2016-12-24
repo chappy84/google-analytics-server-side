@@ -51,6 +51,7 @@ class Curl extends Base
     /**
      * Class options
      *
+     * @see https://secure.php.net/manual/en/function.curl-setopt.php
      * @var array
      */
     protected $options = array(
