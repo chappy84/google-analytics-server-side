@@ -32,6 +32,14 @@ class CurlTest extends \PHPUnit_Framework_TestCase
 {
     public $testUrl = 'http://www.example.com/';
 
+    protected function setUp()
+    {
+        parent::setUp();
+        if (!extension_loaded('curl')) {
+            $this->markTestSkipped('The cURL extension is not available.');
+        }
+    }
+
     public function testConstruct()
     {
         $options = array(
