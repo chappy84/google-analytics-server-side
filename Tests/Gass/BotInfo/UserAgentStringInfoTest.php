@@ -46,7 +46,7 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
     /**
      * Take virtual copy of the filesystem so that these tests will run a little bit quicker
      */
-    public function setup()
+    protected function setUp()
     {
         parent::setup();
         $baseDir = realpath(__DIR__ . '/../../dependency-files');

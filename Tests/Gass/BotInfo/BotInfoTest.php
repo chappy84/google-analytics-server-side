@@ -36,7 +36,7 @@ use Gass\BotInfo\TestAdapter;
  */
 class BotInfoTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $ds = DIRECTORY_SEPARATOR;

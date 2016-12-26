@@ -54,7 +54,7 @@ class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
      */
     protected $httpAdapter;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $ds = DIRECTORY_SEPARATOR;

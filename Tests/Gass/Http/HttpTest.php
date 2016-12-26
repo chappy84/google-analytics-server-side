@@ -36,7 +36,7 @@ class HttpTest extends \PHPUnit_Framework_TestCase
 {
     private $defaultAdapter;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $adapterToLoad = extension_loaded('curl') ? 'Curl' : 'Stream';
