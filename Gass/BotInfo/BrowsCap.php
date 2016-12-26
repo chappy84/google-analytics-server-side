@@ -26,6 +26,7 @@
 
 namespace Gass\BotInfo;
 
+use Gass\Exception\DomainException;
 use Gass\Exception\RuntimeException;
 use Gass\Http\Http;
 
@@ -112,7 +113,9 @@ class BrowsCap extends Base
      */
     public function __construct(array $options = array())
     {
-        if (!isset($options[static::OPT_BROWSCAP])
+        if (!isset($options[static::OPT_INI_FILE])
+            && !isset($options[static::OPT_SAVE_PATH])
+            && !isset($options[static::OPT_BROWSCAP])
             && false !== ($browsCapLocation = ini_get(static::OPT_BROWSCAP))
             && '' != trim($browsCapLocation)
         ) {
@@ -172,13 +175,16 @@ class BrowsCap extends Base
     /**
      * Gets the latest version date from the web
      *
+     * @throws DomainException
      * @throws RuntimeException
      */
     private function setLatestVersionDate()
     {
-        $latestVersionDateFile = $this->getOption(static::OPT_SAVE_PATH) .
-            DIRECTORY_SEPARATOR .
-            $this->getOption(static::OPT_LATEST_VERSION_DATE_FILE);
+        if (null === ($latestVersionDateFile = $this->getFilePath(static::OPT_LATEST_VERSION_DATE_FILE))) {
+            throw new DomainException(
+                'Cannot deduce latest version date file location. Please set the required options.'
+            );
+        }
         if (!file_exists($latestVersionDateFile)
             || false === ($fileSaveTime = filemtime($latestVersionDateFile))
             || $fileSaveTime < time() - 86400
@@ -188,47 +194,65 @@ class BrowsCap extends Base
                     ->request(static::VERSION_DATE_URL)
                     ->getResponse()
             );
-            if (!is_writable($latestVersionDateFile)
-                || false === file_put_contents($latestVersionDateFile, trim($latestDateString))
-            ) {
-                throw new RuntimeException(
-                    'Cannot save latest version date to file: ' . $latestVersionDateFile
-                );
+            if (false === $this->checkValidDateTimeString($latestDateString)) {
+                unset($latestDateString);
+            } else {
+                $this->saveToFile($latestVersionDateFile, trim($latestDateString));
             }
-        } elseif (!file_exists($latestVersionDateFile)
-            || false === ($latestDateString = file_get_contents($latestVersionDateFile))
-        ) {
+        } elseif (false === ($latestDateString = @file_get_contents($latestVersionDateFile))) {
+            $errorMsg = isset($php_errormsg)
+                ? $php_errormsg
+                : 'error message not available, this could be because the ini ' .
+                    'setting "track_errors" is set to "Off" or XDebug is running';
             throw new RuntimeException(
-                'Couldn\'t read latest version date file: ' . $latestVersionDateFile
+                'Couldn\'t read latest version date file: ' . $latestVersionDateFile . ' due to: ' . $errorMsg
             );
         }
-        if (false !== ($latestVersionDate = strtotime($latestDateString))) {
+        if (isset($latestDateString)
+            && false !== ($latestVersionDate = $this->checkValidDateTimeString($latestDateString))
+        ) {
             $this->latestVersionDate = $latestVersionDate;
         }
     }
 
     /**
+     * Checks a string is a valid date format, and if so returns it's associated unix timestamp
+     *
+     * @param string $dateString
+     * @return int|bool
+     */
+    private function checkValidDateTimeString($dateString)
+    {
+        if (false === ($timestamp = strtotime($dateString))) {
+            return false;
+        }
+        return $timestamp;
+    }
+
+    /**
      * Checks whether the browscap file exists, is readable, and hasn't expired the cache lifetime
      *
+     * @throws DomainException
      * @throws RuntimeException
      */
     private function checkIniFile()
     {
-        if (null === ($browsCapLocation = $this->getFilePath(static::OPT_INI_FILE))) {
-            throw new RuntimeException(
-                'The browscap option has not been specified, please set this and try again.'
+        if (null === ($iniFilePath = $this->getFilePath(static::OPT_INI_FILE))) {
+            throw new DomainException(
+                'Cannot deduce browscap ini file location. Please set the required options.'
             );
         }
-        if (!file_exists($browsCapLocation)) {
+        if (!file_exists($iniFilePath)) {
             $this->updateIniFile();
         }
-        if (!is_readable($browsCapLocation)) {
+        if (!is_readable($iniFilePath)) {
             throw new RuntimeException(
-                'The browscap option points to a un-readable file, ' .
-                'please ensure the permissions are correct and try again.'
+                'The browscap ini file ' .
+                    $iniFilePath .
+                    ' is un-readable, please ensure the permissions are correct and try again.'
             );
         }
-        if (false === ($fileSaveTime = filemtime($browsCapLocation))
+        if (false === ($fileSaveTime = filemtime($iniFilePath))
             || (null !== ($latestVersionDate = $this->getLatestVersionDate())
                 && $fileSaveTime < $latestVersionDate)
         ) {
@@ -240,38 +264,35 @@ class BrowsCap extends Base
     /**
      * Updates the browscap ini file to the latest version
      *
+     * @throws DomainException
      * @throws RuntimeException
      */
     private function updateIniFile()
     {
-        $browsCapLocation = $this->getFilePath(static::OPT_INI_FILE);
-        $directory = dirname($browsCapLocation);
-        if ((!file_exists($directory) && !mkdir($directory, 0777, true)) || !is_writable($directory)) {
-            throw new RuntimeException(
-                'The directory "' . $directory . '" is not writable, ' .
-                'please ensure this file can be written to and try again.'
+        if (null === ($iniFilePath = $this->getFilePath(static::OPT_INI_FILE))) {
+            throw new DomainException(
+                'Cannot deduce browscap ini file location. Please set the required options.'
             );
         }
-        $currentHttpUserAgent = Http::getInstance()->getUserAgent();
+
+        $http = Http::getInstance();
+        $currentHttpUserAgent = $http->getUserAgent();
         if ($currentHttpUserAgent === null || '' == trim($currentHttpUserAgent)) {
-            throw new RuntimeException(
-                __CLASS__ . ' cannot be initialised before a user-agent has been set in the Gass\Http adapter.' .
-                ' The remote server rejects requests without a user-agent.'
+            throw new DomainException(
+                'A user-agent has not beeen set in the Gass\Http adapter.' .
+                    ' The remote server rejects requests without a user-agent.'
             );
         }
-        $browscapSource = Http::getInstance()->request(static::BROWSCAP_URL)->getResponse();
+        $browscapSource = $http->request(static::BROWSCAP_URL)->getResponse();
         $browscapContents = trim($browscapSource);
         if (empty($browscapContents)) {
             throw new RuntimeException(
                 'browscap ini file retrieved from external source seems to be empty. ' .
-                'Please either set botInfo to null or ensure the full_php_browscap.ini file can be retrieved.'
+                    'Please ensure the ini file file can be retrieved.'
             );
         }
-        if (false === file_put_contents($browsCapLocation, $browscapContents)) {
-            throw new RuntimeException(
-                'Could not write to "' . $browsCapLocation . '", please check the permissions and try again.'
-            );
-        }
+
+        $this->saveToFile($iniFilePath, $browscapContents);
     }
 
     /**
@@ -415,5 +436,38 @@ class BrowsCap extends Base
             return rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
         }
         return null;
+    }
+
+    /**
+     * Save contents to a specific path
+     *
+     * @param string $filePath
+     * @param mixed $fileContents
+     * @throws RuntimeException
+     * @return $this
+     */
+    private function saveToFile($filePath, $fileContents)
+    {
+        $parentDirPath = dirname($filePath);
+        $folderNotWritable = (!file_exists($filePath) && !is_writable($parentDirPath));
+        $fileNotWritable = (file_exists($filePath) && !is_writable($filePath));
+        if ($folderNotWritable
+            || $fileNotWritable
+            || false === @file_put_contents($filePath, $fileContents, LOCK_EX)
+        ) {
+            if ($folderNotWritable) {
+                $errorMsg = 'Folder ' . $parentDirPath . ' is not writable';
+            } elseif ($fileNotWritable) {
+                $errorMsg = 'File is not writable';
+            } elseif (!isset($php_errormsg)) {
+                $errorMsg = 'error message not available, this could be because the ini ' .
+                    'setting "track_errors" is set to "Off" or XDebug is running';
+            } else {
+                $errorMsg = $php_errormsg;
+            }
+            throw new RuntimeException(
+                'Cannot save file ' . $filePath . ' due to: ' . $errorMsg
+            );
+        }
     }
 }

@@ -23,7 +23,7 @@ install:
 script:
     - vendor/bin/php-cs-fixer fix -v --dry-run .
     - vendor/bin/phpcs --standard=PSR2 -p --extensions=php Gass/ Tests/
-    - vendor/bin/phpunit -c Tests/phpunit.xml.dist --coverage-clover clover.xml
+    - vendor/bin/phpunit -c Tests/phpunit.xml.dist --verbose --coverage-clover clover.xml
 
 after_script:
     - php vendor/bin/coveralls -v

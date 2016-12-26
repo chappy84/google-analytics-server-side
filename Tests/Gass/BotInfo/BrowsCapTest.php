@@ -38,6 +38,8 @@ use org\bovigo\vfs\vfsStreamWrapper;
  */
 class BrowsCapTest extends TestAbstract
 {
+    protected $trackErrors = null;
+
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -67,6 +69,13 @@ class BrowsCapTest extends TestAbstract
         }
         clearstatcache();
         vfsStreamWrapper::setRoot($fsRoot);
+        $this->trackErrors = ini_get('track_errors');
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        ini_set('track_errors', $this->trackErrors);
     }
 
     /**
@@ -76,6 +85,15 @@ class BrowsCapTest extends TestAbstract
     {
         parent::tearDownAfterClass();
         vfsStreamWrapper::unregister();
+    }
+
+    public function setRecentVersionDateFileAndBasicHttpOverride()
+    {
+        $latestVersionFile = vfsStreamWrapper::getRoot()->getChild('latestVersionDate.txt');
+        $latestVersionFile->lastModified(time());
+        clearstatcache();
+
+        m::mock('overload:Gass\Http\Http');
     }
 
     public function setTestHttpForVersionDateFile()
@@ -113,7 +131,108 @@ class BrowsCapTest extends TestAbstract
         );
     }
 
-    public function testConstructValidBrowscapInOptions()
+    public function testConstructValidWithOptions()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $options = array(
+            BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+        );
+        $browsCap = new BrowsCap($options);
+
+        $options[BrowsCap::OPT_LATEST_VERSION_DATE_FILE] = 'latestVersionDate.txt';
+
+        $this->assertAttributeEquals($options, 'options', $browsCap);
+    }
+
+    /**
+     * @dataProvider dataProviderTestsIniFileSavePathOptions
+     */
+    public function testConstructValidIgnoresIniBrowsCapWhenIniFileOrSavePathOptions(array $options)
+    {
+        $existingIniSetting = trim(ini_get(BrowsCap::OPT_BROWSCAP));
+        $expectedOptions = array_merge(
+            array(
+                BrowsCap::OPT_INI_FILE => null,
+                BrowsCap::OPT_SAVE_PATH => null,
+                BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
+            ),
+            $options
+        );
+        $browsCap = new BrowsCap($options);
+
+        $this->assertAttributeEquals($expectedOptions, 'options', $browsCap);
+    }
+
+    public function testSetOptionBrowscapNoOptionIniFileOrSavePath()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $provisionalOptions = array(
+            BrowsCap::OPT_INI_FILE => null,
+            BrowsCap::OPT_SAVE_PATH => null,
+            BrowsCap::OPT_LATEST_VERSION_DATE_FILE => null,
+        );
+
+        $browsCap = new BrowsCap;
+        $browsCap->setOptions($provisionalOptions);
+
+        $this->assertAttributeEquals($provisionalOptions, 'options', $browsCap);
+        $this->assertSame($browsCap, $browsCap->setOption(BrowsCap::OPT_BROWSCAP, $iniFile->url()));
+        $expectedOptions = array_merge(
+            $provisionalOptions,
+            array(
+                BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+                BrowsCap::OPT_SAVE_PATH => $root->url(),
+            )
+        );
+        $this->assertAttributeEquals($expectedOptions, 'options', $browsCap);
+    }
+
+    /**
+     * @dataProvider dataProviderTestsIniFileSavePathOptions
+     */
+    public function testSetOptionWithBrowscapDoestOverrideIniFileOrSavePath(array $options)
+    {
+        $provisionalOptions = array_merge(
+            array(
+                BrowsCap::OPT_INI_FILE => null,
+                BrowsCap::OPT_SAVE_PATH => null,
+                BrowsCap::OPT_LATEST_VERSION_DATE_FILE => null,
+            ),
+            $options
+        );
+
+        $iniFile = vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini');
+        $browsCap = new BrowsCap;
+        $browsCap->setOptions($provisionalOptions);
+
+        $this->assertAttributeEquals($provisionalOptions, 'options', $browsCap);
+        $this->assertSame($browsCap, $browsCap->setOption(BrowsCap::OPT_BROWSCAP, $iniFile->url()));
+        $this->assertAttributeEquals($provisionalOptions, 'options', $browsCap);
+    }
+
+    public function testSetOptionSetGenericOption()
+    {
+        $options = array(
+            BrowsCap::OPT_INI_FILE => null,
+            BrowsCap::OPT_SAVE_PATH => null,
+            BrowsCap::OPT_LATEST_VERSION_DATE_FILE => null,
+        );
+
+        $browsCap = new BrowsCap;
+        $browsCap->setOptions($options);
+        $name = 'foo';
+        $value = 'bar';
+        $expectedOptions = array_merge($options, array($name => $value));
+
+        $browsCap->setOption($name, $value);
+
+        $this->assertAttributeEquals($expectedOptions, 'options', $browsCap);
+    }
+
+    public function testGetOptionBrowsCapValid()
     {
         $root = vfsStreamWrapper::getRoot();
         $iniFile = $root->getChild('test_php_browscap.ini');
@@ -124,35 +243,263 @@ class BrowsCapTest extends TestAbstract
             )
         );
 
-        $this->assertAttributeEquals(
-            array(
-                BrowsCap::OPT_INI_FILE => $iniFile->getName(),
-                BrowsCap::OPT_SAVE_PATH => $root->url(),
-                BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
-            ),
-            'options',
-            $browsCap
-        );
+        $this->assertEquals($iniFile->url(), $browsCap->getOption(BrowsCap::OPT_BROWSCAP));
     }
 
-    public function testGetLatestVersionDate()
+    public function testGetOptionBrowsCapValidRemovesExcessDirectorySeparators()
     {
-        $browsCap = $this->getBrowscapWithIni();
-        $iniFile = vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini');
-
-        $this->assertAttributeEquals(
+        $root = vfsStreamWrapper::getRoot();
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $browsCap = new BrowsCap(
             array(
                 BrowsCap::OPT_INI_FILE => $iniFile->getName(),
-                BrowsCap::OPT_SAVE_PATH => dirname($iniFile->url()),
-                BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
-            ),
-            'options',
-            $browsCap
+                BrowsCap::OPT_SAVE_PATH => $root->url() . '///',
+            )
         );
+
+        $this->assertEquals($iniFile->url(), $browsCap->getOption(BrowsCap::OPT_BROWSCAP));
+    }
+
+    /**
+     * @dataProvider dataProviderTestsOneOrOtherIniFileSavePathOptions
+     */
+    public function testGetOptionBrowsCapNullWhenMissingOptions(array $constructOptions)
+    {
+        $browsCap = new BrowsCap($constructOptions);
+
+        $this->assertNull($browsCap->getOption(BrowsCap::OPT_BROWSCAP));
+    }
+
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testGetLatestVersionDateValidFileNotExists($trackErrors)
+    {
+        ini_set('track_errors', $trackErrors);
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFileName = 'latestVersionDate.txt';
+        $latestVersionFile = $root->getChild($latestVersionFileName);
+        $latestVersion = $latestVersionFile->getContent();
+        $root->removeChild($latestVersionFileName);
+        $this->assertFalse($root->hasChild($latestVersionFileName));
+
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(BrowsCap::VERSION_DATE_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($latestVersion);
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        $browsCap = new BrowsCap(array(BrowsCap::OPT_SAVE_PATH => $root->url()));
+
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Cannot save file ' .
+                $root->url() .
+                DIRECTORY_SEPARATOR .
+                $latestVersionFileName .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
+        );
+        $browsCap->getLatestVersionDate();
+    }
+
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testGetLatestVersionDateValidFileSavedOverOneDayAgoAndWritable($trackErrors)
+    {
+        ini_set('track_errors', $trackErrors);
+
+        $this->setTestHttpForVersionDateFile();
+
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->lastModified(time() - 86401);
+        clearstatcache();
+
+        $browsCap = new BrowsCap(array(BrowsCap::OPT_SAVE_PATH => $root->url()));
+
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Cannot save file ' .
+                $latestVersionFile->url() .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
+        );
+        $browsCap->getLatestVersionDate();
+    }
+
+    public function testGetLatestVersionDateValidFileSavedWithinLastDay()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $filemtime = time() - 86400;
+        $latestVersionFile->lastModified($filemtime);
+        clearstatcache();
+
+        $browsCap = new BrowsCap(array(BrowsCap::OPT_SAVE_PATH => $root->url()));
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldNotReceive('getInstance');
         $this->assertEquals(
-            strtotime(vfsStreamWrapper::getRoot()->getChild('latestVersionDate.txt')->getContent()),
+            strtotime($latestVersionFile->getContent()),
             $browsCap->getLatestVersionDate()
         );
+        clearstatcache();
+        $this->assertEquals($filemtime, $latestVersionFile->filemtime());
+    }
+
+    public function testGetLatestVersionDateNotSetOrSavedWhenHttpReturnsInvalidDate()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $filemtime = time() - 86401;
+        $latestVersionFile->lastModified($filemtime);
+        clearstatcache();
+
+        $browsCap = new BrowsCap(array(BrowsCap::OPT_SAVE_PATH => $root->url()));
+
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(BrowsCap::VERSION_DATE_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('most definitely an invalid date format');
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        $this->assertNull($browsCap->getLatestVersionDate());
+        clearstatcache();
+        $this->assertEquals($filemtime, $latestVersionFile->filemtime());
+    }
+
+    public function testGetLatestVersionDateExceptionRuntimeFilePathNotDeducable()
+    {
+        $browsCap = new BrowsCap;
+        $browsCap->setOptions(array(BrowsCap::OPT_SAVE_PATH => null));
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldNotReceive('getInstance');
+        $this->setExpectedException(
+            'Gass\Exception\DomainException',
+            'Cannot deduce latest version date file location. Please set the required options.'
+        );
+        $browsCap->getLatestVersionDate();
+    }
+
+    public function testGetLatestVersionDateExceptionRuntimeFileNotWritable()
+    {
+        $this->setTestHttpForVersionDateFile();
+
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->chmod(0444);
+        $filemtime = time() - 86401;
+        $latestVersionFile->lastModified($filemtime);
+        clearstatcache();
+
+        $browsCap = new BrowsCap(array(BrowsCap::OPT_SAVE_PATH => $root->url()));
+
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Cannot save file ' .
+                $latestVersionFile->url() .
+                ' due to: File is not writable'
+        );
+        $browsCap->getLatestVersionDate();
+    }
+
+    public function testGetLatestVersionDateExceptionRuntimeFolderNotWritable()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFileName = 'latestVersionDate.txt';
+        $latestVersionFile = $root->getChild($latestVersionFileName);
+        $latestVersion = $latestVersionFile->getContent();
+        $root->removeChild($latestVersionFileName);
+        $this->assertFalse($root->hasChild($latestVersionFileName));
+        $root->chmod(0555);
+
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(BrowsCap::VERSION_DATE_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($latestVersion);
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        $browsCap = new BrowsCap(array(BrowsCap::OPT_SAVE_PATH => $root->url()));
+
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Cannot save file ' .
+                $root->url() .
+                DIRECTORY_SEPARATOR .
+                $latestVersionFileName .
+                ' due to: Folder ' .
+                $root->url() .
+                ' is not writable'
+        );
+        $browsCap->getLatestVersionDate();
+    }
+
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testGetLatestVersionDateExceptionRuntimeFileNotReadable($trackErrors)
+    {
+        ini_set('track_errors', $trackErrors);
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->chmod(0111);
+        $latestVersionFile->lastModified(time() - 86400);
+        clearstatcache();
+
+        $browsCap = new BrowsCap(array(BrowsCap::OPT_SAVE_PATH => $root->url()));
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldNotReceive('getInstance');
+
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Couldn\'t read latest version date file: ' .
+                $latestVersionFile->url() .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_get_contents(' . $latestVersionFile->url() . '): failed to open stream'
+                )
+        );
+        $browsCap->getLatestVersionDate();
     }
 
     public function testGetBrowserValid()
@@ -207,23 +554,352 @@ class BrowsCapTest extends TestAbstract
     public function testGetBrowserEmptyUserAgent()
     {
         $browsCap = $this->getBrowscapWithIni();
-        $this->assertEquals(false, $browsCap->getBrowser(''));
+        $this->assertFalse($browsCap->getBrowser(''));
     }
 
-    public function testGetIsBotValid()
+    public function testGetBrowserDetailsBrowserDoesntMatchIndex()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->lastModified(time());
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $iniFile->lastModified(strtotime($latestVersionFile->getContent()));
+        clearstatcache();
+
+        $browsCap = $this->getBrowscapWithIni();
+
+        $browsCap->getBrowser('');
+
+        $rm = new \ReflectionMethod(get_class($browsCap), 'getBrowserDetails');
+        $rm->setAccessible(true);
+        $this->assertFalse($rm->invoke($browsCap, 'FooBarBaz'));
+    }
+
+    public function testGetBrowserDetailsBrowserParentDoesntExist()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->lastModified(time());
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $iniFile->lastModified(strtotime($latestVersionFile->getContent()));
+        clearstatcache();
+
+        $browsCap = $this->getBrowscapWithIni();
+
+        $browsCap->getBrowser('');
+
+        $rm = new \ReflectionMethod(get_class($browsCap), 'getBrowserDetails');
+        $rm->setAccessible(true);
+        $this->assertFalse($rm->invoke($browsCap, 'DoesntHaveAParent'));
+    }
+
+    public function testCheckIniFileExceptionRuntimeUnreadableIniFile()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $iniFile->chmod(0111);
+
+        $browsCap = $this->getBrowscapWithIni();
+
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'The browscap ini file ' .
+                $root->url() .
+                DIRECTORY_SEPARATOR .
+                $iniFile->getName() .
+                ' is un-readable, please ensure the permissions are correct and try again.'
+        );
+        $browsCap->getBrowser();
+    }
+
+    /**
+     * @dataProvider dataProviderTestsOneOrOtherIniFileSavePathOptions
+     */
+    public function testCheckIniFileExceptionDomainCannotDeduceIniFileLocation(array $options)
+    {
+        $provisionalOptions = array_merge(
+            array(
+                BrowsCap::OPT_INI_FILE => null,
+                BrowsCap::OPT_SAVE_PATH => null,
+                BrowsCap::OPT_LATEST_VERSION_DATE_FILE => null,
+            ),
+            $options
+        );
+
+        $browsCap = new BrowsCap($provisionalOptions);
+
+        $this->setExpectedException(
+            'Gass\Exception\DomainException',
+            'Cannot deduce browscap ini file location. Please set the required options.'
+        );
+        $browsCap->getBrowser();
+    }
+
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testCheckIniFileDownloadsFileWhenDoesntExist($trackErrors)
+    {
+        ini_set('track_errors', $trackErrors);
+        $root = vfsStreamWrapper::getRoot();
+        $iniFileName = 'test_php_browscap.ini';
+        $iniFileContent = $root->getChild($iniFileName)->getContent();
+        $root->removeChild($iniFileName);
+        $options = array(
+            BrowsCap::OPT_INI_FILE => $iniFileName,
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+        );
+
+        $browsCap = new BrowsCap($options);
+
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('getUserAgent')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('UA4');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(BrowsCap::BROWSCAP_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($iniFileContent);
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Cannot save file ' .
+                $root->url() .
+                DIRECTORY_SEPARATOR .
+                $iniFileName .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
+        );
+        $browsCap->getBrowser();
+    }
+
+    /**
+     * @dataProvider dataProviderTestUpdateIniFileExceptionDomainMissingHttpUserAgent
+     */
+    public function testUpdateIniFileExceptionDomainMissingHttpUserAgent($userAgentValue)
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $iniFileName = 'test_php_browscap.ini';
+        $iniFile = $root->removeChild($iniFileName);
+        $options = array(
+            BrowsCap::OPT_INI_FILE => $iniFileName,
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+        );
+
+        $browsCap = new BrowsCap($options);
+
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('getUserAgent')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($userAgentValue);
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        $this->setExpectedException(
+            'Gass\Exception\DomainException',
+            'A user-agent has not beeen set in the Gass\Http adapter.' .
+                ' The remote server rejects requests without a user-agent.'
+        );
+        $browsCap->getBrowser();
+    }
+
+    public function dataProviderTestUpdateIniFileExceptionDomainMissingHttpUserAgent()
+    {
+        return array(
+            array(null),
+            array(''),
+            array(' '),
+            array("\t"),
+            array("\n\r"),
+        );
+    }
+
+    public function testUpdateIniFileExceptionRuntimeEmptyIniFile()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $iniFileName = 'test_php_browscap.ini';
+        $iniFile = $root->removeChild($iniFileName);
+        $options = array(
+            BrowsCap::OPT_INI_FILE => $iniFileName,
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+        );
+
+        $browsCap = new BrowsCap($options);
+
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('getUserAgent')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('UA4');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(BrowsCap::BROWSCAP_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('');
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'browscap ini file retrieved from external source seems to be empty. ' .
+                'Please ensure the ini file file can be retrieved.'
+        );
+        $browsCap->getBrowser();
+    }
+
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testCheckIniFileDownloadsFileWhenFileExpired($trackErrors)
+    {
+        ini_set('track_errors', $trackErrors);
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->lastModified(time());
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $iniFile->lastModified(strtotime($latestVersionFile->getContent()) - 1);
+        clearstatcache();
+        $options = array(
+            BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+            BrowsCap::OPT_LATEST_VERSION_DATE_FILE => $latestVersionFile->getName(),
+        );
+
+        $browsCap = new BrowsCap($options);
+
+        $httpAdapter = m::mock('Gass\Http\HttpInterface');
+        $httpAdapter->shouldReceive('getUserAgent')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('UA4');
+        $httpAdapter->shouldReceive('request')
+            ->once()
+            ->with(BrowsCap::BROWSCAP_URL)
+            ->andReturnSelf();
+        $httpAdapter->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($latestVersionFile->getContent());
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldReceive('getInstance')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn($httpAdapter);
+
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Cannot save file ' .
+                $root->url() .
+                DIRECTORY_SEPARATOR .
+                $iniFile->getName() .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
+        );
+        $browsCap->getBrowser();
+    }
+
+    public function testCheckIniFileDoesntDownloadFileWhenFileNotExpired()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->lastModified(time());
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $iniFile->lastModified(strtotime($latestVersionFile->getContent()));
+        clearstatcache();
+        $options = array(
+            BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+            BrowsCap::OPT_LATEST_VERSION_DATE_FILE => $latestVersionFile->getName(),
+        );
+
+        $browsCap = new BrowsCap($options);
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldNotReceive('getInstance');
+
+        $this->assertInstanceOf('stdClass', $browsCap->getBrowser('UA4'));
+    }
+
+    public function testLoadIniFileExceptionRuntimeNoBrowserDetailsFound()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->lastModified(time());
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $iniFile->lastModified(time());
+        $iniFile->setContent('foo');
+        clearstatcache();
+        $options = array(
+            BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+            BrowsCap::OPT_LATEST_VERSION_DATE_FILE => $latestVersionFile->getName(),
+        );
+
+        $browsCap = new BrowsCap($options);
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldNotReceive('getInstance');
+
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Browscap ini file could not be parsed.'
+        );
+        $browsCap->getBrowser();
+    }
+
+    /**
+     * @dataProvider dataProviderTestGetIsBotValid
+     */
+    public function testGetIsBotValid($userAgent, $expectedReturn)
     {
         $browsCap = $this->getBrowscapWithIni();
 
-        $ua4UserAgent = 'UA4';
-        $this->assertFalse($browsCap->isBot($ua4UserAgent));
-        $this->assertEquals($ua4UserAgent, $browsCap->getUserAgent());
+        $this->assertEquals($expectedReturn, $browsCap->isBot($userAgent));
+        $this->assertEquals($userAgent, $browsCap->getUserAgent());
+    }
 
-        $ua3CrawlerUserAgent = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
-        $this->assertTrue($browsCap->isBot($ua3CrawlerUserAgent));
-        $this->assertEquals($ua3CrawlerUserAgent, $browsCap->getUserAgent());
-
-        $this->assertTrue($browsCap->isBot(null));
-        $this->assertEquals(null, $browsCap->getUserAgent());
+    public function dataProviderTestGetIsBotValid()
+    {
+        return array(
+            array('UA4', false),
+            array('`Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.3; Trident/7.0)', true),
+            array('\'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.3; Trident/7.0)', true),
+            array('"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.3; Trident/7.0)', true),
+            array('"UA3', true),
+            array('UA2', true),
+            array('UA1', true),
+            array(null, true),
+        );
     }
 
     public function testGetIsBotSetRemoteAddress()
@@ -241,19 +917,24 @@ class BrowsCapTest extends TestAbstract
         $this->assertEquals($testIpAddress, $browsCap->getRemoteAddress());
     }
 
-    public function testCheckIniFileEmptyBrowscapRuntimeException()
+    public function dataProviderTestsOneOrOtherIniFileSavePathOptions()
     {
-        $this->setExpectedException(
-            'Gass\Exception\RuntimeException',
-            'The browscap option has not been specified, please set this and try again.'
+        return array(
+            array(array(BrowsCap::OPT_INI_FILE => 'foo')),
+            array(array(BrowsCap::OPT_SAVE_PATH => 'bar')),
         );
-        $browscap = new Browscap;
-        $browscap->getBrowser();
+    }
+
+    public function dataProviderTestsIniFileSavePathOptions()
+    {
+        $data = $this->dataProviderTestsOneOrOtherIniFileSavePathOptions();
+        $data[] = array(array(BrowsCap::OPT_INI_FILE => 'baz', BrowsCap::OPT_SAVE_PATH => 'qux'));
+        return $data;
     }
 
     private function getBrowscapWithIni()
     {
-        $this->setTestHttpForVersionDateFile();
+        $this->setRecentVersionDateFileAndBasicHttpOverride();
         $iniFile = vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini');
 
         return new BrowsCap(
