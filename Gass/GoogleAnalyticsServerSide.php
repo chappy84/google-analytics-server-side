@@ -22,7 +22,7 @@
  * @copyright   Copyright (c) 2011-2016 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
- * @version     0.10.0 Beta
+ * @version     0.12.1 Beta
  * @example     $gass = new \Gass\GoogleAnalyticsServerSide;
  *              $gass->setAccount('UA-XXXXXXX-X')
  *                  ->trackPageView();

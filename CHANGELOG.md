@@ -1,6 +1,14 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.12.1 Beta
+-------------------
+
+ - Increase unit test coverage
+ - Slight re-write of BrowsCap BotInfo Adapter, abstracting common functionality
+ - Increase configuration options of BrowsCap BotInfo Adapter
+ - Add in constants for config option names with BrowsCap and UserAgentStringInfo BotInfo Adapters
+
 Version 0.12.0 Beta
 -------------------
 
