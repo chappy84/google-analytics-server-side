@@ -28,8 +28,9 @@ namespace GassTests\Gass\Adapter;
 
 use Gass\Adapter\Multi;
 use GassTests\ExampleClasses\Adapter\InvalidDefaultInterface;
+use GassTests\TestAbstract;
 
-class MultiTest extends \PHPUnit_Framework_TestCase
+class MultiTest extends TestAbstract
 {
     public function testConstructNoArguments()
     {

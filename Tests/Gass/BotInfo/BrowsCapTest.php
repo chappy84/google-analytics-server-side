@@ -27,6 +27,7 @@
 namespace GassTests\Gass\BotInfo;
 
 use Gass\BotInfo\BrowsCap;
+use GassTests\TestAbstract;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
@@ -35,7 +36,7 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class BrowsCapTest extends \PHPUnit_Framework_TestCase
+class BrowsCapTest extends TestAbstract
 {
     public static function setUpBeforeClass()
     {
@@ -114,13 +115,19 @@ class BrowsCapTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructValidBrowscapInOptions()
     {
-        $browsCap = $this->getBrowscapWithIni();
-        $iniFile = vfsStreamWrapper::getRoot()->getChild('test_php_browscap.ini');
+        $root = vfsStreamWrapper::getRoot();
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $browsCap = new BrowsCap(
+            array(
+                BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+                BrowsCap::OPT_SAVE_PATH => $root->url(),
+            )
+        );
 
         $this->assertAttributeEquals(
             array(
                 BrowsCap::OPT_INI_FILE => $iniFile->getName(),
-                BrowsCap::OPT_SAVE_PATH => dirname($iniFile->url()),
+                BrowsCap::OPT_SAVE_PATH => $root->url(),
                 BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
             ),
             'options',

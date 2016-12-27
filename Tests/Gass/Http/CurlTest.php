@@ -27,8 +27,9 @@
 namespace GassTests\Gass\Http;
 
 use Gass\Http\Curl;
+use GassTests\TestAbstract;
 
-class CurlTest extends \PHPUnit_Framework_TestCase
+class CurlTest extends TestAbstract
 {
     public $testUrl = 'http://www.example.com/';
 

@@ -29,12 +29,13 @@ namespace GassTests\Gass\BotInfo;
 use Gass\BotInfo\BotInfo;
 use Gass\BotInfo\BrowsCap;
 use Gass\BotInfo\TestAdapter;
+use GassTests\TestAbstract;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class BotInfoTest extends \PHPUnit_Framework_TestCase
+class BotInfoTest extends TestAbstract
 {
     protected function setUp()
     {

@@ -27,8 +27,9 @@
 namespace GassTests\Gass\Validate;
 
 use Gass\Validate\Url;
+use GassTests\TestAbstract;
 
-class UrlTest extends \PHPUnit_Framework_TestCase
+class UrlTest extends TestAbstract
 {
     /**
      * @var Gass\Validate\Url

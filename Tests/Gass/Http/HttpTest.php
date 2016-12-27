@@ -27,12 +27,13 @@
 namespace GassTests\Gass\Http;
 
 use Gass\Http\Http;
+use GassTests\TestAbstract;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class HttpTest extends \PHPUnit_Framework_TestCase
+class HttpTest extends TestAbstract
 {
     private $defaultAdapter;
 

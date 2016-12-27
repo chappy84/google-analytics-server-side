@@ -27,8 +27,9 @@
 namespace GassTests\Gass\Validate;
 
 use Gass\Validate\IpAddress;
+use GassTests\TestAbstract;
 
-class IpAddressTest extends \PHPUnit_Framework_TestCase
+class IpAddressTest extends TestAbstract
 {
     /**
      * @dataProvider dataProviderTestIsValidValidipv4Addreses

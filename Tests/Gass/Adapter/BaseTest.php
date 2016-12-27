@@ -26,7 +26,9 @@
 
 namespace GassTests\Gass\Adapter;
 
-class BaseTest extends \PHPUnit_Framework_TestCase
+use GassTests\TestAbstract;
+
+class BaseTest extends TestAbstract
 {
     public function testSetOptionsValid()
     {

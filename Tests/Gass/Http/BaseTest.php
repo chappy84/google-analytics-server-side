@@ -26,9 +26,10 @@
 
 namespace GassTests\Gass\Http;
 
+use GassTests\TestAbstract;
 use Mockery as m;
 
-class BaseTest extends \PHPUnit_Framework_TestCase
+class BaseTest extends TestAbstract
 {
     /**
      * @runInSeparateProcess

@@ -27,8 +27,9 @@
 namespace GassTests\Gass\Validate;
 
 use Gass\Validate\LanguageCode;
+use GassTests\TestAbstract;
 
-class LanguageCodeTest extends \PHPUnit_Framework_TestCase
+class LanguageCodeTest extends TestAbstract
 {
     /**
      * @dataProvider dataProviderTestIsValidValidLanguageCodes

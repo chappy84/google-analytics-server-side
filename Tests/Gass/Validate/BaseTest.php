@@ -26,7 +26,9 @@
 
 namespace GassTests\Gass\Validate;
 
-class BaseTest extends \PHPUnit_Framework_TestCase
+use GassTests\TestAbstract;
+
+class BaseTest extends TestAbstract
 {
     /**
      * @dataProvider dataProviderTestSetMessagesValid

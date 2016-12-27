@@ -31,8 +31,9 @@ use Gass\BotInfo\UserAgentStringInfo;
 use Gass\GoogleAnalyticsServerSide;
 use Gass\Http\Http;
 use Gass\Http\Stream as HttpStream;
+use GassTests\TestAbstract;
 
-class GoogleAnalyticsServerSideTest extends \PHPUnit_Framework_TestCase
+class GoogleAnalyticsServerSideTest extends TestAbstract
 {
     /**
      * @var string

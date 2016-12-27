@@ -27,8 +27,9 @@
 namespace GassTests\Gass\BotInfo;
 
 use Gass\BotInfo\Multi;
+use GassTests\TestAbstract;
 
-class MultiTest extends \PHPUnit_Framework_TestCase
+class MultiTest extends TestAbstract
 {
     public function testGetRemoteAddressBadMethodCallException()
     {
