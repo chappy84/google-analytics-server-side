@@ -189,7 +189,7 @@ class UserAgentStringInfoTest extends TestAbstract
         );
         $this->assertSame($uasi, $uasi->set());
         $this->assertNull($fsRoot->getChild($csvFile->getName()));
-        // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
             'Unable to write to file ' .
@@ -237,7 +237,7 @@ class UserAgentStringInfoTest extends TestAbstract
         );
         $this->assertSame($uasi, $uasi->set());
         $this->assertNull($fsRoot->getChild($csvFile->getName()));
-        // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
             'Unable to write to file ' .
@@ -346,7 +346,7 @@ class UserAgentStringInfoTest extends TestAbstract
         $this->assertAttributeNotEmpty('botIps', $uasi);
         $this->assertAttributeArraySubset($expectedDistinctIps, 'botIps', $uasi);
         $this->assertAttributeEquals(null, 'cacheDate', $uasi);
-        // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
             'Unable to write to file ' .
@@ -414,7 +414,7 @@ class UserAgentStringInfoTest extends TestAbstract
         $this->assertAttributeNotEmpty('botIps', $uasi);
         $this->assertAttributeArraySubset($expectedDistinctIps, 'botIps', $uasi);
         $this->assertAttributeEquals(null, 'cacheDate', $uasi);
-        // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
             'Unable to write to file ' .
@@ -530,7 +530,7 @@ class UserAgentStringInfoTest extends TestAbstract
         );
         $this->assertNull($fsRoot->getChild($cacheFilename));
         $this->assertSame($uasi, $uasi->set());
-        // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
             'Unable to write to file ' .
