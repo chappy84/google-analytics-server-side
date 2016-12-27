@@ -62,7 +62,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      *
      * @var string
      */
-    const GIF_URL = 'http://www.google-analytics.com/__utm.gif';
+    const GIF_URL = 'https://www.google-analytics.com/__utm.gif';
 
     /**
      * Location of the current JS file
@@ -70,7 +70,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      *
      * @var string
      */
-    const JS_URL = 'http://www.google-analytics.com/ga.js';
+    const JS_URL = 'https://www.google-analytics.com/ga.js';
 
     /**
      * Current contents of the ga.js file
