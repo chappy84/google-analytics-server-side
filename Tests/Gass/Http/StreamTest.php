@@ -27,10 +27,25 @@
 namespace GassTests\Gass\Http;
 
 use Gass\Http\Stream;
+use GassTests\TestAbstract;
 
-class StreamTest extends \PHPUnit_Framework_TestCase
+class StreamTest extends TestAbstract
 {
     private $testUrl = 'http://www.example.com/';
+
+    protected $trackErrors;
+
+    protected function setUp()
+    {
+        parent::setup();
+        $this->trackErrors = ini_get('track_errors');
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        ini_set('track_errors', $this->trackErrors);
+    }
 
     public function testSetOption()
     {
@@ -182,11 +197,22 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/(^|\r\n)X-Forwarded-For: ' . $remoteAddress . '(\r\n|$)/', $headerOption);
     }
 
-    public function testRequestExceptionRuntime()
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testRequestExceptionRuntime($trackErrors)
     {
+        ini_set('track_errors', $trackErrors);
+        $url = 'definitely not a valid url';
         $stream = new Stream;
-        $this->setExpectedException('Gass\Exception\RuntimeException', 'Source could not be retrieved. Error: ');
-        $stream->request('definitely not a valid url');
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Source could not be retrieved. Error: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_get_contents(' . $url . '): failed to open stream: No such file or directory'
+                )
+        );
+        $stream->request($url);
     }
 
     /**

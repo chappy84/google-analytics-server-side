@@ -165,11 +165,11 @@ class Stream extends Base
         $context = stream_context_create(parent::getOption('context'));
 
         if (false === ($response = @file_get_contents(parent::getOption('url'), false, $context))) {
-            if (!isset($php_errormsg)) {
-                $php_errormsg = 'error message not available, this could be because the ini ' .
+            $errorMsg = isset($php_errormsg)
+                ? $php_errormsg
+                : 'error message not available, this could be because the ini ' .
                     'setting "track_errors" is set to "Off" or XDebug is running';
-            }
-            throw new RuntimeException('Source could not be retrieved. Error: ' . $php_errormsg);
+            throw new RuntimeException('Source could not be retrieved. Error: ' . $errorMsg);
         }
         $this->setResponseHeaders($http_response_header);
         if (null !== ($statusCode = $this->getInfo('Http-Code'))) {

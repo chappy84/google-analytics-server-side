@@ -36,10 +36,26 @@ abstract class TestAbstract extends \PHPUnit_Framework_TestCase
         m::close();
     }
 
+    public function dataProviderBooleans()
+    {
+        return array(
+            array(true),
+            array(false),
+        );
+    }
+
     protected function assertAttributeArraySubset($expected, $attribute, $class)
     {
         $rp = new \ReflectionProperty(get_class($class), $attribute);
         $rp->setAccessible(true);
         $this->assertArraySubset($expected, $rp->getValue($class));
+    }
+
+    protected function getErrorMsgOrSilencedDefault($expectedMessage)
+    {
+        return (true === filter_var(ini_get('track_errors'), FILTER_VALIDATE_BOOLEAN))
+            ? $expectedMessage
+            : 'error message not available, this could be because the ini ' .
+                'setting "track_errors" is set to "Off" or XDebug is running';
     }
 }

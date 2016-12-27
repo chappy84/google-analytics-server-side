@@ -27,6 +27,7 @@
 namespace GassTests\Gass\BotInfo;
 
 use Gass\BotInfo\UserAgentStringInfo;
+use GassTests\TestAbstract;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
@@ -35,8 +36,10 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
+class UserAgentStringInfoTest extends TestAbstract
 {
+    protected $trackErrors;
+
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -66,6 +69,13 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         }
         clearstatcache();
         vfsStreamWrapper::setRoot($fsRoot);
+        $this->trackErrors = ini_get('track_errors');
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        ini_set('track_errors', $this->trackErrors);
     }
 
     /**
@@ -145,8 +155,12 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $uasi->set();
     }
 
-    public function testSetWithCacheSettingsCacheExpiredLongTimeAgo()
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testSetWithCacheSettingsCacheExpiredLongTimeAgo($trackErrors)
     {
+        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
 
@@ -174,16 +188,27 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
             )
         );
         $this->assertSame($uasi, $uasi->set());
-        $this->assertNull($fsRoot->getChild('temp/' . $csvFile->getName()));
+        $this->assertNull($fsRoot->getChild($csvFile->getName()));
         // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
-            'Unable to write to file '
+            'Unable to write to file ' .
+                $fsRoot->url() .
+                DIRECTORY_SEPARATOR .
+                $csvFile->getName() .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
         );
     }
 
-    public function testSetWithCacheSettingsCacheExpiredJustNow()
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testSetWithCacheSettingsCacheExpiredJustNow($trackErrors)
     {
+        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
 
@@ -211,11 +236,18 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
             )
         );
         $this->assertSame($uasi, $uasi->set());
-        $this->assertNull($fsRoot->getChild('temp/' . $csvFile->getName()));
+        $this->assertNull($fsRoot->getChild($csvFile->getName()));
         // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
-            'Unable to write to file '
+            'Unable to write to file ' .
+                $fsRoot->url() .
+                DIRECTORY_SEPARATOR .
+                $csvFile->getName() .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
         );
     }
 
@@ -264,8 +296,12 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testSetWithCacheSettingsCacheDoesNotExistValidWebResponse()
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testSetWithCacheSettingsCacheDoesNotExistValidWebResponse($trackErrors)
     {
+        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
         $fh = fopen($csvFile->url(), 'r');
@@ -280,6 +316,7 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
                 $expectedDistinctIps[$csvLine[1]] = $csvLine[0];
             }
         }
+        $nonExistentFileName = 'definitelyNonExistent.csv';
 
         $httpAdapter = m::mock('Gass\Http\HttpInterface');
         $httpAdapter->shouldReceive('request')
@@ -300,7 +337,7 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $uasi = new UserAgentStringInfo(
             array(
                 UserAgentStringInfo::OPT_CACHE_PATH => $fsRoot->url(),
-                UserAgentStringInfo::OPT_CACHE_FILENAME => 'definitelyNonExistent.csv',
+                UserAgentStringInfo::OPT_CACHE_FILENAME => $nonExistentFileName,
             )
         );
         $this->assertSame($uasi, $uasi->set());
@@ -312,12 +349,23 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
-            'Unable to write to file '
+            'Unable to write to file ' .
+                $fsRoot->url() .
+                DIRECTORY_SEPARATOR .
+                $nonExistentFileName .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
         );
     }
 
-    public function testSetWithCacheSettingsCacheExistsButNonReadableValidWebResponse()
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testSetWithCacheSettingsCacheExistsButNonReadableValidWebResponse($trackErrors)
     {
+        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
         $fh = fopen($csvFile->url(), 'r');
@@ -351,7 +399,7 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
 
         $nonReadableCsv = clone $csvFile;
         $nonReadableCsv->rename('nonReadable.csv');
-        $nonReadableCsv->chmod(0000);
+        $nonReadableCsv->chmod(0111);
         $fsRoot->addChild($nonReadableCsv);
 
         $uasi = new UserAgentStringInfo(
@@ -369,7 +417,14 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
-            'Unable to write to file '
+            'Unable to write to file ' .
+                $fsRoot->url() .
+                DIRECTORY_SEPARATOR .
+                $nonReadableCsv->getName() .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
         );
     }
 
@@ -441,8 +496,12 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedDistinctBots, $uasi->get());
     }
 
-    public function testDestructSavesToCacheFileWhenNotExists()
+    /**
+     * @dataProvider dataProviderBooleans
+     */
+    public function testDestructSavesToCacheFileWhenNotExists($trackErrors)
     {
+        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
         $cacheFilename = 'nonExistent.csv';
@@ -469,12 +528,19 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
                 UserAgentStringInfo::OPT_CACHE_FILENAME => $cacheFilename,
             )
         );
-        $this->assertNull($fsRoot->getChild('temp/' . $cacheFilename));
+        $this->assertNull($fsRoot->getChild($cacheFilename));
         $this->assertSame($uasi, $uasi->set());
         // Due to an issue with vfsStrean and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
-            'Unable to write to file '
+            'Unable to write to file ' .
+                $fsRoot->url() .
+                DIRECTORY_SEPARATOR .
+                $cacheFilename .
+                ' due to: ' .
+                $this->getErrorMsgOrSilencedDefault(
+                    'file_put_contents(): Exclusive locks may only be set for regular files'
+                )
         );
         unset($uasi);
     }
@@ -704,12 +770,5 @@ class UserAgentStringInfoTest extends \PHPUnit_Framework_TestCase
         $uasi = new UserAgentStringInfo;
         $this->assertTrue($uasi->isBot(null, $botIpAddress));
         $this->assertAttributeEquals($botIpAddress, 'remoteAddress', $uasi);
-    }
-
-    protected function assertAttributeArraySubset($expected, $attribute, $class)
-    {
-        $rp = new \ReflectionProperty(get_class($class), $attribute);
-        $rp->setAccessible(true);
-        $this->assertArraySubset($expected, $rp->getValue($class));
     }
 }

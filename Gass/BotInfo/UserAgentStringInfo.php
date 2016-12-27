@@ -174,7 +174,7 @@ class UserAgentStringInfo extends Base
         if (empty($botsCsv)) {
             throw new RuntimeException(
                 'Bots CSV retrieved from external source seems to be empty. ' .
-                'Please either set botInfo to null or ensure the bots csv file can be retrieved.'
+                    'Please either set botInfo to null or ensure the bots csv file can be retrieved.'
             );
         }
         return $botsCsv;
@@ -239,11 +239,17 @@ class UserAgentStringInfo extends Base
                 $csvString,
                 LOCK_EX
             )) {
+                $errorMsg = isset($php_errormsg)
+                    ? $php_errormsg
+                    : 'error message not available, this could be because the ini ' .
+                        'setting "track_errors" is set to "Off" or XDebug is running';
                 throw new RuntimeException(
                     'Unable to write to file ' .
                         $csvPath .
                         DIRECTORY_SEPARATOR .
-                        $this->getOption(static::OPT_CACHE_FILENAME)
+                        $this->getOption(static::OPT_CACHE_FILENAME) .
+                        ' due to: ' .
+                        $errorMsg
                 );
             }
         }
