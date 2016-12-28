@@ -52,19 +52,20 @@ class BrowsCapTest extends TestAbstract
     protected function setUp()
     {
         parent::setup();
-        $baseDir = realpath(__DIR__ . '/../../dependency-files');
+        $ds = DIRECTORY_SEPARATOR;
+        $baseDir = realpath(__DIR__ . $ds . '..' . $ds . '..' . $ds . 'dependency-files');
         $fsRoot = vfsStream::copyFromFileSystem(
             $baseDir,
             vfsStream::newDirectory('temp', 0777),
-            filesize($baseDir . '/test_php_browscap.ini')
+            filesize($baseDir . $ds . 'test_php_browscap.ini')
         );
         foreach ($fsRoot->getChildren() as $child) {
             $child->chmod(0777);
             $child->lastAttributeModified(
-                filectime($baseDir . '/' . $child->getName())
+                filectime($baseDir . $ds . $child->getName())
             );
             $child->lastModified(
-                filemtime($baseDir . '/' . $child->getName())
+                filemtime($baseDir . $ds . $child->getName())
             );
         }
         clearstatcache();
