@@ -75,8 +75,8 @@ could also be done like this:
 
 ```php
 $gass = new \Gass\GoogleAnalyticsServerSide(
-	array(
-		'account' => 'UA-XXXXXXX-X',
+    array(
+        'account' => 'UA-XXXXXXX-X',
         'botInfo' => true
     )
 );
@@ -138,7 +138,7 @@ Event tracking is implemented using the [same functionality as in the ga.js trac
 
 ```php
 \Gass\GoogleAnalyticsServerSide::trackEvent(
-	 string $category, 
+     string $category, 
      string $action, 
     [string $label = null, 
     [int    $value = null, 
@@ -183,7 +183,7 @@ e.g.
 
 ```php
 $gass = new \Gass\GoogleAnalyticsServerSide(
-	array(
+    array(
         'botInfo' => true,
         'account' => 'UA-XXXXXXX-X',
     )
@@ -194,8 +194,8 @@ or
 
 ```php
 $gass = new \Gass\GoogleAnalyticsServerSide(
-	array(
-		'botInfo' => array(
+    array(
+        'botInfo' => array(
             'adapter' => 'BrowsCap',
             \Gass\BotInfo\BrowsCap::OPT_SAVE_PATH => '/tmp/',
             \Gass\BotInfo\BrowsCap::OPT_INI_FILE => 'full_php_browscap.ini',
@@ -256,10 +256,10 @@ e.g.
 
 ```php
 $gass = new \Gass\GoogleAnalyticsServerSide(
-	array(
-		'account' => 'UA-XXXXXXX-X',
+    array(
+        'account' => 'UA-XXXXXXX-X',
         'http' => array(
-        	'adapter' => 'Curl',
+            'adapter' => 'Curl',
             CURLOPT_PROXY => 'http://exampleproxy.local:8080'
         )
     )
