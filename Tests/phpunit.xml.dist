@@ -26,9 +26,9 @@
         <server name="HTTP_ACCEPT_LANGUAGE" value="en-GB,en;q=0.8"/>
         <server name="HTTP_DNT" value="1"/>
         <cookie name="__utma" value="217344784.1277951898.1353238970.1359405715.1363640418.6"/>
-        <cookie name="__utmb" value="217344784.2.10.1363640418"/>
+        <cookie name="__utmb" value="217344784.2.6.1363640418"/>
         <cookie name="__utmc" value="217344784"/>
-        <cookie name="__utmz" value="217344784.1353250868.2.2.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=example.com"/>
+        <cookie name="__utmz" value="217344784.1353250868.6.2.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=example.com"/>
     </php>
     <testsuites>
         <testsuite name="GASS Test Suite">

@@ -284,13 +284,6 @@ class GoogleAnalyticsServerSide implements GassInterface
     private $botInfo;
 
     /**
-     * Options to pass to Gass\Http
-     *
-     * @var null|array|\Gass\Http\Interface
-     */
-    private $http;
-
-    /**
      * Whether or not to ignore the Do Not Track header
      *
      * @var bool
@@ -535,11 +528,11 @@ class GoogleAnalyticsServerSide implements GassInterface
     /**
      * Returns the current HTTP client in use
      *
-     * @return null|array|\Gass\Http\Interface
+     * @return Http
      */
     public function getHttp()
     {
-        return $this->http;
+        return Http::getInstance();
     }
 
     /**
@@ -766,7 +759,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     public function setDoNotTrack($doNotTrack)
     {
-        if (!in_array($doNotTrack, array(1, 0, null, '1', '0', 'null', 'unset'))) {
+        if (!in_array($doNotTrack, array(1, 0, null, '1', '0', 'null', 'unset'), true)) {
             throw new InvalidArgumentException('$doNotTrack must have a value of 1, 0, \'unset\' or null');
         }
         if (is_string($doNotTrack)) {
@@ -926,14 +919,15 @@ class GoogleAnalyticsServerSide implements GassInterface
             if (!is_string($searchEngine)
                 || 1 !== preg_match('/^[a-z0-9\.-]+$/', $searchEngine)
             ) {
-                throw new OutOfBoundsException('search engine name "' . $searchEngine . '" is invalid');
+                throw new DomainException('search engine name "' . $searchEngine . '" is invalid');
             }
             foreach ($queryParams as $queryParameter) {
                 if (!is_string($queryParameter)
                     || 1 !== preg_match('/^[a-z0-9_\-]+$/i', $queryParameter)
                 ) {
+                    $this->getAsString($queryParameter, 'Search engine query parameter');
                     throw new DomainException(
-                        'search engine query parameter "' . $queryParameter . '" is invalid'
+                        'Search engine query parameter "' . $queryParameter . '" is invalid'
                     );
                 }
             }
@@ -951,11 +945,13 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     public function setBotInfo($botInfo)
     {
-        if (!is_array($botInfo) && !is_bool($botInfo) && $botInfo !== null
+        if (!is_array($botInfo)
+            && true !== $botInfo
+            && null !== $botInfo
             && !$botInfo instanceof BotInfoInterface
         ) {
             throw new InvalidArgumentException(
-                'botInfo must be an array, boolean, null' .
+                'botInfo must be an array, true, null' .
                 ' or a class which implements Gass\BotInfo\BotInfoInterface.'
             );
         } elseif ($botInfo !== null) {
@@ -1001,7 +997,6 @@ class GoogleAnalyticsServerSide implements GassInterface
         Http::setAcceptLanguage($this->getAcceptLanguage())
             ->setRemoteAddress($this->getRemoteAddress())
             ->setUserAgent($this->getUserAgent());
-        $this->http = $http;
         return $this;
     }
 
@@ -1139,7 +1134,7 @@ class GoogleAnalyticsServerSide implements GassInterface
     public function getDomainHash($domain = null)
     {
         $domain = ($domain === null)
-            ? $this->serverName
+            ? $this->getServerName()
             : $this->getAsString($domain, 'Domain');
         $a = 1;
         $c = 0;
@@ -1581,7 +1576,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      *
      * @param array $extraParams
      * @throws DomainException
-     * @return bool|GoogleAnalyticsServerSide
+     * @return bool|$this
      */
     private function track(array $extraParams = array())
     {

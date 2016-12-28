@@ -44,11 +44,38 @@ abstract class TestAbstract extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function dataProviderAllDataTypesButArray()
+    {
+        return array(
+            array(new \ArrayObject),
+            array(new \stdClass),
+            array(null),
+            array(true),
+            array(1234567890),
+            array(1.234567890),
+            array('foo'),
+        );
+    }
+
     protected function assertAttributeArraySubset($expected, $attribute, $class)
     {
         $rp = new \ReflectionProperty(get_class($class), $attribute);
         $rp->setAccessible(true);
         $this->assertArraySubset($expected, $rp->getValue($class));
+    }
+
+    protected function assertAttributeArrayHasKey($key, $attribute, $class)
+    {
+        $rp = new \ReflectionProperty(get_class($class), $attribute);
+        $rp->setAccessible(true);
+        $this->assertArrayHasKey($key, $rp->getValue($class));
+    }
+
+    protected function assertAttributeArrayNotHasKey($key, $attribute, $class)
+    {
+        $rp = new \ReflectionProperty(get_class($class), $attribute);
+        $rp->setAccessible(true);
+        $this->assertArrayNotHasKey($key, $rp->getValue($class));
     }
 
     protected function getErrorMsgOrSilencedDefault($expectedMessage)
