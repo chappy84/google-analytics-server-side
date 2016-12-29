@@ -30,8 +30,6 @@ use Gass\BotInfo\BotInfo;
 use Gass\GoogleAnalyticsServerSide;
 use GassTests\TestAbstract;
 use Mockery as m;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamWrapper;
 
 /**
  * @runTestsInSeparateProcesses
@@ -87,6 +85,173 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             ->expectJsUrlCall($http);
     }
 
+    public function testConstructWithoutOptions()
+    {
+        $envServerName = $this->getEnvVar('SERVER_NAME');
+        $envRemoteAddress = $this->getEnvVar('REMOTE_ADDR');
+        $envRequestUri = $this->getEnvVar('REQUEST_URI');
+        $envUserAgent = $this->getEnvVar('HTTP_USER_AGENT');
+        $envDocumentReferer = $this->getEnvVar('HTTP_REFERER');
+        $envAcceptLanguage = $this->getEnvVar('HTTP_ACCEPT_LANGUAGE');
+        $envDnt = $this->getEnvVar('HTTP_DNT');
+
+        $http = m::mock('overload:Gass\Http\Http');
+        if (!empty($envUserAgent)) {
+            $http->shouldReceive('setUserAgent')
+                ->once()
+                ->with($envUserAgent)
+                ->andReturnSelf();
+        }
+        if (!empty($envRemoteAddress)) {
+            $http->shouldReceive('setRemoteAddress')
+                ->once()
+                ->with($envRemoteAddress)
+                ->andReturnSelf();
+        }
+        if (!empty($envAcceptLanguage)) {
+            $http->shouldReceive('setAcceptLanguage')
+                ->once()
+                ->with($envAcceptLanguage)
+                ->andReturnSelf();
+        }
+
+        $botInfo = m::mock('overload:Gass\BotInfo\BotInfo');
+
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        if (!empty($envRemoteAddress)) {
+            $ipValidator->shouldReceive('isValid')
+                ->once()
+                ->with($envRemoteAddress)
+                ->andReturn(true);
+        }
+
+        $langValidator = m::mock('overload:Gass\Validate\LanguageCode');
+        if (!empty($envAcceptLanguage)) {
+            $langValidator->shouldReceive('isValid')
+                ->once()
+                ->with($envAcceptLanguage)
+                ->andReturn(true);
+        }
+
+        $urlValidator = m::mock('overload:Gass\Validate\Url');
+        if (!empty($envDocumentReferer)) {
+            $urlValidator->shouldReceive('isValid')
+                ->once()
+                ->with($envDocumentReferer)
+                ->andReturn(true);
+        }
+
+        $gass = new GoogleAnalyticsServerSide;
+        if (!empty($envServerName)) {
+            $this->assertAttributeEquals($envServerName, 'serverName', $gass);
+        }
+        if (!empty($envRemoteAddress)) {
+            $this->assertAttributeEquals($envRemoteAddress, 'remoteAddress', $gass);
+        }
+        if (!empty($envRequestUri)) {
+            $this->assertAttributeEquals($envRequestUri, 'documentPath', $gass);
+        }
+        if (!empty($envUserAgent)) {
+            $this->assertAttributeEquals($envUserAgent, 'userAgent', $gass);
+        }
+        if (!empty($envDocumentReferer)) {
+            $this->assertAttributeEquals($envDocumentReferer, 'documentReferer', $gass);
+        }
+        if (!empty($envAcceptLanguage)) {
+            $this->assertAttributeEquals($envAcceptLanguage, 'acceptLanguage', $gass);
+        }
+        if (array_key_exists('HTTP_DNT', $_SERVER)) {
+            $this->assertAttributeEquals($envDnt, 'doNotTrack', $gass);
+        }
+    }
+
+    public function testConstructWithOptions()
+    {
+        $envServerName = $this->getEnvVar('SERVER_NAME');
+        $envRemoteAddress = $this->getEnvVar('REMOTE_ADDR');
+        $envRequestUri = $this->getEnvVar('REQUEST_URI');
+        $envUserAgent = $this->getEnvVar('HTTP_USER_AGENT');
+        $envDocumentReferer = $this->getEnvVar('HTTP_REFERER');
+        $envAcceptLanguage = $this->getEnvVar('HTTP_ACCEPT_LANGUAGE');
+        $envDnt = $this->getEnvVar('HTTP_DNT');
+
+        $http = m::mock('overload:Gass\Http\Http');
+        if (!empty($envUserAgent)) {
+            $http->shouldReceive('setUserAgent')
+                ->once()
+                ->with($envUserAgent)
+                ->andReturnSelf();
+        }
+        if (!empty($envRemoteAddress)) {
+            $http->shouldReceive('setRemoteAddress')
+                ->once()
+                ->with($envRemoteAddress)
+                ->andReturnSelf();
+        }
+        if (!empty($envAcceptLanguage)) {
+            $http->shouldReceive('setAcceptLanguage')
+                ->once()
+                ->with($envAcceptLanguage)
+                ->andReturnSelf();
+        }
+
+        $botInfo = m::mock('overload:Gass\BotInfo\BotInfo');
+
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        if (!empty($envRemoteAddress)) {
+            $ipValidator->shouldReceive('isValid')
+                ->once()
+                ->with($envRemoteAddress)
+                ->andReturn(true);
+        }
+
+        $langValidator = m::mock('overload:Gass\Validate\LanguageCode');
+        if (!empty($envAcceptLanguage)) {
+            $langValidator->shouldReceive('isValid')
+                ->once()
+                ->with($envAcceptLanguage)
+                ->andReturn(true);
+        }
+
+        $urlValidator = m::mock('overload:Gass\Validate\Url');
+        if (!empty($envDocumentReferer)) {
+            $urlValidator->shouldReceive('isValid')
+                ->once()
+                ->with($envDocumentReferer)
+                ->andReturn(true);
+        }
+
+        $options = array(
+            'charset' => 'foo',
+            'pageTitle' => 'bar',
+        );
+
+        $gass = new GoogleAnalyticsServerSide($options);
+        if (!empty($envServerName)) {
+            $this->assertAttributeEquals($envServerName, 'serverName', $gass);
+        }
+        if (!empty($envRemoteAddress)) {
+            $this->assertAttributeEquals($envRemoteAddress, 'remoteAddress', $gass);
+        }
+        if (!empty($envRequestUri)) {
+            $this->assertAttributeEquals($envRequestUri, 'documentPath', $gass);
+        }
+        if (!empty($envUserAgent)) {
+            $this->assertAttributeEquals($envUserAgent, 'userAgent', $gass);
+        }
+        if (!empty($envDocumentReferer)) {
+            $this->assertAttributeEquals($envDocumentReferer, 'documentReferer', $gass);
+        }
+        if (!empty($envAcceptLanguage)) {
+            $this->assertAttributeEquals($envAcceptLanguage, 'acceptLanguage', $gass);
+        }
+        if (array_key_exists('HTTP_DNT', $_SERVER)) {
+            $this->assertAttributeEquals($envDnt, 'doNotTrack', $gass);
+        }
+        $this->assertAttributeEquals(strtoupper($options['charset']), 'charset', $gass);
+        $this->assertAttributeEquals($options['pageTitle'], 'pageTitle', $gass);
+    }
+
     public function testSetVersionValid()
     {
         list($gass) = $this->getGassAndDependencies();
@@ -120,6 +285,17 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             array(array('5.2.3')),
             array(new \stdClass),
         );
+    }
+
+    /**
+     * @depends testSetVersionValid
+     */
+    public function testGetVersion()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $testValue = '1.2.3';
+        $gass->setVersion($testValue);
+        $this->assertEquals($testValue, $gass->getVersion());
     }
 
     public function testSetUserAgentValid()
@@ -156,6 +332,27 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         list($gass) = $this->getGassAndDependencies();
         $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'User Agent must be a string.');
         $gass->setUserAgent($userAgent);
+    }
+
+    /**
+     * @depends testSetUserAgentValid
+     */
+    public function testGetUserAgent()
+    {
+        list(
+            $gass,
+            $http,
+            $botInfo
+        ) = $this->getGassAndDependencies();
+
+        $userAgent = 'testString';
+
+        $botInfo->shouldReceive('setUserAgent');
+        $http->shouldReceive('setUserAgent');
+        $gass->setBotInfo(m::mock('Gass\BotInfo\BotInfoInterface'));
+
+        $gass->setUserAgent($userAgent);
+        $this->assertEquals($userAgent, $gass->getUserAgent());
     }
 
     /**
@@ -289,6 +486,26 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $gass->setAcceptLanguage($invalidLanguage);
     }
 
+    /**
+     * @depends testSetAcceptLanguageValid
+     */
+    public function testGetAcceptLanguage()
+    {
+        $langValidator = m::mock('overload:Gass\Validate\LanguageCode');
+        $langValidator->shouldReceive('isValid')->andReturn(true);
+
+        list(
+            $gass,
+            $http
+        ) = $this->getGassAndDependencies(true, true, false);
+        $http->shouldReceive('setAcceptLanguage');
+
+        $acceptLanguage = 'foo';
+
+        $gass->setAcceptLanguage($acceptLanguage);
+        $this->assertEquals($acceptLanguage, $gass->getAcceptLanguage());
+    }
+
     public function testSetServerNameValid()
     {
         list($gass) = $this->getGassAndDependencies();
@@ -305,6 +522,17 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         list($gass) = $this->getGassAndDependencies();
         $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Server Name must be a string.');
         $gass->setServerName($serverName);
+    }
+
+    /**
+     * @depends testSetServerNameValid
+     */
+    public function testGetServerName()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $serverName = 'foo';
+        $gass->setServerName($serverName);
+        $this->assertEquals($serverName, $gass->getServerName());
     }
 
     /**
@@ -433,6 +661,26 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
     }
 
     /**
+     * @depends testSetRemoteAddressValid
+     */
+    public function testGetRemoteAddress()
+    {
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator->shouldReceive('isValid')->andReturn(true);
+
+        list(
+            $gass,
+            $http
+        ) = $this->getGassAndDependencies(false, false);
+        $http->shouldReceive('setRemoteAddress');
+
+        $remoteAddress = 'foo';
+
+        $gass->setRemoteAddress($remoteAddress);
+        $this->assertEquals($remoteAddress, $gass->getRemoteAddress());
+    }
+
+    /**
      * @dataProvider dataProviderTestSetAccountValid
      */
     public function testSetAccountValid($account)
@@ -478,6 +726,17 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             array(array('UA-1234-5'), 'Account must be a string.'),
             array(new \stdClass, 'Account must be a string.'),
         );
+    }
+
+    /**
+     * @depends testSetAccountValid
+     */
+    public function testGetAccount()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $account = 'MO-1234-1';
+        $gass->setAccount($account);
+        $this->assertEquals($account, $gass->getAccount());
     }
 
     public function testSetDocumentRefererValid()
@@ -546,6 +805,22 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
     }
 
     /**
+     * @depends testSetDocumentRefererValid
+     */
+    public function testGetDocumentReferer()
+    {
+        $documentReferer = 'foo';
+
+        $urlValidator = m::mock('overload:Gass\Validate\Url');
+        $urlValidator->shouldReceive('isValid')->andReturn(true);
+
+        list($gass) = $this->getGassAndDependencies(true, true, true, false);
+
+        $gass->setDocumentReferer($documentReferer);
+        $this->assertEquals($documentReferer, $gass->getDocumentReferer());
+    }
+
+    /**
      * @dataProvider dataProviderTestSetDocumentPathValid
      */
     public function testSetDocumentPathValid($documentPath)
@@ -575,6 +850,17 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         list($gass) = $this->getGassAndDependencies();
         $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Document Path must be a string.');
         $gass->setDocumentPath($documentPath);
+    }
+
+    /**
+     * @depends testSetDocumentPathValid
+     */
+    public function testGetDocumentPath()
+    {
+        $documentPath = 'foo';
+        list($gass) = $this->getGassAndDependencies();
+        $gass->setDocumentPath($documentPath);
+        $this->assertEquals($documentPath, $gass->getDocumentPath());
     }
 
     /**
@@ -624,6 +910,17 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         );
     }
 
+    /**
+     * @depends testSetDoNotTrackValid
+     */
+    public function testGetDoNotTrack()
+    {
+        $doNotTrack = 1;
+        list($gass) = $this->getGassAndDependencies();
+        $gass->setDoNotTrack($doNotTrack);
+        $this->assertEquals($doNotTrack, $gass->getDoNotTrack());
+    }
+
     public function testSetPageTitleValid()
     {
         list($gass) = $this->getGassAndDependencies();
@@ -640,6 +937,17 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         list($gass) = $this->getGassAndDependencies();
         $this->setExpectedException('Gass\Exception\InvalidArgumentException', 'Page Title must be a string.');
         $gass->setPageTitle($pageTitle);
+    }
+
+    /**
+     * @depends testSetPageTitleValid
+     */
+    public function testGetPageTitle()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $pageTitle = 'Abcdef Ghijk Lmnop';
+        $gass->setPageTitle($pageTitle);
+        $this->assertEquals($pageTitle, $gass->getPageTitle());
     }
 
     /**
@@ -674,7 +982,18 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         );
     }
 
-    public function testSetCustomVarValid()
+    /**
+     * @depends testSetIgnoreDoNotTrackValid
+     */
+    public function testGetIgnoreDoNotTrack()
+    {
+        $ignoreDoNotTrack = true;
+        list($gass) = $this->getGassAndDependencies();
+        $gass->setIgnoreDoNotTrack($ignoreDoNotTrack);
+        $this->assertEquals($ignoreDoNotTrack, $gass->getIgnoreDoNotTrack());
+    }
+
+    public function testSetCustomVarValidBasic()
     {
         list($gass) = $this->getGassAndDependencies();
         $customVar1 = array(
@@ -703,6 +1022,31 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             array(
                 'index1' => $customVar1,
                 'index5' => $customVar2,
+            ),
+            'customVariables',
+            $gass
+        );
+    }
+
+    /**
+     * @depends testSetCustomVarValidBasic
+     */
+    public function testSetCustomVarValidFillsInEmptyIndexes()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $gass->setCustomVar('Custom Var 1', 'Custom Value 1');
+        $gass->setCustomVar('Custom Var 2', 'Custom Value 2');
+        $gass->setCustomVar('Custom Var 3', 'Custom Value 3', 1, 4);
+        $gass->setCustomVar('Custom Var 4', 'Custom Value 4', 2, 5);
+        $gass->setCustomVar('Custom Var 5', 'Custom Value 5');
+        $this->assertAttributeArraySubSet(
+            array(
+                'index3' => array(
+                    'index' => 3,
+                    'name' => 'Custom Var 5',
+                    'value' => 'Custom Value 5',
+                    'scope' => 3,
+                ),
             ),
             'customVariables',
             $gass
@@ -799,6 +1143,80 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $gass->setCustomVar('Custom Var 6', 'Custom Value 6');
     }
 
+    /**
+     * @dataProvider dataProviderCustomVariables
+     * @depends testSetCustomVarValidBasic
+     */
+    public function testGetCustomVariables($variables)
+    {
+        list($gass) = $this->getGassAndDependencies();
+        foreach ($variables as $index => $data) {
+            $gass->setCustomVar(
+                $data['name'],
+                $data['value'],
+                $data['scope'],
+                $data['index']
+            );
+        }
+        $this->assertEquals($variables, $gass->getCustomVariables());
+    }
+
+    public function dataProviderCustomVariables()
+    {
+        return array(
+            array(
+                array(
+                    'index1' => array(
+                        'index' => 1,
+                        'name' => 'Custom Var 1',
+                        'value' => 'Custom Value 1',
+                        'scope' => 2,
+                    ),
+                    'index2' => array(
+                        'index' => 2,
+                        'name' => 'Custom Var 2',
+                        'value' => 'Custom Value 2',
+                        'scope' => 1,
+                    ),
+                    'index3' => array(
+                        'index' => 3,
+                        'name' => 'Custom Var 3',
+                        'value' => 'Custom Value 3',
+                        'scope' => 2,
+                    ),
+                    'index4' => array(
+                        'index' => 4,
+                        'name' => 'Custom Var 4',
+                        'value' => 'Custom Value 4',
+                        'scope' => 3,
+                    ),
+                    'index5' => array(
+                        'index' => 5,
+                        'name' => 'Custom Var 5',
+                        'value' => 'Custom Value 5',
+                        'scope' => 1,
+                    ),
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @depends testSetCustomVarValidBasic
+     */
+    public function testGetVisitorCustomVarValid()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $customVar = array(
+            'index' => 5,
+            'name' => 'Custom Var 5',
+            'value' => 'Custom Value 5',
+            'scope' => 2,
+        );
+        $gass->setCustomVar($customVar['name'], $customVar['value'], $customVar['scope'], $customVar['index']);
+        $this->assertEquals($customVar['value'], $gass->getVisitorCustomVar($customVar['index']));
+    }
+
     public function testGetVisitorCustomVarExceptionInvalidIndex()
     {
         list($gass) = $this->getGassAndDependencies();
@@ -807,6 +1225,62 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             'The index: "4" has not been set.'
         );
         $gass->getVisitorCustomVar(4);
+    }
+
+    /**
+     * @dataProvider dataProviderCustomVariables
+     * @depends testSetCustomVarValidBasic
+     */
+    public function testGetCustomVarsByScopeWithoutArg($variables)
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $expected = array();
+        foreach ($variables as $index => $data) {
+            $gass->setCustomVar(
+                $data['name'],
+                $data['value'],
+                $data['scope'],
+                $data['index']
+            );
+            if (3 === $data['scope']) {
+                $expected[] = implode('=', $data);
+            }
+        }
+        $this->assertEquals($expected, $gass->getCustomVarsByScope());
+    }
+
+    /**
+     * @dataProvider dataProviderTestGetCustomVarsByScopeWithArg
+     * @depends testSetCustomVarValidBasic
+     */
+    public function testGetCustomVarsByScopeWithArg($variables, $scope)
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $expected = array();
+        foreach ($variables as $index => $data) {
+            $gass->setCustomVar(
+                $data['name'],
+                $data['value'],
+                $data['scope'],
+                $data['index']
+            );
+            if ($scope === $data['scope']) {
+                $expected[] = implode('=', $data);
+            }
+        }
+        $this->assertEquals($expected, $gass->getCustomVarsByScope($scope));
+    }
+
+    public function dataProviderTestGetCustomVarsByScopeWithArg()
+    {
+        $data = $this->dataProviderCustomVariables();
+        $retVal = array();
+        for ($i = 1; $i <= 3; $i++) {
+            $level = $data[0];
+            $level[] = $i;
+            $retVal[] = $level;
+        }
+        return $retVal;
     }
 
     public function testDeleteCustomVarValid()
@@ -963,7 +1437,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
     /**
      * @depends testSetSearchEnginesValid
      */
-    public function testGetSearchEnginesValid()
+    public function testGetSearchEnginesValidBasic()
     {
         list($gass) = $this->getGassAndDependencies();
         $searchEngines = array(
@@ -972,6 +1446,26 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         );
         $gass->setSearchEngines($searchEngines);
         $this->assertEquals($searchEngines, $gass->getSearchEngines());
+    }
+
+    /**
+     * @depends testSetSearchEnginesValid
+     */
+    public function testGetSearchEnginesValidSetsFromJsIfSetNotAlreadyCalled()
+    {
+        list(
+            $gass,
+            $http
+        ) = $this->getGassAndDependencies();
+        $this->expectJsUrlCall($http);
+
+        $rp = new \ReflectionProperty(get_class($gass), 'searchEngines');
+        $rp->setAccessible(true);
+        $defaultSearchEngines = $rp->getValue($gass);
+        $rp->setValue($gass, array());
+
+        $this->assertAttributeEmpty('searchEngines', $gass);
+        $this->assertEquals($defaultSearchEngines, $gass->getSearchEngines());
     }
 
     public function testSetBotInfoValidWithAdapterClass()
@@ -1071,6 +1565,30 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             array(45.67),
             array('foo'),
         );
+    }
+
+    /**
+     * @depends testSetBotInfoValidWithAdapterClass
+     */
+    public function testGetBotInfo()
+    {
+        list(
+            $gass,
+            ,
+            $botInfo
+        ) = $this->getGassAndDependencies();
+
+        $envUserAgent = $this->getEnvVar('HTTP_USER_AGENT');
+        $envRemoteAddress = $this->getEnvVar('REMOTE_ADDR');
+
+        $botInfoAdapter = m::mock('Gass\BotInfo\BotInfoInterface');
+
+        $expectedBotInfo = new BotInfo(array(), $botInfoAdapter);
+        $expectedBotInfo->setUserAgent($envUserAgent);
+        $expectedBotInfo->setRemoteAddress($envRemoteAddress);
+
+        $gass->setBotInfo($botInfoAdapter);
+        $this->assertEquals($expectedBotInfo, $gass->getBotInfo());
     }
 
     public function testSetHttpValidWithAdapter()
@@ -1268,6 +1786,19 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         );
     }
 
+    public function testGetHttp()
+    {
+        list(
+            $gass,
+            $http
+        ) = $this->getGassAndDependencies();
+        $http->shouldReceive('getInstance')
+            ->once()
+            ->withNoArgs()
+            ->andReturnSelf();
+        $this->assertInstanceOf('Gass\Http\Http', $gass->getHttp());
+    }
+
     public function testSetOptionsValid()
     {
         list($gass) = $this->getGassAndDependencies();
@@ -1301,11 +1832,87 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $this->assertSame($gass, $gass->setOption('serverName', 'baz'));
     }
 
-    public function testSetOptionExceptionMissingOption()
+    public function testSetOptionReturnsThisWhenGetMEthodExistsButSetDeosnt()
     {
         list($gass) = $this->getGassAndDependencies();
-        $this->setExpectedException('Gass\Exception\OutOfRangeException', 'Test is not an available option.');
-        $gass->setOption('Test', 'Value');
+        $this->assertSame($gass, $gass->setOption('serverName', 'baz'));
+    }
+
+    /**
+     * @dataProvider dataProviderTestSetOptionExceptionOutOfRange
+     */
+    public function testSetOptionExceptionOutOfRangeMissingSetOrGetMethods($optionName, $exceptionMessage)
+    {
+        $exceptionMessage = $optionName . ' ' . $exceptionMessage;
+
+        list($gass) = $this->getGassAndDependencies();
+
+        $this->setExpectedException('Gass\Exception\OutOfRangeException', $exceptionMessage);
+        $gass->setOption($optionName, 'Value');
+    }
+
+    public function dataProviderTestSetOptionExceptionOutOfRange()
+    {
+        return array(
+            array('cookie', 'is not an available option.'),
+            array('foo', 'is not an available option.'),
+            array('cookiesString', 'is not a writable option.'),
+            array('domainHash', 'is not a writable option.'),
+        );
+    }
+
+    public function testSetOptionExceptionOutOfRangeHasGetButSetMethodNotPubliclyAccessible()
+    {
+        $optionName = 'currentJsFile';
+
+        list(
+            $gass,
+            $http
+        ) = $this->getGassAndDependencies();
+
+        $http->shouldReceive('request')
+            ->once()
+            ->with(GoogleAnalyticsServerSide::JS_URL)
+            ->andReturnSelf();
+        $http->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($this->jsFileContents);
+
+        $this->setExpectedException('Gass\Exception\OutOfRangeException', $optionName . ' is not a writable option.');
+        $gass->setOption($optionName, 'Value');
+    }
+
+    /**
+     * @depends testSetServerNameValid
+     */
+    public function testGetOptionValid()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $value = 'foo';
+        $gass->setServerName($value);
+        $this->assertEquals($value, $gass->getOption('serverName'));
+    }
+
+    /**
+     * @dataProvider dataProviderTestGetOptionExceptionOutOfBounds
+     */
+    public function testGetOptionExceptionOutOfBounds($name)
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $this->setExpectedException(
+            'Gass\Exception\OutOfRangeException',
+            $name . ' is not an available option.'
+        );
+        $gass->getOption($name);
+    }
+
+    public function dataProviderTestGetOptionExceptionOutOfBounds()
+    {
+        return array(
+            array('Test'), // No Available Method
+            array('cookie'), // Method not Publicly Accessibile
+        );
     }
 
     /**
@@ -1581,6 +2188,63 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         );
     }
 
+    public function testGetIpToReportValidEmptyWhenNoCurrentlySetRemoteAddress()
+    {
+        unset($_SERVER['REMOTE_ADDR']);
+
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+
+        list(
+            $gass,
+            $http,
+            $botInfo
+        ) = $this->getGassAndDependencies(false, false);
+
+        $this->assertEquals('', $gass->getIPToReport());
+    }
+
+    public function testGetIPToReportValidInvalidRemoteAddress()
+    {
+        $setRemoteAddressCalls = 0;
+        $envRemoteAddress = $this->getEnvVar('REMOTE_ADDR');
+        $remoteAddress = '1.2345.6.7';
+
+        /*
+         * A little bit hackery due to the class being instantiated each call to setRemoteAddress
+         * including via the constructor with the REMOTE_ADDR header value in phpunit.xml.dist
+         */
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator->shouldReceive('isValid')
+            ->once()
+            ->with(m::anyOf($envRemoteAddress, $remoteAddress))
+            ->andReturnUsing(
+                function ($ipAddress) use (&$setRemoteAddressCalls, $envRemoteAddress, $remoteAddress) {
+                    if ((1 === ++$setRemoteAddressCalls && $envRemoteAddress === $ipAddress)
+                        || (2 === $setRemoteAddressCalls && $remoteAddress === $ipAddress)
+                    ) {
+                        return true;
+                    }
+                    throw new \BadMethodCallException(
+                        'Unexpected call to Gass\Validate\IpAddress::isValid on iteration ' . $setRemoteAddressCalls
+                    );
+                }
+            );
+
+        list(
+            $gass,
+            $http,
+            $botInfo
+        ) = $this->getGassAndDependencies(false, false);
+
+        $http->shouldReceive('setRemoteAddress')
+            ->once()
+            ->with($remoteAddress)
+            ->andReturnSelf();
+
+        $gass->setRemoteAddress($remoteAddress);
+        $this->assertEquals('', $gass->getIPToReport());
+    }
+
     /**
      * @dataProvider dataProviderTestGetDomainHashValid
      */
@@ -1687,25 +2351,75 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $this->assertEquals($utmaParts[5], $utmzParts[2]);
     }
 
+    public function testGetCookiesValidSetCookiesNotCalled()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $this->assertEquals(
+            array('__utma' => null, '__utmb' => null, '__utmc' => null, '__utmv' => null, '__utmz' => null),
+            $gass->getCookies()
+        );
+    }
+
+    /**
+     * @depends testSetCookiesValid
+     */
+    public function testGetCookiesValidSetCookiesCalled()
+    {
+        list($gass) = $this->getGassAndDependencies();
+
+        $gass->setServerName('www.example.com');
+        $gass->disableCookieHeaders();
+        $gass->setCookies();
+
+        $domainHash = (string) $gass->getDomainHash();
+
+        $expectedCookieNames = array('__utma', '__utmb', '__utmc', '__utmv', '__utmz');
+        $cookies = $gass->getCookies();
+        foreach ($expectedCookieNames as $cookieName) {
+            $this->assertArrayHasKey($cookieName, $cookies);
+            $cookieValue = $cookies[$cookieName];
+            if ($cookieName === '__utmv') {
+                $this->assertEmpty($cookieValue);
+            } else {
+                $this->assertNotEmpty($cookieValue);
+                $this->assertStringStartsWith($domainHash, $cookieValue);
+            }
+        }
+    }
+
+    /**
+     * @depends testSetCookiesValid
+     * @depends testGetCookiesValidSetCookiesCalled
+     */
     public function testGetCookiesStringValid()
     {
         list($gass) = $this->getGassAndDependencies();
         $gass->setServerName('www.example.com');
         $gass->disableCookieHeaders();
         $gass->setCookies();
-        $cookieString = $gass->getCookiesString();
-        $this->assertContains('__utma', $cookieString);
-        $this->assertContains('__utmb', $cookieString);
-        $this->assertContains('__utmc', $cookieString);
-        $this->assertContains('__utmz', $cookieString);
-        $this->assertNotContains('__utmv', $cookieString);
+
+        $cookieParts = array();
+        $currentCookies = $gass->getCookies();
+        unset($currentCookies['__utmv']);
+        foreach ($currentCookies as $name => $value) {
+            $value = trim($value);
+            if (!empty($value)) {
+                $cookieParts[] = $name . '=' . $value . ';';
+            }
+        }
+        $expectedCookieString = implode($cookieParts, ' ');
+
+        $actualCookieString = $gass->getCookiesString();
+        $this->assertEquals($expectedCookieString, $actualCookieString);
+        $this->assertNotContains('__utmv', $actualCookieString);
     }
 
     public function testSetSessionCookieTimeoutValid()
     {
         list($gass) = $this->getGassAndDependencies();
-        $this->assertSame($gass, $gass->setSessionCookieTimeout(86400000));
-        $this->assertAttributeEquals(86400, 'sessionCookieTimeout', $gass);
+        $timeoutValue = 86400000;
+        $this->assertSame($gass, $gass->setSessionCookieTimeout($timeoutValue));
+        $this->assertAttributeEquals($timeoutValue / 1000, 'sessionCookieTimeout', $gass);
     }
 
     /**
@@ -1726,14 +2440,19 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         return array(
             array(86400.000),
             array('86400000'),
+            array(new \stdClass),
+            array(array(86400000)),
+            array(true),
+            array(null),
         );
     }
 
     public function testSetVisitorCookieTimeoutValid()
     {
         list($gass) = $this->getGassAndDependencies();
-        $this->assertSame($gass, $gass->setVisitorCookieTimeout(86400000));
-        $this->assertAttributeEquals(86400, 'visitorCookieTimeout', $gass);
+        $timeoutValue = 86400000;
+        $this->assertSame($gass, $gass->setVisitorCookieTimeout($timeoutValue));
+        $this->assertAttributeEquals($timeoutValue / 1000, 'visitorCookieTimeout', $gass);
     }
 
     /**
@@ -1756,7 +2475,33 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $this->assertAttributeEquals(false, 'sendCookieHeaders', $gass);
     }
 
-    public function testSetVersionFromJsValid()
+    /**
+     * @depends testGetCookiesValidSetCookiesNotCalled
+     */
+    public function testSetCookiesFromRequestHeaders()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $expectedCookieNames = array('__utma', '__utmb', '__utmc', '__utmv', '__utmz');
+        $expectedCookies = array();
+        foreach ($expectedCookieNames as $cookieName) {
+            if (!empty($_COOKIE[$cookieName])) {
+                $expectedCookies[$cookieName] = $_COOKIE[$cookieName];
+            }
+        }
+        if (empty($expectedCookies)) {
+            $this->markTestSkipped('No cookies with values to test setting from super global');
+        }
+
+        $expectedCookies = array_merge(array_fill_keys($expectedCookieNames, null), $expectedCookies);
+        $gass->setCookiesFromRequestHeaders();
+
+        $this->assertAttributeEquals($expectedCookies, 'cookies', $gass);
+    }
+
+    /**
+     * @depends testSetVersionValid
+     */
+    public function testSetVersionFromJsValidWithCorrectJsFile()
     {
         list(
             $gass,
@@ -1768,6 +2513,59 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $this->assertAttributeEquals('5.6.7', 'version', $gass);
     }
 
+    /**
+     * @depends testSetVersionValid
+     */
+    public function testSetVersionFromJsValidDoesntUpdateVersionWhenJsEmpty()
+    {
+        list(
+            $gass,
+            $http
+        ) = $this->getGassAndDependencies();
+
+        $http->shouldReceive('request')
+            ->once()
+            ->with(GoogleAnalyticsServerSide::JS_URL)
+            ->andReturnSelf();
+        $http->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('');
+
+        $versionNotReplaced = '1.1.1';
+        $this->assertSame($gass, $gass->setVersion($versionNotReplaced));
+        $this->assertSame($gass, $gass->setVersionFromJs());
+        $this->assertAttributeEquals($versionNotReplaced, 'version', $gass);
+    }
+
+    /**
+     * @depends testSetVersionValid
+     */
+    public function testSetVersionFromJsValidDoesntUpdateVersionWhenJsDoesntContainValidVersion()
+    {
+        list(
+            $gass,
+            $http
+        ) = $this->getGassAndDependencies();
+
+        $http->shouldReceive('request')
+            ->once()
+            ->with(GoogleAnalyticsServerSide::JS_URL)
+            ->andReturnSelf();
+        $http->shouldReceive('getResponse')
+            ->once()
+            ->withNoArgs()
+            ->andReturn('foo=function(){return"1.2";};a=1;');
+
+        $versionNotReplaced = '1.1.1';
+        $this->assertSame($gass, $gass->setVersion($versionNotReplaced));
+        $this->assertSame($gass, $gass->setVersionFromJs());
+        $this->assertAttributeEquals($versionNotReplaced, 'version', $gass);
+    }
+
+    /**
+     * @depends testSetSearchEnginesValid
+     */
     public function testSetSearchEnginesFromJsValid()
     {
         list(

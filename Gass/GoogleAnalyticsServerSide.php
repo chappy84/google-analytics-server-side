@@ -1031,7 +1031,7 @@ class GoogleAnalyticsServerSide implements GassInterface
                 return $this->$methodName($value);
             }
         }
-        return $this;
+        throw new OutOfRangeException($name . ' is not a writable option.');
     }
 
     /**
