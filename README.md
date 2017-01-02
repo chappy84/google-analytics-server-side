@@ -384,7 +384,7 @@ LICENSE
 
 This software uses the BSD 3-Clause license:
 
-Copyright (c) 2011-2016, Tom Chapman (http://tom-chapman.uk)
+Copyright (c) 2011-2017, Tom Chapman (http://tom-chapman.uk)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
