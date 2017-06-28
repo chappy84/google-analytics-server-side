@@ -1124,7 +1124,7 @@ class GoogleAnalyticsServerSide implements GassInterface
     }
 
     /**
-     * Generates a random hash for the domain provided, sourced from the ga.js and converted to php
+     * Generates a hash for the domain provided, sourced from the ga.js and converted to php
      * see: http://www.google.com/support/forum/p/Google%20Analytics/thread?tid=626b0e277aaedc3c
      *
      * @param string $domain [optional]

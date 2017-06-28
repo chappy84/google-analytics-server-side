@@ -352,7 +352,7 @@ point release of that minor point version to ensure it works.
 
 Provisional PHP nightly & [HHVM][25] support are provided as-well however these are not guaranteed.
 
-If you're submitting a pull request, please ensure you've run the twst suite with PHPUnit, installed via 
+If you're submitting a pull request, please ensure you've run the test suite with PHPUnit, installed via 
 [composer][7]. Please see the instructions [here][21] on how to install it. After which you can [install][22] 
 phpunit, and the  other required dev dependencies using `composer install`.
 
