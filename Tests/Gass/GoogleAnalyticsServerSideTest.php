@@ -2351,6 +2351,211 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $this->assertEquals($utmaParts[5], $utmzParts[2]);
     }
 
+    public function testSetCookiesDisablesFutureSettingOfCookieResponseHeaders()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $gass->setIgnoreDoNotTrack(true);
+        $gass->setCookies();
+        $this->assertAttributeEquals(false, 'sendCookieHeaders', $gass);
+    }
+
+    /**
+     * @depends testSetCookiesValid
+     */
+    public function testSetCookiesCallsSetCookiesFromRequestHeadersCorrectly()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $gass->setIgnoreDoNotTrack(true);
+        $gass->disableCookieHeaders();
+        $this->assertAttributeEquals(false, 'setCookiesCalled', $gass);
+        $gass->setCookies();
+        $this->assertAttributeEquals(true, 'setCookiesCalled', $gass);
+        $this->assertAttributeArraySubset(
+            array(
+                '__utmc' => !empty($_COOKIE['__utmc']) ? $_COOKIE['__utmc'] : null,
+                '__utmv' => !empty($_COOKIE['__utmv']) ? $_COOKIE['__utmv'] : null,
+                '__utmz' => !empty($_COOKIE['__utmz']) ? $_COOKIE['__utmz'] : null,
+            ),
+            'cookies',
+            $gass
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderTestSetCustomVarsFromCookieValid
+     * @depends testSetCustomVarValidBasic
+     * @depends testSetCookiesValid
+     */
+    public function testSetCustomVarsFromCookieValid($cookieValueString, array $expectedCustomVars = array())
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $cookies = array(
+            '__utmv' => $gass->getDomainHash() . '.|' . $cookieValueString,
+        );
+        $gass->disableCookieHeaders();
+        $gass->setCookies($cookies);
+        $this->assertAttributeEquals($expectedCustomVars, 'customVariables', $gass);
+    }
+
+    public function dataProviderTestSetCustomVarsFromCookieValid()
+    {
+        return array(
+            array(
+                '1=foo=bar=3',
+                array(
+                    'index1' => array(
+                        'index' => 1,
+                        'name' => 'foo',
+                        'value' => 'bar',
+                        'scope' => 3,
+                    ),
+                ),
+            ),
+            array(
+                '3=foo=bar=2^5=baz=qux=1',
+                array(
+                    'index3' => array(
+                        'index' => 3,
+                        'name' => 'foo',
+                        'value' => 'bar',
+                        'scope' => 2,
+                    ),
+                    'index5' => array(
+                        'index' => 5,
+                        'name' => 'baz',
+                        'value' => 'qux',
+                        'scope' => 1,
+                    ),
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @depends testSetCookiesValid
+     */
+    public function testSetCookiesIncreasesSessionWhenNoUtmbAndUtmzCookies()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $gass->disableCookieHeaders();
+        $cookies = array(
+            '__utma' => '217344784.1277951898.1353238970.1359405715.1363640418.6',
+            '__utmc' => '217344784',
+        );
+
+        $gass->setCookies($cookies);
+        $rp = new \ReflectionProperty(get_class($gass), 'cookies');
+        $rp->setAccessible(true);
+        $actual = $rp->getValue($gass);
+        $this->assertArrayHasKey('__utma', $actual);
+        $this->assertRegExp('/^217344784\.1277951898\.1353238970\.1363640418\.[0-9]{10,}\.7$/', $actual['__utma']);
+        $this->assertArrayHasKey('__utmb', $actual);
+        $this->assertRegExp('/^217344784\.1\.7\.[0-9]{10,}$/', $actual['__utmb']);
+        $this->assertArrayHasKey('__utmc', $actual);
+        $this->assertEquals('217344784', $actual['__utmc']);
+        $this->assertArrayHasKey('__utmv', $actual);
+        $this->assertEquals(null, $actual['__utmv']);
+        $this->assertArrayHasKey('__utmz', $actual);
+        $this->assertEquals(
+            '217344784.1353238970.7.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=example.com',
+            $actual['__utmz']
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderReferers
+     * @depends testSetCookiesValid
+     */
+    public function testSetCookiesDifferentReferers($referer, $expectedUtmzSuffixRegExp)
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $gass->setDocumentReferer($referer);
+        $gass->disableCookieHeaders();
+
+        $domainHash = $gass->getDomainHash();
+        $gass->setCookies(array('__utmc' => $domainHash));
+
+        $rp = new \ReflectionProperty(get_class($gass), 'cookies');
+        $rp->setAccessible(true);
+        $actual = $rp->getValue($gass);
+
+        $this->assertArrayHasKey('__utmz', $actual);
+        $this->assertRegExp(
+            '/^' . $domainHash . '\.[0-9]{10,}\.1\.1\.' . $expectedUtmzSuffixRegExp . '$/',
+            $actual['__utmz']
+        );
+    }
+
+    /**
+     * @depends testSetCookiesValid
+     */
+    public function testSetCookiesIncreasesCampaignNumberWhenRefererChanges()
+    {
+        $referers = $this->dataProviderReferers();
+
+        list($gass) = $this->getGassAndDependencies();
+        $gass->disableCookieHeaders();
+
+        $domainHash = $gass->getDomainHash();
+
+        $rp = new \ReflectionProperty(get_class($gass), 'cookies');
+        $rp->setAccessible(true);
+
+        $cookies = array('__utmc' => $domainHash);
+        foreach ($referers as $key => $refererDetails) {
+            $gass->setDocumentReferer($refererDetails['referer']);
+            $gass->setCookies($cookies);
+
+            $actual = $rp->getValue($gass);
+
+            $this->assertArrayHasKey('__utmz', $actual);
+            $expectedCampaignNumber = $key + 1;
+            $this->assertRegExp(
+                '/^' .
+                    $domainHash .
+                    '\.[0-9]{10,}\.1\.' .
+                    $expectedCampaignNumber .
+                    '\.' .
+                    $refererDetails['suffixRegExp'] .
+                    '$/',
+                $actual['__utmz']
+            );
+            $cookies = array_merge($cookies, $actual);
+        }
+    }
+
+    public function dataProviderReferers()
+    {
+        return array(
+            array(
+                'referer' => '',
+                'suffixRegExp' => 'utmcsr=\(direct\)|utmccn=\(direct\)|utmcmd=\(none\)',
+            ),
+            array(
+                'referer' => 'https://www.google.co.uk/search?q=example.com',
+                'suffixRegExp' => 'utmcsr=google|utmccn=\(organic\)|utmcmd=organic|utmctr=example\.com',
+            ),
+            array(
+                'referer' => 'http://www.test.com/path/to/page',
+                'suffixRegExp' => 'utmcsr=www\.test\.com|utmccn=\(referral\)|utmcmd=referral|utmcct=\/path\/to\/page',
+            ),
+        );
+    }
+
+    public function testSetCookiesExceptionInvalidCookieName()
+    {
+        list($gass) = $this->getGassAndDependencies();
+        $cookies = array(
+            'foo' => 'bar',
+        );
+        $gass->disableCookieHeaders();
+        $this->setExpectedException(
+            'Gass\Exception\OutOfBoundsException',
+            'Cookie by name: foo is not related to Google Analytics.'
+        );
+        $gass->setCookies($cookies);
+    }
+
     public function testGetCookiesValidSetCookiesNotCalled()
     {
         list($gass) = $this->getGassAndDependencies();
@@ -2581,7 +2786,10 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $this->assertAttributeArrayHasKey('ask', 'searchEngines', $gass);
     }
 
-    public function testTrackPageviewValid()
+    /**
+     * @dataProvider dataProviderTestTrackSingleValid
+     */
+    public function testTrackPageviewSingleValid($account, array $extraParams, array $customVars)
     {
         list(
             $gass,
@@ -2589,10 +2797,132 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             $botInfo
         ) = $this->getGassAndDependencies();
         $botInfo->shouldReceive('isBot')
-            ->once()
             ->withNoArgs()
             ->andReturn(false);
-        $gass->disableCookieHeaders()
+
+        $pageTitle = 'Example Page Title';
+
+        $gass->setBotInfo(true)
+            ->disableCookieHeaders()
+            ->setAccount($account)
+            ->setPageTitle($pageTitle);
+
+        foreach ($customVars as $customVar) {
+            $gass->setCustomVar(
+                $customVar['name'],
+                $customVar['value'],
+                $customVar['scope'],
+                $customVar['index']
+            );
+        }
+        $this->expectJsUrlCall($http);
+
+        $documentReferer = (string) $gass->getDocumentReferer();
+        $documentReferer = (empty($documentReferer) && $documentReferer !== '0')
+            ? '-'
+            : urldecode($documentReferer);
+
+        $expectedGifParams = array_merge(
+            array(
+                'utmwv' => $gass->getVersion(),
+                'utmn' => 'REPLACEME',
+                'utmhn' => (string) $this->getEnvVar('SERVER_NAME'),
+                'utmr' => $documentReferer,
+                'utmac' => (string) $gass->getAccount(),
+                'utmcc' => $gass->getCookiesString(),
+                'utmul' => $gass->getAcceptLanguage(),
+                'utmcs' => $gass->getCharset(),
+                'utmu' => 'q~',
+                'utmip' => null,
+                'utmp' => urldecode((string) $this->getEnvVar('REQUEST_URI')),
+                'utmdt' => $pageTitle,
+            ),
+            $extraParams
+        );
+
+        $http->shouldReceive('request')
+            ->once()
+            ->with(
+                matchesPattern(
+                    '/^' .
+                        preg_quote(GoogleAnalyticsServerSide::GIF_URL, '/') .
+                        '\?' .
+                        str_replace(
+                            array('utmn\=REPLACEME', 'utmcc\=&'),
+                            array('utmn\=.+?', 'utmcc\=.+?&'),
+                            preg_quote(http_build_query($expectedGifParams, null, '&'))
+                        ) .
+                        '$/'
+                )
+            )->andReturnSelf();
+        $this->assertSame($gass, $gass->trackPageview());
+    }
+
+    public function dataProviderTestTrackSingleValid()
+    {
+        return array(
+            array(
+                'UA-00000-0',
+                array(),
+                array(),
+            ),
+            array(
+                'MO-00000-0',
+                array(
+                    'utmip' => preg_replace('/^((\d{1,3}\.){3})\d{1,3}$/', '$1', $this->getEnvVar('REMOTE_ADDR')) . '0',
+                ),
+                array(),
+            ),
+            array(
+                'UA-00000-0',
+                array(
+                    'utme' => '8(foo*baz)9(bar*qux)11(2*3!1)',
+                ),
+                array(
+                    'index1' => array(
+                        'index' => 1,
+                        'name' => 'foo',
+                        'value' => 'bar',
+                        'scope' => 2,
+                    ),
+                    'index3' => array(
+                        'index' => 3,
+                        'name' => 'baz',
+                        'value' => 'qux',
+                        'scope' => 1,
+                    ),
+                ),
+            ),
+            array(
+                'MO-00000-0',
+                array(
+                    'utmip' => preg_replace('/^((\d{1,3}\.){3})\d{1,3}$/', '$1', $this->getEnvVar('REMOTE_ADDR')) . '0',
+                    'utme' => '8(foo)9(bar)11(2)',
+                ),
+                array(
+                    'index1' => array(
+                        'index' => 1,
+                        'name' => 'foo',
+                        'value' => 'bar',
+                        'scope' => 2,
+                    ),
+                ),
+            ),
+        );
+    }
+
+    public function testTrackPageviewMultipleValid()
+    {
+        list(
+            $gass,
+            $http,
+            $botInfo
+        ) = $this->getGassAndDependencies();
+        $botInfo->shouldReceive('isBot')
+            ->withNoArgs()
+            ->andReturn(false);
+        $gass->setBotInfo(true)
+            ->disableCookieHeaders()
             ->setAccount('MO-00000-0');
         $gass->setPageTitle('Example Page Title');
         $this->expectJsAndGifUrlCall($http);
@@ -2602,6 +2932,25 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $gass->trackPageview('http://www.test.co.uk/example/path?q=other');
         $gass->setBotInfo(m::mock('Gass\BotInfo\BotInfoInterface'));
         $gass->trackPageview();
+    }
+
+    public function testTrackPageviewReturnsFalseWhenClientIsBot()
+    {
+        list(
+            $gass,
+            $http,
+            $botInfo
+        ) = $this->getGassAndDependencies();
+        $botInfo->shouldReceive('isBot')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true);
+        $gass->setBotInfo(true)
+            ->disableCookieHeaders()
+            ->setAccount('MO-00000-0');
+        $gass->setPageTitle('Example Page Title');
+        $this->expectJsUrlCall($http);
+        $this->assertFalse($gass->trackPageview());
     }
 
     public function testTrackPageviewExceptionInvalidUrl()
@@ -2641,14 +2990,9 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
     }
 
     /**
-     * @depends testGetEventStringValidIndividualParams
-     * @depends testGetEventStringExceptionActionWrongDataType
-     * @depends testGetEventStringExceptionCategoryWrongDataType
-     * @depends testGetEventStringExceptionEmptyAction
-     * @depends testGetEventStringExceptionEmptyCategory
-     * @depends testGetEventStringExceptionLabelWrongDataType
+     * @dataProvider dataProviderTestTrackSingleValid
      */
-    public function testTrackEventValid()
+    public function testTrackEventSingleValid($account, array $extraParams, array $customVars)
     {
         list(
             $gass,
@@ -2656,11 +3000,88 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             $botInfo
         ) = $this->getGassAndDependencies();
         $botInfo->shouldReceive('isBot')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $pageTitle = 'Example Page Title';
+
+        $gass->setBotInfo(true)
+            ->disableCookieHeaders()
+            ->setAccount($account)
+            ->setPageTitle($pageTitle);
+
+        foreach ($customVars as $customVar) {
+            $gass->setCustomVar(
+                $customVar['name'],
+                $customVar['value'],
+                $customVar['scope'],
+                $customVar['index']
+            );
+        }
+        $this->expectJsUrlCall($http);
+
+        $documentReferer = (string) $gass->getDocumentReferer();
+        $documentReferer = (empty($documentReferer) && $documentReferer !== '0')
+            ? '-'
+            : urldecode($documentReferer);
+
+        $expectedGifParams = array(
+            'utmwv' => $gass->getVersion(),
+            'utmn' => 'REPLACEME',
+            'utmhn' => (string) $this->getEnvVar('SERVER_NAME'),
+            'utmr' => $documentReferer,
+            'utmac' => (string) $gass->getAccount(),
+            'utmcc' => $gass->getCookiesString(),
+            'utmul' => $gass->getAcceptLanguage(),
+            'utmcs' => $gass->getCharset(),
+            'utmu' => 'q~',
+            'utmip' => null,
+            'utmt' => 'event',
+            'utme' => '5(foo*bar)' . (isset($extraParams['utme']) ? $extraParams['utme'] : ''),
+            'utmni' => '1',
+        );
+        unset($extraParams['utme']);
+        $expectedGifParams = array_merge($expectedGifParams, $extraParams);
+
+        $http->shouldReceive('request')
             ->once()
+            ->with(
+                matchesPattern(
+                    '/^' .
+                        preg_quote(GoogleAnalyticsServerSide::GIF_URL, '/') .
+                        '\?' .
+                        str_replace(
+                            array('utmn\=REPLACEME', 'utmcc\=&'),
+                            array('utmn\=.+?', 'utmcc\=.+?&'),
+                            preg_quote(http_build_query($expectedGifParams, null, '&'))
+                        ) .
+                        '$/'
+                )
+            )->andReturnSelf();
+        $this->assertSame($gass, $gass->trackEvent('foo', 'bar', null, null, true));
+    }
+
+    /**
+     * @depends testGetEventStringValidIndividualParams
+     * @depends testGetEventStringExceptionActionWrongDataType
+     * @depends testGetEventStringExceptionCategoryWrongDataType
+     * @depends testGetEventStringExceptionEmptyAction
+     * @depends testGetEventStringExceptionEmptyCategory
+     * @depends testGetEventStringExceptionLabelWrongDataType
+     */
+    public function testTrackEventMultipleValid()
+    {
+        list(
+            $gass,
+            $http,
+            $botInfo
+        ) = $this->getGassAndDependencies();
+        $botInfo->shouldReceive('isBot')
             ->withNoArgs()
             ->andReturn(false);
         $this->expectJsAndGifUrlCall($http);
-        $gass->disableCookieHeaders()
+        $gass->setBotInfo(true)
+            ->disableCookieHeaders()
             ->setAccount('MO-00000-0');
         $category = 'Test Category';
         $action = 'Test Action';

@@ -858,7 +858,15 @@ class GoogleAnalyticsServerSide implements GassInterface
             foreach ($customVars as $customVar) {
                 list($custVarIndex, $custVarName, $custVarValue, $custVarScope) = explode('=', $customVar, 4);
                 if (!isset($currentCustVars['index' . $custVarIndex])) {
-                    $this->setCustomVar($custVarName, $custVarValue, $custVarScope, $custVarIndex);
+                    $isIntVal = function ($var) {
+                        return is_numeric($var) && ((int) $var == $var);
+                    };
+                    $this->setCustomVar(
+                        $custVarName,
+                        $custVarValue,
+                        $isIntVal($custVarScope) ? (int) $custVarScope : $custVarScope,
+                        $isIntVal($custVarIndex) ? (int) $custVarIndex : $custVarIndex
+                    );
                 }
             }
         }
