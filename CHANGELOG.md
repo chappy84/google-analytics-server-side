@@ -1,6 +1,13 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.12.2 Beta
+-------------------
+
+ - Finalise unit test coverage
+ - Fixed a few remaining bugs / issues found as part of unit testing
+ - Remove HHVM CI support
+
 Version 0.12.1 Beta
 -------------------
 
