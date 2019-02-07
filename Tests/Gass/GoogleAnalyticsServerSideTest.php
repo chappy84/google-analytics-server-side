@@ -160,9 +160,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         if (!empty($envAcceptLanguage)) {
             $this->assertAttributeEquals($envAcceptLanguage, 'acceptLanguage', $gass);
         }
-        if (array_key_exists('HTTP_DNT', $_SERVER)) {
-            $this->assertAttributeEquals($envDnt, 'doNotTrack', $gass);
-        }
     }
 
     public function testConstructWithOptions()
@@ -244,9 +241,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         }
         if (!empty($envAcceptLanguage)) {
             $this->assertAttributeEquals($envAcceptLanguage, 'acceptLanguage', $gass);
-        }
-        if (array_key_exists('HTTP_DNT', $_SERVER)) {
-            $this->assertAttributeEquals($envDnt, 'doNotTrack', $gass);
         }
         $this->assertAttributeEquals(strtoupper($options['charset']), 'charset', $gass);
         $this->assertAttributeEquals($options['pageTitle'], 'pageTitle', $gass);
@@ -863,64 +857,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $this->assertEquals($documentPath, $gass->getDocumentPath());
     }
 
-    /**
-     * @dataProvider dataProviderTestSetDoNotTrackValid
-     */
-    public function testSetDoNotTrackValid($doNotTrack, $expectedSetValue)
-    {
-        list($gass) = $this->getGassAndDependencies();
-        $this->assertSame($gass, $gass->setDoNotTrack($doNotTrack));
-        $this->assertAttributeEquals($expectedSetValue, 'doNotTrack', $gass);
-    }
-
-    public function dataProviderTestSetDoNotTrackValid()
-    {
-        return array(
-            array(1, 1),
-            array(0, 0),
-            array(null, null),
-            array('1', 1),
-            array('0', 0),
-            array('null', null),
-            array('unset', null),
-        );
-    }
-
-    /**
-     * @dataProvider dataProviderTestSetDoNotTrackExceptionInvalidArgument
-     */
-    public function testSetDoNotTrackExceptionInvalidArgument($doNotTrack)
-    {
-        list($gass) = $this->getGassAndDependencies();
-        $this->setExpectedException(
-            'Gass\Exception\InvalidArgumentException',
-            '$doNotTrack must have a value of 1, 0, \'unset\' or null'
-        );
-        $gass->setDoNotTrack($doNotTrack);
-    }
-
-    public function dataProviderTestSetDoNotTrackExceptionInvalidArgument()
-    {
-        return array(
-            array('foo'),
-            array(array('bar')),
-            array(new \stdClass),
-            array(true),
-            array(1.1),
-        );
-    }
-
-    /**
-     * @depends testSetDoNotTrackValid
-     */
-    public function testGetDoNotTrack()
-    {
-        $doNotTrack = 1;
-        list($gass) = $this->getGassAndDependencies();
-        $gass->setDoNotTrack($doNotTrack);
-        $this->assertEquals($doNotTrack, $gass->getDoNotTrack());
-    }
-
     public function testSetPageTitleValid()
     {
         list($gass) = $this->getGassAndDependencies();
@@ -948,49 +884,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $pageTitle = 'Abcdef Ghijk Lmnop';
         $gass->setPageTitle($pageTitle);
         $this->assertEquals($pageTitle, $gass->getPageTitle());
-    }
-
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testSetIgnoreDoNotTrackValid($ignoreDoNotTrack)
-    {
-        list($gass) = $this->getGassAndDependencies();
-        $this->assertSame($gass, $gass->setIgnoreDoNotTrack($ignoreDoNotTrack));
-        $this->assertAttributeEquals($ignoreDoNotTrack, 'ignoreDoNotTrack', $gass);
-    }
-
-    /**
-     * @dataProvider dataProviderTestSetIgnoreDoNotTrackExceptionInvalidArgument
-     */
-    public function testSetIgnoreDoNotTrackExceptionInvalidArgument($ignoreDoNotTrack)
-    {
-        list($gass) = $this->getGassAndDependencies();
-        $this->setExpectedException('Gass\Exception\InvalidArgumentException', '$ignoreDoNotTrack must be a boolean.');
-        $gass->setIgnoreDoNotTrack($ignoreDoNotTrack);
-    }
-
-    public function dataProviderTestSetIgnoreDoNotTrackExceptionInvalidArgument()
-    {
-        return array(
-            array(new \stdClass),
-            array('baz'),
-            array(1234567890),
-            array(1.234567890),
-            array(array()),
-            array(null),
-        );
-    }
-
-    /**
-     * @depends testSetIgnoreDoNotTrackValid
-     */
-    public function testGetIgnoreDoNotTrack()
-    {
-        $ignoreDoNotTrack = true;
-        list($gass) = $this->getGassAndDependencies();
-        $gass->setIgnoreDoNotTrack($ignoreDoNotTrack);
-        $this->assertEquals($ignoreDoNotTrack, $gass->getIgnoreDoNotTrack());
     }
 
     public function testSetCustomVarValidBasic()
@@ -2354,7 +2247,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
     public function testSetCookiesDisablesFutureSettingOfCookieResponseHeaders()
     {
         list($gass) = $this->getGassAndDependencies();
-        $gass->setIgnoreDoNotTrack(true);
         $gass->setCookies();
         $this->assertAttributeEquals(false, 'sendCookieHeaders', $gass);
     }
@@ -2365,7 +2257,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
     public function testSetCookiesCallsSetCookiesFromRequestHeadersCorrectly()
     {
         list($gass) = $this->getGassAndDependencies();
-        $gass->setIgnoreDoNotTrack(true);
         $gass->disableCookieHeaders();
         $this->assertAttributeEquals(false, 'setCookiesCalled', $gass);
         $gass->setCookies();
@@ -2715,7 +2606,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $this->expectJsUrlCall($http);
         $this->assertSame($gass, $gass->setVersion('1.1.1'));
         $this->assertSame($gass, $gass->setVersionFromJs());
-        $this->assertAttributeEquals('5.6.7', 'version', $gass);
+        $this->assertAttributeEquals('5.7.2', 'version', $gass);
     }
 
     /**

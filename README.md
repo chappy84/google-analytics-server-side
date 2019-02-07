@@ -26,7 +26,6 @@ This PHP adaptation is maintained by [Tom Chapman][5].
 [![Latest Stable Version](https://poser.pugx.org/chappy84/google-analytics-server-side/v/stable)](https://packagist.org/packages/chappy84/google-analytics-server-side)
 [![Total Downloads](https://poser.pugx.org/chappy84/google-analytics-server-side/downloads)](https://packagist.org/packages/chappy84/google-analytics-server-side)
 [![License](https://poser.pugx.org/chappy84/google-analytics-server-side/license)](https://packagist.org/packages/chappy84/google-analytics-server-side)
-[![Dependency Status](https://www.versioneye.com/user/projects/55a2bc5132393900170004a9/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55a2bc5132393900170004a9)
 
 Installation
 ------------
@@ -315,52 +314,24 @@ You do have the option to turn off the sending of the cookie headers to the brow
 can be done by calling disableCookieHeaders before calling trackPageView / trackEvent for 
 the first time.
 
-#### EU Cookie Law and the Do Not Track header
-
-Yep, as European web developers we all hate one of the most idiotic and stupid pieces of 
-legislation ever introduced by bureaucrats that don't understand either the technology 
-itself or the ridiculously easy work arounds using such things as Javascript, Flash, 
-Silverlight, etc. See [@samyk][18]'s [evercookie][19] if you don't know.
-
-Anyway, in response to this, since Google themselves deal with the [Do Not Track][20] header 
-and to obey the user's preference this framework should silently deal with this 
-header in the same way, thus the user's preference is accepted by default.
-
-This framework however provides the developer the option to ignore the user's preference.  
-You can do this by making the following call:
-
-```php
-$gass->setIgnoreDoNotTrack(true);
-```
-
-To reverse this and no longer ignore the Do Not Track header you can make the following call:
-
-```php
-$gass->setIgnoreDoNotTrack(false);
-```
-
-[18]: https://github.com/samyk
-[19]: https://github.com/samyk/evercookie
-[20]: http://www.w3.org/TR/tracking-dnt/
-
 Test Suite & CI
 ---------------
 
-This framework uses [PHPUnit][23], along with [TravisCI][24], to test functionality on the
+This framework uses [PHPUnit][20], along with [TravisCI][21], to test functionality on the
 supported PHP minor versions 5.3, 5.4, 5.5, 5.6, 7.0 and 7.1. This is done by default on the latest bug fix
 point release of that minor point version to ensure it works.
 
-Provisional PHP nightly & [HHVM][25] support are provided as-well however these are not guaranteed.
+Provisional PHP nightly & [HHVM][22] support are provided as-well however these are not guaranteed.
 
 If you're submitting a pull request, please ensure you've run the test suite with PHPUnit, installed via 
-[composer][7]. Please see the instructions [here][21] on how to install it. After which you can [install][22] 
+[composer][7]. Please see the instructions [here][18] on how to install it. After which you can [install][19] 
 phpunit, and the  other required dev dependencies using `composer install`.
 
-[21]: https://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
-[22]: https://getcomposer.org/doc/03-cli.md#install
-[23]: https://github.com/sebastianbergmann/phpunit
-[24]: https://travis-ci.org/
-[25]: http://hhvm.com/
+[18]: https://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
+[19]: https://getcomposer.org/doc/03-cli.md#install
+[20]: https://github.com/sebastianbergmann/phpunit
+[21]: https://travis-ci.org/
+[22]: http://hhvm.com/
 
 PHP Version
 -----------
@@ -371,13 +342,13 @@ The minimum supported version is PHP 5.3.23
 
 I've left the following branches of versions which worked with the now un-supported versions of PHP:
 
-- [PHP 5.2 Branch][26] 
+- [PHP 5.2 Branch][23] 
 
 Please feel free to use, fork etc. any of these branches. Any issues which arise in them won't 
 have fixes attempted I'm afraid. However if you've attempted a fix yourself, please lodge a 
 pull-request and It'll be considered. 
 
-[26]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+[23]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 LICENSE
 -------

@@ -139,13 +139,6 @@ class GoogleAnalyticsServerSide implements GassInterface
     private $documentPath;
 
     /**
-     * The value of the Do Not Track header
-     *
-     * @var int|null
-     */
-    private $doNotTrack;
-
-    /**
      * Google Analytics Account ID for the site
      * value for utmac
      *
@@ -284,13 +277,6 @@ class GoogleAnalyticsServerSide implements GassInterface
     private $botInfo;
 
     /**
-     * Whether or not to ignore the Do Not Track header
-     *
-     * @var bool
-     */
-    private $ignoreDoNotTrack = false;
-
-    /**
      * URL Validator
      *
      * @var Gass\Validate\Url
@@ -324,9 +310,6 @@ class GoogleAnalyticsServerSide implements GassInterface
         }
         if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $this->setAcceptLanguage($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        }
-        if (array_key_exists('HTTP_DNT', $_SERVER)) {
-            $this->setDoNotTrack($_SERVER['HTTP_DNT']);
         }
         $this->setOptions($options);
     }
@@ -428,16 +411,6 @@ class GoogleAnalyticsServerSide implements GassInterface
     }
 
     /**
-     * Returns whether or not Do Not Track has been enabled
-     *
-     * @return int|null
-     */
-    public function getDoNotTrack()
-    {
-        return $this->doNotTrack;
-    }
-
-    /**
      * Returns the Page Title
      *
      * @return string
@@ -533,16 +506,6 @@ class GoogleAnalyticsServerSide implements GassInterface
     public function getHttp()
     {
         return Http::getInstance();
-    }
-
-    /**
-     * Returns whether or not Do Not Track is being ignored
-     *
-     * @return bool
-     */
-    public function getIgnoreDoNotTrack()
-    {
-        return $this->ignoreDoNotTrack;
     }
 
     /**
@@ -751,25 +714,6 @@ class GoogleAnalyticsServerSide implements GassInterface
     }
 
     /**
-     * Set Do Not Track
-     *
-     * @param int|string|null $doNotTrack
-     * @throws InvalidArgumentException
-     * @return $this
-     */
-    public function setDoNotTrack($doNotTrack)
-    {
-        if (!in_array($doNotTrack, array(1, 0, null, '1', '0', 'null', 'unset'), true)) {
-            throw new InvalidArgumentException('$doNotTrack must have a value of 1, 0, \'unset\' or null');
-        }
-        if (is_string($doNotTrack)) {
-            $doNotTrack = (is_numeric($doNotTrack)) ? (int) $doNotTrack : null;
-        }
-        $this->doNotTrack = $doNotTrack;
-        return $this;
-    }
-
-    /**
      * Set Page Title
      *
      * @param string $pageTitle
@@ -778,22 +722,6 @@ class GoogleAnalyticsServerSide implements GassInterface
     public function setPageTitle($pageTitle)
     {
         $this->pageTitle = $this->getAsString($pageTitle, 'Page Title');
-        return $this;
-    }
-
-    /**
-     * Set whether or not to ignore do not track
-     *
-     * @param bool $ignoreDoNotTrack
-     * @throws InvalidArgumentException
-     * @return $this
-     */
-    public function setIgnoreDoNotTrack($ignoreDoNotTrack = true)
-    {
-        if (!is_bool($ignoreDoNotTrack)) {
-            throw new InvalidArgumentException('$ignoreDoNotTrack must be a boolean.');
-        }
-        $this->ignoreDoNotTrack = $ignoreDoNotTrack;
         return $this;
     }
 
@@ -1171,8 +1099,7 @@ class GoogleAnalyticsServerSide implements GassInterface
      */
     public function setCookies(array $cookies = array())
     {
-        $doNotTrack = (1 === $this->getDoNotTrack() && !$this->getIgnoreDoNotTrack()) ? true : false;
-        if (!$this->setCookiesCalled && !$doNotTrack && empty($cookies)) {
+        if (!$this->setCookiesCalled && empty($cookies)) {
             $this->setCookiesFromRequestHeaders();
         }
         $this->setCookiesCalled = true;
@@ -1286,7 +1213,7 @@ class GoogleAnalyticsServerSide implements GassInterface
             ++$campaignNumber;
         }
 
-        $sendCookieHeaders = ($this->sendCookieHeaders && !$doNotTrack) ? true : false;
+        $sendCookieHeaders = ($this->sendCookieHeaders) ? true : false;
         /*
          * Set the cookies to the required values
          */
