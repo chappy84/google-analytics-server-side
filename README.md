@@ -321,8 +321,6 @@ This framework uses [PHPUnit][20], along with [TravisCI][21], to test functional
 supported PHP minor versions 5.3, 5.4, 5.5, 5.6, 7.0 and 7.1. This is done by default on the latest bug fix
 point release of that minor point version to ensure it works.
 
-Provisional PHP nightly & [HHVM][22] support are provided as-well however these are not guaranteed.
-
 If you're submitting a pull request, please ensure you've run the test suite with PHPUnit, installed via 
 [composer][7]. Please see the instructions [here][18] on how to install it. After which you can [install][19] 
 phpunit, and the  other required dev dependencies using `composer install`.
@@ -331,7 +329,6 @@ phpunit, and the  other required dev dependencies using `composer install`.
 [19]: https://getcomposer.org/doc/03-cli.md#install
 [20]: https://github.com/sebastianbergmann/phpunit
 [21]: https://travis-ci.org/
-[22]: http://hhvm.com/
 
 PHP Version
 -----------
@@ -342,13 +339,13 @@ The minimum supported version is PHP 5.3.23
 
 I've left the following branches of versions which worked with the now un-supported versions of PHP:
 
-- [PHP 5.2 Branch][23] 
+- [PHP 5.2 Branch][22] 
 
 Please feel free to use, fork etc. any of these branches. Any issues which arise in them won't 
 have fixes attempted I'm afraid. However if you've attempted a fix yourself, please lodge a 
 pull-request and It'll be considered. 
 
-[23]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
+[22]: https://github.com/chappy84/google-analytics-server-side/tree/php-5.2
 
 LICENSE
 -------
