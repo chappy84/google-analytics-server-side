@@ -19,7 +19,7 @@
  *      employees. "Google" and "Google Analytics" are trademarks of
  *      Google Inc. and it's respective subsidiaries.
  *
- * @copyright   Copyright (c) 2011-2017 Tom Chapman (http://tom-chapman.uk/)
+ * @copyright   Copyright (c) 2011-2019 Tom Chapman (http://tom-chapman.uk/)
  * @license     BSD 3-clause "New" or "Revised" License
  * @link        http://github.com/chappy84/google-analytics-server-side
  * @version     0.12.2 Beta
