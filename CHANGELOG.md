@@ -1,6 +1,11 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.14.0 Beta
+-------------------
+
+ - Remove DNT header support since the technology has been abandoned (https://github.com/w3c/dnt/commit/5d85d6c3d116b5eb29fddc69352a77d87dfd2310) 
+
 Version 0.12.2 Beta
 -------------------
 
