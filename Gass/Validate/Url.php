@@ -47,7 +47,7 @@ class Url extends Base
             $this->addMessage('The provided URL must be a string.');
             return false;
         }
-        $validated = filter_var($value, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED);
+        $validated = filter_var($value, FILTER_VALIDATE_URL);
         if (false === $validated) {
             $this->addMessage('"%value%" is an invalid URL');
             return false;
