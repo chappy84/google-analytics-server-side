@@ -1,6 +1,11 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.14.1 Beta
+-------------------
+
+ - Remove deprecated FILTER_VALIDATE options [depricated in PHP 7.3](https://www.php.net/manual/en/migration73.deprecated.php#migration73.deprecated.filter)
+
 Version 0.14.0 Beta
 -------------------
 
