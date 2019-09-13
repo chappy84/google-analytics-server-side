@@ -1,3 +1,14 @@
+Archived Repo
+=============
+This is an archived project and is no longer supported or updated. Please do not file issues or pull-requests against this repo. 
+
+If you wish to continue to develop this code yourself, we recommend you fork it.
+
+The project was reverse engineered from the ga.js code, which [Google now considers "legacy"][2]  
+We recommend you follow Google's recommendation, and [upgrade to analytics.js](https://developers.google.com/analytics/devguides/collection/upgrade/reference/gajs-analyticsjs), 
+at which point you can then use the [Google Analytics Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/) to record analytics from the server side. 
+There are various existing PHP implementations of this protocol, which we won't recommend one. If switching, do your research, and pick a good one, or be bold, and create a new one.
+
 [Google Analytics Server Side][1]
 ============================
 
