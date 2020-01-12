@@ -1,6 +1,16 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.14.2 Beta
+-------------------
+
+ - Add in ability to update browscap ini file via cron job
+ - Add in ability to disable auto browscap ini file update per request
+ - Add in unofficial support for PHP 7.2 - 7.4
+ - Switch from using $php-errormsg to the error_get_last function, in part for compatibility with more recent PHP versions
+ - Correct ordering of parameters to implode function in line with requirements for more recent PHP versions
+ - Switch to using constant keys for default option setup
+
 Version 0.14.1 Beta
 -------------------
 
@@ -9,7 +19,7 @@ Version 0.14.1 Beta
 Version 0.14.0 Beta
 -------------------
 
- - Remove DNT header support since the technology has been abandoned (https://github.com/w3c/dnt/commit/5d85d6c3d116b5eb29fddc69352a77d87dfd2310) 
+ - Remove DNT header support since the technology has been abandoned (https://github.com/w3c/dnt/commit/5d85d6c3d116b5eb29fddc69352a77d87dfd2310)
 
 Version 0.12.2 Beta
 -------------------
