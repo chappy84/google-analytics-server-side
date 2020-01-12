@@ -24,7 +24,7 @@ matrix:
 sudo: false
 
 install:
-    - COMPOSER_MEMORY_LIMIT=-1 composer install --prefer-source -n
+    - COMPOSER_MEMORY_LIMIT=-1 composer install --prefer-source -n --ignore-platform-reqs
 
 script:
     - vendor/bin/php-cs-fixer fix -v --dry-run .
