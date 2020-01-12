@@ -1030,7 +1030,7 @@ class GoogleAnalyticsServerSide implements GassInterface
                         $value['scope'];
                 }
             }
-            return '8(' . implode($names, '*') . ')9(' . implode($values, '*') . ')11(' . implode($scopes, '*') . ')';
+            return '8(' . implode('*', $names) . ')9(' . implode('*', $values) . ')11(' . implode('*', $scopes) . ')';
         }
         return null;
     }
@@ -1271,7 +1271,7 @@ class GoogleAnalyticsServerSide implements GassInterface
                 $cookieParts[] = $name . '=' . $value . ';';
             }
         }
-        return implode($cookieParts, ' ');
+        return implode(' ', $cookieParts);
     }
 
     /**
