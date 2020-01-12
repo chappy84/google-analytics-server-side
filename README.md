@@ -329,8 +329,8 @@ Test Suite & CI
 ---------------
 
 This framework uses [PHPUnit][20], along with [TravisCI][21], to test functionality on the
-supported PHP minor versions 5.3, 5.4, 5.5, 5.6, 7.0 and 7.1. This is done by default on the latest bug fix
-point release of that minor point version to ensure it works.
+supported PHP minor versions 5.3, 5.4, 5.5, 5.6, 7.0, and 7.1, with unofficial support for 7.2, 7.3, and 7.4.
+This is done by default on the latest bug fix point release of that minor point version to ensure it works.
 
 If you're submitting a pull request, please ensure you've run the test suite with PHPUnit, installed via 
 [composer][7]. Please see the instructions [here][18] on how to install it. After which you can [install][19] 
