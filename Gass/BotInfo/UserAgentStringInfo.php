@@ -99,9 +99,9 @@ class UserAgentStringInfo extends Base
      * @var array
      */
     protected $options = array(
-        'cachePath' => null,
-        'cacheFilename' => 'bots.csv',
-        'cacheLifetime' => 2592000, // 30 days
+        self::OPT_CACHE_PATH => null,
+        self::OPT_CACHE_FILENAME => 'bots.csv',
+        self::OPT_CACHE_LIFETIME => 2592000, // 30 days
     );
 
     /**

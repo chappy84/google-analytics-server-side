@@ -101,9 +101,9 @@ class BrowsCap extends Base
      * @var array
      */
     protected $options = array(
-        'iniFilename' => null,
-        'savePath' => null,
-        'latestVersionDateFile' => 'latestVersionDate.txt',
+        self::OPT_INI_FILE => null,
+        self::OPT_SAVE_PATH => null,
+        self::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
     );
 
     /**
