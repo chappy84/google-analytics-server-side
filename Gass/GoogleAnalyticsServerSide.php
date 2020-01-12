@@ -1420,7 +1420,7 @@ class GoogleAnalyticsServerSide implements GassInterface
     {
         $currentJs = $this->getCurrentJsFile();
         if (!empty($currentJs)) {
-            $regEx = '([a-z0-9:\s-_\.]+)';
+            $regEx = '([a-z0-9:\s\-_\.]+)';
             $searchEngineString = preg_replace(
                 '/^[\s\S]+\=[\'"]' . $regEx . '[\'"]\.split\([\'"]\s+[\'"]\)[\s\S]+$/i',
                 '$1',
