@@ -117,6 +117,7 @@ class BrowsCapTest extends TestAbstract
                 BrowsCap::OPT_INI_FILE => !empty($existingIniSetting) ? basename($existingIniSetting) : null,
                 BrowsCap::OPT_SAVE_PATH => !empty($existingIniSetting) ? dirname($existingIniSetting) : null,
                 BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
+                BrowsCap::OPT_DISABLE_AUTO_UPDATE => false,
             ),
             'options',
             $browsCap
@@ -134,6 +135,7 @@ class BrowsCapTest extends TestAbstract
         $browsCap = new BrowsCap($options);
 
         $options[BrowsCap::OPT_LATEST_VERSION_DATE_FILE] = 'latestVersionDate.txt';
+        $options[BrowsCap::OPT_DISABLE_AUTO_UPDATE] = false;
 
         $this->assertAttributeEquals($options, 'options', $browsCap);
     }
@@ -149,6 +151,7 @@ class BrowsCapTest extends TestAbstract
                 BrowsCap::OPT_INI_FILE => null,
                 BrowsCap::OPT_SAVE_PATH => null,
                 BrowsCap::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
+                BrowsCap::OPT_DISABLE_AUTO_UPDATE => false,
             ),
             $options
         );
@@ -165,6 +168,7 @@ class BrowsCapTest extends TestAbstract
             BrowsCap::OPT_INI_FILE => null,
             BrowsCap::OPT_SAVE_PATH => null,
             BrowsCap::OPT_LATEST_VERSION_DATE_FILE => null,
+            BrowsCap::OPT_DISABLE_AUTO_UPDATE => false,
         );
 
         $browsCap = new BrowsCap;
@@ -192,6 +196,7 @@ class BrowsCapTest extends TestAbstract
                 BrowsCap::OPT_INI_FILE => null,
                 BrowsCap::OPT_SAVE_PATH => null,
                 BrowsCap::OPT_LATEST_VERSION_DATE_FILE => null,
+                BrowsCap::OPT_DISABLE_AUTO_UPDATE => false,
             ),
             $options
         );
@@ -211,6 +216,7 @@ class BrowsCapTest extends TestAbstract
             BrowsCap::OPT_INI_FILE => null,
             BrowsCap::OPT_SAVE_PATH => null,
             BrowsCap::OPT_LATEST_VERSION_DATE_FILE => null,
+            BrowsCap::OPT_DISABLE_AUTO_UPDATE => false,
         );
 
         $browsCap = new BrowsCap;
@@ -580,7 +586,7 @@ class BrowsCapTest extends TestAbstract
                 $iniFile->getName() .
                 ' is un-readable, please ensure the permissions are correct and try again.'
         );
-        $browsCap->getBrowser();
+        $browsCap->checkIniFile();
     }
 
     /**
@@ -603,7 +609,7 @@ class BrowsCapTest extends TestAbstract
             'Gass\Exception\DomainException',
             'Cannot deduce browscap ini file location. Please set the required options.'
         );
-        $browsCap->getBrowser();
+        $browsCap->checkIniFile();
     }
 
     public function testCheckIniFileDownloadsFileWhenDoesntExist()
@@ -648,7 +654,7 @@ class BrowsCapTest extends TestAbstract
                 $iniFileName .
                 ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
-        $browsCap->getBrowser();
+        $browsCap->checkIniFile();
     }
 
     /**
@@ -683,7 +689,7 @@ class BrowsCapTest extends TestAbstract
             'A user-agent has not beeen set in the Gass\Http adapter.' .
                 ' The remote server rejects requests without a user-agent.'
         );
-        $browsCap->getBrowser();
+        $browsCap->checkIniFile();
     }
 
     public function dataProviderTestUpdateIniFileExceptionDomainMissingHttpUserAgent()
@@ -734,7 +740,7 @@ class BrowsCapTest extends TestAbstract
             'browscap ini file retrieved from external source seems to be empty. ' .
                 'Please ensure the ini file file can be retrieved.'
         );
-        $browsCap->getBrowser();
+        $browsCap->checkIniFile();
     }
 
     public function testCheckIniFileDownloadsFileWhenFileExpired()
@@ -782,7 +788,7 @@ class BrowsCapTest extends TestAbstract
                 $iniFile->getName() .
                 ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
-        $browsCap->getBrowser();
+        $browsCap->checkIniFile();
     }
 
     public function testCheckIniFileDoesntDownloadFileWhenFileNotExpired()
@@ -831,7 +837,62 @@ class BrowsCapTest extends TestAbstract
             'Gass\Exception\RuntimeException',
             'Browscap ini file could not be parsed.'
         );
-        $browsCap->getBrowser();
+        $browsCap->checkIniFile();
+    }
+
+    public function testCheckIniFileDoesntTryToUpdateWhenUpdateDisabledAndFilesExist()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $latestVersionFile = $root->getChild('latestVersionDate.txt');
+        $latestVersionFile->lastModified(time());
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $iniFile->lastModified(time() - 86400);
+        $iniFile->setContent('foo');
+        clearstatcache();
+        $options = array(
+            BrowsCap::OPT_INI_FILE => $iniFile->getName(),
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+            BrowsCap::OPT_LATEST_VERSION_DATE_FILE => $latestVersionFile->getName(),
+            BrowsCap::OPT_DISABLE_AUTO_UPDATE => true,
+        );
+
+        $browsCap = new BrowsCap($options);
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldNotReceive('getInstance');
+
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'Browscap ini file could not be parsed.'
+        );
+        $browsCap->checkIniFile();
+    }
+
+    public function testCheckIniFileDoesntTryToUpdateWhenUpdateDisabledAndFilesDontExist()
+    {
+        $root = vfsStreamWrapper::getRoot();
+        $iniFile = $root->getChild('test_php_browscap.ini');
+        $iniFile->lastModified(time() - 86400);
+        unlink($iniFile->url());
+
+        clearstatcache();
+        $options = array(
+            BrowsCap::OPT_INI_FILE => 'test_php_browscap.ini',
+            BrowsCap::OPT_SAVE_PATH => $root->url(),
+            BrowsCap::OPT_DISABLE_AUTO_UPDATE => true,
+        );
+
+        $browsCap = new BrowsCap($options);
+
+        $httpMock = m::mock('overload:Gass\Http\Http');
+        $httpMock->shouldNotReceive('getInstance');
+
+        $this->setExpectedException(
+            'Gass\Exception\RuntimeException',
+            'The browscap ini file vfs://temp/test_php_browscap.ini is un-readable, ' .
+                'please ensure the permissions are correct and try again.'
+        );
+        $browsCap->checkIniFile();
     }
 
     /**

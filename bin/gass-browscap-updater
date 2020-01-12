@@ -1,0 +1,156 @@
+#!/usr/bin/env php
+<?php
+/**
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Google Analytics Server Side is free software; you can redistribute it and/or
+ * modify it under the terms of the BSD 3-clause "New" or "Revised" License
+ *
+ * N/B: This code is nether written or endorsed by Google or any of it's
+ *      employees. "Google" and "Google Analytics" are trademarks of
+ *      Google Inc. and it's respective subsidiaries.
+ *
+ * @copyright   Copyright (c) 2011-2020 Tom Chapman (http://tom-chapman.uk/)
+ * @license     BSD 3-clause "New" or "Revised" License
+ * @link        http://github.com/chappy84/google-analytics-server-side
+ */
+
+use Gass\BotInfo\BrowsCap;
+use Gass\Http\Http;
+
+if ("" === ini_get('date.timezone')) {
+    date_default_timezone_set('UTC');
+}
+
+$baseDir = dirname(__DIR__);
+$pathsToSearch = array(
+    $baseDir . '/vendor/autoload.php',
+    $baseDir . '/../../autoload.php',
+    $baseDir . '/Gass/Bootstrap.php',
+);
+
+$foundAutoloader = false;
+foreach ($pathsToSearch as $path) {
+    if (file_exists($path)) {
+        require_once $path;
+        $foundAutoloader = true;
+        break;
+    }
+}
+
+if (!$foundAutoloader) {
+    throw new \Exception('Could not find autoloader path');
+}
+
+$options = array();
+if (false !== ($browsCapLocation = ini_get(BrowsCap::OPT_BROWSCAP)) && '' != trim($browsCapLocation)) {
+    $options[BrowsCap::OPT_BROWSCAP] = $browsCapLocation;
+}
+
+$version = '0.14.1-Beta';
+
+$cliOpts = getopt('s:f:c:vh', array('save-path:', 'ini-filename:', 'cache-filename:', 'version', 'help'));
+
+if (array_key_exists('h', $cliOpts) || array_key_exists('help', $cliOpts)) {
+    $browscap = new BrowsCap();
+    $defaultCacheFilename = $browscap->getOption(BrowsCap::OPT_LATEST_VERSION_DATE_FILE);
+    echo <<<HELP
+
+Browscap ini file updater v$version by Tom Chapman
+
+Part of Google Analytics Server Side PHP package
+
+This command updates the browscap ini file if an update is available
+It is intended to be used via a cron job, or some other job scheduler, and
+to replace the auto update feature in the GASS BrowsCap BotInfo Adapter.
+
+If using this script, ensure you set this option for Gass\BotInfo\Browscap where you use GASS in your PHP code:
+    \Gass\BotInfo\BrowsCap::OPT_DISABLE_AUTO_UPDATE = true
+
+Usage:
+    gass-browscap-updater
+    gass-browscap-updater -s <save-path> -f <ini-filename>
+    gass-browscap-updater -c <cache-filename>
+    gass-browscap-updater -s <save-path> -f <ini-filename> -c <cache-filename>
+
+Examples:
+    gass-browscap-updater -s /var/lib/browscap -f full_php_browscap.ini
+    gass-browscap-updater -c $defaultCacheFilename
+    gass-browscap-updater -s /var/lib/browscap -f full_php_browscap.ini -c $defaultCacheFilename
+
+Options:
+    -s, --save-path       The path to save the ini file and latest update cache file in
+    -f, --ini-filename    The filename given to the browscap file downloaded
+    -c, --cache-filename  The filename given to the latest version date cache file
+    -v, --version         Output's the current version
+    -h, --help            Displays this help
+
+If either of the options '--save-path' or '--ini-filename' is not provided,
+they will be derived from the 'browscap' php.ini setting, if it is present.
+
+'--cache-filename' will default to "$defaultCacheFilename" if not provided
+
+
+We'd recommend this be run monthly. To do this, add the following to your crontab via 'crontab -e':
+
+0 0 * * 0 /path/to/bin/gass-browscap-updater -s <save-path> -f <ini-filename> -c <cache-filename>
+
+This will run it at midnight every Sunday
+
+
+HELP;
+    exit(0);
+}
+
+if (array_key_exists('v', $cliOpts) || array_key_exists('version', $cliOpts)) {
+    echo $version, "\n";
+    exit(0);
+}
+
+$missingOptions = array();
+if (empty($cliOpts['s']) && empty($cliOpts['save-path'])) {
+    $missingOptions[] = '-s / --save-path';
+} else {
+    $options[BrowsCap::OPT_SAVE_PATH] = (!empty($cliOpts['s'])) ? $cliOpts['s'] : $cliOpts['save-path'];
+}
+if (empty($cliOpts['f']) && empty($cliOpts['ini-filename'])) {
+    $missingOptions[] = '-f / --ini-filename';
+} else {
+    $options[BrowsCap::OPT_INI_FILE] = (!empty($cliOpts['f'])) ? $cliOpts['f'] : $cliOpts['ini-filename'];
+}
+if (!empty($missingOptions) && empty($options[BrowsCap::OPT_BROWSCAP])) {
+    $missingOptsStr = implode("\n  ", $missingOptions);
+    echo <<<ERR
+
+  Missing the following required options, that cannot be derived from the also missing 'browscap' php ini setting:
+  $missingOptsStr
+
+
+ERR;
+    exit(1);
+}
+if (!empty($cliOpts['c']) || !empty($cliOpts['cache-filename'])) {
+    $options[BrowsCap::OPT_LATEST_VERSION_DATE_FILE] = (!empty($cliOpts['c'])) ? $cliOpts['c'] : $cliOpts['cache-filename'];
+}
+
+try {
+    $http = Http::setUserAgent('GassBotInfoBrowscapUpdaterBot/' . $version . ' Beta (+https://github.com/chappy84/google-analytics-server-side)');
+    $browscap = new BrowsCap($options);
+
+    ini_set('memory_limit', -1);
+    $browscap->checkIniFile();
+    ini_restore('memory_limit');
+} catch (\Exception $e) {
+    echo $e->getMessage(), "\n";
+    exit(1);
+}

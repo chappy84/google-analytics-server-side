@@ -35,6 +35,9 @@
             "GassTests\\" : "Tests/"
         }
     },
+    "bin": [
+        "bin/gass-browscap-updater"
+    ],
     "support" : {
         "source" : "https://github.com/chappy84/google-analytics-server-side",
         "issues" : "https://github.com/chappy84/google-analytics-server-side/issues"

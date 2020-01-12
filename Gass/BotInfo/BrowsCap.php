@@ -82,6 +82,13 @@ class BrowsCap extends Base
     const OPT_LATEST_VERSION_DATE_FILE = 'latestVersionDateFile';
 
     /**
+     * Whether or not to auto update the browscap.ini option
+     *
+     * @var string
+     */
+    const OPT_DISABLE_AUTO_UPDATE = 'iniFileDisableAutoUpdate';
+
+    /**
      * The last time the browscap file was updated
      *
      * @var int
@@ -104,6 +111,7 @@ class BrowsCap extends Base
         self::OPT_INI_FILE => null,
         self::OPT_SAVE_PATH => null,
         self::OPT_LATEST_VERSION_DATE_FILE => 'latestVersionDate.txt',
+        self::OPT_DISABLE_AUTO_UPDATE => false,
     );
 
     /**
@@ -236,14 +244,14 @@ class BrowsCap extends Base
      * @throws DomainException
      * @throws RuntimeException
      */
-    private function checkIniFile()
+    public function checkIniFile()
     {
         if (null === ($iniFilePath = $this->getFilePath(static::OPT_INI_FILE))) {
             throw new DomainException(
                 'Cannot deduce browscap ini file location. Please set the required options.'
             );
         }
-        if (!file_exists($iniFilePath)) {
+        if (!file_exists($iniFilePath) && !$this->getOption(self::OPT_DISABLE_AUTO_UPDATE)) {
             $this->updateIniFile();
         }
         if (!is_readable($iniFilePath)) {
@@ -253,10 +261,11 @@ class BrowsCap extends Base
                     ' is un-readable, please ensure the permissions are correct and try again.'
             );
         }
-        if (false === ($fileSaveTime = filemtime($iniFilePath))
-            || (null !== ($latestVersionDate = $this->getLatestVersionDate())
-                && $fileSaveTime < $latestVersionDate)
-        ) {
+        if (!$this->getOption(self::OPT_DISABLE_AUTO_UPDATE)
+            && (false === ($fileSaveTime = filemtime($iniFilePath))
+                || (null !== ($latestVersionDate = $this->getLatestVersionDate())
+                    && $fileSaveTime < $latestVersionDate)
+        )) {
             $this->updateIniFile();
         }
         $this->loadIniFile();

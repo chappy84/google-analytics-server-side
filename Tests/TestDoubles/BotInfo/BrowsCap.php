@@ -42,4 +42,6 @@ class BrowsCap extends BaseEmpty
     const OPT_SAVE_PATH = 'bar';
 
     const OPT_LATEST_VERSION_DATE_FILE = 'baz';
+
+    const OPT_DISABLE_AUTO_UPDATE = 'qux';
 }
