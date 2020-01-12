@@ -33,20 +33,6 @@ class StreamTest extends TestAbstract
 {
     private $testUrl = 'http://www.example.com/';
 
-    protected $trackErrors;
-
-    protected function setUp()
-    {
-        parent::setup();
-        $this->trackErrors = ini_get('track_errors');
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        ini_set('track_errors', $this->trackErrors);
-    }
-
     public function testSetOption()
     {
         $option1Name = 'foo';
@@ -197,20 +183,14 @@ class StreamTest extends TestAbstract
         $this->assertRegExp('/(^|\r\n)X-Forwarded-For: ' . $remoteAddress . '(\r\n|$)/', $headerOption);
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testRequestExceptionRuntime($trackErrors)
+    public function testRequestExceptionRuntime()
     {
-        ini_set('track_errors', $trackErrors);
         $url = 'definitely not a valid url';
         $stream = new Stream;
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
             'Source could not be retrieved. Error: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_get_contents(' . $url . '): failed to open stream: No such file or directory'
-                )
+                'file_get_contents(' . $url . '): failed to open stream: No such file or directory'
         );
         $stream->request($url);
     }

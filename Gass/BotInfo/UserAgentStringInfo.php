@@ -239,10 +239,11 @@ class UserAgentStringInfo extends Base
                 $csvString,
                 LOCK_EX
             )) {
-                $errorMsg = isset($php_errormsg)
-                    ? $php_errormsg
-                    : 'error message not available, this could be because the ini ' .
-                        'setting "track_errors" is set to "Off" or XDebug is running';
+                $errorMsg = 'error message not available. You may have a custom error handler in place.';
+                $errorDet = error_get_last();
+                if (!empty($errorDet['message'])) {
+                    $errorMsg = $errorDet['message'];
+                }
                 throw new RuntimeException(
                     'Unable to write to file ' .
                         $csvPath .

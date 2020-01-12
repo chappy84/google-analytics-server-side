@@ -38,8 +38,6 @@ use org\bovigo\vfs\vfsStreamWrapper;
  */
 class UserAgentStringInfoTest extends TestAbstract
 {
-    protected $trackErrors;
-
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -70,13 +68,6 @@ class UserAgentStringInfoTest extends TestAbstract
         }
         clearstatcache();
         vfsStreamWrapper::setRoot($fsRoot);
-        $this->trackErrors = ini_get('track_errors');
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        ini_set('track_errors', $this->trackErrors);
     }
 
     /**
@@ -156,12 +147,8 @@ class UserAgentStringInfoTest extends TestAbstract
         $uasi->set();
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testSetWithCacheSettingsCacheExpiredLongTimeAgo($trackErrors)
+    public function testSetWithCacheSettingsCacheExpiredLongTimeAgo()
     {
-        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
 
@@ -197,19 +184,12 @@ class UserAgentStringInfoTest extends TestAbstract
                 $fsRoot->url() .
                 DIRECTORY_SEPARATOR .
                 $csvFile->getName() .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testSetWithCacheSettingsCacheExpiredJustNow($trackErrors)
+    public function testSetWithCacheSettingsCacheExpiredJustNow()
     {
-        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
 
@@ -245,10 +225,7 @@ class UserAgentStringInfoTest extends TestAbstract
                 $fsRoot->url() .
                 DIRECTORY_SEPARATOR .
                 $csvFile->getName() .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
     }
 
@@ -297,12 +274,8 @@ class UserAgentStringInfoTest extends TestAbstract
         }
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testSetWithCacheSettingsCacheDoesNotExistValidWebResponse($trackErrors)
+    public function testSetWithCacheSettingsCacheDoesNotExistValidWebResponse()
     {
-        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
         $fh = fopen($csvFile->url(), 'r');
@@ -354,19 +327,12 @@ class UserAgentStringInfoTest extends TestAbstract
                 $fsRoot->url() .
                 DIRECTORY_SEPARATOR .
                 $nonExistentFileName .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testSetWithCacheSettingsCacheExistsButNonReadableValidWebResponse($trackErrors)
+    public function testSetWithCacheSettingsCacheExistsButNonReadableValidWebResponse()
     {
-        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
         $fh = fopen($csvFile->url(), 'r');
@@ -422,10 +388,7 @@ class UserAgentStringInfoTest extends TestAbstract
                 $fsRoot->url() .
                 DIRECTORY_SEPARATOR .
                 $nonReadableCsv->getName() .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
     }
 
@@ -497,12 +460,8 @@ class UserAgentStringInfoTest extends TestAbstract
         $this->assertArraySubset($expectedDistinctBots, $uasi->get());
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testDestructSavesToCacheFileWhenNotExists($trackErrors)
+    public function testDestructSavesToCacheFileWhenNotExists()
     {
-        ini_set('track_errors', $trackErrors);
         $fsRoot = vfsStreamWrapper::getRoot();
         $csvFile = $fsRoot->getChild('botIP.csv');
         $cacheFilename = 'nonExistent.csv';
@@ -538,10 +497,7 @@ class UserAgentStringInfoTest extends TestAbstract
                 $fsRoot->url() .
                 DIRECTORY_SEPARATOR .
                 $cacheFilename .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
         unset($uasi);
     }

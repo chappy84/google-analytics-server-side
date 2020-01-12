@@ -77,12 +77,4 @@ abstract class TestAbstract extends \PHPUnit_Framework_TestCase
         $rp->setAccessible(true);
         $this->assertArrayNotHasKey($key, $rp->getValue($class));
     }
-
-    protected function getErrorMsgOrSilencedDefault($expectedMessage)
-    {
-        return (true === filter_var(ini_get('track_errors'), FILTER_VALIDATE_BOOLEAN))
-            ? $expectedMessage
-            : 'error message not available, this could be because the ini ' .
-                'setting "track_errors" is set to "Off" or XDebug is running';
-    }
 }

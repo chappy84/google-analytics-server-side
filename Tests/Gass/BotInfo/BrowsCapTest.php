@@ -38,8 +38,6 @@ use org\bovigo\vfs\vfsStreamWrapper;
  */
 class BrowsCapTest extends TestAbstract
 {
-    protected $trackErrors = null;
-
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -70,13 +68,6 @@ class BrowsCapTest extends TestAbstract
         }
         clearstatcache();
         vfsStreamWrapper::setRoot($fsRoot);
-        $this->trackErrors = ini_get('track_errors');
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        ini_set('track_errors', $this->trackErrors);
     }
 
     /**
@@ -271,12 +262,8 @@ class BrowsCapTest extends TestAbstract
         $this->assertNull($browsCap->getOption(BrowsCap::OPT_BROWSCAP));
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testGetLatestVersionDateValidFileNotExists($trackErrors)
+    public function testGetLatestVersionDateValidFileNotExists()
     {
-        ini_set('track_errors', $trackErrors);
         $root = vfsStreamWrapper::getRoot();
         $latestVersionFileName = 'latestVersionDate.txt';
         $latestVersionFile = $root->getChild($latestVersionFileName);
@@ -309,21 +296,13 @@ class BrowsCapTest extends TestAbstract
                 $root->url() .
                 DIRECTORY_SEPARATOR .
                 $latestVersionFileName .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
         $browsCap->getLatestVersionDate();
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testGetLatestVersionDateValidFileSavedOverOneDayAgoAndWritable($trackErrors)
+    public function testGetLatestVersionDateValidFileSavedOverOneDayAgoAndWritable()
     {
-        ini_set('track_errors', $trackErrors);
-
         $this->setTestHttpForVersionDateFile();
 
         $root = vfsStreamWrapper::getRoot();
@@ -338,10 +317,7 @@ class BrowsCapTest extends TestAbstract
             'Gass\Exception\RuntimeException',
             'Cannot save file ' .
                 $latestVersionFile->url() .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
         $browsCap->getLatestVersionDate();
     }
@@ -474,12 +450,8 @@ class BrowsCapTest extends TestAbstract
         $browsCap->getLatestVersionDate();
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testGetLatestVersionDateExceptionRuntimeFileNotReadable($trackErrors)
+    public function testGetLatestVersionDateExceptionRuntimeFileNotReadable()
     {
-        ini_set('track_errors', $trackErrors);
         $root = vfsStreamWrapper::getRoot();
         $latestVersionFile = $root->getChild('latestVersionDate.txt');
         $latestVersionFile->chmod(0111);
@@ -491,14 +463,12 @@ class BrowsCapTest extends TestAbstract
         $httpMock = m::mock('overload:Gass\Http\Http');
         $httpMock->shouldNotReceive('getInstance');
 
+        // Due to an issue with vfsStream and file_put_contents: https://github.com/mikey179/vfsStream/wiki/Known-Issues
         $this->setExpectedException(
             'Gass\Exception\RuntimeException',
             'Couldn\'t read latest version date file: ' .
                 $latestVersionFile->url() .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_get_contents(' . $latestVersionFile->url() . '): failed to open stream'
-                )
+                ' due to: file_get_contents(' . $latestVersionFile->url() . '): failed to open stream'
         );
         $browsCap->getLatestVersionDate();
     }
@@ -636,12 +606,8 @@ class BrowsCapTest extends TestAbstract
         $browsCap->getBrowser();
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testCheckIniFileDownloadsFileWhenDoesntExist($trackErrors)
+    public function testCheckIniFileDownloadsFileWhenDoesntExist()
     {
-        ini_set('track_errors', $trackErrors);
         $root = vfsStreamWrapper::getRoot();
         $iniFileName = 'test_php_browscap.ini';
         $iniFileContent = $root->getChild($iniFileName)->getContent();
@@ -680,10 +646,7 @@ class BrowsCapTest extends TestAbstract
                 $root->url() .
                 DIRECTORY_SEPARATOR .
                 $iniFileName .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
         $browsCap->getBrowser();
     }
@@ -774,12 +737,8 @@ class BrowsCapTest extends TestAbstract
         $browsCap->getBrowser();
     }
 
-    /**
-     * @dataProvider dataProviderBooleans
-     */
-    public function testCheckIniFileDownloadsFileWhenFileExpired($trackErrors)
+    public function testCheckIniFileDownloadsFileWhenFileExpired()
     {
-        ini_set('track_errors', $trackErrors);
         $root = vfsStreamWrapper::getRoot();
         $latestVersionFile = $root->getChild('latestVersionDate.txt');
         $latestVersionFile->lastModified(time());
@@ -821,10 +780,7 @@ class BrowsCapTest extends TestAbstract
                 $root->url() .
                 DIRECTORY_SEPARATOR .
                 $iniFile->getName() .
-                ' due to: ' .
-                $this->getErrorMsgOrSilencedDefault(
-                    'file_put_contents(): Exclusive locks may only be set for regular files'
-                )
+                ' due to: file_put_contents(): Exclusive locks may only be set for regular files'
         );
         $browsCap->getBrowser();
     }

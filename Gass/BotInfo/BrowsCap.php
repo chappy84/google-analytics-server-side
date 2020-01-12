@@ -200,10 +200,11 @@ class BrowsCap extends Base
                 $this->saveToFile($latestVersionDateFile, trim($latestDateString));
             }
         } elseif (false === ($latestDateString = @file_get_contents($latestVersionDateFile))) {
-            $errorMsg = isset($php_errormsg)
-                ? $php_errormsg
-                : 'error message not available, this could be because the ini ' .
-                    'setting "track_errors" is set to "Off" or XDebug is running';
+            $errorMsg = 'error message not available. You may have a custom error handler in place.';
+            $errorDet = error_get_last();
+            if (!empty($errorDet['message'])) {
+                $errorMsg = $errorDet['message'];
+            }
             throw new RuntimeException(
                 'Couldn\'t read latest version date file: ' . $latestVersionDateFile . ' due to: ' . $errorMsg
             );
@@ -455,15 +456,16 @@ class BrowsCap extends Base
             || $fileNotWritable
             || false === @file_put_contents($filePath, $fileContents, LOCK_EX)
         ) {
+            $errorMsg = 'error message not available. You may have a custom error handler in place.';
             if ($folderNotWritable) {
                 $errorMsg = 'Folder ' . $parentDirPath . ' is not writable';
             } elseif ($fileNotWritable) {
                 $errorMsg = 'File is not writable';
-            } elseif (!isset($php_errormsg)) {
-                $errorMsg = 'error message not available, this could be because the ini ' .
-                    'setting "track_errors" is set to "Off" or XDebug is running';
             } else {
-                $errorMsg = $php_errormsg;
+                $errorDet = error_get_last();
+                if (!empty($errorDet['message'])) {
+                    $errorMsg = $errorDet['message'];
+                }
             }
             throw new RuntimeException(
                 'Cannot save file ' . $filePath . ' due to: ' . $errorMsg
