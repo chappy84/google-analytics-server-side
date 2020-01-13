@@ -180,12 +180,13 @@ You can also pass an instance of a `Gass\BotInfo\BotInfoInterface` adapter which
 There are two adapters available in the GASS package
 
 #### BrowsCap
-There are four options as part of the array configuration parameter:
+There are five options as part of the array configuration parameter:
 
 - `\Gass\BotInfo\BrowsCap::OPT_SAVE_PATH`: The Path where the ini file and latest version file are stored.
 - `\Gass\BotInfo\BrowsCap::OPT_INI_FILE`: The name of the ini file to store the browscap ini data in.
 - `\Gass\BotInfo\BrowsCap::OPT_LATEST_VERSION_DATE_FILE`: The name of the text file to store the latest version timestamp in.
 - `\Gass\BotInfo\BrowsCap::OPT_BROWSCAP`: This is the same as the php ini setting [browscap][12], a file-system location where the [full_php_browscap.ini file][13] is located / can be downloaded to. 
+- `\Gass\BotInfo\BrowsCap::OPT_DISABLE_AUTO_UPDATE`: This disables the auto-update feature for the browscap.ini file. See the [update](#updating-the-ini-file) section below for further information.
 
 N/B: `OPT_BROWSCAP` will be ignored if you have set either `OPT_SAVE_PATH` or `OPT_INI_FILE`. `OPT_SAVE_PATH` or `OPT_INI_FILE` will also override any value derived from `OPT_BROWSCAP`. This is as `OPT_BROWSCAP` is intended as a fallback for the browscap ini setting, and backwards compatibility with previous versions of this package.  
 
@@ -222,14 +223,31 @@ $gass = new \Gass\GoogleAnalyticsServerSide(array('account' => 'UA-XXXXXXX-X'));
 $browsCapAdapter = new \Gass\BotInfo\BrowsCap;
 $gass->setBotInfo($browsCapAdapter);
 ```
+##### Updating the ini file
 
 When an update for the browscap ini file is available [on the server][13] the code will 
-automatically download the file into the location provided.
+automatically download the file into the location provided.  
+This functionality can be disabled by setting the `\Gass\BotInfo\BrowsCap::OPT_DISABLE_AUTO_UPDATE` configuration option to `true`.  
 
-N/B: You MUST either provide location info for the browscap ini file or have the browscap ini setting 
+With this disabled, this package provides another method to allow you to update the ini file automatically.  
+The script `bin/gass-browscap-updater` can be setup to run with a scheduler. 
+This uses the same code from the auto-update feature, checking the cache file, and the latest update date stored on [browscap.org][13], then downloads a new version if one is available.
+
+Ths script has the following command line options:
+
+- `-s` / `--save-path` The path to save the ini file and latest update cache file in
+- `-f` / `--ini-filename` The filename given to the browscap file downloaded
+- `-c` / `--cache-filename`: The filename given to the latest version date cache file
+- `-v` / `--version`: Output's the current version
+- `-h` / `--help`: Displays the help
+
+See the help provided by the script for further information on usage.
+
+##### Notes
+
+* You MUST either provide location info for the browscap ini file or have the browscap ini setting 
 set in php.ini, otherwise this adapter will not work.
-
-N/B2: Due to an issue with the browscap ini file only being loaded when PHP starts up 
+* Due to an issue with the browscap ini file only being loaded when PHP starts up 
 (which is with the web-server apache, PHP-FPM etc.) the code deals with the ini file 
 itself, rather than using the built in get_browser function. This ensures the auto-update 
 functionality will work without the need to restart the web-server.
