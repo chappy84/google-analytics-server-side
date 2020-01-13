@@ -57,7 +57,7 @@ if (false !== ($browsCapLocation = ini_get(BrowsCap::OPT_BROWSCAP)) && '' != tri
     $options[BrowsCap::OPT_BROWSCAP] = $browsCapLocation;
 }
 
-$version = '0.14.2-Beta';
+$version = '0.14.3-Beta';
 
 $cliOpts = getopt('s:f:c:vh', array('save-path:', 'ini-filename:', 'cache-filename:', 'version', 'help'));
 

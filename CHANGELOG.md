@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.14.3 Beta
+-------------------
+
+- Add in documentation for new Browscap ini file update functionality in previous release
+- Correct update script help docs
+
 Version 0.14.2 Beta
 -------------------
 
