@@ -13,7 +13,7 @@ There are various existing PHP implementations of this protocol, which we won't 
 ============================
 
 Google Analytics Server Side is an implementation of the [Google Analytics web tracking ECMAScript][2] in [PHP][3].  
-It provides server side Google Analytics tracking with a small easy to use PHP 5.3+ framework.  
+It provides server side Google Analytics tracking with a small easy to use PHP 5.3+ package.  
 Implemented are the parts of the interface that would be available without [ECMAScript][6] in a 
 browser to detect certain features such as screen resolution / colour, flash / java plugin version etc.
 
@@ -45,7 +45,7 @@ The package is available to install using [composer][7] from the [packagist][8] 
 v0.8.6-beta. Simply require [chappy84/google-analytics-server-side][9] and it'll be installed,
 checking the requirements.
 
-Alternatively if you don't want to use composer, the framework, without tests, can be included by 
+Alternatively if you don't want to use composer, the package, without tests, can be included by 
 using the following:
 
 ```php
@@ -93,54 +93,54 @@ $gass = new \Gass\GoogleAnalyticsServerSide(
 ```
 
 These options can also be set individually by the method setOption,
-or in one go with the method setOptions
+or in one go with the method `setOptions`
 
-Most of the [current basic methods][10] available in ga.js tracking code have been
+Most of the [current basic methods][10] available in the `ga.js` tracking code have been
 implemented.  
 The methods implemented are:
 
-- deleteCustomVar
-- getAccount
-- getVersion
-- getVisitorCustomVar
-- setAccount
-- setCustomVar
-- setSessionCookieTimeout
-- setVisitorCookieTimeout
-- trackPageview
+- `deleteCustomVar`
+- `getAccount`
+- `getVersion`
+- `getVisitorCustomVar`
+- `setAccount`
+- `setCustomVar`
+- `setSessionCookieTimeout`
+- `setVisitorCookieTimeout`
+- `trackPageview`
 
 The methods not implemented yet are:
 
-- getName
-- setSampleRate
-- setSiteSpeedSampleRate
+- `getName`
+- `setSampleRate`
+- `setSiteSpeedSampleRate`
 
 Extra methods are also available for the information which would normally be
 pre-determined in the javascript or http request object from the browser. The User Agent,
 Server Name, Remote Address, Document Path, Document Referer, Google Analytics Version,
 Accepted Language, Cookies and Search Engines are all set automatically without any method
 calls being required by the developer. However, the following methods are available to set
-these variables and should be called before the trackPageView / trackEvent method to save
+these variables and should be called before the `trackPageView` / `trackEvent` method to save
 the tracking information:
 
-- setVersion
-- setAcceptLanguage
-- setUserAgent
-- setServerName
-- setRemoteAddress
-- setDocumentPath
-- setDocumentReferer
-- setCookies
+- `setVersion`
+- `setAcceptLanguage`
+- `setUserAgent`
+- `setServerName`
+- `setRemoteAddress`
+- `setDocumentPath`
+- `setDocumentReferer`
+- `setCookies`
 
 On top of this there are also set methods to alter the default values for the the page
 title and document character set.
 These are available via the following methods:
 
-- setPageTitle
-- setCharset
+- `setPageTitle`
+- `setCharset`
 
 Get methods are also provided for all of the above.  
-All methods but get methods allow chaining for ease of use.
+All methods but `get` methods allow chaining for ease of use.
 
 ### Event Tracking
 
@@ -156,8 +156,8 @@ Event tracking is implemented using the [same functionality as in the ga.js trac
 );
 ```
 
-N.B. trackEvent() does not require trackPageView() to be called first.  
-However if you do not call trackPageView first or set nonInteraction to true then your 
+N.B. `trackEvent()` does not require `trackPageView()` to be called first.  
+However if you do not call `trackPageView` first or set `nonInteraction` to `true` then your 
 pages/visit metric may become less than 1.
 
 [10]: https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration
@@ -166,18 +166,18 @@ pages/visit metric may become less than 1.
 BotInfo
 -------
 
-You must enable botInfo for it to ignore any search/trawler bots.  
-To do this you need to pass one of true, and associative array or an instance of the 
-adapter you want to use into the class.  The code will default to the BrowsCap adapter. 
+You must enable `BotInfo` for it to ignore any search/trawler bots.  
+To do this you need to pass one of `true`, and associative array, or an instance of the 
+adapter you want to use into the class.  The code will default to the `BrowsCap` adapter. 
 Setting this to true will use the default. If you pass an associative array, this will be 
-passed to BotInfo and through to the Adapter. When providing an associative array you can 
-also pass the element 'adapter' which will tell BotInfo which class to use as the Adapter. 
-You can also pass an instance of a Gass\BotInfo Adapter which will be used by the 
-Gass\BotInfo Class.
+passed to `BotInfo` and through to the Adapter. When providing an associative array you can 
+also pass the element `'adapter'` which will tell `BotInfo` which class to use as the adapter. 
+You can also pass an instance of a `Gass\BotInfo\BotInfoInterface` adapter which will be used by the 
+`Gass\BotInfo` class.
 
 ### Adapters
 
-There are two adapters available in the GASS framework
+There are two adapters available in the GASS package
 
 #### BrowsCap
 There are four options as part of the array configuration parameter:
@@ -187,7 +187,7 @@ There are four options as part of the array configuration parameter:
 - `\Gass\BotInfo\BrowsCap::OPT_LATEST_VERSION_DATE_FILE`: The name of the text file to store the latest version timestamp in.
 - `\Gass\BotInfo\BrowsCap::OPT_BROWSCAP`: This is the same as the php ini setting [browscap][12], a file-system location where the [full_php_browscap.ini file][13] is located / can be downloaded to. 
 
-N/B: `OPT_BROWSCAP` will be ignored if you have set either `OPT_SAVE_PATH` or `OPT_INI_FILE`. `OPT_SAVE_PATH` or `OPT_INI_FILE` will also override any value derived from `OPT_BROWSCAP`. This is as `OPT_BROWSCAP` is intended as a fallback for the browscap ini setting, and backwards compatibility with previous versions of this framework.  
+N/B: `OPT_BROWSCAP` will be ignored if you have set either `OPT_SAVE_PATH` or `OPT_INI_FILE`. `OPT_SAVE_PATH` or `OPT_INI_FILE` will also override any value derived from `OPT_BROWSCAP`. This is as `OPT_BROWSCAP` is intended as a fallback for the browscap ini setting, and backwards compatibility with previous versions of this package.  
 
 e.g.
 
@@ -207,7 +207,7 @@ $gass = new \Gass\GoogleAnalyticsServerSide(
     array(
         'botInfo' => array(
             'adapter' => 'BrowsCap',
-            \Gass\BotInfo\BrowsCap::OPT_SAVE_PATH => '/tmp/',
+            \Gass\BotInfo\BrowsCap::OPT_SAVE_PATH => '/var/lib/browscap',
             \Gass\BotInfo\BrowsCap::OPT_INI_FILE => 'full_php_browscap.ini',
         ),
         'account' => 'UA-XXXXXXX-X'
@@ -236,7 +236,8 @@ functionality will work without the need to restart the web-server.
 
 #### UserAgentStringInfo
 
-***DEPRECATED*** - until udger.com (or a comparable service) implements csvs (or another data source) to replace user agent string info's csv, as user-agent-string.info has now shut down
+***DEPRECATED*** - until udger.com (or a comparable service) implements csvs (or another data source) 
+to replace user agent string info's csv, as user-agent-string.info has now shut down
 
 This downloaded a csv list of search engine crawlers from [user-agent-string.info][14].  
 There are three options as part of the array configuration parameter:
@@ -255,11 +256,11 @@ Http
 ----
 
 This is a singleton class which provides http functionality across all sections of the
-GASS framework.  
-This will default to using the Curl adapter if it's available otherwise it'll fall back 
-to the Stream adapter. It requires no options. All options should be passed as a 
-configuration option to GoogleAnalyticsServerSide either via the configuration parameter 
-in the 'http' element or via the setHttp parameter. This can either be an associative 
+GASS package.  
+This will default to using the `Curl` adapter if the php curl extension is available, otherwise it'll 
+fall back to the `Stream` adapter. It requires no options. All options should be passed as a 
+configuration option to `GoogleAnalyticsServerSide`, either via the configuration parameter 
+in the `'http'` element or via the `setHttp` method's parameter. This can either be an associative 
 array or an instance of the required adapter.
 
 e.g.
@@ -286,12 +287,12 @@ $gass->setHttp($httpAdapter);
 
 ### Adapters
 
-There are two Adapters available to Gass\Http, these are:
+There are two Adapters available in `Gass\Http`, these are:
 
 #### Stream
-Stream creates a stream context and utilises this stream with `file_get_contents`. See 
+`Stream` creates a stream context and utilises this stream with `file_get_contents`. See 
 [php's example][15]. Any [available options][16] provided to this class will go into the 
-'http' array for the stream context, thus you may pass any headers or proxy information etc. 
+`'http'` array for the stream context, thus you may pass any headers or proxy information etc. 
 into this to use in the connection when made.
 
 #### Curl
@@ -309,26 +310,26 @@ End User Location
 -----------------
 
 The End User's Location will be reported as the location of the server if you use the GA Account 
-number in the format UA-XXXXXXX-X as provided by Google. If you alter this to the format 
-MO-XXXXXXX-X then the location will be tracked correctly and appear on the location map as 
+number in the format `UA-XXXXXXX-X` as provided by Google. If you alter this to the format 
+`MO-XXXXXXX-X` then the location will be tracked correctly and appear on the location map as 
 it does with the normal ECMAScript tracking.
 
 Cookies
 -------
 
-Cookies are automatically set when either trackPageView or trackEvent are called.  
+Cookies are automatically set when either `trackPageView` or `trackEvent` are called.  
 They are however only sent as headers to the browser once, thus if you call either 
 function more than once, or call both functions, then they will only be included in the 
 headers when the first call is made.
 
 You do have the option to turn off the sending of the cookie headers to the browser which 
-can be done by calling disableCookieHeaders before calling trackPageView / trackEvent for 
+can be done by calling `disableCookieHeaders` before calling trackPageView / trackEvent for 
 the first time.
 
 Test Suite & CI
 ---------------
 
-This framework uses [PHPUnit][20], along with [TravisCI][21], to test functionality on the
+This package uses [PHPUnit][20], along with [TravisCI][21], to test functionality on the
 supported PHP minor versions 5.3, 5.4, 5.5, 5.6, 7.0, and 7.1, with unofficial support for 7.2, 7.3, and 7.4.
 This is done by default on the latest bug fix point release of that minor point version to ensure it works.
 
