@@ -103,9 +103,9 @@ they will be derived from the 'browscap' php.ini setting, if it is present.
 
 We'd recommend this be run monthly. To do this, add the following to your crontab via 'crontab -e':
 
-0 0 * * 0 /path/to/bin/gass-browscap-updater -s <save-path> -f <ini-filename> -c <cache-filename>
+0 0 1 * * /path/to/bin/gass-browscap-updater -s <save-path> -f <ini-filename> -c <cache-filename>
 
-This will run it at midnight every Sunday
+This will run it at midnight on the 1st of every month
 
 
 HELP;
