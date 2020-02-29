@@ -2,7 +2,7 @@ title: Google Analytics Server Side
 description: Server Side Google Analytics Tracking in PHP
 google_analytics: UA-33383621-1
 show_downloads: true
-theme: jekyll-theme-architect
+theme: jekyll-theme-hacker
 
 gems:
   - jekyll-mentions
