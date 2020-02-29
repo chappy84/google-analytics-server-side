@@ -28,10 +28,6 @@
 use Gass\BotInfo\BrowsCap;
 use Gass\Http\Http;
 
-if ("" === ini_get('date.timezone')) {
-    date_default_timezone_set('UTC');
-}
-
 $baseDir = dirname(__DIR__);
 $pathsToSearch = array(
     $baseDir . '/vendor/autoload.php',
