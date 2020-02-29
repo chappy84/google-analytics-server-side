@@ -1,6 +1,12 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.14.4 Beta
+-------------------
+
+- Correct minor non-functional issues with new Browscap ini file update functionality
+- Remove the need for gh-pages branch
+
 Version 0.14.3 Beta
 -------------------
 
