@@ -144,7 +144,7 @@ if (!empty($cliOpts['c']) || !empty($cliOpts['cache-filename'])) {
 }
 
 try {
-    $http = Http::setUserAgent('GassBotInfoBrowscapUpdaterBot/' . $version . ' Beta (+https://github.com/chappy84/google-analytics-server-side)');
+    $http = Http::setUserAgent('GassBotInfoBrowscapUpdaterBot/' . $version . ' (+https://github.com/chappy84/google-analytics-server-side)');
     $browscap = new BrowsCap($options);
 
     ini_set('memory_limit', -1);
