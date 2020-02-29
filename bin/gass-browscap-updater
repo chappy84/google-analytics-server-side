@@ -113,7 +113,7 @@ HELP;
 }
 
 if (array_key_exists('v', $cliOpts) || array_key_exists('version', $cliOpts)) {
-    echo $version, "\n";
+    echo $version, PHP_EOL;
     exit(0);
 }
 
@@ -129,7 +129,7 @@ if (empty($cliOpts['f']) && empty($cliOpts['ini-filename'])) {
     $options[BrowsCap::OPT_INI_FILE] = (!empty($cliOpts['f'])) ? $cliOpts['f'] : $cliOpts['ini-filename'];
 }
 if (!empty($missingOptions) && empty($options[BrowsCap::OPT_BROWSCAP])) {
-    $missingOptsStr = implode("\n  ", $missingOptions);
+    $missingOptsStr = implode(PHP_EOL . '  ', $missingOptions);
     echo <<<ERR
 
   Missing the following required options, that cannot be derived from the also missing 'browscap' php ini setting:
@@ -151,6 +151,6 @@ try {
     $browscap->checkIniFile();
     ini_restore('memory_limit');
 } catch (\Exception $e) {
-    echo $e->getMessage(), "\n";
+    echo $e->getMessage(), PHP_EOL;
     exit(1);
 }
