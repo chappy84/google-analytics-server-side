@@ -117,7 +117,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
 
         $botInfo = m::mock('overload:Gass\BotInfo\BotInfo');
 
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         if (!empty($envRemoteAddress)) {
             $ipValidator->shouldReceive('isValid')
                 ->once()
@@ -194,7 +194,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
 
         $botInfo = m::mock('overload:Gass\BotInfo\BotInfo');
 
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         if (!empty($envRemoteAddress)) {
             $ipValidator->shouldReceive('isValid')
                 ->once()
@@ -542,7 +542,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
          * A little bit hackery due to the class being instantiated each call to setRemoteAddress
          * including via the constructor with the REMOTE_ADDR header value in phpunit.xml.dist
          */
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         $ipValidator->shouldReceive('isValid')
             ->once()
             ->with(m::anyOf($envRemoteAddress, $remoteAddress))
@@ -558,6 +558,8 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
                     );
                 }
             );
+
+        $rc = new \ReflectionClass('Gass\Validate\IpAddress');
 
         list(
             $gass,
@@ -593,7 +595,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
          * A little bit hackery due to the class being instantiated each call to setRemoteAddress
          * including via the constructor with the REMOTE_ADDR header value in phpunit.xml.dist
          */
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         $ipValidator->shouldReceive('isValid')
             ->once()
             ->with(m::anyOf($envRemoteAddress, $invalidRemoteAddress))
@@ -641,7 +643,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
     {
         $envRemoteAddress = $this->getEnvVar('REMOTE_ADDR');
 
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         $ipValidator->shouldReceive('isValid')
             ->once()
             ->with($envRemoteAddress)
@@ -659,7 +661,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
      */
     public function testGetRemoteAddress()
     {
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         $ipValidator->shouldReceive('isValid')->andReturn(true);
 
         list(
@@ -1507,7 +1509,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
                 ->andReturnSelf();
         }
 
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         if (!empty($envRemoteAddress)) {
             $http->shouldReceive('setRemoteAddress')
                 ->once()
@@ -1568,7 +1570,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
                 ->andReturnSelf();
         }
 
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         if (!empty($envRemoteAddress)) {
             $http->shouldReceive('setRemoteAddress')
                 ->once()
@@ -1627,7 +1629,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             ->with($envAcceptLanguage)
             ->andReturnSelf();
 
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         if (!empty($envRemoteAddress)) {
             $ipValidator->shouldReceive('isValid')
                 ->once()
@@ -1996,19 +1998,19 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
          * A little bit hackery due to the class being instantiated each call to setRemoteAddress
          * including via the constructor with the REMOTE_ADDR header value in phpunit.xml.dist
          */
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         $ipValidator->shouldReceive('isValid')
-            ->once()
+            ->once(3)
             ->with(m::anyOf($envRemoteAddress, $remoteAddress))
             ->andReturnUsing(
                 function ($ipAddress) use (&$setRemoteAddressCalls, $envRemoteAddress, $remoteAddress) {
                     if ((1 === ++$setRemoteAddressCalls && $envRemoteAddress === $ipAddress)
-                        || (2 === $setRemoteAddressCalls && $remoteAddress === $ipAddress)
+                        || ((2 === $setRemoteAddressCalls || 3 === $setRemoteAddressCalls) && $remoteAddress === $ipAddress)
                     ) {
                         return true;
                     }
                     throw new \BadMethodCallException(
-                        'Unexpected call to Gass\Validate\IpAddress::isValid on iteration ' . $setRemoteAddressCalls
+                        'Unexpected call to Gass\Validate\IpAddress::isValid on iteration ' . $setRemoteAddressCalls . ' called with "' . $ipAddress . '"'
                     );
                 }
             );
@@ -2040,19 +2042,19 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
          * A little bit hackery due to the class being instantiated each call to setRemoteAddress
          * including via the constructor with the REMOTE_ADDR header value in phpunit.xml.dist
          */
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
         $ipValidator->shouldReceive('isValid')
             ->once()
             ->with(m::anyOf($envRemoteAddress, $remoteAddress))
             ->andReturnUsing(
                 function ($ipAddress) use (&$setRemoteAddressCalls, $envRemoteAddress, $remoteAddress) {
                     if ((1 === ++$setRemoteAddressCalls && $envRemoteAddress === $ipAddress)
-                        || (2 === $setRemoteAddressCalls && $remoteAddress === $ipAddress)
+                        || ((2 === $setRemoteAddressCalls || 3 === $setRemoteAddressCalls) && $remoteAddress === $ipAddress)
                     ) {
                         return true;
                     }
                     throw new \BadMethodCallException(
-                        'Unexpected call to Gass\Validate\IpAddress::isValid on iteration ' . $setRemoteAddressCalls
+                        'Unexpected call to Gass\Validate\IpAddress::isValid on iteration ' . $setRemoteAddressCalls . ' called with "' . $ipAddress . '"'
                     );
                 }
             );
@@ -2085,7 +2087,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
     {
         unset($_SERVER['REMOTE_ADDR']);
 
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+        $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
 
         list(
             $gass,
@@ -2093,48 +2095,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             $botInfo
         ) = $this->getGassAndDependencies(false, false);
 
-        $this->assertEquals('', $gass->getIPToReport());
-    }
-
-    public function testGetIPToReportValidInvalidRemoteAddress()
-    {
-        $setRemoteAddressCalls = 0;
-        $envRemoteAddress = $this->getEnvVar('REMOTE_ADDR');
-        $remoteAddress = '1.2345.6.7';
-
-        /*
-         * A little bit hackery due to the class being instantiated each call to setRemoteAddress
-         * including via the constructor with the REMOTE_ADDR header value in phpunit.xml.dist
-         */
-        $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
-        $ipValidator->shouldReceive('isValid')
-            ->once()
-            ->with(m::anyOf($envRemoteAddress, $remoteAddress))
-            ->andReturnUsing(
-                function ($ipAddress) use (&$setRemoteAddressCalls, $envRemoteAddress, $remoteAddress) {
-                    if ((1 === ++$setRemoteAddressCalls && $envRemoteAddress === $ipAddress)
-                        || (2 === $setRemoteAddressCalls && $remoteAddress === $ipAddress)
-                    ) {
-                        return true;
-                    }
-                    throw new \BadMethodCallException(
-                        'Unexpected call to Gass\Validate\IpAddress::isValid on iteration ' . $setRemoteAddressCalls
-                    );
-                }
-            );
-
-        list(
-            $gass,
-            $http,
-            $botInfo
-        ) = $this->getGassAndDependencies(false, false);
-
-        $http->shouldReceive('setRemoteAddress')
-            ->once()
-            ->with($remoteAddress)
-            ->andReturnSelf();
-
-        $gass->setRemoteAddress($remoteAddress);
         $this->assertEquals('', $gass->getIPToReport());
     }
 
@@ -2724,6 +2684,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
                 'utmul' => $gass->getAcceptLanguage(),
                 'utmcs' => $gass->getCharset(),
                 'utmu' => 'q~',
+                'aip' => 1,
                 'utmip' => null,
                 'utmp' => urldecode((string) $this->getEnvVar('REQUEST_URI')),
                 'utmdt' => $pageTitle,
@@ -2926,6 +2887,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             'utmul' => $gass->getAcceptLanguage(),
             'utmcs' => $gass->getCharset(),
             'utmu' => 'q~',
+            'aip' => 1,
             'utmip' => null,
             'utmt' => 'event',
             'utme' => '5(foo*bar)' . (isset($extraParams['utme']) ? $extraParams['utme'] : ''),
@@ -3072,7 +3034,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         }
 
         if ($ipValidator) {
-            $ipValidator = m::mock('overload:Gass\Validate\IpAddress');
+            $ipValidator = m::mock('overload:Gass\Validate\IpAddress', IpAddressInterfaceStub::class);
             if (!empty($envRemoteAddress)) {
                 $ipValidator->shouldReceive('isValid')
                     ->once()
@@ -3146,4 +3108,10 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         }
         return $retVal;
     }
+}
+
+interface IpAddressInterfaceStub
+{
+    const OPT_ALLOW_IPV4 = 'allowIpV4';
+    const OPT_ALLOW_IPV6 = 'allowIpV6';
 }

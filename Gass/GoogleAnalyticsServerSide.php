@@ -1051,10 +1051,28 @@ class GoogleAnalyticsServerSide implements GassInterface
             return '';
         }
 
+        $ipValidatorV4 = new ValidateIpAddress(
+            array(
+                \Gass\Validate\IpAddress::OPT_ALLOW_IPV4 => true,
+                \Gass\Validate\IpAddress::OPT_ALLOW_IPV6 => false,
+            )
+        );
         // Capture the first three octects of the IP address and replace the forth
         // with 0, e.g. 124.455.3.123 becomes 124.455.3.0
-        if (preg_match('/^((\d{1,3}\.){3})\d{1,3}$/', $remoteAddress, $matches)) {
+        if ($ipValidatorV4->isValid($remoteAddress)
+            && preg_match('/^((\d{1,3}\.){3})\d{1,3}$/', $remoteAddress, $matches)
+        ) {
             return $matches[1] . '0';
+        }
+
+        $ipValidatorV6 = new ValidateIpAddress(
+            array(
+                \Gass\Validate\IpAddress::OPT_ALLOW_IPV4 => false,
+                \Gass\Validate\IpAddress::OPT_ALLOW_IPV6 => true,
+            )
+        );
+        if ($ipValidatorV6->isValid($remoteAddress)) {
+            return $remoteAddress;
         }
         return '';
     }
@@ -1541,6 +1559,7 @@ class GoogleAnalyticsServerSide implements GassInterface
             'utmul' => $this->getAcceptLanguage(),
             'utmcs' => $this->getCharset(),
             'utmu' => 'q~',
+            'aip' => 1, // Force IP Anonymisation
         );
         if (0 === strpos($account, 'MO-')) {
             $queryParams['utmip'] = $this->getIPToReport();

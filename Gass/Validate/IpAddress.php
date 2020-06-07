@@ -26,6 +26,8 @@
 
 namespace Gass\Validate;
 
+use Gass\Exception\InvalidArgumentException;
+
 /**
  * IP Address v4 Validator
  *
@@ -34,10 +36,48 @@ namespace Gass\Validate;
 class IpAddress extends Base
 {
     /**
+     * Allow IPv4 option index
+     *
+     * @var string
+     */
+    const OPT_ALLOW_IPV4 = 'allowIPv4';
+
+    /**
+     * Allow IPv6 option index
+     *
+     * @var string
+     */
+    const OPT_ALLOW_IPV6 = 'allowIPv6';
+
+    /**
+     * Adapter options passed in as part of construct or setOption/s
+     *
+     * @var array
+     */
+    protected $options = array(
+        self::OPT_ALLOW_IPV4 => true,
+        self::OPT_ALLOW_IPV6 => true,
+    );
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param array $options
+     * @return $this
+     */
+    public function setOptions(array $options)
+    {
+        parent::setOptions($options);
+        if (!$this->getOption(self::OPT_ALLOW_IPV4) && !$this->getOption(self::OPT_ALLOW_IPV6)) {
+            throw new InvalidArgumentException('Cannot validate with all IP versions disabled');
+        }
+        return $this;
+    }
+
+    /**
      * Returns whether or not the value is valid
      *
      * @param mixed $value
-     *
      * @return bool
      */
     public function isValid($value)
@@ -47,10 +87,24 @@ class IpAddress extends Base
             $this->addMessage('The provided IP address must be a string.');
             return false;
         }
-        if (false === filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $this->addMessage('"%value%" is an invalid IPv4 address');
-            return false;
+        $allowIPv4 = $this->getOption(self::OPT_ALLOW_IPV4);
+        if ($allowIPv4 && false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return true;
         }
-        return true;
+        $allowIPv6 = $this->getOption(self::OPT_ALLOW_IPV6);
+        if ($allowIPv6 && false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return true;
+        }
+
+        // Generate correct failed validation message
+        $version = '';
+        if ($allowIPv4 && !$allowIPv6) {
+            $version = 'v4';
+        }
+        if (!$allowIPv4 && $allowIPv6) {
+            $version = 'v6';
+        }
+        $this->addMessage('"%value%" is an invalid IP' . $version . ' address', $value);
+        return false;
     }
 }

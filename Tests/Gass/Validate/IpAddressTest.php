@@ -31,17 +31,60 @@ use GassTests\TestAbstract;
 
 class IpAddressTest extends TestAbstract
 {
-    /**
-     * @dataProvider dataProviderTestIsValidValidipv4Addreses
-     */
-    public function testIsValidValidipv4Addreses($value)
+    public function testSetOptionsEnsuresAtLeastOneVersionSet()
     {
         $ipValidator = new IpAddress;
+
+        $this->setExpectedException(
+            'Gass\Exception\InvalidArgumentException',
+            'Cannot validate with all IP versions disabled'
+        );
+
+        $ipValidator->setOptions(
+            array(
+                IpAddress::OPT_ALLOW_IPV4 => false,
+                IpAddress::OPT_ALLOW_IPV6 => false,
+            )
+        );
+    }
+
+    public function testNoOptionsDoesntThrowException()
+    {
+        new IpAddress;
+        new IpAddress(array());
+    }
+
+    public function testConstructorOptionsEnsuresOneVersionSet()
+    {
+        $this->setExpectedException(
+            'Gass\Exception\InvalidArgumentException',
+            'Cannot validate with all IP versions disabled'
+        );
+
+        new IpAddress(
+            array(
+                IpAddress::OPT_ALLOW_IPV4 => false,
+                IpAddress::OPT_ALLOW_IPV6 => false,
+            )
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderTestIsValidWithValidIPv4Addreses
+     */
+    public function testIsValidWithValidIPv4Addreses($value)
+    {
+        $ipValidator = new IpAddress(
+            array(
+                IpAddress::OPT_ALLOW_IPV4 => true,
+                IpAddress::OPT_ALLOW_IPV6 => false,
+            )
+        );
         $this->assertTrue($ipValidator->isValid($value));
         $this->assertAttributeEmpty('messages', $ipValidator);
     }
 
-    public function dataProviderTestIsValidValidipv4Addreses()
+    public function dataProviderTestIsValidWithValidIPv4Addreses()
     {
         return array(
             array('0.0.0.0'),
@@ -60,16 +103,21 @@ class IpAddressTest extends TestAbstract
     }
 
     /**
-     * @dataProvider dataProviderTestIsValidInvalidIpv4Addresses
+     * @dataProvider dataProviderTestIsValidWithInvalidIPv4Addresses
      */
-    public function testIsValidInvalidIpv4Addresses($value, $message)
+    public function testIsValidWithInvalidIPv4Addresses($value, $message)
     {
-        $ipValidator = new IpAddress;
+        $ipValidator = new IpAddress(
+            array(
+                IpAddress::OPT_ALLOW_IPV4 => true,
+                IpAddress::OPT_ALLOW_IPV6 => false,
+            )
+        );
         $this->assertFalse($ipValidator->isValid($value));
         $this->assertAttributeEquals(array($message), 'messages', $ipValidator);
     }
 
-    public function dataProviderTestIsValidInvalidIpv4Addresses()
+    public function dataProviderTestIsValidWithInvalidIPv4Addresses()
     {
         return array(
             array('255.255.255.256', '"255.255.255.256" is an invalid IPv4 address'),
@@ -78,6 +126,113 @@ class IpAddressTest extends TestAbstract
             array('999.999.999.999', '"999.999.999.999" is an invalid IPv4 address'),
             array('::1', '"::1" is an invalid IPv4 address'),
             array('1024.1024.1024.1024', '"1024.1024.1024.1024" is an invalid IPv4 address'),
+            array(new \stdClass, 'The provided IP address must be a string.'),
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderTestIsValidWithValidIPv6Addreses
+     */
+    public function testIsValidWithValidIPv6Addreses($value)
+    {
+        $ipValidator = new IpAddress(
+            array(
+                IpAddress::OPT_ALLOW_IPV4 => false,
+                IpAddress::OPT_ALLOW_IPV6 => true,
+            )
+        );
+        $this->assertTrue($ipValidator->isValid($value));
+        $this->assertAttributeEmpty('messages', $ipValidator);
+    }
+
+    public function dataProviderTestIsValidWithValidIPv6Addreses()
+    {
+        return array(
+            array('::'),
+            array('::1'),
+            array('2001:db8::ff00:42:8329'),
+            array('2001:db8::1'),
+            array('2001:db8:85a3::8a2e:0370:7334'),
+            array('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'),
+            array('fc00::'),
+            // The last group can explicitly be an IPv4 address
+            array('2001:db8::ff00:42:8329:192.168.0.1'),
+            array('::ffff:192.168.255.255'),
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderTestIsValidWithInvalidIPv6Addresses
+     */
+    public function testIsValidWithInvalidIPv6Addresses($value, $message)
+    {
+        $ipValidator = new IpAddress(
+            array(
+                IpAddress::OPT_ALLOW_IPV4 => false,
+                IpAddress::OPT_ALLOW_IPV6 => true,
+            )
+        );
+        $this->assertFalse($ipValidator->isValid($value));
+        $this->assertAttributeEquals(array($message), 'messages', $ipValidator);
+    }
+
+    public function dataProviderTestIsValidWithInvalidIPv6Addresses()
+    {
+        return array(
+            array('8.8.8.8', '"8.8.8.8" is an invalid IPv6 address'),
+            array('::gggg', '"::gggg" is an invalid IPv6 address'),
+            array('zzzz::', '"zzzz::" is an invalid IPv6 address'),
+            array(new \stdClass, 'The provided IP address must be a string.'),
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderTestIsValidWithValidIPv4Or6Addreses
+     */
+    public function testIsValidWithValidIPv4Or6Addreses($value)
+    {
+        $ipValidator = new IpAddress(
+            array(
+                IpAddress::OPT_ALLOW_IPV4 => true,
+                IpAddress::OPT_ALLOW_IPV6 => true,
+            )
+        );
+        $this->assertTrue($ipValidator->isValid($value));
+        $this->assertAttributeEmpty('messages', $ipValidator);
+    }
+
+    public function dataProviderTestIsValidWithValidIPv4Or6Addreses()
+    {
+        return array_merge(
+            $this->dataProviderTestIsValidWithValidIPv4Addreses(),
+            $this->dataProviderTestIsValidWithValidIPv6Addreses()
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderTestIsValidWithInvalidIPv4Or6Addresses
+     */
+    public function testIsValidWithInvalidIPv4Or6Addresses($value, $message)
+    {
+        $ipValidator = new IpAddress(
+            array(
+                IpAddress::OPT_ALLOW_IPV4 => true,
+                IpAddress::OPT_ALLOW_IPV6 => true,
+            )
+        );
+        $this->assertFalse($ipValidator->isValid($value));
+        $this->assertAttributeEquals(array($message), 'messages', $ipValidator);
+    }
+
+    public function dataProviderTestIsValidWithInvalidIPv4Or6Addresses()
+    {
+        return array(
+            array('255.255.255.256', '"255.255.255.256" is an invalid IP address'),
+            array('275.3.6.128', '"275.3.6.128" is an invalid IP address'),
+            array('999.999.999.999', '"999.999.999.999" is an invalid IP address'),
+            array('1024.1024.1024.1024', '"1024.1024.1024.1024" is an invalid IP address'),
+            array('::gggg', '"::gggg" is an invalid IP address'),
+            array('zzzz::', '"zzzz::" is an invalid IP address'),
             array(new \stdClass, 'The provided IP address must be a string.'),
         );
     }
