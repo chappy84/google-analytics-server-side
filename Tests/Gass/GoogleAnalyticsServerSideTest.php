@@ -2461,7 +2461,7 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
                 $cookieParts[] = $name . '=' . $value . ';';
             }
         }
-        $expectedCookieString = implode($cookieParts, ' ');
+        $expectedCookieString = implode(' ', $cookieParts);
 
         $actualCookieString = $gass->getCookiesString();
         $this->assertEquals($expectedCookieString, $actualCookieString);
