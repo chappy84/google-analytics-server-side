@@ -93,7 +93,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $envUserAgent = $this->getEnvVar('HTTP_USER_AGENT');
         $envDocumentReferer = $this->getEnvVar('HTTP_REFERER');
         $envAcceptLanguage = $this->getEnvVar('HTTP_ACCEPT_LANGUAGE');
-        $envDnt = $this->getEnvVar('HTTP_DNT');
 
         $http = m::mock('overload:Gass\Http\Http');
         if (!empty($envUserAgent)) {
@@ -170,7 +169,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
         $envUserAgent = $this->getEnvVar('HTTP_USER_AGENT');
         $envDocumentReferer = $this->getEnvVar('HTTP_REFERER');
         $envAcceptLanguage = $this->getEnvVar('HTTP_ACCEPT_LANGUAGE');
-        $envDnt = $this->getEnvVar('HTTP_DNT');
 
         $http = m::mock('overload:Gass\Http\Http');
         if (!empty($envUserAgent)) {
@@ -3094,11 +3092,6 @@ class GoogleAnalyticsServerSideTest extends TestAbstract
             case 'HTTP_ACCEPT_LANGUAGE':
                 if (isset($_SERVER[$name])) {
                     $retVal = 'en-gb';
-                }
-                break;
-            case 'HTTP_DNT':
-                if (array_key_exists('HTTP_DNT', $_SERVER)) {
-                    $retVal = $_SERVER['HTTP_DNT'];
                 }
                 break;
             default:

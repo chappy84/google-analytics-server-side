@@ -24,7 +24,6 @@
         <server name="HTTP_USER_AGENT" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.33 Safari/537.31"/>
         <server name="HTTP_REFERER" value="https://www.google.co.uk/search?q=example.com"/>
         <server name="HTTP_ACCEPT_LANGUAGE" value="en-GB,en;q=0.8"/>
-        <server name="HTTP_DNT" value="1"/>
         <cookie name="__utma" value="217344784.1277951898.1353238970.1359405715.1363640418.6"/>
         <cookie name="__utmb" value="217344784.2.6.1363640418"/>
         <cookie name="__utmc" value="217344784"/>
