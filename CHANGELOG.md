@@ -1,6 +1,13 @@
 Google Analytics Server Side Changelog
 ======================================
 
+Version 0.14.5 Beta
+-------------------
+
+- Add in support for IPv6 addresses
+- Remove test support for DNT header removed in 0.14.0
+- Fix UnitTest broken in PHP 7.4
+
 Version 0.14.4 Beta
 -------------------
 
